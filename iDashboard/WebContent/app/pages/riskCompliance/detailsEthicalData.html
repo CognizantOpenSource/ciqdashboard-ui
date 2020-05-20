@@ -1,0 +1,135 @@
+
+<div ng-controller="riskComplianceCtrl"
+	>
+
+
+
+
+
+
+
+
+
+	<div ba-panel-class="with-scroll" class="col-lg-12 col-xs-12 col-md-12">
+		<div class="panel panel-blur with-scroll animated zoomIn" zoom-in=""
+			ba-panel-blur="">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title">Ethical Details</h3>
+				<div uib-dropdown=""style="float: right; margin-top: -17px; color: #58D68D;">
+						<a id="exportThis" uib-dropdown-toggle="" class="dropdown-toggle"
+							aria-haspopup="true" aria-expanded="false"> <i
+							class="fa fa fa-bars"></i>
+						</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href="" ng-click="exportTableToCSV('EthicalDetails.csv')"><i
+										class="ion-document"></i>Export in CSV</a></li>
+								<li><a href="" id="exportThis"ng-click="exportTableToExcel('tblData', 'EthicalDetails-data')"><i
+										class="ion-document-text"></i>Export in XLS</a></li>
+							</ul>
+						</div>
+			</div>
+
+			<div class="panel-body">
+
+				<table class="table"  id="tblData" st-table="ethicalDetails"
+					st-safe-src="rowCollection">
+					<thead>
+						<tr class="sortable">
+
+							<th style="width: 6%;font-weight:bold">Division</th>
+							<th style="width: 7%;font-weight:bold">Taxonomy LOB</th>
+							<th style="width: 7%;font-weight:bold">Internal/External</th>
+
+
+
+							<th style="width: 10%;font-weight:bold">Line Of Business</th>
+
+							<th style="width: 10%;font-weight:bold">Vulnerability Class</th>
+							<th style="width: 10%;font-weight:bold">Title</th>
+
+
+
+
+
+						</tr>
+
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in ethicalDetails" class="editable-row">
+							<td>{{item.division}}</td>
+							<td>{{item.taxonomyLOB}}</td>
+
+							<td>{{item.internalExternal}}</td>
+
+
+
+							<td>{{item.lineofBusiness}}</td>
+
+							<td>{{item.vulnerabilityClass}}</td>
+							<td>{{item.title}}</td>
+
+
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="6" class="text-center">
+								<div st-pagination="" st-items-by-page="smartTablePageSize"
+									st-displayed-pages="5"></div>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+
+			</div>
+		</div>
+	</div>
+
+<!-- 	<div>
+		<div ng-init="getCsvEthicalDetails();"></div>
+		<div ng-hide=true id="exportableBizEthicalDetails">
+			<table class="table" border="1">
+				<thead>
+
+
+					<tr class="sortable ">
+						<th>Division</th>
+						<th>Taxonomy LOB</th>
+						<th>Internal/External</th>
+						<th>Line Of Business</th>
+						<th>Vulnerability Class</th>
+						<th>Title</th>
+
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in usAgencyEthicalDetails">
+						<td>{{item.division}}</td>
+						<td>{{item.taxonomyLOB}}</td>
+						<td>{{item.internalExternal}}</td>
+						<td>{{item.lineofBusiness}}</td>
+						<td>{{item.vulnerabilityClass}}</td>
+						<td>{{item.title}}</td>
+
+
+
+
+
+
+
+
+
+
+
+
+					</tr>
+				</tbody>
+
+			</table>
+		</div>
+
+
+	</div> -->
+</div>

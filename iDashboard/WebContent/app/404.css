@@ -1,0 +1,76 @@
+html {
+	position: relative;
+	min-width: 320px;
+}
+
+html, body {
+	min-height: 100%;
+	height: 100%;
+}
+
+body {
+	font: 12px/16px "Roboto", sans-serif;
+	color: #666666;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-color: #fff;
+	/* background: url("../assets/img/iDashboard-bg.jpg") no-repeat center center; 
+	background-size : cover;
+	will-change: transform;
+	z-index: -1;
+	background-size: cover*/
+}
+
+@media screen and (min-width: 992px) {
+	.mleft {
+		margin-left: 50%;
+	}
+}
+
+.page-not-found-modal {
+	background: 255, 255, 255;
+	border-radius: 5px;
+	font-weight: 300;
+	color: #000000;
+	padding: 32px;
+	text-align: center;
+	border-color: #0032a1;
+	border:20px;
+}
+
+.page-not-found-modal h1 {
+	font-weight: 300;
+	margin-bottom: 32px;
+}
+
+.page-not-found-modal p {
+	font-size: 16px;
+	line-height: 24px;
+	color: #000000;
+}
+
+.page-not-found-modal a {
+	text-decoration: none;
+	outline: none;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
+	color: #0032a1;
+	display: inline-block;
+}
+
+.page-not-found-modal a:hover {
+	color: #0032a1;
+}

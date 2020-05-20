@@ -1,0 +1,32 @@
+<div align="center" style=" margin-left:-115px;valign:middle;margin-top:60px; overflow: hidden;">
+	<div align="center" >
+	
+	<!-- <image title="refresh" src="images/qbot-small-logo.png" style="width:125px;"></image> -->
+	<p class="OpenSans-Regular" style=" font-size: 45px; padding-top:10px;  color:#ffffff; ">DASHBOT</p>
+
+	  <p class="OpenSans-Regular" style="padding-top:25px;"><span style="font-size: 21px; color:#ffffff;"> An Advanced Search Engine </span></p>
+	</div>
+	<div align="middle" style="valign:middle"  ng-init="checkQbotHome()">
+	<form ng-submit="search(homeSearchTxt)">
+  <div class="input-group">
+   <input type="text" class="form-control1" ng-model="homeSearchTxt" list="comicstitle" ng-keyup="keyevent($event.keyCode,homeSearchTxt)" />
+         <datalist id="comicstitle">
+    <option  data-ng-repeat="ttl in titles" value="{{ttl}}"> 
+  </datalist>
+     <span class="input-group-btn">
+    <!--  <img src="images/search.png" class="btn" ng-click="search(homeSearchTxt)"/> -->
+     <button class="btn1" type="button" align="center" style="font-size: 15px;"" ng-click=search(homeSearchTxt)  ">Search</button>
+  </span> 
+ 
+ 
+   
+   </div>
+   	<!--<button type="button" ng-click="search(homeSearchTxt)" class="btn btn-success btn-raised">Search</button>
+--></form>
+ </div>
+ 
+ <div id="footer" style="float:right;vertical-align: bottom;margin-top:280px;">
+  <div style="margin-top:10px;float:right;" >
+  <label  style="margin-left: 0px; color:#A2A2A2; font-weight: normal; font-size:12px;">Copyright  &copy; 2016-17 Cognizant Technology Solutions</label> </div>
+ </div>
+</div>

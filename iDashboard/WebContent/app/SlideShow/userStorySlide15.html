@@ -1,0 +1,56 @@
+<div class="row pie-charts" ng-controller="UserStoryCtrl" style="display: flex; margin-top: 100px; margin-bottom: 100px">
+
+		<div class="pie-chart-item-container">
+			<div ba-panel style="margin-top: 20px">
+				<div class="pie-chart-item" id="userStoryIterID">
+					<div style="font-size: 15px; text-align: center;"
+						ng-init="initOpsUserStorySprintCount()">Total No. of Iterations</div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{opsuserStorySprintData}}</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="pie-chart-item-container">
+			<div ba-panel style="margin-top: 20px;">
+				<div class="pie-chart-item" id="opsUserStryData">
+					<div style="font-size: 15px; text-align: center"
+						ng-init="initOpsUserStorycount()">Total User Stories</div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{opsuserStoryData}}</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="pie-chart-item-container">
+			<div ba-panel style="margin-top: 20px">
+				<div class="pie-chart-item" id="userStoryBackLogID">
+					<div style="font-size: 15px; text-align: center;"
+						ng-init="initIterationUserStoryBackLogCount()">No. of User Stories
+						in Backlog</div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{userStoryIterBackLogData}}</div>
+			
+				</div>
+			</div>
+		</div>
+
+		<div class="pie-chart-item-container">
+			<div ba-panel style="margin-top: 20px">
+				<div class="pie-chart-item" id="userStoryDefectID">
+					<div style="font-size: 15px; text-align: center;"
+						ng-init="initUserStoryDefectCount()">No. of Defects
+						Associated with User Stories</div>
+					<a href="#userStoryDefectDetails" class="descriptionLink">
+						<div class="description-stats"
+							style="font-size: 40px; margin-top: 20px; text-align: center">{{defectdata}}</div>
+					</a>
+
+
+				</div>
+			</div>
+		</div>
+
+	
+	</div>

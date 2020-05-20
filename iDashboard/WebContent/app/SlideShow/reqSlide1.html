@@ -1,0 +1,47 @@
+ 	<div class="row pie-charts" ng-controller="RequirementsCtrl" style="display: flex; margin-top: 100px; margin-bottom: 100px" ng-init="gettimeperiod();">
+	<div class="pie-chart-item-container" style="margin-left:122px">
+	   <div ba-panel style="margin-top:20px;">
+			<div class="pie-chart-item" id="totalreqlist"  >
+				<div style="font-size: 15px; text-align:center" ng-init="totalReqcountFilter()" >Total Requirements Count</div>
+				<div class="description-stats" style="font-size: 40px;margin-top:20px;text-align:center">{{totalreqcount}}</div>
+			  	<div>
+		           <a ng-click="open('app/pages/charts/requirements/requirementsdata/reqcount.html','sm')">
+		           <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-top:20px" ></a>
+		     	</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<div class="pie-chart-item-container" >
+  <div ba-panel style="margin-top:20px">
+   <div class="pie-chart-item" ng-init= "ReqvoltilityFilter()">
+    <div class="chart"  id="reqvolafilter" rel="rgba(255,255,255,0.4)"> <span class="percent"> </span> </div>
+    
+    <div class="">
+     
+      <div style="font-size:15px;padding-top:20px;padding-left: 100px !important;" class="description-stats">Requirement Stability</div>
+      <div class="description-stats"></div>
+      
+      </div>
+       <div>
+            <a ng-click="open('app/pages/charts/requirements/requirementsdata/reqvolatility.html','lg')">
+            <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-top:20px" ></a>
+      </div>
+      </div>
+      </div>
+      </div>
+	<!-- <div class="pie-chart-item-container">
+	   <div ba-panel style="margin-top:20px">
+			<div class="pie-chart-item" id="reqLeakageLevel" >
+				<div style="font-size: 15px;text-align:center;" ng-init="ReqleakageFilter()" >Requirement Leakage </div>
+				<div class="description-stats" style="font-size: 40px;margin-top:20px;text-align:center">{{reqleakagefilter}}</div>
+			    <div>
+		           <a ng-click="open('app/pages/charts/requirements/requirementsdata/reqleakage.html','lg')">
+		           <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-top:20px" ></a>
+		        </div>
+
+			</div>
+		</div>
+	</div> -->
+	</div>

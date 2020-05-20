@@ -1,0 +1,33 @@
+<div class="modal-content info" >
+  <div class="modal-header bg-info">
+    <i class="ion-information-circled modal-icon"></i><span>Dashboard Name : {{dashboardName}}</span>
+  </div>
+  <div class="modal-body operational text-center" ng-controller="OperationalDashboardCtrl">
+<!--  <div class="modal-dialog" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; margin-bottom:50px;">
+ --> <table id="example" class="table">
+				<thead> 
+					<tr class="sortable" >
+
+						<th style="width: 300px; text-align: center; font-weight: bold">Domain</th>
+						<th style="width: 200px; text-align: center; font-weight: bold">Project</th>
+						<th style="width: 300px; text-align: center; font-weight: bold">Release</th>
+					
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr ng-repeat="subinfo in dashboardinfo[0].releaseSet">
+					
+						<td style="width: 200px; text-align: center">{{subinfo.level1}}</td>
+						<td style="width: 200px; text-align: center">{{subinfo.level2}}</td>
+						<td style="width: 200px; text-align: center">{{subinfo.level3}}</td>
+					
+					</tr>
+				</tbody>
+			</table>
+			<!-- </div> -->
+			</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-info" ng-click="$dismiss()">OK</button>
+  </div>
+</div>

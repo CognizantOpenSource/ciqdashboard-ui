@@ -1,0 +1,141 @@
+<div class="row" ng-controller="OperationalDashboardCtrl"
+	ng-init="getRollingPeriod();init();">
+
+	<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
+		ba-panel-class="with-scroll">
+		<div class="summarytitle ">
+			Summary of Dashboard using {{templateName}} template - <label
+				style="color: midnightblue;">(Data taken from ALM Only)</label> <label
+				style="float: right;">&nbsp;<i class="fa fa-television"
+				aria-hidden="true"></i>&nbsp; <a
+				ng-click="openpopupforsummarypage('lg');">Slide Show</a></label> <label
+				style="float: right;"><i class="fa fa-file-excel-o"
+				aria-hidden="true"></i>&nbsp;<a ng-click="downloadTable('xls','rollupsheetexecTable','Rollup Sheet')">Download
+					&nbsp;</a><b>|</b></label>
+
+		</div>
+
+		<div class="summarytable"
+			ng-init="globalViewTable();summaryTableMetricTitle();">
+			<table class="table" st-table="globalViewDetails"
+				st-safe-src="safeCollection">
+				<thead class=" summarytable">
+					<tr class="sortable">
+						<th style="width: 5%; font-weight: bold" st-sort="project"
+							st-sort-default="true">{{templateSelectedMetricName[0]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric1">{{templateSelectedMetricName[1]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric2">{{templateSelectedMetricName[2]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric3">{{templateSelectedMetricName[3]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric4">{{templateSelectedMetricName[4]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric5">{{templateSelectedMetricName[5]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric6">{{templateSelectedMetricName[6]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric7">{{templateSelectedMetricName[7]}}</th>
+						<th style="width: 5%; font-weight: bold" st-sort="metric8">{{templateSelectedMetricName[8]}}</th>
+
+
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr ng-repeat="item in globalViewDetails track by $index">
+						<td style="width: 5%;"><a
+							ng-click="getProject(item.domain,item.project,item.tool)">{{item.project}}</a></td>
+						<td style="width: 5%;">{{item.metric1}}</td>
+						<td style="width: 5%;">{{item.metric2}}</td>
+						<td style="width: 5%;">{{item.metric3}}</td>
+						<td style="width: 5%;">{{item.metric4}}</td>
+						<td style="width: 5%;">{{item.metric5}}</td>
+						<td style="width: 5%;">{{item.metric6}}</td>
+						<td style="width: 5%;">{{item.metric7}}</td>
+						<td style="width: 5%;">{{item.metric8}}</td>
+					</tr>
+
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="12" class="text-center">
+							<div st-pagination="" st-items-by-page="10"
+								st-displayed-pages="5"></div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+
+	<!-- //Rollup Sheet -->
+
+	<div>
+		<div ng-init=""></div>
+		<div ng-hide=true id="exportableTable">
+			<table class="table" id="rollupsheetexecTable">
+				<tr>
+					<th>Project</th>
+					
+<!-- 					<th>Total Test Execution Count</th> -->
+
+					<th>Total number of Automated Regression Tests</th>
+					<th>Total number of Regression Tests</th>
+					<th>Regression Automation Coverage</th>
+					
+					<th>Total number of Tests Passed in First Run</th>
+					<th>Total number of Unique Tests Executed</th>
+					<th>First Time Pass Rate</th>
+
+					<th>Total # of Automated Functional Tests Executed (all runs)</th>
+					<th>Total # of Functional Tests Executed (all runs)</th>
+					<th>Functional Automation Utilization</th>
+
+					<th>Total # of Unique Automated Regression Tests Executed</th>
+					<th>Total # of Unique Regression Tests Designed</th>
+					<th>Regression Automation Utilization</th>
+
+					<th>Total # of Automated UAT Tests Executed (all runs)</th>
+					<th>Total # of UAT Tests Executed (all runs)</th>
+					<th>UAT Automation Utilization</th>
+
+					<th>Total number of Rejected (Dropped) Defects</th>
+					<th>Total number of Defects</th>
+					<th>Defect Rejection Rate</th>
+
+					<th>Total number of Defects</th>
+					<th>Total number of Tests Executed (all runs)</th>
+					<th>Defect Density</th>
+				</tr>
+				<tr ng-repeat="item in rolupsheetTableDetailsExport track by $index">
+				    <td>{{item.project}}</td>
+
+					<td>{{item.field5}}</td>
+				    <td>{{item.field6}}</td>
+				    <td>{{item.field7}}</td>
+				    
+				    <td>{{item.field2}}</td>
+				    <td>{{item.field3}}</td>
+				    <td>{{item.field4}}</td>
+				    
+				    <td>{{item.field8}}</td>
+				    
+				    <td>{{item.field9}}</td>
+				    <td>{{item.field10}}</td>
+				    <td>{{item.field11}}</td>
+				    <td>{{item.field12}}</td>
+				    
+				    <td>{{item.field13}}</td>
+				    <td>{{item.field14}}</td>
+				    <td>{{item.field15}}</td>
+				    <td>{{item.field16}}</td>
+				    
+				    <td>{{item.field17}}</td>
+				    <td>{{item.field18}}</td>
+				    <td>{{item.field19}}</td>
+				    <td>{{item.field20}}</td>
+				    
+				    <td>{{item.field21}}</td>
+				    <td>{{item.field22}}</td>
+					
+				</tr>
+			</table>
+		</div>
+	</div>
+
+</div>

@@ -1,0 +1,61 @@
+<div class="popupbgimg modal-content " style="margin-top: 50"
+	ng-controller="AdminCtrl">
+
+	<div class="modal-header" ng-init="getcustomtemplatelistview()">
+		<span style="font-size: 18px">Details of {{myselectedTemplate}}</span>
+		<!-- <a ng-click="TemplateSavingCancel();"> <img src="./assets/img/close.png"
+			style="float: right; width: 2%; height: 1%;margin-top: 0px">
+		</a> -->
+		<button type="button" class="close" ng-click="cancel();$dismiss()"
+			aria-label="closeed">
+			<span aria-hidden="true"> x</span>
+		</button>
+	</div>
+
+	<form name="customTemplate">
+		<div class="modal-body">
+			<div class="row" style="margin-left: 5px">
+				<div class=" form-group col-md-3">
+					<label for="rollingperiod" style="font-size: 15px">Rolling
+						Period </label>
+				</div>
+				<div class=" form-group col-md-6">
+					<span class="text-justify text-dark metricstextcolor" style="font-size: 15px">{{viewRollingPeriod}}</span>
+				</div>
+			</div>
+			<div class="row" style="margin-left: 5px">
+				<div class=" form-group col-md-3">
+					<label for="toolselected" style="font-size: 15px">Tools
+						Selected </label>
+				</div>
+				<div class=" form-group col-md-6">
+					<input type="checkbox" ng-model="viewToolIsAlm" disabled><label
+						style="padding-left: 5px"> ALM </label> <input type="checkbox"
+						style="margin-left: 30px" ng-model="viewToolIsJira" disabled><label
+						style="padding-left: 5px"> JIRA </label>
+				</div>
+			</div>
+
+			<div class="row" style="margin-left: 5px">
+				<div class=" form-group col-md-3">
+					<label for="rollingperiod" style="font-size: 15px">List of
+						Selected Metrics </label>
+				</div>
+				<div class=" form-group col-md-6 " ba-panel
+					ba-panel-class="with-scroll">
+					<table class="table" id="viewSelectedMetricName">
+						<tr ng-repeat="item in viewSelectedMetricName">
+							<td class="metricstextcolor">{{item}}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+		</div>
+		<div class="modal-footer ">
+			<button type="button" style="margin-left: 48%; float: left"
+				class="btn btn-success"
+				ng-click="TemplateSavingCancel();$dismiss();">OK</button>
+		</div>
+	</form>
+</div>

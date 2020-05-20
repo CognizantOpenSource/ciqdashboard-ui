@@ -1,0 +1,56 @@
+<div class="popupbgimg modal-content" style="margin-top:150%" ng-controller="AdminCtrl">
+<div class="modal-header">
+    <span style="font-size: 16px"> Edit User Details: {{form.userId}}</span>
+    
+    <!-- <a ng-click="cancel();$dismiss();">
+	<img src="./assets/img/close.png" style="float:right;width: 10%" >
+</a> -->
+<button type="button" class="close" ng-click="cancel();$dismiss()" aria-label="closeed">
+			<span aria-hidden="true"> x</span>
+		</button> 
+  </div>
+
+  
+<div class="modal-body">
+      
+  <form name="form" ng-submit=updateAdminUser(form) method="post" autocomplete="off">
+  
+  <div class="form-group" >
+    <label for="exampleInputEmail1">User ID</label>
+    <input type="input" class="form-control" id="exampleInputEmail1" ng-init="form.userId=userIdUpdate" ng-model="form.userId" placeholder="UserID" disabled="disabled" required>
+  </div>
+  
+   <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" ng-init="form.password=passwordUpdate" ng-model="form.password" placeholder="Password" disabled="disabled" required>
+  </div>
+
+  <div class="form-group">
+    <label for="displayName">User Name To Be Displayed</label>
+    <input type="input" class="form-control" id="displayName" ng-init="form.userName=userNameUpdate" ng-model="form.userName" placeholder="Username" ng-disabled="IsDisabled" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" ng-model="form.email" ng-init="form.email=emailUpdate" placeholder="Email" ng-disabled="IsDisabled" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="phone">Mobile</label>
+<input type="text" name="phone" class="form-control" ng-init="form.mobile=mobileUpdate" ng-model="form.mobile" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-minlength="10" placeholder="Mobile" maxlength="10" ng-model-options="{ updateOn: 'blur' }" ng-pattern="/^[0-9]*$/" ng-disabled="IsDisabled"  required><br />
+<span style="color:red" ng-show="form.phone.$dirty && form.phone.$invalid">
+<span ng-show="form.phone.$error.required">Phone is required.</span>
+<span ng-show="form.phone.$error.pattern">Phone must be numeric.</span>
+<span ng-show="form.phone.$error.minlength">Phone must be min 10 char.</span>
+<span ng-show="form.phone.$error.maxlength">Phone must not be more than 10 char.</span>
+</span>
+</p>
+  </div>
+  <div class="form-group"> 
+  <button type="submit" style="margin-left:20%" class="btn btn-success"  ng-disabled="form.$invalid">Update</button>
+  <button type="button" style="margin-left:2%;" class="btn btn-danger" ng-click="cancel();$dismiss();">Cancel</button>
+  </div>
+</form>
+ 
+     </div>
+     </div>

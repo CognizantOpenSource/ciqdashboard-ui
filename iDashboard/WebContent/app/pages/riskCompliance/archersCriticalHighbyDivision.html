@@ -1,0 +1,126 @@
+
+<div ng-controller="riskComplianceCtrl">
+<div class="row" style="margin-top: 48px;">
+		<div class="col-lg-12 col-md-12 col-sm-12"
+			ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title"style="font-weight:bold">AST-Archers-Critical & High by Division
+					<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href="" ng-click="exportTableToCSV('Archer.csv')"><i
+										class="ion-document"></i>Export in CSV</a></li>
+								<li><a href="" id="exportThis"ng-click="exportTableToExcel('tblData', 'Archer-data')"><i
+										class="ion-document-text"></i>Export in XLS</a></li>
+							</ul>
+						</div></h3>
+				</div>
+				<div class="panel-body">
+
+					<div class="horizontal-scroll">
+	
+						<table class="table"   style="margin-top: -10px;">
+							<thead>
+
+
+
+								<tr>
+
+									<th style="width: 25%;font-weight:bold">Division</th>
+									
+									
+									 <th style="width: 15%;font-weight:bold">Business-<br>Risk - 5</br></th>	
+									 <th style="width: 15%;font-weight:bold">Business-<br>Risk - 4</br></th>
+									
+									<th style="width: 15%;font-weight:bold">Enterprise-<br>Risk - 5</br></th>
+									<th style="width: 20%;font-weight:bold">Enterprise-<br>Risk - 4</br></th>
+								</tr>
+
+							</thead>
+
+							<tbody ng-init="archerCriticalHighByDivision();archerCriticalHighByDivisionGlobal();archerCriticalHighByDivisionEMEA();archerCriticalHighByDivisionGIARS();archerCriticalHighByDivisionAlternative();archerCriticalHighByDivisionSubAccounting();archerCriticalHighByDivisionOnCore();">
+								<tr >
+									<td style="width: 10%">{{divisinList[0]}}</td>
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[0])"style="color:#ffffff;text-decoration-color:#58d68d;">{{businessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[0])"style="color:#ffffff;text-decoration-color:#58d68d;">{{businessdata4}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[0])"style="color:#ffffff;text-decoration-color:#58d68d;">{{enterprisedata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[0])"style="color:#ffffff;text-decoration-color:#58d68d;">{{enterprisedata4}}</a></td>
+									
+									
+								</tr>
+								<tr>
+									<td style="width: 10%">{{divisinList[1]}}</td>
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[1])"style="color:#ffffff;text-decoration-color:#58d68d;">{{subbusinessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[1])"style="color:#ffffff;text-decoration-color:#58d68d;">{{subbusinessdata4}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[1])"style="color:#ffffff;text-decoration-color:#58d68d;">{{subenterprisedata5}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[1])"style="color:#ffffff;text-decoration-color:#58d68d;">{{subenterprisedata4}}</a></td>
+								</tr>
+								<tr>
+									<td style="width: 10%">{{divisinList[2]}}</td>
+									
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[2])"style="color:#ffffff;text-decoration-color:#58d68d;">{{oncorebusinessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[2])"style="color:#ffffff;text-decoration-color:#58d68d;">{{oncorebusinessdata4}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[2])"style="color:#ffffff;text-decoration-color:#58d68d;">{{oncoreenterprisedata5}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[2])"style="color:#ffffff;text-decoration-color:#58d68d;">{{oncoreenterprisedata4}}</a></td>
+									
+								</tr>
+
+								<tr>
+									<td style="width: 10%">{{divisinList[3]}}</td>
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[3])"style="color:#ffffff;text-decoration-color:#58d68d;">{{alternativebusinessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[3])"style="color:#ffffff;text-decoration-color:#58d68d;">{{alternativebusinessdata4}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[3])"style="color:#ffffff;text-decoration-color:#58d68d;">{{alternativeenterprisedata5}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[3])"style="color:#ffffff;text-decoration-color:#58d68d;">{{alternativeenterprisedata4}}</a></td>
+									
+								</tr>
+								
+								<tr>
+									<td style="width: 10%">{{divisinList[4]}}</td>
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[4])"style="color:#ffffff;text-decoration-color:#58d68d;">{{giarsbusinessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[4])"style="color:#ffffff;text-decoration-color:#58d68d;">{{giarsbusinessdata4}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[4])"style="color:#ffffff;text-decoration-color:#58d68d;">{{giarsenterprisedata5}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[4])"style="color:#ffffff;text-decoration-color:#58d68d;">{{giarsenterprisedata4}}</a></td>
+								</tr>
+								
+								<tr>
+									<td style="width: 10%">{{divisinList[5]}}</td>
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[5])"style="color:#ffffff;text-decoration-color:#58d68d;">{{emeabusinessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[5])"style="color:#ffffff;text-decoration-color:#58d68d;">{{emeabusinessdata4}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[5])"style="color:#ffffff;text-decoration-color:#58d68d;">{{emeaenterprisedata5}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[5])"style="color:#ffffff;text-decoration-color:#58d68d;">{{emeaenterprisedata4}}</a></td>
+								</tr>
+								<tr>
+									<td style="width: 10%">{{divisinList[6]}}</td>
+									<td class="underlineText"><a ng-click="getArcherBusinessCriticalData(divisinList[6])"style="color:#ffffff;text-decoration-color:#58d68d;">{{globalbusinessdata5}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherBusinessHighData(divisinList[6])"style="color:#ffffff;text-decoration-color:#58d68d;">{{globalbusinessdata4}}</a></td>
+									<td class="underlineText"><a ng-click="getArcherEnterpriseCriticalData(divisinList[6])"style="color:#ffffff;text-decoration-color:#58d68d;">{{globalenterprisedata5}}</a></td>
+									<td  class="underlineText"><a ng-click="getArcherEnterpriseHighData(divisinList[6])"style="color:#ffffff;text-decoration-color:#58d68d;">{{globalenterprisedata4}}</a></td>
+								</tr>
+								<tr>
+									<td style="width: 10%; >Total:</td>
+									<td>{{businessdata5+oncorebusinessdata5+subbusinessdata5+oncorebusinessdata5+emeabusinessdata5+globalbusinessdata5+giarsbusinessdata5}}</td>
+									<td>{{businessdata4+subbusinessdata4+oncorebusinessdata4+globalbusinessdata4+oncorebusinessdata4+emeabusinessdata4+giarsbusinessdata4+alternativebusinessdata4}}</td>
+									<td>{{enterprisedata5+subenterprisedata5+subenterprisedata5+globalenterprisedata5+oncoreenterprisedata5+emeaenterprisedata5+giarsenterprisedata5+alternativeenterprisedata5}}</td>
+									<td>{{enterprisedata4+subenterprisedata4+subenterprisedata4+globalenterprisedata4+emeaenterprisedata4+giarsenterprisedata4+alternativeenterprisedata4+oncoreenterprisedata4}}</td>
+								</tr>
+							</tbody>
+
+
+
+
+
+						</table>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

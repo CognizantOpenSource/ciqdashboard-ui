@@ -1,0 +1,23 @@
+<div ng-if="tool == 'ALM'" class="widgets gridster" ng-controller="slideShowCtrl" ng-init="menubar = true">
+
+	
+
+	<div class="row"  style="margin-top: 50px;">
+
+		<div uib-carousel active="active" interval="myInterval"
+			no-wrap="noWrapSlides">
+			<div uib-slide ng-repeat="slide in slides track by slide.id"
+				index="slide.id">
+				<ng-include src="slide.image" id="closeddefect" style="margin:auto;"></ng-include>
+				{{slide.text}}
+			</div>
+		</div>
+
+
+	</div>
+
+
+</div>
+
+
+

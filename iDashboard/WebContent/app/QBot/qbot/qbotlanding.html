@@ -1,0 +1,271 @@
+ <div id="headerdiv" class="headerdiv" >
+ 
+ <div style="width:100%;border-top:1px solid #80bace;">
+ 
+
+  
+  
+  <div class="row" style="padding-top:20px;margin-left:3px;">
+
+   
+   <div>
+  <form ng-submit="searchMain()">
+  <div class="input-group">
+   <input type="text" class="form-control1"  ng-model="keyword" list="comicstitle" ng-keyup="keyevent($event.keyCode,keyword)"/>
+                   <datalist id="comicstitle">
+    <option  data-ng-repeat="ttl in titles" value="{{ttl}}"> 
+  </datalist>
+     <span class="input-group-btn">
+  
+      <button class="btn1" type="button" align="center" style="font-size: 15px;" ng-click="searchMain()" >Search</button>
+      
+     
+  </span>
+   </div>
+  
+	</form> 
+</div>
+</div>
+<div align="center" style="margin-top:100px" ng-show="loadingImage"> <img src="images/dashbot_loader.gif">
+</div>
+
+
+
+<div ng-show="!loadingImage" class="row" style="margin-left:6px;padding-top:10px;background: transparent !important;">
+
+ <div ng-show="showRefineSearch"> Please Refine Your Search</div>
+
+
+
+ 
+    {{moreObjects}}
+<!-- <div ng-show="showSummary"  class="row" style="padding-top:15px">
+
+
+<div class="custompanel-heading col-md-4 user_txt" style="margin-left:30px;padding-top:10px;border-left:1px solid #e2e2e2;border-top:1px solid #e2e2e2;border-right:1px solid #e2e2e2;width:200px">Details of the {{keyword}}</div>
+
+
+</div> -->
+
+
+
+<div ng-show="showCorrectResult"  >
+
+<div><p class="result_txt">Showing results for  
+<b class="result_yellowtxt" id="searchWord" ng-bind-html="appropriateString"></b>  
+<b class="result_yellowtxt" id="Summaryobj" ng-bind-html="firstSummary" ></b>
+</p>
+
+</div>
+
+
+
+
+</div>
+
+  <div ng-show="suggestion" style="display:float;" >
+	<div style="display:float;" >Did you mean
+	<button style="margin-left:20px;" class="tab_result1"  ng-model="task" ng-repeat="it in didYouMeanKeys1"  ng-click="refine(it.index1)">{{it.tite}} </button> 
+	</div>
+	  
+	 
+
+
+</div> 
+
+
+
+<div ng-show="showSummary">
+<div style="width:80%;">
+<div>
+  <div id="check">
+  
+      
+      <div>
+      
+      <div> <!-- show summary -->
+   <div class="horizontal-scroll"> 
+     <table class="table table-striped">
+    <thead style="background: transparent !important;background: rgba(255, 255, 255, 0.2) !important;">
+      <tr  ng-init="current=0">
+     <th style="border-right: 1px solid rgba(255,255,255,0.1);width: 30%;" ng-repeat="list in summaryListInPanel |limitTo:5:0"  class="table-width Att_key">  {{list.Key}} </th>
+      <th  ng-show="detail" class="table-width Att_key">  Detailed view </th>
+	</tr>
+    </thead>
+         <tbody>
+    <tr style="background: transparent !important;background: rgba(255, 255, 255, 0.4) !important;">
+      <td ng-repeat="list in summaryListInPanel |limitTo:5:current"  class="table-width Att_val"  style="border-right: 1px solid rgba(255,255,255,0.1);"> {{list.value}} </td>
+      <td  ng-show="detail" class="table-width Att_val"><img src="images/more-dot.png" style="width:19px; height:3px;" alt="find more" title="{{get}}"  ng-click="open('app/QBot/qbot/DetailedPopup.html')" /></td>   
+      </tr>
+      </tbody>
+    </table>
+    </div>
+    
+   
+<!--      
+      <div  style="padding-top:10px;display:inline;float:left;width:200px;height:40px;padding-bottom:6px;padding-left:2px;border-top:1px solid #e2e2e2;" class="Att_key">
+      {{list.Key}}
+      </div>
+      </div>
+    
+     <div style="padding-bottom:10px;display:block;" ng-repeat="list in summaryListInPanel |limitTo:5:current">            
+      
+      
+        <div style="padding-top:10px;display:inline;float:left;width:200px;height:40px;padding-bottom:6px;padding-left:2px;border-top:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;" class="Att_value"> {{list.value}}</div>     
+    
+    </div> -->
+      
+      </div>
+    
+  </div>
+  </div>
+
+</div>
+</div>
+</div>
+<div>
+     <div ng-show="showResult" >
+  
+<!-- <div>
+<md-button ng-click="getTypeTabs()">click me</md-button>
+</div>
+ -->
+
+ <div >
+ <div    style="text-align:left! important;margin-top:20px;padding-left:15px;border-bottom:1px solid #86d3e3" class="button-wrapper" align="center" >
+ <ul   class="btn-list clearfix">
+ <button ng-class="(typeTab.index == activeTabIndex  ? 'tab_selected' : 'tab_result')" style="width:auto;padding-top:5px;padding-bottom:10px; outline:none"   ng-repeat="typeTab in typeTabs" type="button" ng-click="updateGraph(typeTab.index)" >{{typeTab.title}}</button>
+ </ul>
+ </div>
+</div>
+</div>
+<div style="width:100%;margin-top:2%;padding-bottom: 3%;">
+
+<div  ng-show="showTable"  style="float:left;display:inline-block">
+                                                                                                                                      
+                                                <table >
+                                                <tr>
+                                                <td class="count_label">Total Count :</td>
+                                                <td class="count"> <div  id="total-count" ></div> </td>
+                                                </tr>
+                                                </table>
+                                                                                                                                                                                             
+<!--     <div class="chart-title" >  <strong> Total Count : </strong>
+     </div>	 -->
+<!--      <div align="center">
+    <label>Select Category</label><select ng-change="filterData(selectedCategory)" ng-model="selectedCategory" ng-options="x for x in linkObjectList">
+</select>
+</div> -->
+</div>
+
+
+<div ng-show="slickUpdate" align="right" style="display:inline-block;float:right;" >
+ <div align="right" style="margin-right:30px;">
+ 
+ 
+   <a style="margin-right: 13px;" class="Refresh_txt" href="javascript:dc.filterAll(); dc.renderAll();">
+   <img src="images/reset.png" title="Refresh" alt="Refresh" style="padding-left: 10px;" ng-click="refresh()"></a>
+   <img src="{{img}}" alt="alternative text"  title="{{get}}"ng-click="hidden()" />
+   </div>
+  
+<!--  <uib-tabset active="activeTabIndex">
+	  <uib-tab heading="{{typeTab.title}}" id="{{tab-typeTab.index}}" ng-repeat="typeTab in typeTabs" select="changeTabFunction(typeTab.index)">   
+ -->
+</div>
+</div>
+
+
+
+
+<div ng-show="slickUpdate1" >	
+<div ng-show="slickUpdate">	
+
+		
+
+<div style="background-color:transparent; padding-top:25px" class="row" >
+<div ng-show="prevbtn"><img  src ="images/arrow-left.png" style=" float:left; margin-top:11.5%;" ng-click="previous();"></div><div ng-if="keysForAccess.length>3"> 
+<div ng-show="nextbtn"><img  src ="images/arrow-right.png" style="float:right;margin-top:11.5%;" ng-click="next();"></div></div>
+<div class="panel-custom">
+<div   ng-repeat="ids in chartIdsssForGraph | limitTo:3:strtIndx"  class="col-md-12 col-lg-3-5 "  style="margin-bottom: 20px;">
+
+    <div >
+  <div  class="panel-heading att_key" style="background: transparent !important;color:#ffffff;background: rgba(255, 255, 255, 0.1) !important;" ><b>{{ids.label}}</b>
+
+
+   <!-- <div ng-hide="image[$index]">-->
+
+     <!-- <div ng-show="image[$index]">
+
+   <img src="images/more-dot.png" style="width:19px; height:3px;float:right;"  title="full view"  ng-click="open('app/QBot/qbot/chartpopup.html')" />
+   </div>  -->
+
+   </div> 
+      
+<div id="{{ids.id}}" class="panel-body" style="background: transparent !important;background: rgba(255, 255, 255, 0.1) !important;">
+     
+</div>
+      
+    </div>
+  
+  </div>
+  </div>
+
+</div>
+</div> 
+		
+ 
+ 
+  	 <div ng-show="showTable" class="row" style="    margin-top: 2%; overflow:auto">
+ 		<div  class="col-md-12 col-lg-3">
+
+			<table style="background: transparent !important;margin-left:-15px;color:#ffffff;background: rgba(255, 255, 255, 0.1) !important;" class="table custometd custometable table-striped "  id="data-table">
+			
+		 <tr  dir-paginate=" in dashTable  | itemsPerPage: 5 | limitTo :65"  total-items=""></tr>
+			</table>
+		</div>
+		</div>	
+		
+	
+		
+ 	<div ng-show="showPageLimits"   id="paging" style="margin-top:2%;color:#ffffff;">
+    Showing <span id="begin"></span>-<span id="end"></span> of <span id="size" ></span>.
+    <button ng-disabled="pre" class="btn2" ng-click="last()" ng-class="{'diabled-class': pre}">Previous </button>
+     <button ng-disabled="nex" class="btn2" ng-click="next1()" ng-class="{'diabled-class': nex}">Next </button>
+</div> 
+
+ </div>
+
+   
+
+  
+			
+
+			
+			
+	
+<div ng-show="onlygraph" style="margin-left:50px;" class="row">
+ <div   ng-repeat="ids in chartIdsssForGraph1"  class="col-md-12 col-lg-3-5 " style="padding-top:25px; margin-bottom: 20px;" >
+
+    <div >
+      <div  class="panel-heading att_key" style="background: transparent !important;background: rgba(255, 255, 255, 0.1) !important;"><b>{{ids.label}} </b> 
+     <!--  <div >
+      <div ng-show="image[$index]"> <img src="images/more-dot.png" style="width:19px; height:3px;float:right;" title="full view"  ng-click="open('app/QBot/qbot/chartpopup.html')" />
+      </div>
+      </div> -->  
+      </div>
+      
+      <div id="{{ids.id}}" class="panel-body" style="background: transparent !important;background: rgba(255, 255, 255, 0.1) !important;">
+     
+      </div>
+      
+    </div>
+  </div>
+</div>					
+  		
+ 
+   </div>
+	</div>
+    </div>
+    </div>
+
+     

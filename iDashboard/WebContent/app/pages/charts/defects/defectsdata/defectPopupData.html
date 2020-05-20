@@ -1,0 +1,148 @@
+
+
+<div class="widgets gridster popupbgimg" style="margin-top: 400px;"
+	ng-controller="defectPopupDataCtrl">
+	<!--  <a ng-click="cancel()">
+         <img src="./assets/img/close.png" style="float:right; margin-top: 15px; margin-right: 15px;" >
+      </a> -->
+<!-- 	<button type="button" class="close" ng-click="cancel();$dismiss()"
+		aria-label="closeed">
+		<span aria-hidden="true"> x</span>
+	</button> -->
+	<div class="row">
+	<div class="modal-header" style="height:40px;">
+		<span style="font-size: 16px"> Analyse</span>
+		
+		<button type="button" style="margin-top:-17px;" class="close" ng-click="cancel();$dismiss()" aria-label="closeed">
+			<span aria-hidden="true"> x</span>
+		</button> 
+		<!-- <a
+			ng-click="cancel();$dismiss();"> <img src="./assets/img/close.png"
+			style="float: right; width: 10%">
+		</a> -->
+	</div>
+		<table style="margin-top: 10px;">
+			<tr>
+
+				<td><div class="chart-wrapper1 levels" id="menuselect"
+						style="background-color: transparent; border-color: rgba(255, 255, 255, 0.4); color: rgba(255, 255, 255, 0.4); margin-left: 15px !important; border-radius: 4px; height: 48px; white-space: nowrap">
+						<div class="chart-title">Priority</div>
+					</div></td>
+					
+					<td><div class="chart-wrapper1 levels" id="menuselect2"
+						style="background-color: transparent; border-color: rgba(255, 255, 255, 0.4); color: rgba(255, 255, 255, 0.4); margin-left: 15px !important; border-radius: 4px; height: 48px; white-space: nowrap">
+						<div class="chart-title">Severity</div>
+					</div></td>
+					
+
+				<td><div class="chart-wrapper1 levels" id="menuselect1"
+						style="background-color: transparent; border-color: rgba(255, 255, 255, 0.4); color: rgba(255, 255, 255, 0.4); margin-left: 15px !important; border-radius: 4px; height: 48px; white-space: nowrap">
+						<div class="chart-title">Status</div>
+					</div></td>
+
+				<td style="padding-top: 5%"><div class="dc-data-count dc-chart"
+						id="row-selection">
+
+						<span> <a href="javascript:dc.filterAll(); dc.renderAll();"><font
+								style="margin-left: 15px !important; padding: 5px; border-radius: 3px; background: transparent; border: 1px solid rgb(255, 255, 255);"
+								color="#fff">Reset All</font></a>
+						</span>
+					</div></td>
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="row pie-charts">
+
+
+		<div class="pie-chart-item-container">
+			<div ba-panel>
+				<div class="pie-chart-item">
+
+
+					<div class="pie-chart-item" id="total-projects"
+						style="font-size: 40px; text-align: center">
+						<div
+							style="margin-bottom: 20px; font-size: 15px; text-align: center">Total
+							Defect Count</div>
+					</div>
+					<!--  <div >
+            <a ng-click="open('app/pages/dashboard/infoDialog/tot_defect.html')">
+            <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-top:20px" ></a>
+      </div>-->
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="row with-scroll">
+		<div class="col-lg-6 col-md-6" ba-panel
+			ba-panel-title="Defects by Priority" ba-panel-class="with-scroll">
+			<div id="state-donations" class=" "></div>
+
+		</div>
+
+		<div class="col-lg-6 col-md-6" ba-panel
+					ba-panel-title="Defects By Severity" ba-panel-class="with-scroll">
+					<div id="severity-chart" class=" "></div>
+				</div>
+
+		<div class="col-lg-6 col-md-6" ba-panel
+			ba-panel-title="Defects By Status" ba-panel-class="with-scroll">
+			<div id="poverty-chart" class=" "></div>
+		</div>
+		
+		
+		
+		
+		<!-- <div class="col-lg-6 col-md-6" ba-panel
+			ba-panel-title="Defects Assigned To" ba-panel-class="with-scroll">
+			<div id="funding-chart" class=" "></div>
+		</div> -->
+	</div>
+
+
+	<!-- <div class="row" ng-controller="defectPopupDataCtrl">
+
+
+
+		<div class="col-lg-4 col-md-6" ba-panel
+			ba-panel-title="Defects by Environment" ba-panel-class="with-scroll">
+			<div id="resource-chart" class=" "  >
+			</div>
+
+		</div>
+
+		<div class="col-md-8" ba-panel ba-panel-title="Defects Info"
+			ba-panel-class="with-scroll">
+			<table class="table" id="datatable">
+			</table>
+
+
+			<div id="paging">
+				Showing <span id="begin"></span>-<span id="end"></span> of <span
+					id="size"></span>.
+				<md-button ng-click="last()">Last</md-button>
+				<md-button ng-click="next()">Next</md-button>
+			</div>
+		</div>
+	</div>
+ -->
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

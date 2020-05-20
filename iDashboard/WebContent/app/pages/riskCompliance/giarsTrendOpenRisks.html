@@ -1,0 +1,152 @@
+
+<div ng-controller="riskComplianceCtrl" >
+<div class="row">
+<!-- <div class="form-group col-md-2" ng-init="getdefaultdate();" >
+				<label>From:</label> <input style="width: 111%;margin-left: -14px;" type="date"
+					ng-change="getfromdate(dtfrom | date:'MM/dd/yyyy')"
+					class="form-control" uib-datepicker-popup="MM/dd/yyyy"
+					datepicker-options="options" ng-model="dtfrom" is-open="opened1"
+					ng-required="true" close-text="Close"
+					alt-input-formats="altInputFormats" show-button-bar="false" />
+			</div>
+			<div class="form-group col-md-2" ng-init="getdefaultdate();">
+				<label>To:</label> <input style="width: 111%;margin-left: -14px;" type="date"
+					ng-change="getTodate(dtfrom | date:'MM/dd/yyyy')"
+					class="form-control" uib-datepicker-popup="MM/dd/yyyy"
+					datepicker-options="options" ng-model="dtto" is-open="opened1"
+					ng-required="true" close-text="Close"
+					alt-input-formats="altInputFormats" ="false" />
+			</div>  -->
+			<div class="form-group">
+
+					<div class="form-group col-md-2"ng-init="getdefaultdate()">
+						<label>From:</label> <input type="date"
+							ng-change="getlc1fromdate(dtfrom | date:'MM/dd/yyyy')"
+							class="form-control" uib-datepicker-popup="MM/dd/yyyy"
+							datepicker-options="options" ng-model="dtfrom" is-open="opened1"
+							ng-required="true" close-text="Close"
+							alt-input-formats="altInputFormats" show-button-bar="false" />
+					</div>
+
+					<div class="form-group col-md-2"ng-init="getdefaultdate()">
+						<label>To:</label> <input type="date" class="form-control"
+							ng-change="getlc1todate(dtto | date:'MM/dd/yyyy')"
+							uib-datepicker-popup="MM/dd/yyyy" datepicker-options="options"
+							ng-model="dtto" is-open="opened2" ng-required="true"
+							close-text="Close" alt-input-formats="altInputFormats"
+							show-button-bar="false" />
+					</div>
+				</div>
+			 
+			</div>
+			<div class="row">
+<div class="col-lg-6 col-md-6 col-sm-6"
+	       ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix" >
+					<h3 class="panel-title" style="font-weight:bold">Qualys-Vulnerability
+					<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','archerdivision','Qualys-Vulnerability ADPART')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','archerdivision','Qualys-Vulnerability ADPART ')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div></h3>
+				</div>
+				<div class="panel-body">
+
+	       <div class="horizontal-scroll">
+	       
+	 	  
+	 	  <div id="commitdiv" class="admin-chart" ng-init="commitTrendForQualysGIARS()" style="height:300px; margin-top:1%">
+
+ <canvas id="commitsubdiv"height="100%">
+</canvas>
+                
+</div>
+	</div></div></div></div>
+	 <div class="col-lg-6 col-md-6 col-sm-6"
+	       ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight:bold">Archer
+					<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','archerdivision','Archer ADPART')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','archerdivision','Archer ADPART')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div></h3>
+				</div>
+				<div class="panel-body">
+
+	       <div class="horizontal-scroll">
+	       
+	 	  
+	 	  <div id="commitdiv2" class="admin-chart" ng-init="commitTrendForArcherGIARS()" style="height:300px; margin-top:1%">
+
+ <canvas id="commitsubdiv2"height="100%">
+</canvas>
+                
+</div>
+	 </div>
+	 
+	  </div>
+	  </div>
+	  </div>
+	  </div>
+	 <div class="row">
+	  <div class="col-lg-6 col-md-6 col-sm-6"
+	        ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight:bold">Ethical Hack
+					<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','archerdivision','Ethical Hack ADPART')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','archerdivision','Ethical Hack ADPART')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div></h3>
+				</div>
+				<div class="panel-body">
+
+	       <div class="horizontal-scroll">
+	       
+	 	  
+	 	  <div id="commitdiv1" class="admin-chart" ng-init="commitTrendForEthicalGIARS()" style="height:300px; margin-top:1%">
+
+ <canvas id="commitsubdiv1"height="100%">
+</canvas>
+                
+</div>
+	 </div>
+	 </div> 
+	  </div>
+	  </div>
+	  </div>
+	  </div>
