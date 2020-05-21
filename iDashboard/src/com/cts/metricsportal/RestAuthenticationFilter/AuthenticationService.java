@@ -1,102 +1,137 @@
 package com.cts.metricsportal.RestAuthenticationFilter;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+/**
+@author 653731
+*/
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.naming.NamingException;
 import javax.swing.text.BadLocationException;
-import javax.xml.bind.DatatypeConverter;
 
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.cognizant.cimesg.accessjl.core.LdapAuthentication;
 import com.cognizant.idashboard.iAuthentication;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
+import com.cts.metricsportal.util.AESUtil;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.PropertyManager;
+import com.cts.metricsportal.util.SessionHandler;
+import com.cts.metricsportal.vo.IdashboardSession;
 import com.cts.metricsportal.vo.OperationalDashboardVO;
 import com.cts.metricsportal.vo.UserVO;
 
 public class AuthenticationService extends BaseMongoOperation {
-
+	
+	final static Integer AUTH_FAILED = 401;
+	final static Integer SESSION_TIMEOUT = 441;
+	final static Integer OTHER_ACTIVE_SESSION = 440;
+	final static Integer UNKNOWN_EXCEPTION = -1;
+	final static Integer OK = 200;
+	
+	SessionHandler sessionHandler = new SessionHandler();
+	
 	public String getUser(String authCredentials) {
 
-		UserVO vo = new UserVO();
+		String username = null;
 		// header value format will be "Basic encodedstring" for Basic
 		// authentication. Example "Basic YWRtaW46YWRtaW4="
-		final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
-		String usernameAndPassword = null;
-		try {
-			byte[] decodedBytes = DatatypeConverter.parseBase64Binary(encodedUserPassword);
-			usernameAndPassword = new String(decodedBytes, "UTF-8");
-		} catch (IOException e) {
-			/* e.printStackTrace(); */
+		authCredentials = decryptHeader(authCredentials);
+		if(authCredentials!= null) {
+			StringTokenizer tokenizer = new StringTokenizer(authCredentials, ":");
+			username = tokenizer.nextToken();
 		}
-		final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-
-		final String userId = tokenizer.nextToken();
-
-		return userId;
+		return username;
 
 	}
 
-	public boolean authenticate(String authCredentials) {
-
-		if (null == authCredentials)
-			return false;
-		// header value format will be "Basic encodedstring" for Basic
-		// authentication. Example "Basic YWRtaW46YWRtaW4="
-
+	public UserVO getUserDetails(String authCredentials) {
 		UserVO userInfo = new UserVO();
-
-		List<UserVO> userDetails = new ArrayList<UserVO>();
-		try {
-			userDetails = getMongoOperation().findAll(UserVO.class);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		authCredentials = decryptHeader(authCredentials);
+		String username = authCredentials.split(":")[0];
+		String password = authCredentials.split(":")[1];
+		userInfo.setUserId(username);
+		userInfo.setPassword(password);
+		password = null;
+		return userInfo;
+	}
+	
+	public String decryptHeader(String header) {
+		String decHeader = AESUtil.decryptHeader(header);
+		return decHeader;			//admin:cGFzc3d
+	}
+	
+	public UserVO getUserDetailsPassEncrypted(String authCredentials) {
+		UserVO userInfo = new UserVO();
+		authCredentials = decryptHeader(authCredentials);
+		if(authCredentials!= null) {
+			String username = authCredentials.split(":")[0];
+			String password = authCredentials.split(":")[1];
+			password = new String(decryptHeader(password));
+			userInfo.setUserId(username);
+			userInfo.setPassword(password);
+			password = null;
 		}
-		boolean authStatus = false;
-		UserVO uvo = authenticateUser(authCredentials);
-		String userId = uvo.getUserId();
-		String password = uvo.getPassword();
+		return userInfo;
+	}
+	
+	public Integer authenticate(String authCredentials, Boolean isPlugin) {
+		IdashboardSession session = null;
+		if (null == authCredentials || authCredentials.trim().equals(""))
+			return AUTH_FAILED;
+		// header value format will be "Basic encryptedstring" for Basic
+		// authentication. Example "Basic NmlatruoavcsYWRtaW46YWRtaW4="
+		
+		boolean authStatusLogin = false;
+	
+		UserVO requestUser = getUserDetailsPassEncrypted(authCredentials);
+		String userId = requestUser.getUserId();
+		String password = requestUser.getPassword();
 
-		for (UserVO vo : userDetails) {
-			if (vo.getUserId().equalsIgnoreCase(userId)) {
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(userId));
+		UserVO vo = null;
+		
+		try {
+			vo = getMongoOperation().findOne(query1, UserVO.class);
+			
+			if (vo != null && vo.getUserId().equals(userId)) {
 				if (vo.isLdap()) {
 
-					authStatus = authenticateInternal(userId, password);
-					if (authStatus == true) {
-
-						userInfo = vo;
-						return authStatus;
+					authStatusLogin = authenticateLdap(userId, password);
+					if (authStatusLogin == true) {
+						return OK;
 					} else {
-						return false;
+						return AUTH_FAILED;
 					}
 
 				} else {
-					authStatus = authenticate1(userId, password);
-					return authStatus;
+					session = sessionHandler.getSession(userId,false);
+					if (session.getTimestamp() == -1)
+						return AUTH_FAILED;
+					authStatusLogin = password.equals(session.getSessionId());
+					
+					if (!authStatusLogin) {
+						return OTHER_ACTIVE_SESSION;
+					}
+					if (sessionHandler.isExpired(session, isPlugin)) {
+						return SESSION_TIMEOUT;
+					}
+					authStatusLogin = authStatusLogin & !sessionHandler.isExpired(session, isPlugin);
 				}
 			}
+		} catch (NumberFormatException | BadLocationException e) {
+				e.printStackTrace();
+			}
+		if (authStatusLogin && session != null) {
+			sessionHandler.updateCurrentSession(session);
+			return OK;
+		} else {
+			return AUTH_FAILED;
 		}
-
-		return authStatus;
 	}
 
 	// Check project access
@@ -110,7 +145,7 @@ public class AuthenticationService extends BaseMongoOperation {
 		List<UserVO> projectinfo = new ArrayList<UserVO>();
 		List<OperationalDashboardVO> opprojectinfo = null;
 
-		UserVO uvo = authenticateUser(authCredentials);
+		UserVO uvo = getUserDetailsPassEncrypted(authCredentials);
 		String userId = uvo.getUserId();
 
 		String owner = "";
@@ -144,14 +179,7 @@ public class AuthenticationService extends BaseMongoOperation {
 				projectinfo = getMongoOperation().find(query1, UserVO.class);
 			}
 
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
+		} catch(NumberFormatException | BadLocationException e) {
 			e.printStackTrace();
 		}
 
@@ -169,187 +197,194 @@ public class AuthenticationService extends BaseMongoOperation {
 		return authStatus;
 	}
 
-	public boolean checkAdminUser(String authCredentials) {
-
-		UserVO userInfo = new UserVO();
-
-		List<UserVO> userDetails = new ArrayList<UserVO>();
-		try {
-			userDetails = getMongoOperation().findAll(UserVO.class);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		boolean authStatus = false;
-		UserVO uvo = authenticateUser(authCredentials);
-		String userId = uvo.getUserId();
-		String password = uvo.getPassword();
-
-		for (UserVO vo : userDetails) {
-			if (vo.getUserId().equalsIgnoreCase(userId)) {
-				if (vo.isAdmin()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean checkOperationalLayerAccess(String authCredentials) {
-
-		UserVO userInfo = new UserVO();
-
-		List<UserVO> userDetails = new ArrayList<UserVO>();
-		try {
-			userDetails = getMongoOperation().findAll(UserVO.class);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		boolean authStatus = false;
-		UserVO uvo = authenticateUser(authCredentials);
-		String userId = uvo.getUserId();
-		String password = uvo.getPassword();
-
-		for (UserVO vo : userDetails) {
-			if (vo.getUserId().equalsIgnoreCase(userId)) {
-				if (vo.isOperational()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean checkLCLayerAccess(String authCredentials) {
-
-		UserVO userInfo = new UserVO();
-
-		List<UserVO> userDetails = new ArrayList<UserVO>();
-		try {
-			userDetails = getMongoOperation().findAll(UserVO.class);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		boolean authStatus = false;
-		UserVO uvo = authenticateUser(authCredentials);
-		String userId = uvo.getUserId();
-		String password = uvo.getPassword();
-
-		for (UserVO vo : userDetails) {
-			if (vo.getUserId().equalsIgnoreCase(userId)) {
-				if (vo.isLifeCycle()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean checkIntelligentLayerAccess(String authCredentials) {
-
-		UserVO userInfo = new UserVO();
-
-		List<UserVO> userDetails = new ArrayList<UserVO>();
-		try {
-			userDetails = getMongoOperation().findAll(UserVO.class);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		boolean authStatus = false;
-		UserVO uvo = authenticateUser(authCredentials);
-		String userId = uvo.getUserId();
-		String password = uvo.getPassword();
-
-		for (UserVO vo : userDetails) {
-			if (vo.getUserId().equalsIgnoreCase(userId)) {
-				if (vo.isQbot()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-
-	public UserVO authenticateUser(String authCredentials) {
-
-		UserVO vo = new UserVO();
-		// header value format will be "Basic encodedstring" for Basic
-		// authentication. Example "Basic YWRtaW46YWRtaW4="
-		final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
-		String usernameAndPassword = null;
-		try {
-			byte[] decodedBytes = DatatypeConverter.parseBase64Binary(encodedUserPassword);
-			usernameAndPassword = new String(decodedBytes, "UTF-8");
-		} catch (IOException e) {
-			/* e.printStackTrace(); */
-		}
-		final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-
-		final String userId = tokenizer.nextToken();
-		String password1 = tokenizer.nextToken();
-
-		byte[] decodedBytesPassword = DatatypeConverter.parseBase64Binary(password1);
-		char[] password = null;
+	public Integer checkAdminUser(String authCredentials) {
+		boolean isPlugin = false;
+		IdashboardSession session = null;
+		boolean adminAccess = false;
 		
-		StringBuilder sb =new StringBuilder();
+		if (authCredentials == null || authCredentials.trim().equals("")) {
+			return AUTH_FAILED;
+		}
+		
+		UserVO uvo = getUserDetailsPassEncrypted(authCredentials);
+		String userId = uvo.getUserId();
+		String password = uvo.getPassword();
+		UserVO vo = null;
+		
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(userId));
 		try {
-			password = iAuthentication.write(decodedBytesPassword);
-			// setting the username and pwd
+			vo = getMongoOperation().findOne(query1,UserVO.class);
+		} catch (NumberFormatException | BaseException | BadLocationException e) {
 			
-			for(char ch: password) {
-				sb.append(ch);
-			}
-			
-			vo.setUserId(userId);
-			vo.setPassword(sb.toString());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			password1 = null;
-			sb.setLength(0);
-			Arrays.fill(password, ' ');
 		}
 
-		return vo;
+			if (vo != null && vo.getUserId().equalsIgnoreCase(userId)) {
+				if (vo.isAdmin()) {
+					session = sessionHandler.getSession(userId,false);
+					if (session.getTimestamp() == -1)
+						return AUTH_FAILED;
+					adminAccess = password.equals(session.getSessionId());
+					
+					if (!adminAccess) {
+						return OTHER_ACTIVE_SESSION;
+					}
+					if (sessionHandler.isExpired(session, isPlugin)) {
+						return SESSION_TIMEOUT;
+					}
+					adminAccess = adminAccess && !sessionHandler.isExpired(session, isPlugin);
+					
+				} else {
+					return AUTH_FAILED;
+				}
+			}
+			if (adminAccess && session != null) {
+				sessionHandler.updateCurrentSession(session);
+				return OK;
+			} else {
+				return AUTH_FAILED;
+			}
 	}
 
-	public boolean authenticateInternal(String username, String passwordAuth) {
+	public Integer checkOperationalLayerAccess(String authCredentials) {
+		boolean isPlugin = false;
+		IdashboardSession session = null;
+		boolean operationalAccess = false;
+		
+		UserVO uvo = getUserDetailsPassEncrypted(authCredentials);
+		String userId = uvo.getUserId();
+		String password = uvo.getPassword();
+		
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(userId));
+		UserVO vo = null;
+		
+		try {
+			vo = getMongoOperation().findOne(query1 ,UserVO.class);
+		} catch (NumberFormatException | BadLocationException e) {
+			
+			e.printStackTrace();
+		}
+
+			if (vo != null && vo.getUserId().equals(userId)) {
+				if (vo.isOperational()) {
+					session = sessionHandler.getSession(userId,false);
+					if (session.getTimestamp() == -1)
+						return AUTH_FAILED;
+					operationalAccess = password.equals(session.getSessionId());
+					
+					if (!operationalAccess) {
+						return OTHER_ACTIVE_SESSION;
+					}
+					if (sessionHandler.isExpired(session, isPlugin)) {
+						return SESSION_TIMEOUT;
+					}
+					
+				} else {
+					return AUTH_FAILED;
+				}
+		}
+		if (operationalAccess && session != null) {
+			sessionHandler.updateCurrentSession(session);
+			return OK;
+		} else {
+			return AUTH_FAILED;
+		}
+	
+	}
+
+	public Integer checkLifecycleLayerAccess(String authCredentials) {
+		boolean isPlugin = false;
+		IdashboardSession session = null;
+		boolean lifecyleAccess = false;
+		
+		UserVO uvo = getUserDetailsPassEncrypted(authCredentials);
+		String userId = uvo.getUserId();
+		String password = uvo.getPassword();
+		
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(userId));
+		UserVO vo = null;
+		
+		try {
+			vo = getMongoOperation().findOne(query1 ,UserVO.class);
+		} catch (NumberFormatException | BadLocationException e) {
+				e.printStackTrace();
+		}
+	
+			if (vo != null && vo.getUserId().equalsIgnoreCase(userId)) {
+				if (vo.isLifeCycle()) {
+					session = sessionHandler.getSession(userId,false);
+					if (session.getTimestamp() == -1)
+						return AUTH_FAILED;
+					lifecyleAccess = password.equals(session.getSessionId());
+					
+					if (!lifecyleAccess) {
+						return OTHER_ACTIVE_SESSION;
+					}
+					if (sessionHandler.isExpired(session, isPlugin)) {
+						return SESSION_TIMEOUT;
+					}
+					
+				} else {
+					return AUTH_FAILED;
+				}
+			}
+			
+			if (lifecyleAccess && session != null) {
+				sessionHandler.updateCurrentSession(session);
+				return OK;
+			} else {
+				return AUTH_FAILED;
+			}
+	}
+
+	public Integer checkIntelligentLayerAccess(String authCredentials) {
+		boolean isPlugin = false;
+		IdashboardSession session = null;
+		boolean intelligentAccess = false;
+		
+		UserVO uvo = getUserDetailsPassEncrypted(authCredentials);
+		String userId = uvo.getUserId();
+		String password = uvo.getPassword();
+		
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(userId));
+		UserVO vo = null;
+		
+		try {
+			vo = getMongoOperation().findOne(query1 ,UserVO.class);
+		} catch (NumberFormatException | BadLocationException e) {
+				e.printStackTrace();
+		}
+			if (vo != null && vo.getUserId().equalsIgnoreCase(userId)) {
+				if (vo.isQbot()) {
+					session = sessionHandler.getSession(userId,false);
+					if (session.getTimestamp() == -1)
+						return AUTH_FAILED;
+					intelligentAccess = password.equals(session.getSessionId());
+					
+					if (!intelligentAccess) {
+						return OTHER_ACTIVE_SESSION;
+					}
+					if (sessionHandler.isExpired(session, isPlugin)) {
+						return SESSION_TIMEOUT;
+					}
+					
+				} else {
+					return AUTH_FAILED;
+				}
+			}
+			if (intelligentAccess && session != null) {
+				sessionHandler.updateCurrentSession(session);
+				return OK;
+			} else {
+				return AUTH_FAILED;
+			}
+	}
+	
+	public boolean authenticateLdap(String username, String password) {
 
 		// return true;
 
@@ -371,15 +406,15 @@ public class AuthenticationService extends BaseMongoOperation {
 		// the actual LDAP authentication.
 		try {
 
-			// For LDAP we need to sent a Original password
-			String password = iAuthentication.read(passwordAuth);
+			// For LDAP we need to send a Original password
+			//String password = iAuthentication.read(passwordAuth);
 
-			authStatus = authenticator.authenticate(username, password);
+			authStatus = authenticator.authenticate(username.trim(), password);
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			passwordAuth = null;
+			password = null;
 		}
 
 		return authStatus;

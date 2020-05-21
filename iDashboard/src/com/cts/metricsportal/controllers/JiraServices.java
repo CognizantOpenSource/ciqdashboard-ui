@@ -1,6 +1,7 @@
 package com.cts.metricsportal.controllers;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,18 +17,13 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.JiraMetrics;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.CyclesTrendVO;
 import com.cts.metricsportal.vo.DefectChartVO;
 import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DomainVO;
-import com.cts.metricsportal.vo.JiraTestExecutionVO;
 import com.cts.metricsportal.vo.JiraUserStoryStatusVO;
 import com.cts.metricsportal.vo.JiraUserStoryVO;
 import com.cts.metricsportal.vo.UserStoryDefectsStatusVO;
@@ -76,7 +72,12 @@ public class JiraServices {
 			NumberFormatException, BaseException, BadLocationException {
 
 		long versionlist = 0;
-		versionlist = jirametrics.getTotExecutionCount(authString, dashboardName, domainName, projectName, vardtfrom, vardtto);
+		try {
+			versionlist = jirametrics.getTotExecutionCount(authString, dashboardName, domainName, projectName, vardtfrom, vardtto);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return versionlist;
 
 	}
@@ -122,8 +123,13 @@ public class JiraServices {
 			BadLocationException {
 
 		HashMap<String, String> testsCreatedVsExecuted = new HashMap<String, String>();
-		testsCreatedVsExecuted = jirametrics.getBugsdetectedcountbyprojects(authString, dashboardName, domainName,
-				projectName, selectedproject,vardtfrom,vardtto);
+		try {
+			testsCreatedVsExecuted = jirametrics.getBugsdetectedcountbyprojects(authString, dashboardName, domainName,
+					projectName, selectedproject,vardtfrom,vardtto);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return testsCreatedVsExecuted;
 
 	}
@@ -255,8 +261,13 @@ public class JiraServices {
 			@QueryParam("projectName") String projectName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 		List<DefectStatusVO> finalresult = new ArrayList<DefectStatusVO>();
-		finalresult = jirametrics.getpassfailtrendchart(authString, dashboardName, domainName, projectName, vardtfrom,
-				vardtto);
+		try {
+			finalresult = jirametrics.getpassfailtrendchart(authString, dashboardName, domainName, projectName, vardtfrom,
+					vardtto);
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
 		return finalresult;
 	}
 
@@ -271,8 +282,13 @@ public class JiraServices {
 			@QueryParam("projectName") String projectName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
-		finalresult = jirametrics.getdefectStatusChart(authString, dashboardName, domainName, projectName, vardtfrom,
-				vardtto);
+		try {
+			finalresult = jirametrics.getdefectStatusChart(authString, dashboardName, domainName, projectName, vardtfrom,
+					vardtto);
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
 		return finalresult;
 	}
 
@@ -287,8 +303,13 @@ public class JiraServices {
 			@QueryParam("projectName") String projectName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
-		finalresult = jirametrics.getdefectsOpenStatusPriority(authString, dashboardName, domainName, projectName,
-				vardtfrom, vardtto);
+		try {
+			finalresult = jirametrics.getdefectsOpenStatusPriority(authString, dashboardName, domainName, projectName,
+					vardtfrom, vardtto);
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
 		return finalresult;
 	}
 

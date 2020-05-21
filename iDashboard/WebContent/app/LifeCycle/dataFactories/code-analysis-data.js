@@ -11,16 +11,7 @@
         .module('MetricsPortal.LifeCycle')
         .factory('codeAnalysisData', codeAnalysisData);
 
-    function codeAnalysisData($http,$base64,localStorageService) {   
-    	
-    	 function getEncryptedValue()
-   	  {
-   		 var username= localStorageService.get('userIdA');
-   	     var password= localStorageService.get('passwordA');
-   	        var tokeen =$base64.encode(username+":"+password);
-   	        
-   	        return tokeen;
-   	        }
+    function codeAnalysisData($http, AES, $base64, localStorageService) {   
 
         return {
             details: details
@@ -30,7 +21,7 @@
 
         // search for current builds
         function details() {
-        	 var token  = getEncryptedValue();
+        	 var token  = AES.getEncryptedValue();
              var config = {headers: {
                      'Authorization': token
                      }};

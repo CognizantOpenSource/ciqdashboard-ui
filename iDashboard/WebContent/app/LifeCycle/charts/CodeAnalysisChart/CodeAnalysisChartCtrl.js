@@ -8,11 +8,12 @@
 			'CodeAnalysisChartCtrl', CodeAnalysisChartCtrl);
 
 	/** @ngInject */
-	function CodeAnalysisChartCtrl($scope, $rootScope, $state, $http,
+	function CodeAnalysisChartCtrl($scope, $rootScope, AES, $state, $http,
 			localStorageService, codeAnalysisData, baConfig, $element, $base64,
 			layoutPaths) {
 
 		$rootScope.loggedInuserId = localStorageService.get('loggedInuserId');
+
 		if (localStorageService.get('component')) {
 			// Will assign the selected job to dropdown
 			var component = localStorageService.get('component');
@@ -30,12 +31,12 @@
 			 */
 		})
 
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var token = $base64.encode(username + ":" + password);
-			return token;
-		}
+		/*
+		 * function AES.getEncryptedValue() { var username =
+		 * localStorageService.get('userIdA'); var password =
+		 * localStorageService.get('passwordA'); var token =
+		 * $base64.encode(username + ":" + password); return token; }
+		 */
 
 		$scope.open = function() {
 			$state.go('codeanalysis');
@@ -83,7 +84,7 @@
 		// #1 Get Code Coverage Details
 		$scope.getcoverage = function(projectName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -105,8 +106,6 @@
 			var groupbydata;
 			var filterdata;
 
-			
-			
 			for (var x = 0; x < data.length; x++) {
 
 				coverage.push({
@@ -119,7 +118,6 @@
 			groupbydata = group(data);
 			getData(groupbydata);
 
-			
 			// Get lines of code
 
 			function group(data) {
@@ -155,15 +153,12 @@
 				});
 			}
 
-			
 			var result = _.max(data, function(item) {
 				return new Date(item.date).getTime();
 			});
 
-			
 			$scope.linesofCode = result.lines;
 
-			
 			$scope.lines_to_cover = result.lines_to_cover;
 			$scope.new_lines_to_cover = result.new_lines_to_cover == "" ? 0
 					: result.new_lines_to_cover;
@@ -172,7 +167,7 @@
 			$scope.codeCoveragepie = result.coverage;
 			$scope.loadPieCharts('#codeCoverageChart', $scope.codeCoveragepie);
 
-			//Trend Graph
+			// Trend Graph
 
 			var config = {
 				type : 'line',
@@ -189,26 +184,35 @@
 				options : {
 					scales : {
 						xAxes : [ {
-							 scaleLabel : {
-									display : true,
-									labelString : 'Time Period'
-								},
+							scaleLabel : {
+								display : true,
+								labelString : 'Time Period',
+								fontColor : '#4c4c4c'
+							},
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
+								color : "#d8d3d3"
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
 							}
 						} ],
 						yAxes : [ {
-							 scaleLabel : {
-									display : true,
-									labelString : 'Covered Lines of Code'
-								},
-						gridLines : {
-								color : "rgba(255,255,255,0.2)",
-							}
+							scaleLabel : {
+								display : true,
+								labelString : 'Covered Lines of Code',
+								fontColor : '#4c4c4c'
+							},
+							gridLines : {
+								color : "#d8d3d3"
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
+							},
 						}, {
 							ticks : {
 								min : 0,
-								stepSize : 1
+								stepSize : 1,
+								fontColor : '#4c4c4c'
 							}
 						} ]
 
@@ -261,7 +265,7 @@
 		// #2 Get Unit Test Metrics
 		$scope.getunittest = function(projectName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -351,22 +355,31 @@
 				options : {
 					scales : {
 						xAxes : [ {
-							 scaleLabel : {
-									display : true,
-									labelString : 'Time Period'
-								},
+							scaleLabel : {
+								display : true,
+								labelString : 'Time Period',
+								fontColor : '#4c4c4c'
+							},
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
 							}
+
 						} ],
 						yAxes : [ {
-							 scaleLabel : {
-									display : true,
-									labelString : 'Passed Unit TestCases'
-								},
-						gridLines : {
-								color : "rgba(255,255,255,0.2)",
-							}
+							scaleLabel : {
+								display : true,
+								labelString : 'Passed Unit TestCases',
+								fontColor : '#4c4c4c'
+							},
+							gridLines : {
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
+							},
 						}, {
 							ticks : {
 								min : 0,
@@ -423,7 +436,7 @@
 		// #3 Get Size Metrics
 		$scope.getsize = function(projectName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -455,7 +468,7 @@
 		// #4 Get Complexity Metrics
 		$scope.getcomplexity = function(projectName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -487,7 +500,7 @@
 		// #5 Get Issues Metrics
 		$scope.getissues = function(projectName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -519,7 +532,7 @@
 		// #6 Get Get reliability Metrics
 
 		$scope.getreliability = function(projectName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -555,12 +568,11 @@
 			var filterdata;
 
 			for (var x = 0; x < data.length; x++) {
-				reliability
-						.push({
-							date : data[x].date,
-							bugs : data[x].bugs,
-							remediationeffort : data[x].reliability_remediation_effort
-						})
+				reliability.push({
+					date : data[x].date,
+					bugs : data[x].bugs,
+					remediationeffort : data[x].reliability_remediation_effort
+				})
 			}
 			groupbydata = group(reliability);
 			getData(groupbydata);
@@ -626,17 +638,24 @@
 						xAxes : [ {
 
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
-							}
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
+							},
 						} ],
 						yAxes : [ {
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
-							}
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
+							},
 						}, {
 							ticks : {
 								min : 0,
-								stepSize : 1
+								stepSize : 1,
+								fontColor : '#4c4c4c'
 							}
 						} ]
 
@@ -683,11 +702,10 @@
 		}
 		// #6 End of reliability Metrics
 
-		
 		// #7 Get SecurityAnalysis Metrics
 
 		$scope.getsecurityanalysis = function(projectName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -701,9 +719,9 @@
 				getsecurityanalysismetrics(response);
 			});
 		}
-		
-		function getsecurityanalysismetrics(data){
-			
+
+		function getsecurityanalysismetrics(data) {
+
 			var result = _.max(data, function(item) {
 				return new Date(item.date).getTime();
 			});
@@ -729,18 +747,16 @@
 			var filterdata;
 
 			for (var x = 0; x < data.length; x++) {
-				security
-						.push({
-							date : data[x].date,
-							vulnerabilities : data[x].vulnerabilities,
-							remediationeffort : data[x].security_remediation_effort
-						})
+				security.push({
+					date : data[x].date,
+					vulnerabilities : data[x].vulnerabilities,
+					remediationeffort : data[x].security_remediation_effort
+				})
 			}
 			groupbydata = group(security);
 
 			getData(groupbydata);
 
-		
 			function group(data) {
 				return _.groupBy(data, function(item) {
 					return moment(item.date).format('L');
@@ -807,17 +823,24 @@
 						xAxes : [ {
 
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
 							}
 						} ],
 						yAxes : [ {
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
-							}
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
+							},
 						}, {
 							ticks : {
 								min : 0,
-								stepSize : 1
+								stepSize : 1,
+								fontColor : '#4c4c4c'
 							}
 						} ]
 
@@ -861,16 +884,17 @@
 			ctx = document.getElementById("linesecurity");
 
 			// window.line = new Chart(ctx, config);
-			var securityanalysisconfigchart = new Chart(ctx, securityanalysisconfig);
+			var securityanalysisconfigchart = new Chart(ctx,
+					securityanalysisconfig);
 			// Chart Js //
 		}
 
 		// #7 End of SecurityAnalysis Metrics
-		
+
 		// #8 Get Duplications Metrics
 
 		$scope.getduplications = function(projectName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -884,7 +908,7 @@
 				getduplicationsmetrics(response);
 			});
 		}
-		
+
 		function getduplicationsmetrics(data) {
 			var result = _.max(data, function(item) {
 				return new Date(item.date).getTime();
@@ -900,11 +924,10 @@
 			var filterdata;
 
 			for (var x = 0; x < data.length; x++) {
-				duplications
-						.push({
-							date : data[x].date,
-							duplicatedLines : data[x].duplicated_lines
-						})
+				duplications.push({
+					date : data[x].date,
+					duplicatedLines : data[x].duplicated_lines
+				})
 
 			}
 			groupbydata = group(duplications);
@@ -963,17 +986,24 @@
 						xAxes : [ {
 
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
 							}
 						} ],
 						yAxes : [ {
 							gridLines : {
-								color : "rgba(255,255,255,0.2)",
+								color : "#d8d3d3",
+							},
+							ticks : {
+								fontColor : '#4c4c4c'
 							}
 						}, {
 							ticks : {
 								min : 0,
-								stepSize : 1
+								stepSize : 1,
+								fontColor : '#4c4c4c'
 							}
 						} ]
 
@@ -1019,14 +1049,13 @@
 			// window.line = new Chart(ctx, config);
 			var myChart = new Chart(ctx, config);
 		}
-		
+
 		// #8 End of Duplications Metrics
-		
-		
+
 		// #9 Get Maintainability Metrics
 
 		$scope.getmaintainability = function(projectName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1040,9 +1069,9 @@
 				getmaintainabilitymetrics(response);
 			});
 		}
-		
+
 		function getmaintainabilitymetrics(data) {
-			
+
 			var result = _.max(data, function(item) {
 				return new Date(item.date).getTime();
 			});
@@ -1078,7 +1107,6 @@
 			$scope.getsecurityanalysis(selectedProj.prjName)
 			$scope.getduplications(selectedProj.prjName)
 			$scope.getmaintainability(selectedProj.prjName)
-			
 
 		}
 
@@ -1116,36 +1144,24 @@
 			return ratingColour;
 		}
 
-		
-		/*function unitTests(data) {
-			$scope.unitTests = [];
-			for (var x = 0; x < data.unitTests.length; x++) {
+		/*
+		 * function unitTests(data) { $scope.unitTests = []; for (var x = 0; x <
+		 * data.unitTests.length; x++) {
+		 * 
+		 * if (data.unitTests[x].name !== "test_execution_time" &&
+		 * data.unitTests[x].name !== "Errors" && data.unitTests[x].name !==
+		 * "Success") { $scope.unitTests.push({ name :
+		 * capitalizeFirstLetter(data.unitTests[x].name), formattedValue :
+		 * data.unitTests[x].formattedValue }) } // $scope.graphData } }
+		 */
 
-				if (data.unitTests[x].name !== "test_execution_time"
-						&& data.unitTests[x].name !== "Errors"
-						&& data.unitTests[x].name !== "Success") {
-					$scope.unitTests.push({
-						name : capitalizeFirstLetter(data.unitTests[x].name),
-						formattedValue : data.unitTests[x].formattedValue
-					})
-				}
-				// $scope.graphData
-			}
-		}*/
-
-		
-
-		
-
-		
-		/*function coveragePieChart(lineCoverage) {
-			lineCoverage.value = lineCoverage.value || 0;
-
-			ctrl.unitTestCoverageData = {
-				series : [ lineCoverage.value, (100 - lineCoverage.value) ]
-			};
-		}
-		;*/
+		/*
+		 * function coveragePieChart(lineCoverage) { lineCoverage.value =
+		 * lineCoverage.value || 0;
+		 * 
+		 * ctrl.unitTestCoverageData = { series : [ lineCoverage.value, (100 -
+		 * lineCoverage.value) ] }; } ;
+		 */
 
 		$scope.loadPieCharts = function(id, chartcount) {
 			$scope.chartcount = chartcount;
@@ -1157,8 +1173,8 @@
 					onStep : function(from, to, percent) {
 						$(this.el).find('.percent').text(Math.round(percent));
 					},
-					barColor : chart.attr('rel'),
-					trackColor : 'rgba(0,0,0,0)',
+					barColor : 'green', //chart.attr('rel')
+					trackColor : 'lightgray', //'rgba(0,0,0,0)',
 					size : 120,
 					scaleLength : 0,
 					animation : 2000,
@@ -1181,28 +1197,22 @@
 			});
 		}
 
-		/*$scope.sonarprojects = function() {
-
-			$scope.projectList = {
-				projectList : [ {
-					name : 'Taxi4U-Java'
-				}, {
-					name : 'InsuranceQuote-.Net'
-				} ]
-			};
-
-		}*/
+		/*
+		 * $scope.sonarprojects = function() {
+		 * 
+		 * $scope.projectList = { projectList : [ { name : 'Taxi4U-Java' }, {
+		 * name : 'InsuranceQuote-.Net' } ] }; }
+		 */
 
 		// Back Button Functionality
-
 		$scope.back = function() {
 
 			// alert("Back button");
 			$state.go('viewDashbaord');
 
 		}
-		
-		 /* Export Graphs and tables*/
+
+		/* Export Graphs and tables */
 		function saveCanvasAs(canvas, fileName) {
 			// get image data and transform mime type to
 			// application/octet-stream

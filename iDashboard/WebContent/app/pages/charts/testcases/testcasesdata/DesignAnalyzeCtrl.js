@@ -9,7 +9,7 @@
       .controller('DesignAnalyzeCtrl', DesignAnalyzeCtrl);
 
   /** @ngInject */
-  function DesignAnalyzeCtrl($sessionStorage,$scope, localStorageService, UserService,baConfig, $rootScope,$element, layoutPaths,$http,$base64) {
+  function DesignAnalyzeCtrl($sessionStorage,$scope,AES,localStorageService, UserService,baConfig, $rootScope,$element, layoutPaths,$http,$base64) {
 	  function getEncryptedValue()
 	  {
 		  var username= localStorageService.get('userIdA');
@@ -26,7 +26,7 @@
 		  $rootScope.tcanalyse.close();
 		};
 	 
-		  var token  = getEncryptedValue();
+		  var token  = AES.getEncryptedValue();
 	        var config = {headers: {
 	                'Authorization': token
 	                }};

@@ -8,6 +8,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,8 +38,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.cts.metricsportal.bo.DateTimeCalc;
 import com.cts.metricsportal.bo.JiraMetrics;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.dao.AlmMongoOperations;
+import com.cts.metricsportal.dao.JiraMongoOperations;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.DefectChartVO;
 import com.cts.metricsportal.vo.JiraReqTrendVO;
@@ -58,6 +62,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Path("/requirementServices")
 public class RequirementServices extends BaseMongoOperation {
 	static final Logger logger = Logger.getLogger(RequirementServices.class);
+	DateTimeCalc dateTimeCalc = new DateTimeCalc();
 
 	/**
 	 * This Service will return the Priority details.
@@ -111,8 +116,18 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<JiraRequirmentVO> idlist = new ArrayList<JiraRequirmentVO>();
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
+		
 		List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdRequirements(dashboardName, userId, domainName,
 				projectName);
 
@@ -121,7 +136,7 @@ public class RequirementServices extends BaseMongoOperation {
 		idlist = getMongoOperation().find(projectquery, JiraRequirmentVO.class);
 		List<String> projectlist = new ArrayList<String>();
 		List<String> prolist = null;
-		if (operationalAccess) {
+		if (authenticateToken) {
 			for (int i = 0; i < idlist.size(); i++) {
 				for (int j = 0; j < levelIdList.size(); j++) {
 					if (idlist.get(i).get_id().equalsIgnoreCase(levelIdList.get(j))) {
@@ -152,7 +167,7 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		Query sprintquery = new Query();
 		List<String> sprintlist = new ArrayList<String>();
@@ -163,7 +178,7 @@ public class RequirementServices extends BaseMongoOperation {
 		}
 
 		sprintquery.addCriteria(Criteria.where("prjName").in(prolist));
-		if (operationalAccess) {
+		if (authenticateToken) {
 
 			if (selectedepic == null) {
 				// System.out.println("SelectedEpic is NULL");
@@ -195,20 +210,31 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 	//	Date dfromdate = new Date(dfromval);
 	//	Date dtoddate = new Date(dtoval);
 
 		List<String> sprintlist = new ArrayList<String>();
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
 			Query sprintquery = new Query();
 
 			List<String> prolist = new ArrayList<String>();
 			Query projectquery = new Query();
 			projectquery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
+			
 			projectquery.addCriteria(Criteria.where("owner").is(userId));
 			prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
 					projectquery.getQueryObject());
@@ -287,27 +313,46 @@ public class RequirementServices extends BaseMongoOperation {
 
 			AuthenticationService UserEncrypt = new AuthenticationService();
 			String userId = UserEncrypt.getUser(authString);
-			boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+			boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
-			Date dfromdate = new Date(dfromval);
-			Date dtoddate = new Date(dtoval);
-
+			 Date startDate = null,endDate = null;
+			 
+			try {
+				startDate = dateTimeCalc.getStartDate(dfromval);
+				endDate = dateTimeCalc.getEndDate(dtoval);
+					
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+			}
+			
 			List<String> sprintlist = new ArrayList<String>();
 
-			if (operationalAccess) {
+			if (authenticateToken) {
 
 				Query sprintquery = new Query();
 
 				List<String> prolist = new ArrayList<String>();
 				Query projectquery = new Query();
 				projectquery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+				
+				String owner = "";
+
+				// Check the Dashboard is set as public
+				owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+				if (owner != "") {
+					userId = owner;
+				}
+				// End of the check value
+				
+				
 				projectquery.addCriteria(Criteria.where("owner").is(userId));
 				prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
 						projectquery.getQueryObject());
 
 				sprintquery.addCriteria(Criteria.where("prjName").in(prolist));
-				sprintquery.addCriteria(Criteria.where("issueSprintStartDate").gte(dfromdate)
-						.andOperator(Criteria.where("issueSprintEndDate").lte(dtoddate)));
+				sprintquery.addCriteria(Criteria.where("issueSprintStartDate").gte(startDate)
+						.andOperator(Criteria.where("issueSprintEndDate").lte(endDate)));
 				sprintlist = getMongoOperation().getCollection("JiraRequirements").distinct("issueSprint",
 						sprintquery.getQueryObject());
 
@@ -332,7 +377,7 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		Query epicquery = new Query();
 		List<String> epiclist = new ArrayList<String>();
@@ -351,7 +396,7 @@ public class RequirementServices extends BaseMongoOperation {
 			epicquery.addCriteria(Criteria.where("issueSprint").in(sprintlist));
 		}
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
 			epiclist = getMongoOperation().getCollection("JiraRequirements").distinct("issueEpic",
 					epicquery.getQueryObject());
@@ -374,11 +419,11 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		List<String> epiclist = new ArrayList<String>();
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
 			Query epicquery = new Query();
 
@@ -475,17 +520,35 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		long defTotalStoriesCount = 0;
 
-		if (operationalAccess) {
-
-			Date startDate = new Date(vardtfrom);
-			Date endDate = new Date(vardtto);
-
+		if (authenticateToken) {
+			Date startDate = null,endDate = null;
+			 
+			try {
+				startDate = dateTimeCalc.getStartDate(vardtfrom);
+				endDate = dateTimeCalc.getEndDate(vardtto);
+					
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+			}
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
+			
+			
 			filterQuery.addCriteria(Criteria.where("owner").is(userId));
 
 			List<String> prolist = new ArrayList<String>();
@@ -533,17 +596,35 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		long defTotalStoryPoints = 0;
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
-			Date startDate = new Date(vardtfrom);
-			Date endDate = new Date(vardtto);
-
+			Date startDate = null,endDate = null;
+			 
+			try {
+				startDate = dateTimeCalc.getStartDate(vardtfrom);
+				endDate = dateTimeCalc.getEndDate(vardtto);
+					
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+			}
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
 			filterQuery.addCriteria(Criteria.where("owner").is(userId));
 
 			List<String> prolist = new ArrayList<String>();
@@ -608,7 +689,16 @@ public class RequirementServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdRequirements(dashboardName, userId, domainName,
 				projectName);
@@ -616,10 +706,18 @@ public class RequirementServices extends BaseMongoOperation {
 		JiraReqTrendVO reqtrendvo = new JiraReqTrendVO();
 		trendvolist = new ArrayList<JiraReqTrendVO>();
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
-			Date startDate = new Date(vardtfrom);
-			Date endDate = new Date(vardtto);
+			Date startDate = null,endDate = null;
+			 
+			try {
+				startDate = dateTimeCalc.getStartDate(vardtfrom);
+				endDate = dateTimeCalc.getEndDate(vardtto);
+					
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+			}
 
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
@@ -647,6 +745,11 @@ public class RequirementServices extends BaseMongoOperation {
 			query1.addCriteria(Criteria.where("issueSprintEndDate").lte(endDate));
 
 			if (prolist.size() > 0) {
+				for(int lst=0;lst<prolist.size();lst++) {
+					if(prolist.get(lst).equals("undefined")) {
+						prolist.remove(lst);
+					}
+				}
 				query1.addCriteria(Criteria.where("prjName").in(prolist));
 			}
 			if (sprintlist.size() > 0) {
@@ -764,12 +867,21 @@ public class RequirementServices extends BaseMongoOperation {
 			NumberFormatException, BaseException, BadLocationException {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 
 		List<JiraRequirmentVO> reqlist = new ArrayList<JiraRequirmentVO>();
 
-		if (operationalAccess) {
+		if (authenticateToken) {
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
 
 			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdRequirements(dashboardName, userId, domainName,
 					projectName);
@@ -791,9 +903,16 @@ public class RequirementServices extends BaseMongoOperation {
 			Set<String> hSet = new HashSet<String>(statlist);
 			statuslist = new ArrayList<String>(hSet);
 
-			Date startDate = new Date(vardtfrom);
-			Date endDate = new Date(vardtto);
-
+			Date startDate = null,endDate = null;
+			 
+			try {
+				startDate = dateTimeCalc.getStartDate(vardtfrom);
+				endDate = dateTimeCalc.getEndDate(vardtto);
+					
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+			}
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 			filterQuery.addCriteria(Criteria.where("owner").is(userId));
@@ -862,12 +981,21 @@ public class RequirementServices extends BaseMongoOperation {
 			NumberFormatException, BaseException, BadLocationException,IllegalArgumentException {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 
 		List<JiraRequirmentVO> reqlist = new ArrayList<JiraRequirmentVO>();
 
-		if (operationalAccess) {
+		if (authenticateToken) {
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
 
 			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdRequirements(dashboardName, userId, domainName,
 					projectName);
@@ -889,11 +1017,20 @@ public class RequirementServices extends BaseMongoOperation {
 			Set<String> hSet = new HashSet<String>(statlist);
 			statuslist = new ArrayList<String>(hSet);
 
-			Date startDate = new Date(vardtfrom);
-			Date endDate = new Date(vardtto);
+			Date startDate = null,endDate = null;
+			 
+			try {
+				startDate = dateTimeCalc.getStartDate(vardtfrom);
+				endDate = dateTimeCalc.getEndDate(vardtto);
+					
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+			}
 
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
 			filterQuery.addCriteria(Criteria.where("owner").is(userId));
 
 			List<String> prolist = new ArrayList<String>();
@@ -964,9 +1101,16 @@ public class RequirementServices extends BaseMongoOperation {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		List<Date> finalDateList = new ArrayList<Date>();
 
@@ -992,7 +1136,7 @@ public class RequirementServices extends BaseMongoOperation {
 		List<JiraRequirmentVO> issueSprintStartDateReqList = new ArrayList<JiraRequirmentVO>();
 		List<JiraRequirmentVO> issueSprintEndDateReqList = new ArrayList<JiraRequirmentVO>();
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
 			Query query1 = new Query();
 			Query query2 = new Query();
@@ -1025,7 +1169,6 @@ public class RequirementServices extends BaseMongoOperation {
 			for (int i = 0; i < issueSprintStartDateReqList.size(); i++) {
 				if (issueSprintStartDateReqList.get(i).getIssueSprintStartDate() != null) {
 					startDate = issueSprintStartDateReqList.get(i).getIssueSprintStartDate();
-					String val = issueSprintStartDateReqList.get(i).get_id();
 					break;
 				}
 			}
@@ -1033,7 +1176,6 @@ public class RequirementServices extends BaseMongoOperation {
 			for (int j = 0; j < issueSprintEndDateReqList.size(); j++) {
 				if (issueSprintEndDateReqList.get(j).getIssueSprintEndDate() != null) {
 					endDate = issueSprintEndDateReqList.get(j).getIssueSprintEndDate();
-					String val = issueSprintEndDateReqList.get(j).get_id();
 					break;
 				}
 			}
@@ -1064,7 +1206,7 @@ public class RequirementServices extends BaseMongoOperation {
 
 			// End of the check value
 
-			boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+			boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 			List<Date> finalDateList = new ArrayList<Date>();
 
@@ -1073,6 +1215,17 @@ public class RequirementServices extends BaseMongoOperation {
 
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
 			filterQuery.addCriteria(Criteria.where("owner").is(userId));
 
 			/*List<String> prolist = new ArrayList<String>();
@@ -1090,7 +1243,7 @@ public class RequirementServices extends BaseMongoOperation {
 			List<JiraRequirmentVO> issueSprintStartDateReqList = new ArrayList<JiraRequirmentVO>();
 			List<JiraRequirmentVO> issueSprintEndDateReqList = new ArrayList<JiraRequirmentVO>();
 
-			if (operationalAccess) {
+			if (authenticateToken) {
 
 				Query query1 = new Query();
 				Query query2 = new Query();
@@ -1123,7 +1276,6 @@ public class RequirementServices extends BaseMongoOperation {
 				for (int i = 0; i < issueSprintStartDateReqList.size(); i++) {
 					if (issueSprintStartDateReqList.get(i).getIssueSprintStartDate() != null) {
 						startDate = issueSprintStartDateReqList.get(i).getIssueSprintStartDate();
-						String val = issueSprintStartDateReqList.get(i).get_id();
 						break;
 					}
 				}
@@ -1131,7 +1283,6 @@ public class RequirementServices extends BaseMongoOperation {
 				for (int j = 0; j < issueSprintEndDateReqList.size(); j++) {
 					if (issueSprintEndDateReqList.get(j).getIssueSprintEndDate() != null) {
 						endDate = issueSprintEndDateReqList.get(j).getIssueSprintEndDate();
-						String val = issueSprintEndDateReqList.get(j).get_id();
 						break;
 					}
 				}

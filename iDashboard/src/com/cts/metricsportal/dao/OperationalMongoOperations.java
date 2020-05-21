@@ -5,11 +5,12 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.text.BadLocationException;
@@ -21,8 +22,6 @@ import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.cts.metricsportal.bo.JiraMetrics;
-import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.IdashboardConstantsUtil;
@@ -30,7 +29,6 @@ import com.cts.metricsportal.vo.DefectVO;
 import com.cts.metricsportal.vo.JiraDefectVO;
 import com.cts.metricsportal.vo.JiraRequirementStatusVO;
 import com.cts.metricsportal.vo.JiraRequirmentVO;
-import com.cts.metricsportal.vo.JiraUserStoryVO;
 import com.cts.metricsportal.vo.OperationDashboardDetailsVO;
 import com.cts.metricsportal.vo.OperationalDashboardVO;
 import com.cts.metricsportal.vo.RequirmentVO;
@@ -38,7 +36,6 @@ import com.cts.metricsportal.vo.TestCaseVO;
 import com.cts.metricsportal.vo.TestExeStatusVO;
 import com.cts.metricsportal.vo.TestExecutionVO;
 import com.cts.metricsportal.vo.UserStoriesIterationVO;
-import com.cts.metricsportal.vo.UserStoryDefectsVO;
 import com.mongodb.BasicDBObject;
 
 public class OperationalMongoOperations extends BaseMongoOperation {
@@ -59,9 +56,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			} else if (dateBefore7Days != null && dates != null) {
 				query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
 			}
-
-			query1.addCriteria(Criteria.where("reqType").ne("Folder"));
-
 			long reqModified = getMongoOperation().count(query1, RequirmentVO.class);
 			BasicQuery query2 = new BasicQuery(query);
 			query2.addCriteria(Criteria.where("_id").in(levelIdList));
@@ -70,14 +64,9 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			} else if (dateBefore7Days != null && dates != null) {
 				query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
 			}
-
-			query2.addCriteria(Criteria.where("reqType").ne("Folder"));
-
 			long totalReq = getMongoOperation().count(query2, RequirmentVO.class);
 			if (reqModified != 0 && totalReq != 0) {
-				// reqResult = reqModified * 100 / totalReq;
-//				reqResult = Math.round(((totalReq - reqModified) * 100) / totalReq);
-				reqResult = Math.round(((double)(totalReq - reqModified) * 100)/ ((double)totalReq));
+				reqResult = reqModified * 100 / totalReq;
 
 			} else {
 				reqResult = 0;
@@ -105,8 +94,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		} else if (dateBefore7Days != null && dates != null) {
 			query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
 		}
-
-		query1.addCriteria(Criteria.where("reqType").ne("Folder"));
 
 		try {
 
@@ -147,7 +134,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
 			logger.error("Failed to fetch total Test Case Executed !" + e.getMessage());
-			tcsExecuted=0;
 		}
 
 		return tcsExecuted;
@@ -170,7 +156,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		} catch (NumberFormatException | BadLocationException e) {
 
 			logger.error("Failed to fetch Test Case planned to be Executed !" + e.getMessage());
-			tcsPlannedtoexecute=0;
 		}
 		return tcsPlannedtoexecute;
 	}
@@ -206,14 +191,43 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		// System.out.println(totaltccount);
 
 		if (totaltccount > 0) {
-//			designcovg = Math.round((designedTcs * 100) / totaltccount);
-			designcovg = Math.round(((double)designedTcs * 100)/ ((double)totaltccount));
+			designcovg = designedTcs * 100 / totaltccount;
 			// System.out.println("cov:::"+designcovg);
 		} else {
 			designcovg = 0;
 		}
 		return designcovg;
 	}
+
+	/*
+	 * public static int getdefectRejectionRateFilterQuery(String dashboardName,
+	 * String domain, String project, Date startDate, Date endDate, Date
+	 * dateBefore7Days, Date dates, List<String> levelIdList) throws
+	 * NumberFormatException, BaseException, BadLocationException {
+	 * logger.info("Fetching ALM Defect Rejection rate"); long DefecListCount = 0;
+	 * long rejectedCount = 0;
+	 * 
+	 * Query query = new Query();
+	 * query.addCriteria(Criteria.where("_id").in(levelIdList)); if (startDate !=
+	 * null || endDate != null) {
+	 * query.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate)); }
+	 * else if (dateBefore7Days != null && dates != null) {
+	 * query.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates))
+	 * ; }
+	 * 
+	 * query.addCriteria(Criteria.where("status").is("Rejected")); rejectedCount =
+	 * getMongoOperation().count(query, DefectVO.class);
+	 * 
+	 * String queryy = "{},{_id: 1}"; Query query1 = new BasicQuery(queryy);
+	 * query1.addCriteria(Criteria.where("_id").in(levelIdList)); if (startDate !=
+	 * null && endDate != null) {
+	 * query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate)); }
+	 * 
+	 * DefecListCount = getMongoOperation().count(query1, DefectVO.class); int
+	 * defRejRate; if (rejectedCount > 0 && DefecListCount > 0) { defRejRate = (int)
+	 * (rejectedCount * 100 / DefecListCount); } else { defRejRate = 0; } return
+	 * defRejRate; }
+	 */
 
 	public static List<Integer> getdefectRejectionRateFilterQuery(String dashboardName, String domain, String project,
 			Date startDate, Date endDate, Date dateBefore7Days, Date dates, List<Integer> levelIdList)
@@ -304,10 +318,11 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 
 		query.addCriteria(Criteria.where("_id").in(levelIdList));
 		query.addCriteria(Criteria.where("issueStatus").ne("Closed"));
-
+		
 		query.addCriteria(Criteria.where("issueSprintStartDate").gte(dates));
 		query.addCriteria(Criteria.where("issueSprintEndDate").lte(dateBefore7Days));
-
+		
+		
 		try {
 			openedCount = getMongoOperation().count(query, JiraDefectVO.class);
 		} catch (Exception ex) {
@@ -327,6 +342,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		query.addCriteria(Criteria.where("_id").in(levelIdList));
 		query.addCriteria(Criteria.where("issueSprintStartDate").gte(dates));
 		query.addCriteria(Criteria.where("issueSprintEndDate").lte(dateBefore7Days));
+
 
 		try {
 			totDefCount = getMongoOperation().count(query, JiraDefectVO.class);
@@ -365,12 +381,9 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		long acresult = 0;
 
 		logger.info("Fetching ALM Auto coverage filter..");
-		String query = "{},{_id:0,levelId:1,automationStatus:1}";
+		String query = "{},{_id:0,levelId:1,testType:1}";
 
-		// BasicQuery query1 = new BasicQuery(new BasicDBObject("$where",
-		// "this.automationStatus = 'Ready'"));
-		BasicQuery query1 = new BasicQuery(query);
-		query1.addCriteria(Criteria.where("automationStatus").in("Ready"));
+		BasicQuery query1 = new BasicQuery(new BasicDBObject("$where", "this.testType != 'MANUAL'"));
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
 		if (startDate != null || endDate != null) {
 			query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
@@ -389,8 +402,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		long totaltc = getMongoOperation().count(query2, TestCaseVO.class);
 
 		if (autotc > 0 && totaltc > 0) {
-//			acresult = Math.round((autotc * 100) / totaltc);
-			acresult = Math.round(((double)autotc * 100)/ ((double)totaltc));
+			acresult = autotc * 100 / totaltc;
 		} else {
 			acresult = 0;
 		}
@@ -455,8 +467,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			logger.error("Error Discovery" + e.getMessage());
 		}
 		if (errorrate > 0 && tcsplannedtoexecute > 0) {
-//			reqResult = Math.round((errorrate * 100) / tcsplannedtoexecute);
-			reqResult = Math.round(((double)errorrate * 100)/ ((double)tcsplannedtoexecute));
+			reqResult = errorrate * 100 / tcsplannedtoexecute;
 		}
 		return reqResult;
 
@@ -466,7 +477,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			Date dates, Date dateBefore7Days, List<String> levelIdList) {
 		logger.info("Fetching defect Open count..");
 		long defreopenCount = 0;
-		String userId = LayerAccess.getUser(authString);
 
 		String query = "{},{_id:0,levelId:1}";
 
@@ -475,6 +485,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
 		query1.addCriteria(Criteria.where("issueSprintStartDate").gte(dateBefore7Days));
 		query1.addCriteria(Criteria.where("issueSprintEndDate").lte(dates));
+
 
 		query1.addCriteria(Criteria.where("issueStatus").is("Revalidate"));
 
@@ -491,8 +502,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			Date dates, Date dateBefore7Days, List<String> levelIdList) {
 		logger.info("Fetching defects asscoiated with user story  ..");
 		long totalUserStoryDefectCount = 0;
-
-		String userId = LayerAccess.getUser(authString);
 
 		String query = "{},{_id:0,levelId:1}";
 
@@ -516,11 +525,19 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			String vardtfrom, String vardtto, List<String> levelIdList) {
 
 		logger.info("Fetching defect closed count..");
-		String userId = LayerAccess.getUser(authString);
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
 		long defTestExecutionCount = 0;
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
+		Date startDate=null, endDate=null;
+		try {
+			startDate = formatter.parse(vardtfrom);
+			endDate = formatter.parse(vardtto);
+
+		} catch (ParseException e1) {
+			
+			e1.printStackTrace();
+		}
 
 		String query = "{},{_id:0,levelId:1}";
 
@@ -530,12 +547,13 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		query1.addCriteria(Criteria.where("issueSprintStartDate").gte(startDate));
 		query1.addCriteria(Criteria.where("issueSprintEndDate").lte(endDate));
 
-		query1.addCriteria(Criteria.where("issueStatus").is("Closed"));
 
-		// List <String> exceptionList = new ArrayList<String>();
-		// exceptionList.add("");
-		// exceptionList.add("Backlog");
-		// query1.addCriteria(Criteria.where("issueSprint").ne(exceptionList));
+		query1.addCriteria(Criteria.where("issueStatus").is("Closed"));
+		
+		//List <String> exceptionList = new ArrayList<String>();
+		//exceptionList.add("");
+		//exceptionList.add("Backlog");
+		//query1.addCriteria(Criteria.where("issueSprint").ne(exceptionList));
 
 		try {
 			defTestExecutionCount = getMongoOperation().count(query1, JiraDefectVO.class);
@@ -546,185 +564,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 
 		return defTestExecutionCount;
 	}
-
-	public static List<Long> getDefectDensityrQuery(String dashboardName, String domain, String project, Date startDate,
-			Date endDate, Date dateBefore7Days, Date dates, List<Integer> TestExecutionlevelIdList,
-			List<Integer> DefectlevelIdList) throws NumberFormatException, BaseException, BadLocationException {
-		/*int defdensity = 0;
-		long testexecCount = 0;
-		long defectCount = 0;
-		List<TestExeStatusVO> result = null;
-		long denresult = 0;
-		
-		List<Long> defectdensity = new ArrayList<Long>();
-
-		try {
-
-			String query2 = "{},{_id:0,levelId:1}";
-			Query query1 = new BasicQuery(query2);
-			Query query = new Query();
-
-			query.addCriteria(Criteria.where("_id").in(DefectlevelIdList));
-			query1.addCriteria(Criteria.where("_id").in(TestExecutionlevelIdList));
-
-			if (startDate != null || endDate != null) {
-				query.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-				query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-
-			} else if (dateBefore7Days != null && dates != null) {
-				query.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
-				query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-
-			}
-			query.addCriteria(Criteria.where("status").nin("Deferred", "Dropped", "Rejected", "Duplicate"));
-			//query.addCriteria(Criteria.where("status").ne("Deferred").ne("Dropped").ne("Rejected").ne("Duplicate"));
-			defectCount = getMongoOperation().count(query, DefectVO.class);
-
-			testexecCount = getMongoOperation().count(query1, TestExecutionVO.class);
-
-			//denresult = Math.round((defectCount * 100) / testexecCount);
-			denresult= Math.round(((double)defectCount * 100)/ ((double)testexecCount));
-			defdensity = (int) denresult;
-			
-			defectdensity.add(defectCount);
-			defectdensity.add(testexecCount);
-			defectdensity.add((long)defdensity);
-			
-
-		} catch (Exception ex) {
-			//defdensity = 0;
-			defectdensity.add(defectCount);
-			defectdensity.add(testexecCount);
-			defectdensity.add((long)defdensity);
-		}*/
-		
-		int defdensity = 0;
-		long testexecCount = 0;
-		long defectCount = 0;
-		List<TestExeStatusVO> result = null;
-		long denresult = 0;
-		
-		List<Long> defectdensity = new ArrayList<Long>();
-
-		try {
-			
-			// Getting Functional Tests from Design (TestCases)
-			
-			Query funcTestDesigned = new Query();
-
-			funcTestDesigned.addCriteria(Criteria.where("levelId").in(TestExecutionlevelIdList));
-			funcTestDesigned.addCriteria(Criteria.where("automationType").is("Functional"));
-
-			@SuppressWarnings("unchecked")
-			List<Integer> listFuncTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",funcTestDesigned.getQueryObject());
-			
-			// Getting Functional Tests from Design (TestCases)
-
-			String query = "{},{_id:0,levelId:1,testID:1}";
-			Query queryExe = new BasicQuery(query);
-			Query queryDef = new Query();
-
-			queryDef.addCriteria(Criteria.where("levelId").in(DefectlevelIdList));
-			queryExe.addCriteria(Criteria.where("levelId").in(TestExecutionlevelIdList));
-
-			if (startDate != null || endDate != null) {
-				queryDef.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-				queryExe.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-
-			} else if (dateBefore7Days != null && dates != null) {
-				queryDef.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
-				queryExe.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-
-			}
-
-			//Valid Defects
-			queryDef.addCriteria(Criteria.where("status").nin("Deferred", "Dropped", "Rejected", "Duplicate"));
-			
-			
-			//Defects of Functional Only
-			//110868
-			queryDef.addCriteria(Criteria.where("testId").in(listFuncTestDesigned));
-			
-			defectCount = getMongoOperation().count(queryDef, DefectVO.class);
-			
-			//Execution of Functional Only			
-			queryExe.addCriteria(Criteria.where("testID").in(listFuncTestDesigned));
-			
-			queryExe.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
-			
-			testexecCount = getMongoOperation().count(queryExe, TestExecutionVO.class);
-
-
-			denresult = Math.round(((double)defectCount * 100)/ ((double)testexecCount));
-			defdensity = (int) denresult;
-			
-			defectdensity.add(defectCount);
-			defectdensity.add(testexecCount);
-			defectdensity.add((long)defdensity);
-
-		} catch (Exception ex) {
-			defectdensity.add(defectCount);
-			defectdensity.add(testexecCount);
-			defectdensity.add((long)defdensity);
-		}
-
-		return defectdensity;
-	}
-
-	// Defect Density
-
-	// Regression Automation
-
-	public static List<Long> getRegressionAutomationFilterQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days,
-			List<String> levelIdList) throws NumberFormatException, BaseException, BadLocationException {
-		long regautoresult = 0;
-		long result = 0;
-
-		long testcasecount_n = 0;
-		long testcasecount_d = 0;
-		
-		List<Long> regressionautocoverage = new ArrayList<Long>();
-
-		Query query = new Query();
-		Query query1 = new Query();
-		Query query2 = new Query();
-
-		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
-			query2.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
-
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
-			query2.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
-		}
-
-		query1.addCriteria(Criteria.where("automationStatus").is("Ready").and("automationType").is("Regression"));
-
-		testcasecount_n = getMongoOperation().count(query1, TestCaseVO.class);
-
-		query2.addCriteria(Criteria.where("_id").in(levelIdList));
-		query2.addCriteria(Criteria.where("automationType").is("Regression"));
-		testcasecount_d = getMongoOperation().count(query2, TestCaseVO.class);
-		
-		if (testcasecount_n != 0 && testcasecount_d != 0)
-		{
-//			result = Math.round((testcasecount_n * 100) / testcasecount_d);
-			result = Math.round(((double)testcasecount_n * 100)/ ((double)testcasecount_d));
-		}
-
-		regautoresult = (int) result;
-		
-		regressionautocoverage.add(testcasecount_n);
-		regressionautocoverage.add(testcasecount_d);
-		regressionautocoverage.add(regautoresult);
-		
-
-		return regressionautocoverage;
-	}
-
-	// End of Regression Automation
 
 	public static long getTotalDefectCountFilterQuery(String dashboardName, String domain, String project,
 			Date startDate, Date endDate, Date dateBefore7Days, Date dates, List<String> levelIdList)
@@ -743,8 +582,6 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		defCount = getMongoOperation().count(query1, DefectVO.class);
 		return defCount;
 	}
-
-	// End of Defect Density
 
 	public static long getTcCount(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
 			List<String> levelIdList) {
@@ -807,7 +644,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 			query1.addCriteria(Criteria.where("issueSprintStartDate").gte(dateBefore7Days));
 			query1.addCriteria(Criteria.where("issueSprintEndDate").lte(dates));
-			query1.addCriteria(Criteria.where("issueType").is("Story"));
+			query1.addCriteria(Criteria.where("issueType").is("Story"));			
 			listStories = getMongoOperation().find(query1, JiraRequirementStatusVO.class);
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
 			// TODO Auto-generated catch block
@@ -826,16 +663,16 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 			query1.addCriteria(Criteria.where("issueSprintStartDate").gte(dateBefore7Days));
 			query1.addCriteria(Criteria.where("issueSprintEndDate").lte(dates));
-			// List <String> exceptionList = new ArrayList<String>();
-			// exceptionList.add("");
-			// ***************************************************************
-			// Date of change : 23/05/2019
-			// When issue ia added to backlog, the issuesprit is empty
+			//List <String> exceptionList = new ArrayList<String>();
+			//exceptionList.add("");
+			//***************************************************************
+			// Date of change  : 23/05/2019
+			// When issue ia added to backlog, the issuesprit is empty 
 			//
-			// ***************************************************************
-			// exceptionList.add("Backlog");
+			//***************************************************************
+			//exceptionList.add("Backlog");
 			query1.addCriteria(Criteria.where("issueType").is("Bug"));
-			// query1.addCriteria(Criteria.where("issueSprint").ne(exceptionList));
+			//query1.addCriteria(Criteria.where("issueSprint").ne(exceptionList));
 			totDefCount = getMongoOperation().count(query1, JiraDefectVO.class);
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
 			// TODO Auto-generated catch block
@@ -888,9 +725,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 			String project, Date dates, Date dateBefore7Days, List<String> levelIdList) {
 		logger.info("Fetching user story backlog count..");
 		long totalUserStoriesBacklog = 0;
-
-		String userId = LayerAccess.getUser(authString);
-
+		
 		try {
 			String query = "{},{_id:0,levelId:1}";
 
@@ -898,15 +733,15 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 
 			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 
-			List<String> exceptionList = new ArrayList<String>();
+			List <String> exceptionList = new ArrayList<String>();
 			exceptionList.add("");
-
-			// ***************************************************************
-			// Date of change : 23/05/2019
-			// When issue ia added to backlog, the issuesprit is empty
+			
+			//***************************************************************
+			// Date of change  : 23/05/2019
+			// When issue ia added to backlog, the issuesprit is empty 
 			//
-			// ***************************************************************
-			// exceptionList.add("Backlog");
+			//***************************************************************
+			//exceptionList.add("Backlog");
 			query1.addCriteria(Criteria.where("issueSprint").in(exceptionList));
 			query1.addCriteria(Criteria.where("issueType").is("Story"));
 
@@ -921,7 +756,7 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 	public static List<String> getGlobalLevelProjects(String dashboardName, String owner) {
 		List<OperationalDashboardVO> operational = new ArrayList<OperationalDashboardVO>();
 		List<Integer> levelidlist = new ArrayList<Integer>();
-		String query = "{},{_id:0,dashboardName:1,owner:1,releaseSet:1}";
+		
 		Query query1 = new Query();
 		query1.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 		query1.addCriteria(Criteria.where("owner").is(owner));
@@ -943,365 +778,498 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 		projects.addAll(uniqueProjectList);
 		return projects;
 	}
+	
+	// Regression Automation
 
-	@SuppressWarnings("unchecked")
-	public static List<Long> getUatPercent(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
-			List<Integer> levelIdList) {
-		logger.info("Fetching ALM UAT Test Case Executed..");
+		public static List<Long> getRegressionAutomationFilterQuery(String dashboardName, String userId, String domainName,
+				String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days,
+				List<String> levelIdList) throws NumberFormatException, BaseException, BadLocationException {
+			long regautoresult = 0;
+			long result = 0;
 
-		long uatAutomationUtilizationPercent = 0;
-		
-		List<Long> UAT = new ArrayList<Long>();
+			long testcasecount_n = 0;
+			long testcasecount_d = 0;
+			
+			List<Long> regressionautocoverage = new ArrayList<Long>();
 
-		try {
+			Query query1 = new Query();
+			Query query2 = new Query();
 
-			Query funcTestExecution = new Query();
-			Query funcTestCases = new Query();
-
-			int UATReady = 0;
-			int UATcount = 0;
-
-			// ALMTestCase
-			// NCount
-			funcTestCases.addCriteria(Criteria.where("levelId").in(levelIdList));
-			funcTestCases.addCriteria(Criteria.where("automationType").is("UAT").and("automationStatus").is("Ready"));
-			List<Integer> lstautomationTestCaseId = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
-					funcTestCases.getQueryObject());
-
+			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 			if (startDate != null || endDate != null) {
-				funcTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+				query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
+				query2.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
+
 			} else if (dateBefore7Days != null && dates != null) {
-				funcTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+				query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
+				query2.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
 			}
 
-			funcTestExecution.addCriteria(Criteria.where("testID").in(lstautomationTestCaseId));
+			query1.addCriteria(Criteria.where("automationStatus").is("Ready").and("automationType").is("Regression"));
 
-			List<Integer> dlistaitomationTestExecution = getMongoOperation().getCollection("ALMTestExecution")
-					.distinct("testID", funcTestExecution.getQueryObject());
+			testcasecount_n = getMongoOperation().count(query1, TestCaseVO.class);
 
-			UATReady = dlistaitomationTestExecution.size();
-
-			// DCount
-			Query dfuncTestExecution = new Query();
-			Query dfuncTestCases = new Query();
-
-			dfuncTestCases.addCriteria(Criteria.where("levelId").in(levelIdList));
-			dfuncTestCases.addCriteria(Criteria.where("automationType").is("UAT"));
-			List<Integer> lstTestCaseId = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
-					dfuncTestCases.getQueryObject());
-
-			if (startDate != null || endDate != null) {
-				dfuncTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-			} else if (dateBefore7Days != null && dates != null) {
-				dfuncTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+			query2.addCriteria(Criteria.where("_id").in(levelIdList));
+			query2.addCriteria(Criteria.where("automationType").is("Regression"));
+			testcasecount_d = getMongoOperation().count(query2, TestCaseVO.class);
+			
+			if (testcasecount_n != 0 && testcasecount_d != 0)
+			{
+//				result = Math.round((testcasecount_n * 100) / testcasecount_d);
+				result = Math.round(((double)testcasecount_n * 100)/ ((double)testcasecount_d));
 			}
 
-			dfuncTestExecution.addCriteria(Criteria.where("testID").in(lstTestCaseId));
-
-			List<Integer> dlistTestExecution = getMongoOperation().getCollection("ALMTestExecution").distinct("testID",
-					dfuncTestExecution.getQueryObject());
-
-			UATcount = dlistTestExecution.size();
-
-			if (UATReady != 0 && UATcount != 0) {
-//				uatAutomationUtilizationPercent = Math.round((UATReady * 100 / UATcount));
-				uatAutomationUtilizationPercent = Math.round(((double)UATReady * 100)/ ((double)UATcount));
-			}
+			regautoresult = (int) result;
 			
-			UAT.add((long)UATReady);
-			UAT.add((long)UATcount);
-			UAT.add(uatAutomationUtilizationPercent);
+			regressionautocoverage.add(testcasecount_n);
+			regressionautocoverage.add(testcasecount_d);
+			regressionautocoverage.add(regautoresult);
 			
 
-			/*
-			 * Query funcTestDesigned = new Query();
-			 * 
-			 * funcTestDesigned.addCriteria(Criteria.where("levelId").in(
-			 * levelIdList));
-			 * funcTestDesigned.addCriteria(Criteria.where("automationType").is(
-			 * "UAT"));
-			 * 
-			 * List<Integer> listFuncTestDesigned =
-			 * getMongoOperation().getCollection("ALMTestCases").distinct(
-			 * "testID", funcTestDesigned.getQueryObject());
-			 * 
-			 * funcTestDesigned.addCriteria(Criteria.where("automationStatus").
-			 * is("Ready")); List<Integer> listFuncAutomationTestDesigned =
-			 * getMongoOperation().getCollection("ALMTestCases")
-			 * .distinct("testID", funcTestDesigned.getQueryObject());
-			 * 
-			 * Used for Utilization
-			 * 
-			 * Query funcTestExecuted = new Query(); Query
-			 * funcTestExecutedAutomation = new Query();
-			 * 
-			 * funcTestExecuted.addCriteria(Criteria.where("levelId").in(
-			 * levelIdList));
-			 * funcTestExecutedAutomation.addCriteria(Criteria.where("levelId").
-			 * in(levelIdList));
-			 * 
-			 * if (startDate != null || endDate != null) {
-			 * funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").
-			 * gte(startDate).lte(endDate));
-			 * funcTestExecutedAutomation.addCriteria(Criteria.where(
-			 * "testExecutionDate").gte(startDate).lte(endDate)); } else if
-			 * (dateBefore7Days != null && dates != null) {
-			 * funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").
-			 * gte(dateBefore7Days).lte(dates)); funcTestExecutedAutomation
-			 * .addCriteria(Criteria.where("testExecutionDate").gte(
-			 * dateBefore7Days).lte(dates)); }
-			 * 
-			 * funcTestExecuted.addCriteria(Criteria.where("testID").in(
-			 * listFuncTestDesigned));
-			 * funcTestExecutedAutomation.addCriteria(Criteria.where("testID").
-			 * in(listFuncAutomationTestDesigned));
-			 * 
-			 * List<Integer> listFuncTestExecuted =
-			 * getMongoOperation().getCollection("ALMTestExecution")
-			 * .distinct("testID", funcTestExecuted.getQueryObject());
-			 * 
-			 * List<Integer> listFuncTestExecutedAutomation =
-			 * getMongoOperation().getCollection("ALMTestExecution")
-			 * .distinct("testID", funcTestExecutedAutomation.getQueryObject());
-			 * 
-			 * int iUATTestsExecuted = listFuncTestExecuted.size(); int
-			 * iUATAutomationTestsExecuted =
-			 * listFuncTestExecutedAutomation.size();
-			 * 
-			 * if (iUATTestsExecuted != 0 && iUATAutomationTestsExecuted != 0) {
-			 * uatAutomationUtilizationPercent = (iUATAutomationTestsExecuted /
-			 * iUATTestsExecuted) * 100; }
-			 */
-			
-			
-
-		} catch (NumberFormatException | BaseException | BadLocationException e) {
-			logger.error("Failed to fetch total UAT Test Case Executed !" + e.getMessage());
-			return UAT;
+			return regressionautocoverage;
 		}
 
-		return UAT;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static List<Long> getFunctionalPercent(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
-			List<Integer> levelIdList) {
-		/*logger.info("Fetching ALM Functional Test Case Executed..");
-
-		long funcAutomationUtilizationPercent = 0;
-		List<Long> functionalautoutil = new ArrayList<Long>();
-
-		try {
-			
-			Query funcTestDesigned = new Query();
-
-			funcTestDesigned.addCriteria(Criteria.where("levelId").in(levelIdList));
-			funcTestDesigned.addCriteria(Criteria.where("automationType").is("Functional"));
-
-			List<Integer> listFuncTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
-					funcTestDesigned.getQueryObject());
-
-			funcTestDesigned.addCriteria(Criteria.where("automationStatus").is("Ready"));
-			List<Integer> listFuncAutomationTestDesigned = getMongoOperation().getCollection("ALMTestCases")
-					.distinct("testID", funcTestDesigned.getQueryObject());
-
-			// Used for Utilization
-
-			Query funcTestExecuted = new Query();
-			Query funcTestExecutedAutomation = new Query();
-
-			funcTestExecuted.addCriteria(Criteria.where("levelId").in(levelIdList));
-			funcTestExecutedAutomation.addCriteria(Criteria.where("levelId").in(levelIdList));
-
-			if (startDate != null || endDate != null) {
-				funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-				funcTestExecutedAutomation.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-			} else if (dateBefore7Days != null && dates != null) {
-				funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-				funcTestExecutedAutomation
-						.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-			}
-
-			funcTestExecuted.addCriteria(Criteria.where("testID").in(listFuncTestDesigned));
-			funcTestExecutedAutomation.addCriteria(Criteria.where("testID").in(listFuncAutomationTestDesigned));
-
-			List<Integer> listFuncTestExecuted = getMongoOperation().getCollection("ALMTestExecution")
-					.distinct("testID", funcTestExecuted.getQueryObject());
-
-			List<Integer> listFuncTestExecutedAutomation = getMongoOperation().getCollection("ALMTestExecution")
-					.distinct("testID", funcTestExecutedAutomation.getQueryObject());
-
-			int iFunctionalTestsExecuted = listFuncTestExecuted.size();
-			int iFunctionalAutomationTestsExecuted = listFuncTestExecutedAutomation.size();
-
-			if (iFunctionalTestsExecuted != 0 && iFunctionalAutomationTestsExecuted != 0) {
-				funcAutomationUtilizationPercent = Math.round((iFunctionalAutomationTestsExecuted * 100)
-						/ iFunctionalTestsExecuted);
-			}
-
-			functionalautoutil.add((long)iFunctionalAutomationTestsExecuted);
-			functionalautoutil.add((long)iFunctionalTestsExecuted);
-			functionalautoutil.add(funcAutomationUtilizationPercent);*/
+		// End of Regression Automation
 		
-		logger.info("Fetching ALM Functional Test Case Executed..");
+		@SuppressWarnings("unchecked")
+		public static List<Long> getFunctionalPercent(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
+				List<Integer> levelIdList) {
+			/*logger.info("Fetching ALM Functional Test Case Executed..");
 
-		long funcAutomationUtilizationPercent = 0;
-		List<Long> functionalautoutil = new ArrayList<Long>();
+			long funcAutomationUtilizationPercent = 0;
+			List<Long> functionalautoutil = new ArrayList<Long>();
 
-		try {
-			Query funcTestDesigned = new Query();
-
-			funcTestDesigned.addCriteria(Criteria.where("levelId").in(levelIdList));
-			funcTestDesigned.addCriteria(Criteria.where("automationType").is("Functional"));
-
-			List<Integer> listFuncTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
-					funcTestDesigned.getQueryObject());
-
-			funcTestDesigned.addCriteria(Criteria.where("automationStatus").is("Ready"));
-			List<Integer> listFuncAutomationTestDesigned = getMongoOperation().getCollection("ALMTestCases")
-					.distinct("testID", funcTestDesigned.getQueryObject());
-
-			// Used for Utilization
-
-			Query funcTestExecuted = new Query();
-			Query funcTestExecutedAutomation = new Query();
-
-			funcTestExecuted.addCriteria(Criteria.where("levelId").in(levelIdList));
-			funcTestExecutedAutomation.addCriteria(Criteria.where("levelId").in(levelIdList));
-
-			if (startDate != null || endDate != null) {
-				funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-				funcTestExecutedAutomation.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-			} else if (dateBefore7Days != null && dates != null) {
-				funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-				funcTestExecutedAutomation
-						.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-			}
-
-			funcTestExecuted.addCriteria(Criteria.where("testID").in(listFuncTestDesigned));
-			funcTestExecutedAutomation.addCriteria(Criteria.where("testID").in(listFuncAutomationTestDesigned));
-
-			// List<Integer> listUniqueFuncTestExecuted =
-			// getMongoOperation().getCollection("ALMTestExecution")
-			// .distinct("testID", funcTestExecuted.getQueryObject());
-			//
-			// List<Integer> listUniqueFuncTestExecutedAutomation =
-			// getMongoOperation().getCollection("ALMTestExecution")
-			// .distinct("testID", funcTestExecutedAutomation.getQueryObject());
-
-			// int iFunctionalTestsExecuted = listUniqueFuncTestExecuted.size();
-			// int iFunctionalAutomationTestsExecuted =
-			// listUniqueFuncTestExecutedAutomation.size();
-			
-			funcTestExecuted.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
-			funcTestExecutedAutomation.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
-
-			List<TestExecutionVO> listFuncTestExecuted = getMongoOperation().find(funcTestExecuted,
-					TestExecutionVO.class);
-			List<TestExecutionVO> listFuncTestExecutedAutomation = getMongoOperation().find(funcTestExecutedAutomation,
-					TestExecutionVO.class);
-
-			int iFunctionalTestsExecuted = listFuncTestExecuted.size();
-			int iFunctionalAutomationTestsExecuted = listFuncTestExecutedAutomation.size();
-
-			if (iFunctionalTestsExecuted != 0 && iFunctionalAutomationTestsExecuted != 0) {
-//				funcAutomationUtilizationPercent = Math.round((iFunctionalAutomationTestsExecuted * 100)
-//						/ iFunctionalTestsExecuted);
+			try {
 				
-				funcAutomationUtilizationPercent = Math.round(((double)iFunctionalAutomationTestsExecuted * 100)/ ((double)iFunctionalTestsExecuted));
+				Query funcTestDesigned = new Query();
+
+				funcTestDesigned.addCriteria(Criteria.where("levelId").in(levelIdList));
+				funcTestDesigned.addCriteria(Criteria.where("automationType").is("Functional"));
+
+				List<Integer> listFuncTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
+						funcTestDesigned.getQueryObject());
+
+				funcTestDesigned.addCriteria(Criteria.where("automationStatus").is("Ready"));
+				List<Integer> listFuncAutomationTestDesigned = getMongoOperation().getCollection("ALMTestCases")
+						.distinct("testID", funcTestDesigned.getQueryObject());
+
+				// Used for Utilization
+
+				Query funcTestExecuted = new Query();
+				Query funcTestExecutedAutomation = new Query();
+
+				funcTestExecuted.addCriteria(Criteria.where("levelId").in(levelIdList));
+				funcTestExecutedAutomation.addCriteria(Criteria.where("levelId").in(levelIdList));
+
+				if (startDate != null || endDate != null) {
+					funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+					funcTestExecutedAutomation.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+				} else if (dateBefore7Days != null && dates != null) {
+					funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+					funcTestExecutedAutomation
+							.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+				}
+
+				funcTestExecuted.addCriteria(Criteria.where("testID").in(listFuncTestDesigned));
+				funcTestExecutedAutomation.addCriteria(Criteria.where("testID").in(listFuncAutomationTestDesigned));
+
+				List<Integer> listFuncTestExecuted = getMongoOperation().getCollection("ALMTestExecution")
+						.distinct("testID", funcTestExecuted.getQueryObject());
+
+				List<Integer> listFuncTestExecutedAutomation = getMongoOperation().getCollection("ALMTestExecution")
+						.distinct("testID", funcTestExecutedAutomation.getQueryObject());
+
+				int iFunctionalTestsExecuted = listFuncTestExecuted.size();
+				int iFunctionalAutomationTestsExecuted = listFuncTestExecutedAutomation.size();
+
+				if (iFunctionalTestsExecuted != 0 && iFunctionalAutomationTestsExecuted != 0) {
+					funcAutomationUtilizationPercent = Math.round((iFunctionalAutomationTestsExecuted * 100)
+							/ iFunctionalTestsExecuted);
+				}
+
+				functionalautoutil.add((long)iFunctionalAutomationTestsExecuted);
+				functionalautoutil.add((long)iFunctionalTestsExecuted);
+				functionalautoutil.add(funcAutomationUtilizationPercent);*/
+			
+			logger.info("Fetching ALM Functional Test Case Executed..");
+
+			long funcAutomationUtilizationPercent = 0;
+			List<Long> functionalautoutil = new ArrayList<Long>();
+
+			try {
+				Query funcTestDesigned = new Query();
+
+				funcTestDesigned.addCriteria(Criteria.where("levelId").in(levelIdList));
+				funcTestDesigned.addCriteria(Criteria.where("automationType").is("Functional"));
+
+				List<Integer> listFuncTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
+						funcTestDesigned.getQueryObject());
+
+				funcTestDesigned.addCriteria(Criteria.where("automationStatus").is("Ready"));
+				List<Integer> listFuncAutomationTestDesigned = getMongoOperation().getCollection("ALMTestCases")
+						.distinct("testID", funcTestDesigned.getQueryObject());
+
+				// Used for Utilization
+
+				Query funcTestExecuted = new Query();
+				Query funcTestExecutedAutomation = new Query();
+
+				funcTestExecuted.addCriteria(Criteria.where("levelId").in(levelIdList));
+				funcTestExecutedAutomation.addCriteria(Criteria.where("levelId").in(levelIdList));
+
+				if (startDate != null || endDate != null) {
+					funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+					funcTestExecutedAutomation.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+				} else if (dateBefore7Days != null && dates != null) {
+					funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+					funcTestExecutedAutomation
+							.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+				}
+
+				funcTestExecuted.addCriteria(Criteria.where("testID").in(listFuncTestDesigned));
+				funcTestExecutedAutomation.addCriteria(Criteria.where("testID").in(listFuncAutomationTestDesigned));
+
+				// List<Integer> listUniqueFuncTestExecuted =
+				// getMongoOperation().getCollection("ALMTestExecution")
+				// .distinct("testID", funcTestExecuted.getQueryObject());
+				//
+				// List<Integer> listUniqueFuncTestExecutedAutomation =
+				// getMongoOperation().getCollection("ALMTestExecution")
+				// .distinct("testID", funcTestExecutedAutomation.getQueryObject());
+
+				// int iFunctionalTestsExecuted = listUniqueFuncTestExecuted.size();
+				// int iFunctionalAutomationTestsExecuted =
+				// listUniqueFuncTestExecutedAutomation.size();
+				
+				funcTestExecuted.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
+				funcTestExecutedAutomation.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
+
+				List<TestExecutionVO> listFuncTestExecuted = getMongoOperation().find(funcTestExecuted,
+						TestExecutionVO.class);
+				List<TestExecutionVO> listFuncTestExecutedAutomation = getMongoOperation().find(funcTestExecutedAutomation,
+						TestExecutionVO.class);
+
+				int iFunctionalTestsExecuted = listFuncTestExecuted.size();
+				int iFunctionalAutomationTestsExecuted = listFuncTestExecutedAutomation.size();
+
+				if (iFunctionalTestsExecuted != 0 && iFunctionalAutomationTestsExecuted != 0) {
+//					funcAutomationUtilizationPercent = Math.round((iFunctionalAutomationTestsExecuted * 100)
+//							/ iFunctionalTestsExecuted);
+					
+					funcAutomationUtilizationPercent = Math.round(((double)iFunctionalAutomationTestsExecuted * 100)/ ((double)iFunctionalTestsExecuted));
+				}
+				
+				functionalautoutil.add((long)iFunctionalAutomationTestsExecuted);
+				functionalautoutil.add((long)iFunctionalTestsExecuted);
+				functionalautoutil.add((long)(funcAutomationUtilizationPercent));
+				
+				
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+				logger.error("Failed to fetch total UAT Test Case Executed !" + e.getMessage());
+
+				return functionalautoutil;
 			}
-			
-			functionalautoutil.add((long)iFunctionalAutomationTestsExecuted);
-			functionalautoutil.add((long)iFunctionalTestsExecuted);
-			functionalautoutil.add((long)(funcAutomationUtilizationPercent));
-			
-			
-		} catch (NumberFormatException | BaseException | BadLocationException e) {
-			logger.error("Failed to fetch total UAT Test Case Executed !" + e.getMessage());
 
 			return functionalautoutil;
 		}
 
-		return functionalautoutil;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static List<Long> getRegressionPercent(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
-			List<Integer> levelIdList) {
-		logger.info("Fetching ALM Functional Test Case Executed..");
-		long regressionAutomationUtilizationPercent = 0;
-		
-		List<Long> regressionautoutil =  new ArrayList<Long>();
-
-		try {
+		@SuppressWarnings("unchecked")
+		public static List<Long> getRegressionPercent(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
+				List<Integer> levelIdList) {
+			logger.info("Fetching ALM Functional Test Case Executed..");
+			long regressionAutomationUtilizationPercent = 0;
 			
-			Query regressionTestDesigned = new Query();
+			List<Long> regressionautoutil =  new ArrayList<Long>();
 
-			regressionTestDesigned.addCriteria(Criteria.where("levelId").in(levelIdList));
-			regressionTestDesigned.addCriteria(Criteria.where("automationType").is("Regression"));
-
-			List<Integer> listregressionTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
-					regressionTestDesigned.getQueryObject());
-
-			regressionTestDesigned.addCriteria(Criteria.where("automationStatus").is("Ready"));
-			List<Integer> listRegressionAutomationTestDesigned = getMongoOperation().getCollection("ALMTestCases")
-					.distinct("testID", regressionTestDesigned.getQueryObject());
-			
-			int iRegressionTestsDesigned = listRegressionAutomationTestDesigned.size();
-
-			// Used for Utilization
-
-			Query regressionTestExecuted = new Query();
-			Query regressionExecutedAutomation = new Query();
-
-			regressionTestExecuted.addCriteria(Criteria.where("levelId").in(levelIdList));
-			regressionExecutedAutomation.addCriteria(Criteria.where("levelId").in(levelIdList));
-
-			if (startDate != null || endDate != null) {
-				regressionTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-				regressionExecutedAutomation.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-			} else if (dateBefore7Days != null && dates != null) {
-				regressionTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-				regressionExecutedAutomation
-						.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-			}
-
-			regressionTestExecuted.addCriteria(Criteria.where("testID").in(listregressionTestDesigned));
-			regressionExecutedAutomation.addCriteria(Criteria.where("testID").in(listRegressionAutomationTestDesigned));
-			
-			regressionTestExecuted.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
-			regressionExecutedAutomation.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
-
-			List<Integer> listregressionTestExecuted = getMongoOperation().getCollection("ALMTestExecution")
-					.distinct("testID", regressionTestExecuted.getQueryObject());
-
-			List<Integer> listregressionTestExecutedAutomation = getMongoOperation().getCollection("ALMTestExecution")
-					.distinct("testID", regressionExecutedAutomation.getQueryObject());
-
-			int iRegressionTestsExecuted = listregressionTestExecuted.size();
-			int iRegressionAutomationTestsExecuted = listregressionTestExecutedAutomation.size();
-
-			if (iRegressionTestsExecuted != 0 && iRegressionAutomationTestsExecuted != 0) {
-				/*regressionAutomationUtilizationPercent = (iRegressionAutomationTestsExecuted * 100)
-						/ iRegressionTestsExecuted;*/
+			try {
 				
+				Query regressionTestDesigned = new Query();
 
-				//regressionAutomationUtilizationPercent = Math.round(((double)iRegressionAutomationTestsExecuted * 100)/ ((double)iRegressionTestsExecuted));
+				regressionTestDesigned.addCriteria(Criteria.where("levelId").in(levelIdList));
+				regressionTestDesigned.addCriteria(Criteria.where("automationType").is("Regression"));
+
+				List<Integer> listregressionTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
+						regressionTestDesigned.getQueryObject());
+
+				regressionTestDesigned.addCriteria(Criteria.where("automationStatus").is("Ready"));
+				List<Integer> listRegressionAutomationTestDesigned = getMongoOperation().getCollection("ALMTestCases")
+						.distinct("testID", regressionTestDesigned.getQueryObject());
 				
-				regressionAutomationUtilizationPercent = Math.round((iRegressionAutomationTestsExecuted * 100)
-				/ iRegressionTestsDesigned);
+				int iRegressionTestsDesigned = listRegressionAutomationTestDesigned.size();
+
+				// Used for Utilization
+
+				Query regressionTestExecuted = new Query();
+				Query regressionExecutedAutomation = new Query();
+
+				regressionTestExecuted.addCriteria(Criteria.where("levelId").in(levelIdList));
+				regressionExecutedAutomation.addCriteria(Criteria.where("levelId").in(levelIdList));
+
+				if (startDate != null || endDate != null) {
+					regressionTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+					regressionExecutedAutomation.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+				} else if (dateBefore7Days != null && dates != null) {
+					regressionTestExecuted.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+					regressionExecutedAutomation
+							.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+				}
+
+				regressionTestExecuted.addCriteria(Criteria.where("testID").in(listregressionTestDesigned));
+				regressionExecutedAutomation.addCriteria(Criteria.where("testID").in(listRegressionAutomationTestDesigned));
+				
+				regressionTestExecuted.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
+				regressionExecutedAutomation.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
+
+				List<Integer> listregressionTestExecuted = getMongoOperation().getCollection("ALMTestExecution")
+						.distinct("testID", regressionTestExecuted.getQueryObject());
+
+				List<Integer> listregressionTestExecutedAutomation = getMongoOperation().getCollection("ALMTestExecution")
+						.distinct("testID", regressionExecutedAutomation.getQueryObject());
+
+				int iRegressionTestsExecuted = listregressionTestExecuted.size();
+				int iRegressionAutomationTestsExecuted = listregressionTestExecutedAutomation.size();
+
+				if (iRegressionTestsExecuted != 0 && iRegressionAutomationTestsExecuted != 0) {
+					/*regressionAutomationUtilizationPercent = (iRegressionAutomationTestsExecuted * 100)
+							/ iRegressionTestsExecuted;*/
+					
+
+					//regressionAutomationUtilizationPercent = Math.round(((double)iRegressionAutomationTestsExecuted * 100)/ ((double)iRegressionTestsExecuted));
+					
+					regressionAutomationUtilizationPercent = Math.round((iRegressionAutomationTestsExecuted * 100)
+					/ iRegressionTestsDesigned);
+				}
+
+				regressionautoutil.add((long)iRegressionAutomationTestsExecuted);
+				regressionautoutil.add((long)iRegressionTestsExecuted);
+				regressionautoutil.add(regressionAutomationUtilizationPercent);
+
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+				logger.error("Failed to fetch total UAT Test Case Executed !" + e.getMessage());
+
+				return regressionautoutil;
 			}
-
-			regressionautoutil.add((long)iRegressionAutomationTestsExecuted);
-			regressionautoutil.add((long)iRegressionTestsExecuted);
-			regressionautoutil.add(regressionAutomationUtilizationPercent);
-
-		} catch (NumberFormatException | BaseException | BadLocationException e) {
-			logger.error("Failed to fetch total UAT Test Case Executed !" + e.getMessage());
 
 			return regressionautoutil;
 		}
+		
+		@SuppressWarnings("unchecked")
+		public static List<Long> getUatPercent(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
+				List<Integer> levelIdList) {
+			logger.info("Fetching ALM UAT Test Case Executed..");
 
-		return regressionautoutil;
-	}
+			long uatAutomationUtilizationPercent = 0;
+			
+			List<Long> UAT = new ArrayList<Long>();
+
+			try {
+
+				Query funcTestExecution = new Query();
+				Query funcTestCases = new Query();
+
+				int UATReady = 0;
+				int UATcount = 0;
+
+				// ALMTestCase
+				// NCount
+				funcTestCases.addCriteria(Criteria.where("levelId").in(levelIdList));
+				funcTestCases.addCriteria(Criteria.where("automationType").is("UAT").and("automationStatus").is("Ready"));
+				List<Integer> lstautomationTestCaseId = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
+						funcTestCases.getQueryObject());
+
+				if (startDate != null || endDate != null) {
+					funcTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+				} else if (dateBefore7Days != null && dates != null) {
+					funcTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+				}
+
+				funcTestExecution.addCriteria(Criteria.where("testID").in(lstautomationTestCaseId));
+
+				List<Integer> dlistaitomationTestExecution = getMongoOperation().getCollection("ALMTestExecution")
+						.distinct("testID", funcTestExecution.getQueryObject());
+
+				UATReady = dlistaitomationTestExecution.size();
+
+				// DCount
+				Query dfuncTestExecution = new Query();
+				Query dfuncTestCases = new Query();
+
+				dfuncTestCases.addCriteria(Criteria.where("levelId").in(levelIdList));
+				dfuncTestCases.addCriteria(Criteria.where("automationType").is("UAT"));
+				List<Integer> lstTestCaseId = getMongoOperation().getCollection("ALMTestCases").distinct("testID",
+						dfuncTestCases.getQueryObject());
+
+				if (startDate != null || endDate != null) {
+					dfuncTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+				} else if (dateBefore7Days != null && dates != null) {
+					dfuncTestExecution.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+				}
+
+				dfuncTestExecution.addCriteria(Criteria.where("testID").in(lstTestCaseId));
+
+				List<Integer> dlistTestExecution = getMongoOperation().getCollection("ALMTestExecution").distinct("testID",
+						dfuncTestExecution.getQueryObject());
+
+				UATcount = dlistTestExecution.size();
+
+				if (UATReady != 0 && UATcount != 0) {
+//					uatAutomationUtilizationPercent = Math.round((UATReady * 100 / UATcount));
+					uatAutomationUtilizationPercent = Math.round(((double)UATReady * 100)/ ((double)UATcount));
+				}
+				
+				UAT.add((long)UATReady);
+				UAT.add((long)UATcount);
+				UAT.add(uatAutomationUtilizationPercent);
+				
+
+				/*
+				 * Query funcTestDesigned = new Query();
+				 * 
+				 * funcTestDesigned.addCriteria(Criteria.where("levelId").in(
+				 * levelIdList));
+				 * funcTestDesigned.addCriteria(Criteria.where("automationType").is(
+				 * "UAT"));
+				 * 
+				 * List<Integer> listFuncTestDesigned =
+				 * getMongoOperation().getCollection("ALMTestCases").distinct(
+				 * "testID", funcTestDesigned.getQueryObject());
+				 * 
+				 * funcTestDesigned.addCriteria(Criteria.where("automationStatus").
+				 * is("Ready")); List<Integer> listFuncAutomationTestDesigned =
+				 * getMongoOperation().getCollection("ALMTestCases")
+				 * .distinct("testID", funcTestDesigned.getQueryObject());
+				 * 
+				 * Used for Utilization
+				 * 
+				 * Query funcTestExecuted = new Query(); Query
+				 * funcTestExecutedAutomation = new Query();
+				 * 
+				 * funcTestExecuted.addCriteria(Criteria.where("levelId").in(
+				 * levelIdList));
+				 * funcTestExecutedAutomation.addCriteria(Criteria.where("levelId").
+				 * in(levelIdList));
+				 * 
+				 * if (startDate != null || endDate != null) {
+				 * funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").
+				 * gte(startDate).lte(endDate));
+				 * funcTestExecutedAutomation.addCriteria(Criteria.where(
+				 * "testExecutionDate").gte(startDate).lte(endDate)); } else if
+				 * (dateBefore7Days != null && dates != null) {
+				 * funcTestExecuted.addCriteria(Criteria.where("testExecutionDate").
+				 * gte(dateBefore7Days).lte(dates)); funcTestExecutedAutomation
+				 * .addCriteria(Criteria.where("testExecutionDate").gte(
+				 * dateBefore7Days).lte(dates)); }
+				 * 
+				 * funcTestExecuted.addCriteria(Criteria.where("testID").in(
+				 * listFuncTestDesigned));
+				 * funcTestExecutedAutomation.addCriteria(Criteria.where("testID").
+				 * in(listFuncAutomationTestDesigned));
+				 * 
+				 * List<Integer> listFuncTestExecuted =
+				 * getMongoOperation().getCollection("ALMTestExecution")
+				 * .distinct("testID", funcTestExecuted.getQueryObject());
+				 * 
+				 * List<Integer> listFuncTestExecutedAutomation =
+				 * getMongoOperation().getCollection("ALMTestExecution")
+				 * .distinct("testID", funcTestExecutedAutomation.getQueryObject());
+				 * 
+				 * int iUATTestsExecuted = listFuncTestExecuted.size(); int
+				 * iUATAutomationTestsExecuted =
+				 * listFuncTestExecutedAutomation.size();
+				 * 
+				 * if (iUATTestsExecuted != 0 && iUATAutomationTestsExecuted != 0) {
+				 * uatAutomationUtilizationPercent = (iUATAutomationTestsExecuted /
+				 * iUATTestsExecuted) * 100; }
+				 */
+				
+				
+
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+				logger.error("Failed to fetch total UAT Test Case Executed !" + e.getMessage());
+				return UAT;
+			}
+
+			return UAT;
+		}
+		
+		public static List<Long> getDefectDensityrQuery(String dashboardName, String domain, String project, Date startDate,
+				Date endDate, Date dateBefore7Days, Date dates, List<Integer> TestExecutionlevelIdList,
+				List<Integer> DefectlevelIdList) throws NumberFormatException, BaseException, BadLocationException {
+			
+			int defdensity = 0;
+			long testexecCount = 0;
+			long defectCount = 0;
+			List<TestExeStatusVO> result = null;
+			long denresult = 0;
+			
+			List<Long> defectdensity = new ArrayList<Long>();
+
+			try {
+				
+				// Getting Functional Tests from Design (TestCases)
+				
+				Query funcTestDesigned = new Query();
+
+				funcTestDesigned.addCriteria(Criteria.where("levelId").in(TestExecutionlevelIdList));
+				funcTestDesigned.addCriteria(Criteria.where("automationType").is("Functional"));
+
+				@SuppressWarnings("unchecked")
+				List<Integer> listFuncTestDesigned = getMongoOperation().getCollection("ALMTestCases").distinct("testID",funcTestDesigned.getQueryObject());
+				
+				// Getting Functional Tests from Design (TestCases)
+
+				String query = "{},{_id:0,levelId:1,testID:1}";
+				Query queryExe = new BasicQuery(query);
+				Query queryDef = new Query();
+
+				queryDef.addCriteria(Criteria.where("levelId").in(DefectlevelIdList));
+				queryExe.addCriteria(Criteria.where("levelId").in(TestExecutionlevelIdList));
+
+				if (startDate != null || endDate != null) {
+					queryDef.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
+					queryExe.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+
+				} else if (dateBefore7Days != null && dates != null) {
+					queryDef.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
+					queryExe.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+
+				}
+
+				//Valid Defects
+				queryDef.addCriteria(Criteria.where("status").nin("Deferred", "Dropped", "Rejected", "Duplicate"));
+				
+				
+				//Defects of Functional Only
+				//110868
+				queryDef.addCriteria(Criteria.where("testId").in(listFuncTestDesigned));
+				
+				defectCount = getMongoOperation().count(queryDef, DefectVO.class);
+				
+				//Execution of Functional Only			
+				queryExe.addCriteria(Criteria.where("testID").in(listFuncTestDesigned));
+				
+				queryExe.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
+				
+				testexecCount = getMongoOperation().count(queryExe, TestExecutionVO.class);
+
+
+				denresult = Math.round(((double)defectCount * 100)/ ((double)testexecCount));
+				defdensity = (int) denresult;
+				
+				defectdensity.add(defectCount);
+				defectdensity.add(testexecCount);
+				defectdensity.add((long)defdensity);
+
+			} catch (Exception ex) {
+				defectdensity.add(defectCount);
+				defectdensity.add(testexecCount);
+				defectdensity.add((long)defdensity);
+			}
+
+			return defectdensity;
+		}
+
+		// Defect Density
+		
+		
 }

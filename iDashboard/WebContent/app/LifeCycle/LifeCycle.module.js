@@ -46,7 +46,9 @@
 										files : [
 												'app/LifeCycle/lifecycle/LifeCycleDashboardCtrl.js',
 												'app/LifeCycle/charts/GitHub/GitChartCtrl.js',
+												'app/LifeCycle/charts/Octane/OctaneLifeCtrl.js',
 												'app/LifeCycle/lifecycle/userstories/userstoriesdata/UserStoryLifeCtrl.js',
+												'app/LifeCycle/lifecycle/fortify/fortifydata/FortifyCtrl.js',
 												'app/LifeCycle/charts/chefDataChart/chefRunsDetailsCtrl.js',
 												'app/LifeCycle/charts/CodeAnalysisChart/CodeAnalysisChartCtrl.js',
 												'app/LifeCycle/charts/buildChart/buildMetricsCtrl.js',
@@ -77,8 +79,10 @@
 										files : [
 												'app/LifeCycle/lifecycle/LifeCycleDashboardCtrl.js',
 												'app/LifeCycle/charts/GitHub/GitChartCtrl.js',
+												'app/LifeCycle/charts/Octane/OctaneLifeCtrl.js',
 												'app/LifeCycle/lifecycle/userstories/userstoriesdata/UserStoryLifeCtrl.js',
 												'app/LifeCycle/charts/chefDataChart/chefRunsDetailsCtrl.js',
+												'app/LifeCycle/lifecycle/fortify/fortifydata/FortifyCtrl.js',
 												'app/LifeCycle/charts/CodeAnalysisChart/CodeAnalysisChartCtrl.js',
 												'app/LifeCycle/charts/buildChart/buildMetricsCtrl.js',
 												'app/LifeCycle/charts/TMChart/testManagementMetricsCtrl.js',

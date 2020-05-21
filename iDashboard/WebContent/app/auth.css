@@ -19,25 +19,26 @@
 	margin: auto;
 	padding-top: 2%;
 	margin-left: 35%;
-	
 }
 
 .img_comp_logo {
-	    margin: auto;
-    width: 170px;
-    height: 70px;
-    padding-bottom: 13px;
-    margin-right: -8px;
-    margin-left: -18px;
+	margin: auto;
+	width: 170px;
+	height: 70px;
+	padding-bottom: 13px;
+	margin-right: -8px;
+	margin-left: -18px;
 }
 
 .auth_ID_text {
-    position: relative;
-    top: -5px;
-    display: inline-block;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
+	position: relative;
+	top: -54px;
+	display: inline-block;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	margin-left: 140px;
 }
+
 .socicon {
 	position: relative;
 	top: 1px;
@@ -132,12 +133,13 @@
 }
 
 body {
-	scrollbar-face-color: #d9d9d9;
-	scrollbar-track-color: transparent;
+	font: 14px/16px "Roboto", sans-serif;
+	color: #666666;
+	background-color: #F0F3F4;
 }
 
 html {
-	position: relative;
+	min-height: 100%;
 	min-width: 320px;
 }
 
@@ -503,11 +505,12 @@ button.btn.btn-primary:active, button.btn.btn-primary:target {
 }
 
 button.btn.btn-default {
-	border-width: 1px;
+	border-width: 0px;
 	color: #666666;
 	background: transparent;
 	border-color: #d6d6d6;
-	width:121px;
+	width: 121px;
+	border-radius: 0px;
 }
 
 button.btn.btn-default.disabled, button.btn.btn-default[disabled],
@@ -520,8 +523,8 @@ button.btn.btn-default.disabled, button.btn.btn-default[disabled],
 	fieldset[disabled] button.btn.btn-default:active, button.btn.btn-default.disabled.active,
 	button.btn.btn-default[disabled].active, fieldset[disabled] button.btn.btn-default.active
 	{
-	background: transparent;
-	border-color: #e2e2e2;
+	background: #00b410;
+	border-color: #00b410;
 }
 
 button.btn.btn-default.disabled:hover, button.btn.btn-default[disabled]:hover,
@@ -1096,7 +1099,9 @@ button.progress-button.btn.btn-danger.progress-button-perspective .content
 	padding: 8px 14px;
 	font-size: 16px;
 }
-
+.btn-auth {
+  color: #ffffff !important;
+}
 .dropdown button.btn.btn-default.dropdown-toggle {
 	color: #666666;
 	border: 1px solid #d6d6d6;
@@ -1161,7 +1166,7 @@ button.progress-button.btn.btn-danger.progress-button-perspective .content
 .form-control {
 	color: #666666;
 	border: 1px solid #cbcbcb;
-	border-radius: 5px;
+	border-radius: 0px;
 	background-color: #ffffff;
 	box-shadow: none;
 }
@@ -1191,7 +1196,6 @@ button.progress-button.btn.btn-danger.progress-button-perspective .content
 .form-control:focus {
 	box-shadow: none;
 	border-color: #4db1a7;
-	
 }
 
 select.form-control {
@@ -1973,8 +1977,9 @@ body::before {
 
 .form-control, .form-control:focus {
 	background-color: rgba(0, 0, 0, 0.4);
-	border-radius: 5px;
+	border-radius: 0px;
 	color: #ffffff;
+	
 }
 
 .form-control::-webkit-input-placeholder, .form-control:focus::-webkit-input-placeholder
@@ -2042,15 +2047,15 @@ body::before {
 
 .auth-block {
 	width: 445px;
-    margin: 0 auto;
-    border-radius: 5px;
-    background: #0032a1;
-    color: #fff;
-    padding: 30px 50px;
-    left: 50%;
-    top: 50%;
-    position: fixed;
-    transform: translate3d(-50%,-60%,0px);
+	margin: 0 auto;
+	border-radius: 5px;
+	background: #0032a1;
+	color: #fff;
+	padding: 30px 50px;
+	left: 50%;
+	top: 50%;
+	position: fixed;
+	transform: translate3d(-50%, -60%, 0px);
 }
 
 .auth-block h1 {
@@ -2196,4 +2201,17 @@ img {
 
 .mt60 {
 	margin-top: 60px;
+}
+
+footer {
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+	height: 70px;
+	position: fixed;
+}
+
+footer img {
+	height: 70px;
+	width: auto;
 }

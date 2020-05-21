@@ -2,8 +2,8 @@
 	<div id="createNew" class="row">
 		<button type="button" data-toggle="modal" class="btn btn-default"
 			style="float: right; margin-right: 1%; margin-bottom: 1%;"
-			ng-model="numberTemplate" ng-click="createNewTemplate()">Create
-			New Template</button>
+			ng-model="numberTemplate" ng-click="createNewTemplate()"
+			>Create New Template</button>
 
 	</div>
 	<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
@@ -21,23 +21,24 @@
 
 					</tr>
 				</thead>
-				<tbody>
+				<tbody> 
 
 					<tr ng-repeat="item in templateTableDetails">
 						<td style="width: 10%">{{item.templateName}}</td>
 						<td style="width: 15%">{{item.rollingPeriod}}</td>
 
 
-						<td style="width: 10%;"><a
-							style="color: #ffffff; margin-left: 2%"
-							ng-click="updateTemplateDetails(item.templateName)"
-							class="ion-edit"></a> &nbsp; <a style="color: #ffffff;"
-							ng-click="getselectedtemp(item.templateName)"> <img
-								src="app/pages/dashboard/infoDialog/info.png" width="20"
-								height="20">
-						</a> <a style="color: #ffffff; margin-left: 3%"
-							ng-click="deleteTemplate(item.templateName)" class="ion-trash-b"></a>
-
+						<td style="width: 10%;">
+						<a style="color:#4c4c4c; margin-left: 2%"
+							ng-click="updateTemplateDetails(item.templateName)" class="ion-edit"></a>
+							&nbsp;
+							<a style="color: #4c4c4c;" ng-click= "getselectedtemp(item.templateName)">
+								<img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20">
+							</a>
+							<a
+									style="color: #4c4c4c; margin-left: 3%"
+									ng-click="deleteTemplate(item.templateName)" class="ion-trash-b"></a>
+							
 						</td>
 
 					</tr>

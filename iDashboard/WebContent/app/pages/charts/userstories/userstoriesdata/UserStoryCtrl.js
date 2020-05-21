@@ -1,5 +1,5 @@
 /**
- * @author 653731 created on 16.02.2018
+ * @author created on 16.02.2018
  */
 (function() {
 	'use strict';
@@ -16,22 +16,11 @@
 			});
 
 	/** @ngInject */
-	// function UserStoryCtrl($sessionStorage, paginationService,
-	// $element,$state,
-	// $scope, $base64, $http, $timeout, $uibModal, $rootScope, baConfig,
-	// layoutPaths) {
-	function UserStoryCtrl($sessionStorage, paginationService, UserService,
+	
+	function UserStoryCtrl($sessionStorage, AES, paginationService, UserService,
 			localStorageService, $element, $scope, $base64, $http, $timeout,
 			$uibModal, $rootScope, baConfig, layoutPaths) {
 
-		function getEncryptedValue() {
-
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
 		$rootScope.sortkey = false;
 		$rootScope.searchkey = false;
 		$rootScope.menubar = true;
@@ -79,7 +68,7 @@
 
 		$rootScope.initialUserStorycount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -124,7 +113,7 @@
 
 			// alert('calling initOpsUserStorycount....');
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -148,7 +137,7 @@
 		 * $rootScope.initialProjects = function() {
 		 * 
 		 * //alert('calling initialProjects >>>>4444:::'); var token =
-		 * getEncryptedValue(); var config = { headers : { 'Authorization' :
+		 * AES.getEncryptedValue(); var config = { headers : { 'Authorization' :
 		 * token } }; //alert('calling initialProjects >>>>4444::: 2');
 		 * $http.get( "rest/jiraMetricsServices/projectDetails?dashboardName=" +
 		 * dashboardName,config).success( function(response) {
@@ -165,7 +154,7 @@
 		 * //alert('calling selectedPrjectForIterationsList......'); //alert('on
 		 * load calling selectedPrjectForIterationsList.....' + project);
 		 * 
-		 * var token = getEncryptedValue(); var config = { headers : {
+		 * var token = AES.getEncryptedValue(); var config = { headers : {
 		 * 'Authorization' : token } }; $http.get(
 		 * "rest/rallyServices/iterationDetailsList?dashboardName=" +
 		 * dashboardName+"&userStrproject="+project, config).success(
@@ -179,7 +168,7 @@
 
 			// alert('calling ....selectedPrjectForIterations' + project );
 			// alert('calling ....selectedPrjectForIterations' + iteration );
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -202,7 +191,7 @@
 			// alert('calling ....iterationStoryCount >>>>> ' + project );
 			// alert('calling .... + strProject );
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -227,7 +216,7 @@
 
 			// alert('2:');
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -246,7 +235,7 @@
 
 		$rootScope.initUserStoryBackLogCount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -268,7 +257,7 @@
 		$rootScope.initIterationUserStoryBackLogCount = function() {
 
 			// alert("calling..initIterationUserStoryBackLogCount ");
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -291,7 +280,7 @@
 		// JIRA/////////////////////////////////////////////////////////////
 
 		$rootScope.userStoryPrioirtyFunnelChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -372,7 +361,7 @@
 		// /////////// User Story Test cases count////////////////////
 
 		$rootScope.initUserStoryTestCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -391,7 +380,7 @@
 		// count/////////////////////////////
 		$rootScope.initUserStorySprintCount = function() {
 			
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -424,16 +413,16 @@
 							+ $rootScope.dfromDash + "&vardtto="
 							+ $rootScope.dtoDash, config).success(
 					function(response) {
-						// $scope.userStorySprintData = response;
+						
 						$rootScope.userStorySprintData = response;
-						// $scope.loadPieCharts('#reqvola',$scope.volatilitydata);
+						
 					});
 		}
 
 		// ////////////////////User Story Sprint count for Ops
 		// JIRA/////////////////////////////
 		$rootScope.initOpsUserStorySprintCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -456,7 +445,7 @@
 		// ////////////////// User Story Defect count
 		// JIRA/////////////////////////////////
 		$scope.initUserStoryDefectCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -476,10 +465,9 @@
 		// //////////////////////////////////////
 
 		$scope.userStoryTrendChart = function() {
-			
 			// alert('calling userStoryTrendChart....from main...1111');
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -650,7 +638,7 @@
 
 			// alert('calling userStoryDefChart......4444:::');
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -831,9 +819,9 @@
 
 		// Design Count by Owner - BAR CHART
 		$scope.newOwnerCountChart = function(project) {
-			
+			debugger;
 			// alert("Function called");
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1004,7 +992,7 @@
 
 		$scope.newTypeChart = function(project) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1091,9 +1079,9 @@
 		// Chart/////////////////////////////////
 
 		$scope.userStoryByStatusPieChart = function() {
-			
+			debugger;
 			// alert('calling userStoryByStatusPieChart');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1184,7 +1172,7 @@
 		// JIRA
 		$scope.initialUserStorycountpaginate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1202,7 +1190,7 @@
 		// ///////////////////////// Table on-load for user story test case
 		// data////////////////////////
 		$scope.userStoryTableData = function(start_index) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1227,7 +1215,7 @@
 		// data////////////////////////
 		$scope.userStoryDefectTableData = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1280,8 +1268,8 @@
 		}
 
 		$scope.searchable = function() {
-			
-			var token = getEncryptedValue();
+			debugger;
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1401,7 +1389,7 @@
 		// Table on-load with sort implementation
 		$scope.sortedtable = function(sortvalue, start_index, reverse) {
 			paginationService.setCurrentPage("reqpaginate", start_index);
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1469,7 +1457,7 @@
 
 		}
 		$scope.downloadUSTableData = function(start_index) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1503,7 +1491,7 @@
 					csvString = csvString + "\n";
 				}
 				csvString = csvString.substring(0, csvString.length - 1);
-				//console.log(csvString);
+				console.log(csvString);
 				var blob = new Blob([ csvString ], {
 					type : "text/csv;charset=utf-8;"
 				});

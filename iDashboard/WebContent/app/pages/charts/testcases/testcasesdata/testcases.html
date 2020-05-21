@@ -1,5 +1,5 @@
 <info-Dialog></info-Dialog>
-<div ng-if="tool == 'ALM'" ng-controller="TestCasesCtrl" ng-init="menubar = true;init();">
+<div ng-if="tool == 'ALM'" ng-controller="TestCasesCtrl">
 
 
 	<div class="row">
@@ -43,7 +43,7 @@
 	</div>
 
 	<div class="row pie-charts">
-		<div class="pie-chart-item-container-exec" style="margin-left: 15px">
+		<div class="pie-chart-item-container">
 			<div ba-panel>
 				<div class="pie-chart-item" id="totaltestcount">
 
@@ -52,7 +52,7 @@
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
-						style="font-size: 40px; margin-top: 35px; text-align: center">{{testCount}}
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{testCount}}
 					</div>
 					<div>
 						<a
@@ -63,10 +63,8 @@
 				</div>
 			</div>
 		</div>
-		
-		
 
-		<!-- <div class="pie-chart-item-container-exec">
+		<div class="pie-chart-item-container">
 			<div ba-panel>
 				<div class="pie-chart-item" ng-init="designCoverageFilter()">
 					<div class="chart" id="designcovfilter" rel="rgba(255,255,255,0.4)">
@@ -90,9 +88,9 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 
-		<!-- <div class="pie-chart-item-container-exec">
+		<div class="pie-chart-item-container">
 			<div ba-panel>
 				<div class="pie-chart-item" ng-init="autoCoverageFilter()">
 					<div class="chart" id="autocovfilter" rel="rgba(255,255,255,0.4)">
@@ -116,34 +114,38 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 		
-		<div class="pie-chart-item-container-exec" style="margin-right: 10px">
-			<div ba-panel>
-				<div class="pie-chart-item" ng-init="regressionautomationFilter()">
-					<div class="chart" id="regautofilter" rel="rgba(255,255,255,0.4)">
-						<span class="percent"> </span>
-					</div>
+		
+		<!-- <div class="row pie-charts"> -->
+		<div class="pie-chart-item-container" style="margin-left: 15px">
+		<div ba-panel>
+			<div class="pie-chart-item" ng-init="regressionautomationFilter()">
+				<div class="chart" id="regautofilter" rel="rgba(255,255,255,0.4)">
+					<span class="percent"> </span>
+				</div>
 
-					<div class="">
+				<div class="">
 
-						<div
-							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
-							class="description-stats">Regression Automation Coverage</div>
-						<div class="description-stats"></div>
+					<div
+						style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+						class="description-stats">Regression Automation Coverage</div>
+					<div class="description-stats"></div>
 
-					</div>
-					<div>
-						<a
-							ng-click="open('app/pages/dashboard/infoDialog/regressionautomation.html','lg')">
-							<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-							height="20" style="float: right; margin-top: 6px">
-						</a>
-					</div>
+				</div>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/regressionautomation.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 6px">
+					</a>
 				</div>
 			</div>
 		</div>
 	</div>
+	</div>
+	
+	
 
 
 
@@ -183,7 +185,7 @@
 			style="background-size: 1433px 915px; background-position: 0px -158px;">
 			<div class="panel-heading clearfix">
 				<h3 class="panel-title">
-					Design Count by Test Use
+					Design Count by Status
 					<div uib-dropdown style="float: right;">
 						<a id="exportThis" uib-dropdown-toggle> <i
 							class="fa fa fa-bars"></i>
@@ -191,10 +193,10 @@
 						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
 							<li><i class="dropdown-arr"></i></li>
 							<li><a href=""
-								ng-click="downloadImg('png','piechart','Design Count by Test Use')"><i
+								ng-click="downloadImg('png','piechart','Design Count by Status')"><i
 									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
 							<li><a href=""
-								ng-click="downloadImg('jpeg','piechart','Design Count by Test Use')"><i
+								ng-click="downloadImg('jpeg','piechart','Design Count by Status')"><i
 									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
 						</ul>
 					</div>
@@ -212,7 +214,7 @@
 			style="background-size: 1433px 915px; background-position: 0px -158px;">
 			<div class="panel-heading clearfix">
 				<h3 class="panel-title">
-					Design Count by Automation Status
+					Design Count by Test Type
 					<div uib-dropdown style="float: right;">
 						<a id="exportThis" uib-dropdown-toggle> <i
 							class="fa fa fa-bars"></i>
@@ -220,10 +222,10 @@
 						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
 							<li><i class="dropdown-arr"></i></li>
 							<li><a href=""
-								ng-click="downloadImg('png','donutChart','Design Count by Automation Status')"><i
+								ng-click="downloadImg('png','donutChart','Design Count by Test Type')"><i
 									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
 							<li><a href=""
-								ng-click="downloadImg('jpeg','donutChart','Design Count by Automation Status')"><i
+								ng-click="downloadImg('jpeg','donutChart','Design Count by Test Type')"><i
 									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
 						</ul>
 					</div>
@@ -243,7 +245,7 @@
 			style="background-size: 1433px 915px; background-position: 0px -158px;">
 			<div class="panel-heading clearfix">
 				<h3 class="panel-title">
-					Design Count by Designer
+					Design Count by Owner
 					<div uib-dropdown style="float: right;">
 						<a id="exportThis" uib-dropdown-toggle> <i
 							class="fa fa fa-bars"></i>
@@ -251,10 +253,10 @@
 						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
 							<li><i class="dropdown-arr"></i></li>
 							<li><a href=""
-								ng-click="downloadImg('png','ownerchart','Design Count by Designer')"><i
+								ng-click="downloadImg('png','ownerchart','Design Count by Owner')"><i
 									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
 							<li><a href=""
-								ng-click="downloadImg('jpeg','ownerchart','Design Count by Designer')"><i
+								ng-click="downloadImg('jpeg','ownerchart','Design Count by Owner')"><i
 									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
 						</ul>
 					</div>
@@ -266,8 +268,6 @@
 			</div>
 		</div>
 	</div>
-
-
 
 	<div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
 		<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
@@ -297,20 +297,25 @@
 					<table class="table">
 						<thead>
 							<tr class="sortable ">
-								<th style="width: 20%" ng-click="sort('releaseName',1)">Release <span
-									class="glyphicon sort-icon" ng-show="sortBy=='releaseName'"
-									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
-								</span></th>
-								<th style="width: 10%" ng-click="sort('testID',1)">Test ID <span
-									class="glyphicon sort-icon" ng-show="sortBy=='testID'"
-									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
-								</span></th>
-								<th style="width: 20%" ng-click="sort('testName',1)">Test Name <span
-									class="glyphicon sort-icon" ng-show="sortBy=='testName'"
-									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
-								</span></th>								
-								<th style="width: 10%" ng-click="sort('testCreationDate',1)">Created Date
+								<th style="width: 20%" ng-click="sort('releaseName',1)">Release
 									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='releaseName'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 10%" ng-click="sort('testID',1)">Test ID
+									<span class="glyphicon sort-icon" ng-show="sortBy=='testID'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 20%" ng-click="sort('testName',1)">Test
+									Name <span class="glyphicon sort-icon"
+									ng-show="sortBy=='testName'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 10%" ng-click="sort('testCreationDate',1)">Created
+									Date <span class="glyphicon sort-icon"
 									ng-show="sortBy=='testCreationDate'"
 									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 								</span>
@@ -321,20 +326,20 @@
 									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 								</span>
 								</th>
-								<th style="width: 10%" ng-click="sort('automationType',1)">Test Use
-									<span class="glyphicon sort-icon"
+								<th style="width: 10%" ng-click="sort('automationType',1)">Test
+									Use <span class="glyphicon sort-icon"
 									ng-show="sortBy=='automationType'"
 									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 								</span>
 								</th>
-								<th style="width: 10%" ng-click="sort('automationStatus',1)">Automation Status
-									<span class="glyphicon sort-icon"
+								<th style="width: 10%" ng-click="sort('automationStatus',1)">Automation
+									Status <span class="glyphicon sort-icon"
 									ng-show="sortBy=='automationStatus'"
 									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 								</span>
 								</th>
-								<th style="width: 10%" ng-click="sort('testDesignStatus',1)">Design Status
-									<span class="glyphicon sort-icon"
+								<th style="width: 10%" ng-click="sort('testDesignStatus',1)">Design
+									Status <span class="glyphicon sort-icon"
 									ng-show="sortBy=='testDesignStatus'"
 									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 								</span>
@@ -342,22 +347,24 @@
 							</tr>
 							<tr>
 								<th style="width: 20%"><input class="form-control"
-									ng-model="releaseNamesearch" placeholder="Search" type="text"									
+									ng-model="releaseNamesearch" placeholder="Search" type="text"
 									ng-change="search(1,'releaseName',releaseNamesearch)" /></th>
 								<th style="width: 10%"></th>
 								<th style="width: 20%"><input class="form-control"
 									ng-model="testNamesearch" placeholder="Search" type="search"
-									ng-change="search(1,'testName',testNamesearch)" /></th>								
+									ng-change="search(1,'testName',testNamesearch)" /></th>
 								<th style="width: 10%"></th>
 								<th style="width: 10%"><input class="form-control"
 									ng-model="testDesignersearch" placeholder="Search"
 									type="search"
 									ng-change="search(1,'testDesigner',testDesignersearch)" /></th>
 								<th style="width: 10%"><input class="form-control"
-									ng-model="automationTypesearch" placeholder="Search" type="search"
+									ng-model="automationTypesearch" placeholder="Search"
+									type="search"
 									ng-change="search(1,'automationType',automationTypesearch)" /></th>
 								<th style="width: 10%"><input class="form-control"
-									ng-model="automationStatussearch" placeholder="Search" type="search"
+									ng-model="automationStatussearch" placeholder="Search"
+									type="search"
 									ng-change="search(1,'automationStatus',automationStatussearch)" /></th>
 								<th style="width: 10%"><input class="form-control"
 									ng-model="testDesignStatussearch" placeholder="Search"
@@ -371,11 +378,11 @@
 							<tr dir-paginate="item in tcTableDetails | itemsPerPage: 5"
 								total-items="testdesigndatapaginate" current-page="pageno"
 								pagination-id="tcdesignpaginate">
-								
+
 								<td style="width: 20%">{{item.releaseName}}</td>
 								<td style="width: 10">{{item.testID}}</td>
 								<td style="width: 20%" title="{{item.testName}}">{{item.testName|limitTo:35}}{{item.testName.length>35
-									? '...' : ''}}</td>								
+									? '...' : ''}}</td>
 								<td style="width: 10%">{{item.testCreationDate|
 									date:'MM/dd/yyyy'}}</td>
 								<td style="width: 10%">{{item.testDesigner}}</td>
@@ -399,9 +406,9 @@
 		<div ng-hide=true id="exportableTable">
 			<table class="table" id="designTable">
 				<tr>
-					<th>Release</th>					
+					<th>Release</th>
 					<th>Test ID</th>
-					<th>Test Name</th>					
+					<th>Test Name</th>
 					<th>Created Date</th>
 					<th>Designer</th>
 					<th>Test Use</th>
@@ -409,9 +416,9 @@
 					<th>Design Status</th>
 				</tr>
 				<tr ng-repeat="item in tcTableDetailsDownload">
-					<td>{{item.releaseName}}</td>					
+					<td>{{item.releaseName}}</td>
 					<td>{{item.testID}}</td>
-					<td>{{item.testName | trimDesc}}</td>					
+					<td>{{item.testName | trimDesc}}</td>
 					<td>{{item.testCreationDate | date:'MM-dd-yyyy'}}</td>
 					<td>{{item.testDesigner}}</td>
 					<td>{{item.automationType}}</td>
@@ -421,6 +428,165 @@
 			</table>
 		</div>
 	</div>
+</div>
+
+<!-- <div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+		<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+			style="background-size: 1433px 915px; background-position: 0px -158px;">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title">
+					Design Details
+					<div uib-dropdown style="float: right;">
+						<a id="exportThis" uib-dropdown-toggle> <i
+							class="fa fa fa-bars"></i>
+						</a>
+						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+							<li><i class="dropdown-arr"></i></li>
+							<li><a href=""
+								ng-click="downloadTable('csv','designTable','Design Details')"><i
+									class="ion-document"></i>Export in CSV</a></li>
+							<li><a href=""
+								ng-click="downloadTable('xls','designTable','Design Details')"><i
+									class="ion-document-text"></i>Export in XLS</a></li>
+						</ul>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body" style="padding-right: 0px;">
+				<div class="horizontal-scroll">
+					<div ng-init="tcTableData(1);initialcountpaginate()"></div>
+					<table class="table">
+						<thead>
+							<tr class="sortable ">
+
+								<th style="width: 5%" ng-click="sort('testID',1)">ID <span
+									class="glyphicon sort-icon" ng-show="sortBy=='testID'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span></th>
+								<th style="width: 20%" ng-click="sort('testName',1)">Name <span
+									class="glyphicon sort-icon" ng-show="sortBy=='testName'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span></th>
+								<th style="width: 30%" ng-click="sort('testDescription',1)">Description
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='testDescription'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 15%" ng-click="sort('testCreationDate',1)">Created
+									On <span class="glyphicon sort-icon"
+									ng-show="sortBy=='testCreationDate'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 15%" ng-click="sort('testDesigner',1)">Owner
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='testDesigner'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 25%" ng-click="sort('testType',1)">Test
+									Type <span class="glyphicon sort-icon"
+									ng-show="sortBy=='testType'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 15%" ng-click="sort('testDesignStatus',1)">Status
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='testDesignStatus'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+
+
+							</tr>
+							<tr>
+								<th style="width: 10%"><input class="form-control"
+									ng-model="testIDsearch" placeholder="Search" type="text"
+									onkeypress="return event.charCode > 47 && event.charCode < 58;"
+									ng-change="search(1,'testID',testIDsearch)" /></th>
+								<th style="width: 15%"><input class="form-control"
+									ng-model="testNamesearch" placeholder="Search" type="search"
+									ng-change="search(1,'testName',testNamesearch)" /></th>
+								<th style="width: 20%"><input class="form-control"
+									ng-model="testDescriptionsearch" placeholder="Search"
+									type="search"
+									ng-change="search(1,'testDescription',testDescriptionsearch)" />
+								</th>
+								<th style="width: 10%">
+											<input class="form-control" ng-model="testCreationDatesearch" placeholder="Search" type="search" ng-change="search(1,'testCreationDate', testCreationDatesearch)" />		
+
+								</th>
+								<th style="width: 15%"><input class="form-control"
+									ng-model="testDesignersearch" placeholder="Search"
+									type="search"
+									ng-change="search(1,'testDesigner',testDesignersearch)" /></th>
+								<th style="width: 20%"><input class="form-control"
+									ng-model="testTypesearch" placeholder="Search" type="search"
+									ng-change="search(1,'testType',testTypesearch)" /></th>
+								<th style="width: 15%"><input class="form-control"
+									ng-model="testDesignStatussearch" placeholder="Search"
+									type="search"
+									ng-change="search(1,'testDesignStatus',testDesignStatussearch)" />
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr dir-paginate="item in tcTableDetails | itemsPerPage: 5"
+								total-items="testdatapaginate" current-page="pageno"
+								pagination-id="tcpaginate">
+								<td style="width: 5%">{{item.testID}}</td>
+								<td style="width: 20%" title="{{item.testName}}">{{item.testName|limitTo:15}}{{item.testName.length>15
+									? '...' : ''}}</td>
+								<td style="width: 30%" title="{{item.testDescription}}">{{item.testDescription|limitTo:35}}{{item.testDescription.length>35
+									? '...' : ''}}</td>
+								<td style="width: 15%">{{item.testCreationDate|
+									date:'MM/dd/yyyy'}}</td>
+								<td style="width: 15%">{{item.testDesigner}}</td>
+								<td style="width: 25%">{{item.testType}}</td>
+
+								<td style="width: 15%">{{item.testDesignStatus}}</td>
+
+
+
+							</tr>
+						</tbody>
+					</table>
+					<dir-pagination-controls directions-links="true"
+						boundary-links="true" pagination-id="tcpaginate"
+						on-page-change="tcpageChangedLevel(newPageNumber)"></dir-pagination-controls>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<div ng-init="tcTableDataExport(1)"></div>
+		<div ng-hide=true id="exportableTable">
+			<table class="table" id="designTable">
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Created On</th>
+					<th>Owner</th>
+					<th>Test Type</th>
+					<th>Status</th>
+				</tr>
+				<tr ng-repeat="item in tcTableDetailsDownload">
+					<td>{{item.testID}}</td>
+					<td>{{item.testName | trimDesc}}</td>
+					<td>{{item.testDescription | trimDesc}}</td>
+					<td>{{item.testCreationDate | date:'MM-dd-yyyy'}}</td>
+					<td>{{item.testDesigner}}</td>
+					<td>{{item.testType}}</td>
+					<td>{{item.testDesignStatus}}</td>
+				</tr>
+			</table>
+		</div>
+	</div> -->
 
 </div>
 
@@ -455,7 +621,8 @@
 					class="form-control" uib-datepicker-popup="MM/dd/yyyy"
 					datepicker-options="options" ng-model="dtfrom" is-open="opened1"
 					ng-required="true" close-text="Close"
-					alt-input-formats="altInputFormats" show-button-bar="false" disabled/>
+					alt-input-formats="altInputFormats" show-button-bar="false"
+					disabled />
 			</div>
 
 			<div class="form-group col-md-2">
@@ -465,7 +632,7 @@
 					uib-datepicker-popup="MM/dd/yyyy" datepicker-options="options"
 					ng-model="dtto" is-open="opened2" ng-required="true"
 					close-text="Close" alt-input-formats="altInputFormats"
-					show-button-bar="false" disabled/>
+					show-button-bar="false" disabled />
 			</div>
 		</div>
 
@@ -481,7 +648,7 @@
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
-						style="font-size: 40px; margin-top: 12%; text-align: center; width: 250px; margin-left: 15%">{{testCount}}
+						style="font-size: 40px; margin-top: 12%; text-align: center;">{{testCount}}
 					</div>
 					<div>
 						<a
@@ -530,7 +697,7 @@
 			style="background-size: 1433px 915px; background-position: 0px -158px;">
 			<div class="panel-heading clearfix">
 				<h3 class="panel-title">
-					Tests by Priority
+					Tests by Status
 					<div uib-dropdown style="float: right;">
 						<a id="exportThis" uib-dropdown-toggle> <i
 							class="fa fa fa-bars"></i>
@@ -554,4 +721,166 @@
 		</div>
 
 	</div>
+
+	<div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+		<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+			style="background-size: 1433px 915px; background-position: 0px -158px;">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title">
+					Design Count by Owner
+					<div uib-dropdown style="float: right;">
+						<a id="exportThis" uib-dropdown-toggle> <i
+							class="fa fa fa-bars"></i>
+						</a>
+						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+							<li><i class="dropdown-arr"></i></li>
+							<li><a href=""
+								ng-click="downloadImg('png','ownerchart','Design Count by Owner')"><i
+									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+							<li><a href=""
+								ng-click="downloadImg('jpeg','ownerchart','Design Count by Owner')"><i
+									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+						</ul>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body" style="padding-right: 0px;">
+				<div
+					ng-include="'app/pages/charts/testcases/testcasesdata/jiradesignOwnerChart.html'"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+		<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+			style="background-size: 1433px 915px; background-position: 0px -158px;">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title">
+					Design Details
+					<div uib-dropdown style="float: right;">
+						<a id="exportThis" uib-dropdown-toggle> <i
+							class="fa fa fa-bars"></i>
+						</a>
+						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+							<li><i class="dropdown-arr"></i></li>
+							<li><a href=""
+								ng-click="downloadTable('csv','designTable','Design Details')"><i
+									class="ion-document"></i>Export in CSV</a></li>
+							<li><a href=""
+								ng-click="downloadTable('xls','designTable','Design Details')"><i
+									class="ion-document-text"></i>Export in XLS</a></li>
+						</ul>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body" style="padding-right: 0px;">
+				<div class="horizontal-scroll">
+					<div ng-init=""></div>
+					<table class="table">
+						<thead>
+							<tr class="sortable ">
+
+								<th style="width: 5%" ng-click="sort('issueID',1)">ID <span
+									class="glyphicon sort-icon" ng-show="sortBy=='issueID'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span></th>
+								<th style="width: 20%" ng-click="sort('summary',1)">Summary
+									<span class="glyphicon sort-icon" ng-show="sortBy=='summary'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 30%" ng-click="sort('issueDescription',1)">Description
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='issueDescription'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 15%" ng-click="sort('issueCreated',1)">Created
+									On <span class="glyphicon sort-icon"
+									ng-show="sortBy=='issueCreated'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 15%" ng-click="sort('issueAssignee',1)">Assignee
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='issueAssignee'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 25%" ng-click="sort('issuePriority',1)">Priority
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='issuePriority'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+								<th style="width: 15%" ng-click="sort('issueStatus',1)">Status
+									<span class="glyphicon sort-icon"
+									ng-show="sortBy=='issueStatus'"
+									ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+								</span>
+								</th>
+
+
+							</tr>
+							<tr>
+								<th style="width: 10%"><input class="form-control"
+									ng-model="testIDsearch" placeholder="Search" type="text"
+									onkeypress="return event.charCode > 47 && event.charCode < 58;"
+									ng-change="search(1,'issueID',testIDsearch)" /></th>
+								<th style="width: 15%"><input class="form-control"
+									ng-model="testNamesearch" placeholder="Search" type="search"
+									ng-change="search(1,'summary',testNamesearch)" /></th>
+								<th style="width: 20%"><input class="form-control"
+									ng-model="testDescriptionsearch" placeholder="Search"
+									type="search"
+									ng-change="search(1,'issueDescription',testDescriptionsearch)" />
+								</th>
+								<th style="width: 10%">
+											<input class="form-control" ng-model="testCreationDatesearch" placeholder="Search" type="search" ng-change="search(1,'testCreationDate', testCreationDatesearch)" />		
+
+								</th>
+								<th style="width: 15%"><input class="form-control"
+									ng-model="testDesignersearch" placeholder="Search"
+									type="search"
+									ng-change="search(1,'issueAssignee',testDesignersearch)" /></th>
+								<th style="width: 20%"><input class="form-control"
+									ng-model="testTypesearch" placeholder="Search" type="search"
+									ng-change="search(1,'issuePriority',testTypesearch)" /></th>
+								<th style="width: 15%"><input class="form-control"
+									ng-model="testDesignStatussearch" placeholder="Search"
+									type="search"
+									ng-change="search(1,'issueStatus',testDesignStatussearch)" />
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr dir-paginate="item in tcTableDetails | itemsPerPage: 5"
+								total-items="testdatapaginate" current-page="pageno"
+								pagination-id="tcpaginate">
+								<td style="width: 5%">{{item.issueID}}</td>
+								<td style="width: 20%" title="{{item.summary}}">{{item.summary|limitTo:25}}{{item.summary.length>25
+									? '...' : ''}}</td>
+								<td style="width: 30%" title="{{item.issueDescription}}">{{item.issueDescription|limitTo:35}}{{item.issueDescription.length>35
+									? '...' : ''}}</td>
+								<td style="width: 15%">{{item.issueCreated|
+									date:'MM/dd/yyyy'}}</td>
+								<td style="width: 15%">{{item.issueAssignee}}</td>
+								<td style="width: 25%">{{item.issuePriority}}</td>
+
+								<td style="width: 15%">{{item.issueStatus}}</td>
+
+
+
+							</tr>
+						</tbody>
+					</table>
+					<dir-pagination-controls directions-links="true"
+						boundary-links="true" pagination-id="tcpaginate"
+						on-page-change="tcpageChangedLevel(newPageNumber)"></dir-pagination-controls>
+
+				</div>
+			</div>
+		</div>
+	</div> -->
 </div>

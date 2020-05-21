@@ -9,20 +9,13 @@
 
 	/** @ngInject */
 
-	function buildMetricsCtrl($scope, $state, buildData, baConfig, $element,
+	function buildMetricsCtrl($scope, AES, $state, buildData, baConfig, $element,
 			$rootScope, $sessionStorage, layoutPaths, localStorageService,
 			$base64, $http) {
 
 		var dashName = localStorageService.get('dashboardName');
 		$rootScope.loggedInuserId = localStorageService.get('loggedInuserId');
 		$rootScope.dashNam = dashName;
-
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-			return tokeen;
-		}
 
 		if (localStorageService.get('component')) {
 			var component = localStorageService.get('component')
@@ -41,8 +34,6 @@
 			$scope.buildJobs(data);
 			//$scope.getlatestbuild($rootScope.buildName);
 
-			
-			
 			//$scope.getlatestbuild($rootScope.buildName);
 			//$scope.gettotalbuild($rootScope.buildName);
 			//$scope.getavaragebuildduration($rootScope.buildName);
@@ -109,7 +100,7 @@
 
 		$scope.getlatestbuild = function(jobName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -196,7 +187,7 @@
 		}
 
 		$scope.gettotalbuild = function(jobName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -253,7 +244,7 @@
 					datasets : [ {
 						label : 'No. of builds: ',
 						data : $scope.totalBuild,
-						backgroundColor : "#10685d",
+						backgroundColor : "#078f46",
 						borderWidth : 1
 
 					} ]
@@ -266,14 +257,16 @@
 						yAxes : [ {
 							 scaleLabel : {
 									display : true,
-									labelString : 'Number of Builds'
+									labelString : 'Number of Builds',
+									fontColor: '#4c4c4c'
 								},
 						
 							ticks : {
-								beginAtZero : true
+								beginAtZero : true,
+								fontColor: '#4c4c4c'
 							},
 							gridLines : {
-								color : "rgba(255,255,255,0.2)"
+								color : "#d8d3d3"
 							}
 						} ],
 
@@ -284,8 +277,11 @@
 								},
 							/*display : false,*/
 							gridLines : {
-								color : "rgba(255,255,255,0.2)"
+								color : "#d8d3d3"
 
+							},
+							ticks : {
+								fontColor: '#4c4c4c'
 							}
 						} ]
 					}
@@ -300,7 +296,7 @@
 
 		$scope.getavaragebuildduration = function(jobName) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -347,7 +343,7 @@
 					datasets : [ {
 						label : "Build Duration",
 						data : $scope.duration,
-						backgroundColor : "#10685d",
+						backgroundColor : "#078f46",
 						borderWidth : 1
 					} ]
 				},
@@ -359,25 +355,30 @@
 						yAxes : [ {
 							 scaleLabel : {
 									display : true,
-									labelString : 'Number of Builds'
+									labelString : 'Build duration',
+									fontColor: '#4c4c4c'
 								},
 						ticks : {
 								beginAtZero : true,
-								min : 0.0,
-								stepSize : 0.5
+								fontColor: '#4c4c4c',
+								stepSize : 2
 							},
 							gridLines : {
-								color : "rgba(255,255,255,0.2)"
+								color : "#d8d3d3"
 							}
 						} ],
 
 						xAxes : [ {
 							 scaleLabel : {
 									display : true,
-									labelString : 'Time Period'
+									labelString : 'Time Period',
+									fontColor: '#4c4c4c'
 								},
 							gridLines : {
-								color : "rgba(255,255,255,0.2)"
+								color : "#d8d3d3"
+							},
+							ticks : {
+								fontColor: '#4c4c4c',
 							}
 						} ]
 					}
@@ -391,7 +392,7 @@
 
 		$scope.getbuildperday = function(jobName) {
 		
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -469,15 +470,19 @@
 							xAxes : [ {
 
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
+								},
+								ticks : {
+									fontColor: '#4c4c4c',
 								}
 							} ],
 							yAxes : [ {
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
 								},
 								ticks : {
 									beginAtZero : true,
+									fontColor: '#4c4c4c',
 									min : 0,
 									stepSize : 5,
 									max : 10
@@ -546,23 +551,29 @@
 							xAxes : [ {
 								 scaleLabel : {
 										display : true,
-										labelString : 'Time Period'
+										labelString : 'Time Period',
+										fontColor: '#4c4c4c'
 									},
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
+								},
+								ticks : {
+									fontColor: '#4c4c4c',
 								}
 							} ],
 							yAxes : [ {
 								 scaleLabel : {
 										display : true,
-										labelString : 'Number of Builds'
+										labelString : 'Number of Builds',
+										fontColor: '#4c4c4c'
 									},
 							
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
 								},
 								ticks : {
 									beginAtZero : true,
+									fontColor: '#4c4c4c',
 									min : 0,
 									stepSize : 5,
 									max : 10
@@ -629,10 +640,6 @@
 				$rootScope.buildJob = jobname;
 				
 			}
-			
-			
-			
-
 			if (!nodays) {
 				nodays = 15;
 			}
@@ -646,9 +653,6 @@
 			$scope.getavaragebuildduration($rootScope.buildJob);
 			
 			
-			
-			
-
 			if (nodays > 5) {
 				//latestbuild(selectedJob);
 				//$scope.getlatestbuild($rootScope.buildName);

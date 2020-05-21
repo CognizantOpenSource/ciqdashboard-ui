@@ -9,7 +9,7 @@
       .controller('artifactCountCtrl', artifactCountCtrl);
 
   /** @ngInject */
-  function artifactCountCtrl($sessionStorage,$scope, $rootScope, $base64,$http, baConfig, $element, layoutPaths, UserService, localStorageService) {
+  function artifactCountCtrl($sessionStorage,$scope, $rootScope, AES, $base64,$http, baConfig, $element, layoutPaths, UserService, localStorageService) {
                   function getEncryptedValue()
                 {
                 	  	var username= localStorageService.get('userIdA');
@@ -23,7 +23,7 @@
             	  var projectName = localStorageService.get('projectName');
             	  
                   $scope.artifactCountChart=function(){
-                	    var token  = getEncryptedValue();
+                	    var token  = AES.getEncryptedValue();
                         var config = {headers: {
                                 'Authorization': token
                                 }};

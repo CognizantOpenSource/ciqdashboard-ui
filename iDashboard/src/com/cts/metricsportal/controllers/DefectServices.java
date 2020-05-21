@@ -31,7 +31,9 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.JiraMetrics;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.dao.AlmMongoOperations;
+import com.cts.metricsportal.dao.JiraMongoOperations;
 import com.cts.metricsportal.dao.OperationalDAO;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.DefectChartVO;
@@ -147,18 +149,7 @@ public class DefectServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		
-		
-		String owner = "";
-
-		// Check the Dashboard is set as public
-		owner = AlmMongoOperations.isDashboardsetpublic(dashboardName);
-		if (owner != "") {
-			userId = owner;
-		}
-		// End of the check value
-		
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 		Date startDate =  new Date();
 		Date endDate =  new Date();
@@ -208,12 +199,15 @@ public class DefectServices extends BaseMongoOperation {
 			String query = "{},{_id:0,defectId:1,priority:1,summary:1,releaseName:1,environment:1,severity:1,assignedto:1,status:1}";
 			Query query1 = new BasicQuery(query);
 			query1.addCriteria(Criteria.where("_id").in(levelIdList));
+			/*
+			 * if (defectId != 0) {
+			 * query1.addCriteria(Criteria.where("defectId").is(defectId)); }
+			 */
 			
 			if (!defectId.equalsIgnoreCase("")) {
 				int idefectId=Integer.parseInt(defectId);				
 				query1.addCriteria(Criteria.where("$where").is("/^" + idefectId + ".*/.test(this.defectId)"));				
 			}
-			
 			if (startDate != null || endDate != null) {
 				query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
 			} else if (dateBefore7Days != null && dates != null) {
@@ -253,17 +247,7 @@ public class DefectServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		
-		String owner = "";
-
-		// Check the Dashboard is set as public
-		owner = AlmMongoOperations.isDashboardsetpublic(dashboardName);
-		if (owner != "") {
-			userId = owner;
-		}
-		// End of the check value
-		
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 		Date startDate =  new Date();
 		Date endDate =  new Date();
@@ -313,20 +297,21 @@ public class DefectServices extends BaseMongoOperation {
 			String query = "{},{_id:0,defectId:1,priority:1,summary:1,releaseName:1,environment:1,severity:1,assignedto:1,status:1}";
 			Query query1 = new BasicQuery(query);
 			query1.addCriteria(Criteria.where("_id").in(levelIdList));
+			if (startDate != null || endDate != null) {
+				query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
+			} else if (dateBefore7Days != null && dates != null) {
+				query1.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
+			}
+			/*
+			 * if (defectId != 0) {
+			 * query1.addCriteria(Criteria.where("defectId").is(defectId)); }
+			 */
 			
 			if (!defectId.equalsIgnoreCase("")) {
 				int idefectId=Integer.parseInt(defectId);
 				query1.addCriteria(Criteria.where("$where").is("/^" + idefectId + ".*/.test(this.defectId)"));
 			}
 			
-			if (startDate != null || endDate != null) {
-				query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-			} else if (dateBefore7Days != null && dates != null) {
-				query1.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
-			}
-			/*if (defectId != 0) {
-				query1.addCriteria(Criteria.where("defectId").is(defectId));
-			}*/
 			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
 
 				if (!entry.getValue().equals("undefined")) {
@@ -365,7 +350,7 @@ public class DefectServices extends BaseMongoOperation {
 		long defclosedCount = 0;
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
 		if (operationalAccess) {
@@ -401,13 +386,17 @@ public class DefectServices extends BaseMongoOperation {
 	@Path("/sprintlevellist")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getSprintList(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
-			@QueryParam("selectedproject") String selectedproject, @QueryParam("selectedepic") String selectedepic)
+			@QueryParam("dashboardName") String dashboardName,
+			@QueryParam("owner") String owner,
+			@QueryParam("selectedproject") String selectedproject,
+			@QueryParam("selectedepic") String selectedepic)
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
+		
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
+		
 		Query sprintquery = new Query();
 		List<String> sprintlist = new ArrayList<String>();
 
@@ -448,7 +437,7 @@ public class DefectServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		
 	//	Date dfromdate = new Date (dfromval);
 	//	Date dtoddate = new Date (dtoval);
@@ -462,6 +451,16 @@ public class DefectServices extends BaseMongoOperation {
 			List<String> prolist = new ArrayList<String>();
 			Query projectquery = new Query();
 			projectquery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
 			projectquery.addCriteria(Criteria.where("owner").is(userId));
 			prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
 					projectquery.getQueryObject());
@@ -534,7 +533,6 @@ public class DefectServices extends BaseMongoOperation {
 	}
 	
 	
-	
 	// Sprint List - Drop Down (implement levelId later)
 			@SuppressWarnings("unchecked")
 			@GET
@@ -547,7 +545,7 @@ public class DefectServices extends BaseMongoOperation {
 
 				AuthenticationService UserEncrypt = new AuthenticationService();
 				String userId = UserEncrypt.getUser(authString);
-				boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+				boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 				Date dfromdate = new Date(dfromval);
 				Date dtoddate = new Date(dtoval);
@@ -561,6 +559,17 @@ public class DefectServices extends BaseMongoOperation {
 					List<String> prolist = new ArrayList<String>();
 					Query projectquery = new Query();
 					projectquery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+					
+					String owner = "";
+
+					// Check the Dashboard is set as public
+					owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+					if (owner != "") {
+						userId = owner;
+					}
+					// End of the check value
+					
+					
 					projectquery.addCriteria(Criteria.where("owner").is(userId));
 					prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
 							projectquery.getQueryObject());
@@ -592,7 +601,7 @@ public class DefectServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		List<String> epiclist = new ArrayList<String>();
 
 		if (operationalAccess) {
@@ -692,7 +701,7 @@ public class DefectServices extends BaseMongoOperation {
 			BadLocationException {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 		Query epicquery = new Query();
 		List<String> epiclist = new ArrayList<String>();
@@ -740,7 +749,7 @@ public class DefectServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		List<DefectTrendVO> finalresult = new ArrayList<DefectTrendVO>();
 
 		if (operationalAccess) {
@@ -848,7 +857,7 @@ public class DefectServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 		/*
 		 * diff =endDate.getTime()- startDate.getTime(); noOfDays =
@@ -959,7 +968,7 @@ public class DefectServices extends BaseMongoOperation {
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		if (operationalAccess) {
 			Date startDate = new Date(vardtfrom);
 			Date endDate = new Date(vardtto);
@@ -1066,7 +1075,7 @@ public class DefectServices extends BaseMongoOperation {
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		if (operationalAccess) {
 			Date startDate = new Date(vardtfrom);
 			Date endDate = new Date(vardtto);
@@ -1093,12 +1102,7 @@ public class DefectServices extends BaseMongoOperation {
 			}
 			Set<String> hSet = new HashSet<String>(statlist);
 			prioritylist = new ArrayList<String>(hSet);
-
-			/*
-			 * diff =endDate.getTime()- startDate.getTime(); noOfDays =
-			 * TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-			 */
-
+			
 			Query filterQuery = new Query();
 			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 			filterQuery.addCriteria(Criteria.where("owner").is(userId));
@@ -1173,7 +1177,7 @@ public class DefectServices extends BaseMongoOperation {
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		if (operationalAccess) {
 			Date startDate = new Date(vardtfrom);
 			Date endDate = new Date(vardtto);
@@ -1278,12 +1282,10 @@ public class DefectServices extends BaseMongoOperation {
 			@QueryParam("projectName") String projectName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 
-		long diff = 0;
-		long noOfDays = 0;
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 		if (operationalAccess) {
 			Date startDate = new Date(vardtfrom);
 			Date endDate = new Date(vardtto);
@@ -1411,7 +1413,7 @@ public class DefectServices extends BaseMongoOperation {
 			BadLocationException {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 		long totDefCount = 0;
 
@@ -1441,15 +1443,15 @@ public class DefectServices extends BaseMongoOperation {
 	@GET
 	@Path("/defectOpenRate")
 	@Produces(MediaType.APPLICATION_JSON)
-	public long defectOpenRate(@HeaderParam("Authorization") String authString,
+	public int defectOpenRate(@HeaderParam("Authorization") String authString,
 			@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner)
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		long defOpenRate = 0;
+		boolean operationalAccess = LayerAccess.authenticateToken(authString);
+		int defOpenRate = 0;
 		if (operationalAccess) {
 			List<Integer> levelIdList = OperationalDAO.getLevelIds(dashboardName, owner);
 			long DefecTotCount = 0;
@@ -1466,8 +1468,7 @@ public class DefectServices extends BaseMongoOperation {
 			DefecTotCount = getMongoOperation().count(query1, DefectVO.class);
 
 			if (OpenedCount > 0 && DefecTotCount > 0) {
-//				defOpenRate = (int) Math.round((OpenedCount * 100 / DefecTotCount));
-				defOpenRate = Math.round(((double)OpenedCount * 100)/ ((double)DefecTotCount));
+				defOpenRate = (int) (OpenedCount * 100 / DefecTotCount);
 			} else {
 				defOpenRate = 0;
 			}
@@ -1493,9 +1494,16 @@ public class DefectServices extends BaseMongoOperation {
 			AuthenticationService UserEncrypt = new AuthenticationService();
 			String userId = UserEncrypt.getUser(authString);
 
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
 			// End of the check value
 
-			boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+			boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 			List<Date> finalDateList = new ArrayList<Date>();
 
@@ -1591,7 +1599,7 @@ public class DefectServices extends BaseMongoOperation {
 
 					// End of the check value
 
-					boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+					boolean operationalAccess = LayerAccess.authenticateToken(authString);
 
 					List<Date> finalDateList = new ArrayList<Date>();
 

@@ -11,7 +11,7 @@
       .controller('qbotHomeController', qbotHomeController);
 
   /** @ngInject */
-  function qbotHomeController($scope,$rootScope, $location, $state,$http,localStorageService,$base64) {
+  function qbotHomeController($scope, $rootScope, AES, $location, $state,$http,localStorageService,$base64) {
 	  var inputValue="";
 	  var charCode="";
 	  $rootScope.menubar = false;
@@ -19,20 +19,12 @@
 		$rootScope.var2=false;
 		$rootScope.var3=true;
 		$rootScope.var4=false;
-		$rootScope.var7=false;
-		function getEncryptedValue()
-		  {
-			 var username= localStorageService.get('userIdA');
-		     var password= localStorageService.get('passwordA');
-		        var tokeen =$base64.encode(username+":"+password);
-		        
-		        return tokeen;
-		        }
+		$rootScope.var6=false;
 		
 	  $scope.search=function(inputValue)
 	  {
 		  $scope.keyword=inputValue;
-		 //console.log("inside search--"+inputValue); 
+		 console.log("inside search--"+inputValue); 
 		 inputValue=btoa(inputValue);
 		 $location.path('/dashbotlanding/'+inputValue);
 		 	 
@@ -40,7 +32,7 @@
 	  };
 	  
 	  $scope.checkQbotHome = function(){
-		  var token  = getEncryptedValue();
+		  var token  = AES.getEncryptedValue();
 	        var config = {headers: {
 	                'Authorization': token
 	                }};
@@ -51,11 +43,11 @@
 	  
 	  
 	  $scope.keyevent=function (keyCode,myValue) {
-		  //console.log(keyCode);
+		  console.log(keyCode);
 		    charCode = myValue;        
-		    //console.log(charCode);
+		    console.log(charCode);
 		    inputValue=charCode;
-		    //console.log(inputValue.length);
+		    console.log(inputValue.length);
 		    if(inputValue.length>0)
 			  {
 
@@ -72,7 +64,7 @@
 			      {		    		 
 		        	 var url1= url+inputValue;
 		        	 
-		        	 //console.log("prediction in home controller " + url1);
+		        	 console.log("prediction in home controller " + url1);
 
 		    $http({
 		            url: url1,
@@ -89,15 +81,15 @@
 	 // $scope.Countries = response.predictedValues;
 		  $scope.titles=[];
 		  $scope.titles=response;
-		  //console.log($scope.titles);
+		  console.log($scope.titles);
 	  }
 
 	  $scope.homeSearchTxt1=function(selected)
 	  {
 		  if(selected)
-			  //console.log(typeof(selected.originalObject));
+			  console.log(typeof(selected.originalObject));
 		  	  $scope.keyword=selected.originalObject.key;
-		  	  //console.log($scope.keyword);		 
+		  	  console.log($scope.keyword);		 
 		  	  $scope.search($scope.keyword);
 	
 	  }

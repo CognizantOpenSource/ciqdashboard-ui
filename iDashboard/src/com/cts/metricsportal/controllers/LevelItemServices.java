@@ -24,6 +24,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.cts.metricsportal.bo.LayerAccess;
+import com.cts.metricsportal.dao.JiraMongoOperations;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.LevelItemsVO;
 import com.cts.metricsportal.vo.OperationalDashboardVO;
@@ -100,7 +102,7 @@ public class LevelItemServices extends BaseMongoOperation{
 		
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		int count = 0;
 
@@ -144,6 +146,16 @@ public class LevelItemServices extends BaseMongoOperation{
 		Query query = new Query();
 
 		query.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
+		
 		query.addCriteria(Criteria.where("owner").is(userId));
 
 		Update update = new Update();

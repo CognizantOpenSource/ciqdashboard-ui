@@ -77,21 +77,16 @@ angular.module('ngIdle.idle', ['ngIdle.keepalive', 'ngIdle.localStorage'])
     var options = {
       idle: 20 * 60, // in seconds (default is 20min)
       timeout: 30, // in seconds (default is 30sec)
-      autoResume: 'idle', // lets events automatically resume (unsets idle
-							// state/resets warning)
+      autoResume: 'idle', // lets events automatically resume (unsets idle state/resets warning)
       interrupt: 'mousemove keydown DOMMouseScroll mousewheel mousedown touchstart touchmove scroll',
       windowInterrupt: null,
       keepalive: true
     };
 
     /**
-	 * Sets the number of seconds a user can be idle before they are considered
-	 * timed out.
-	 * 
-	 * @param {Number|Boolean}
-	 *            seconds A positive number representing seconds OR 0 or false
-	 *            to disable this feature.
-	 */
+     *  Sets the number of seconds a user can be idle before they are considered timed out.
+     *  @param {Number|Boolean} seconds A positive number representing seconds OR 0 or false to disable this feature.
+     */
     var setTimeout = this.timeout = function(seconds) {
       if (seconds === false) options.timeout = 0;
       else if (angular.isNumber(seconds) && seconds >= 0) options.timeout = seconds;
@@ -176,8 +171,6 @@ angular.module('ngIdle.idle', ['ngIdle.keepalive', 'ngIdle.localStorage'])
         	
             return;
           }
-          
-          
 
           // countdown has expired, so signal timeout
           if (state.countdown <= 0) {
@@ -257,19 +250,14 @@ angular.module('ngIdle.idle', ['ngIdle.keepalive', 'ngIdle.localStorage'])
           watch: function(noExpiryUpdate) {
             $interval.cancel(state.idle);
             $interval.cancel(state.timeout);
-            
-            
 
-            // calculate the absolute expiry date, as added insurance against a
-			// browser sleeping or paused in the background
+            // calculate the absolute expiry date, as added insurance against a browser sleeping or paused in the background
             var timeout = !options.timeout ? 0 : options.timeout;
             if (!noExpiryUpdate) setExpiry(new Date(new Date().getTime() + ((options.idle + timeout) * 1000)));
 
 
-            if (state.idling) toggleState(); // clears the idle state if
-												// currently idling
-            else if (!state.running) startKeepalive(); // if about to run,
-														// start keep alive
+            if (state.idling) toggleState(); // clears the idle state if currently idling
+            else if (!state.running) startKeepalive(); // if about to run, start keep alive
 
             state.running = true;
 
@@ -295,8 +283,7 @@ angular.module('ngIdle.idle', ['ngIdle.keepalive', 'ngIdle.localStorage'])
               interrupted(anotherTab);
             }
 
-            // note: you can no longer auto resume once we exceed the expiry;
-			// you will reset state by calling watch() manually
+            // note: you can no longer auto resume once we exceed the expiry; you will reset state by calling watch() manually
             if (anotherTab || options.autoResume === 'idle' || (options.autoResume === 'notIdle' && !state.idling)) this.watch(anotherTab);
           }
         };
@@ -320,8 +307,7 @@ angular.module('ngIdle.idle', ['ngIdle.keepalive', 'ngIdle.localStorage'])
 
         $document.find('html').on(options.interrupt, function(event) {
           if (event.type === 'mousemove' && event.originalEvent && event.originalEvent.movementX === 0 && event.originalEvent.movementY === 0) {
-            return; // Fix for Chrome desktop notifications, triggering
-					// mousemove event.
+            return; // Fix for Chrome desktop notifications, triggering mousemove event.
           }
 
           if (event.type !== 'mousemove' || lastMove.hasMoved(event)) {
@@ -519,12 +505,9 @@ angular.module('ngIdle.localStorage', [])
        }
     }
 
-    // Safari, in Private Browsing Mode, looks like it supports localStorage but
-	// all calls to setItem
-    // throw QuotaExceededError. We're going to detect this and just silently
-	// drop any calls to setItem
-    // to avoid the entire page breaking, without having to do a check at each
-	// usage of Storage.
+    // Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem
+    // throw QuotaExceededError. We're going to detect this and just silently drop any calls to setItem
+    // to avoid the entire page breaking, without having to do a check at each usage of Storage.
     var storage = getStorage();
 
     return {

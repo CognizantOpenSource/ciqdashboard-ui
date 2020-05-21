@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 
 import com.cts.metricsportal.dao.AlmMongoOperations;
 import com.cts.metricsportal.dao.ODALMMongoOperations;
-import com.cts.metricsportal.dao.OperationalDAO;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.ArtifactsCountVO;
 import com.cts.metricsportal.vo.DefectResolutionVO;
@@ -34,9 +33,6 @@ public class OperationalDashboardALMMetrics {
 		Date endDate = dateTimeCalc.getEndDate(vardtto);
 		Date dates = new Date();
 		Date dateBefore7Days = dateTimeCalc.getDateForTimeperiod(timeperiod);
-		
-		
-		
 		if(operationalAccess){
 				try {
 					
@@ -187,38 +183,6 @@ public class OperationalDashboardALMMetrics {
 		return totaltexecount;
 		
 	}
-	
-	public long getuniqueExecutionCount(String authString, String dashboardName, String domainName, String projectName,
-			String vardtfrom, String vardtto, String timeperiod) throws ParseException {
-		
-		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
-		String userId = LayerAccess.getUser(authString);
-		String owner ="";
-		long totaltuniqueexecount=0;
-		Date startDate = dateTimeCalc.getStartDate(vardtfrom);
-		Date endDate = dateTimeCalc.getEndDate(vardtto);
-		Date dates = new Date();
-		Date dateBefore7Days = dateTimeCalc.getDateForTimeperiod(timeperiod);
-		if(operationalAccess){
-			try {
-				
-				//Check the Dashboard is set as public
-				owner = ODALMMongoOperations.isDashboardsetpublic(dashboardName);
-				if(owner != "") {
-					userId = owner;
-				}
-				//End of the check value
-				
-				
-				totaltuniqueexecount = ODALMMongoOperations.getuniqueExecutionCountQuery(dashboardName, userId, domainName, projectName, startDate, endDate, dates, dateBefore7Days);
-			} catch (NumberFormatException | BaseException | BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return totaltuniqueexecount;
-		
-	}
 
 	public long getTcCoverage(String authString, String dashboardName, String domainName, String projectName,
 			String vardtfrom, String vardtto, String timeperiod) throws ParseException {
@@ -272,9 +236,7 @@ public class OperationalDashboardALMMetrics {
 					}
 					//End of the check value
 					
-				   defCount = ODALMMongoOperations.getTotalDefectCountinitialQuery(dashboardName, userId, domainName, projectName, startDate, endDate, dates, dateBefore7Days);
-				
-					
+					defCount = ODALMMongoOperations.getTotalDefectCountinitialQuery(dashboardName, userId, domainName, projectName, startDate, endDate, dates, dateBefore7Days);
 				} catch (NumberFormatException | BaseException | BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -283,13 +245,13 @@ public class OperationalDashboardALMMetrics {
 		return defCount;
 	}
 
-	public long defectRejectionRateFilter(String authString, String dashboardName, String domainName, String projectName,
+	public int defectRejectionRateFilter(String authString, String dashboardName, String domainName, String projectName,
 			String vardtfrom, String vardtto, String timeperiod) throws ParseException {
 		
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		String userId = LayerAccess.getUser(authString);
 		String owner="";
-		long defRejRate = 0;
+		int defRejRate = 0;
 		Date startDate = dateTimeCalc.getStartDate(vardtfrom);
 		Date endDate = dateTimeCalc.getEndDate(vardtto);
 		Date dates = new Date();

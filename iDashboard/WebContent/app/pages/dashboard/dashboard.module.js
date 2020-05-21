@@ -62,48 +62,13 @@
 																'lib/raphael.min.js',
 																'lib/morris.css',
 																'lib/morris.min.js',
-																'lib/angular-morris-chart.min.js',
-																'app/SlideShow/slideShowCtrl.js',
-																'app/pages/operational/SummarySlideShow/SummaryslideShowCtrl.js',
-																],
+																'lib/angular-morris-chart.min.js'],
 													});
 										} ]
 							}
 						});
 
-		/*
-		 * .state( 'operationalDashBoard', { url : '/operationalDashBoard',
-		 * directive : 'baSidebar', templateUrl :
-		 * 'app/pages/operational/operationalDashBoard.html', title :
-		 * 'Operational Dashboard',
-		 *  })
-		 * 
-		 * .state('globalview', { url: '/globalview', directive:'baSidebar',
-		 * templateUrl: 'app/pages/operational/globalView.html', title: 'Global
-		 * View',
-		 * 
-		 * sidebarMeta: { icon: 'ion-android-home', order: 0, },
-		 *  }) .state( 'operational', { url : '/operational', directive :
-		 * 'baSidebar', templateUrl :
-		 * 'app/pages/operational/operationalDashBoard.html', title :
-		 * 'Operational Dashboard',
-		 * 
-		 * sidebarMeta: { icon: 'ion-android-home', order: 0, },
-		 *  }) .state( 'createDashbaordOperational', { url :
-		 * '/createDashbaordOperational', directive : 'baSidebar', templateUrl :
-		 * 'app/pages/operational/createOperationalDashboard.html',
-		 * 
-		 * title : 'Create Dashboard',
-		 * 
-		 * sidebarMeta: { icon: 'ion-ionic', order: 0, }, }) .state(
-		 * 'viewDashbaordOperational', { url : '/viewDashbaordOperational',
-		 * directive : 'baSidebar', templateUrl :
-		 * 'app/pages/operational/viewOperationalDashboard.html',
-		 * 
-		 * title : 'Update Dashboard',
-		 * 
-		 * sidebarMeta: { icon: 'ion-ionic', order: 0, }, });
-		 */
+		
 	}
 
 })();

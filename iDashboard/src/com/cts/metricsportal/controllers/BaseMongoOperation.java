@@ -119,7 +119,6 @@ public class BaseMongoOperation {
 		if (mongoOperation == null) {
 			try {
 				mongoOperation = new MongoTemplate(getMongoClient(), getDbName());
-				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

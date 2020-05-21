@@ -5,8 +5,8 @@
   <servlet>
     <servlet-name>jersey-XMLExample-servlet</servlet-name>
     <servlet-class>
-                     com.sun.jersey.spi.container.servlet.ServletContainer
-                </servlet-class>
+              com.sun.jersey.spi.container.servlet.ServletContainer
+     </servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
       <param-value>com.cts.metricsportal.controllers</param-value>
@@ -37,12 +37,12 @@
   </servlet-mapping>
     <error-page>
     <error-code>404</error-code>
-    <location>/app/pages/login/error404.html</location>
+    <location>/404.html</location>
   </error-page>
   <error-page>
     <!-- Missing login -->
     <error-code>401</error-code>
-    <location>/404.html</location>
+    <location>/401.html</location>
 </error-page>
   <error-page>
     <error-code>500</error-code>

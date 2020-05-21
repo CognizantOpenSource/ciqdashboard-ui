@@ -8,16 +8,10 @@
 			'JiraTestCasesCtrl', JiraTestCasesCtrl);
 
 	/** @ngInject */
-	function JiraTestCasesCtrl($sessionStorage, paginationService, UserService,
+	function JiraTestCasesCtrl($sessionStorage, AES, paginationService, UserService,
 			localStorageService, $element, $scope, $base64, $http, $timeout,
 			$uibModal, $rootScope, baConfig, layoutPaths) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
+		
 		$rootScope.sortkey = false;
 		$rootScope.searchkey = false;
 		$rootScope.menubar = true;
@@ -29,7 +23,7 @@
 
 		// PROJECT DROP DOWN LIST
 		$scope.getprojectName = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -65,7 +59,7 @@
 		};
 
 		function onSelectionChangedproject() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -84,7 +78,7 @@
 
 		$scope.updateProjects = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -126,7 +120,7 @@
 		
 	$scope.getRollingPeriod = function() {
 			
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -148,7 +142,7 @@
 
 		$scope.selectedrollingPeriod = function() {
 			$scope.rollingPeriod = localStorageService.get('rollingPeriod');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -209,7 +203,7 @@
 
 		// SPRINT DROP DOWN LIST
 		$scope.getsprintName = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -292,7 +286,7 @@
 		};
 
 		function onSelectionChangedsprint() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -307,7 +301,7 @@
 
 		$scope.updateSprints = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -353,7 +347,7 @@
 
 		$scope.getepicName = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -388,7 +382,7 @@
 		};
 
 		function onSelectionChangedepic() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -403,7 +397,7 @@
 
 		$scope.updateEpics = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -448,7 +442,7 @@
 		// CALENDER DEFAULT VALUE
 		$scope.getdefaultdate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -501,7 +495,7 @@
 		// CALENDER DEFAULT VALUE
 		$scope.getOnLoaddate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -580,13 +574,14 @@
 			 * $scope.getmanualvsauto(); $scope.getStatusStacked();
 			 */
 			$scope.designPriorityChart();
+			$scope.designOwnerChart();
 		}
 
 		// Total Test Count(BA Panel)
 
 		$scope.initialtestcount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -627,7 +622,7 @@
 		// Test case count
 		$scope.initialtestcountdash = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -647,7 +642,7 @@
 		// Design Count by Priority - BAR CHART
 		$scope.designPriorityChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -786,7 +781,8 @@
 											labelString : 'Test Count'
 										},
 										ticks : {
-											beginAtZero : true
+											beginAtZero : true,
+											fontColor: '#4c4c4c'
 										},
 										gridLines : {
 											color : "rgba(255,255,255,0.2)"
@@ -798,6 +794,10 @@
 											labelString : 'Priority'
 										},
 										barThickness : 40,
+										ticks : {
+											beginAtZero : true,
+											fontColor: '#4c4c4c'
+										},
 										gridLines : {
 											color : "rgba(255,255,255,0.2)"
 										}
@@ -813,7 +813,7 @@
 
 		// Status pie chart
 		$scope.newStatusChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -906,7 +906,7 @@
 							display : true,
 							position : 'bottom',
 							labels : {
-								fontColor : '#ffffff',
+								fontColor : '#4c4c4c',
 								boxWidth : 20,
 								fontSize : 10
 							}
@@ -916,6 +916,383 @@
 				});
 			};
 		}
+		
+		// Design Count by Owner - BAR CHART
+		$scope.designOwnerChart = function() {
+			debugger;
+			//alert("owner chart");
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($scope.dfromval == null || $scope.dfromval == undefined
+					|| $scope.dfromval == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $scope.dfromval;
+			}
+
+			if ($scope.dtoval == null || $scope.dtoval == undefined
+					|| $scope.dtoval == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $scope.dtoval;
+			}
+
+			$http.get(
+					"rest/testCaseServices/designownerchartdata?dashboardName="
+							+ dashboardName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&domainName="
+							+ domainName + "&projectName=" + projectName,
+					config).success(function(response) {
+				$scope.data = response;
+				if ($scope.data != 0) {
+					$scope.tcownerchart($scope.data);
+				} else {
+					$('#designowner').remove();
+					$('#designownerdiv').append('<canvas id="designowner">')
+				}
+
+			});
+
+			$scope.tcownerchart = function(result) {
+			
+				$scope.result = result;
+				$scope.labels1 = [];
+				$scope.data1 = [];
+
+				for (var i = 0; i < $scope.result.length; i++) {
+					if ($scope.result[i].value == "") {
+						$scope.result[i].value = "No Owner";
+					}
+					if ($scope.result[i].count != 0) {
+						$scope.labels1.push($scope.result[i].value);
+						$scope.data1.push($scope.result[i].count);
+					}
+				}
+				$scope.labelspie = $scope.labels1;
+				$scope.datapie = $scope.data1;
+				var layoutColors = baConfig.colors;
+				$('#designowner').remove();
+				$('#designownerdiv').append('<canvas id="designowner">')
+				var ctx = document.getElementById("designowner");
+
+				var designchart = new Chart(
+						ctx,
+						{
+							type : 'bar',
+							data : {
+								labels : $scope.labelspie,
+								datasets : [ {
+									data : $scope.datapie,
+									backgroundColor : [
+											"rgba(54, 162, 235, 0.8)",
+											"rgba(153, 102, 255, 0.8)",
+											"rgba(75, 192, 192, 0.8)",
+											"rgba(255, 159, 64, 0.8)",
+											"rgba(255, 99, 132, 0.8)",
+											"#429bf4", "#723f4e",
+											"rgba(255, 206, 86, 0.8)",
+											"#835C3B", "#55335e" ],
+									borderColor : [ "rgba(54, 162, 235, 1)",
+											"rgba(153, 102, 255, 1)",
+											"rgba(75, 192, 192, 1)",
+											"rgba(255, 159, 64, 1)",
+											"rgba(255, 99, 132, 1)", "#429bf4",
+											"#723f4e", "rgba(255, 206, 86, 1)",
+											"#835C3B", "#55335e" ],
+									borderWidth : 1
+								} ]
+							},
+							options : {
+								responsive : true,
+								maintainAspectRatio : false,
+								tooltips : {
+									enabled : true
+								},
+								hover : {
+									animationDuration : 0
+								},
+								"animation" : {
+									"duration" : 1,
+									"onComplete" : function() {
+										var chartInstance = this.chart, ctx = chartInstance.ctx;
+
+										ctx.font = Chart.helpers
+												.fontString(
+														Chart.defaults.global.defaultFontSize,
+														Chart.defaults.global.defaultFontStyle,
+														Chart.defaults.global.defaultFontFamily);
+										ctx.textAlign = 'center';
+										ctx.textBaseline = 'bottom';
+
+										this.data.datasets
+												.forEach(function(dataset, i) {
+													var meta = chartInstance.controller
+															.getDatasetMeta(i);
+													meta.data
+															.forEach(function(
+																	bar, index) {
+																if (dataset.data[index] != 0) {
+																	var data = dataset.data[index];
+																} else {
+																	var data = "";
+																}
+																var centerPoint = bar
+																		.getCenterPoint();
+																ctx
+																		.fillText(
+																				data,
+																				centerPoint.x,
+																				centerPoint.y + 10);
+															});
+												});
+									}
+								},
+								scales : {
+									yAxes : [ {
+										scaleLabel : {
+											display : true,
+											labelString : 'Test Count'
+										},
+										ticks : {
+											beginAtZero : true,
+											fontColor: '#4c4c4c'
+										},
+										gridLines : {
+											color :  "#d8d3d3"
+										}
+									} ],
+									xAxes : [ {
+										scaleLabel : {
+											display : true,
+											labelString : 'Priority'
+										},
+										barThickness : 40,
+										ticks : {
+											beginAtZero : true,
+											fontColor: '#4c4c4c'
+										},
+										gridLines : {
+											color :  "#d8d3d3"
+										}
+									} ]
+
+								}
+							}
+
+						});
+			};
+
+		}
+		
+		$scope.jiraDesignTable = function(start_index){   
+			//alert("table k undar");
+			 var token  = AES.getEncryptedValue();
+			   var config = {headers: {
+			               'Authorization': token
+			              }};
+
+		$scope.index=start_index;
+		var vardtfrom = "";
+		var vardtto = "";
+
+		if ($scope.dfromval == null || $scope.dfromval == undefined
+				|| $scope.dfromval == "") {
+			vardtfrom = "-";
+		} else {
+			vardtfrom = $scope.dfromval;
+		}
+
+		if ($scope.dtoval == null || $scope.dtoval == undefined
+				|| $scope.dtoval == "") {
+			vardtto = "-";
+		} else {
+			vardtto = $scope.dtoval;
+		}
+	  $http.get("./rest/testCaseServices/jiradesigntable?itemsPerPage="+$scope.itemsPerPage+"&start_index="+$scope.index+"&dashboardName="+dashboardName+
+			  "&domainName="+domainName+"&projectName="+projectName+"&vardtfrom="+vardtfrom+"&vardtto="+vardtto+"&timeperiod="+$rootScope.timeperiodTc,config).success(function (response) {
+		   $rootScope.tcTableDetails = response;	   
+		 }) ; 
+		 
+	}
+
+	$scope.initialcountpaginate=function(){
+		debugger;
+		  var token  = AES.getEncryptedValue();
+	    var config = {headers: {
+	            'Authorization': token
+	            }};
+	    var vardtfrom = "";
+		var vardtto = "";
+
+		if ($scope.dfromval == null || $scope.dfromval == undefined
+				|| $scope.dfromval == "") {
+			vardtfrom = "-";
+		} else {
+			vardtfrom = $scope.dfromval;
+		}
+
+		if ($scope.dtoval == null || $scope.dtoval == undefined
+				|| $scope.dtoval == "") {
+			vardtto = "-";
+		} else {
+			vardtto = $scope.dtoval;
+		}
+				  $http.get("rest/testCaseServices/tcJiraRecordsCount?dashboardName="+dashboardName+"&domainName="+domainName+"&projectName="+projectName+"&vardtfrom="+vardtfrom+"&vardtto="+vardtto+"&timeperiod="+$rootScope.timeperiodTc,config).success(function (response) {	
+					  $rootScope.testdatapaginate = response;  
+				   }) ;}
+	   
+	// Sort function starts here
+	$scope.sort = function(keyname,start_index){
+		   $scope.sortBy = keyname;
+		   $rootScope.sortkey= true;
+	   	   $rootScope.searchkey= false;
+		   $scope.index=start_index;
+		   $scope.reverse = !$scope.reverse;
+		   $scope.sortedtable($scope.sortBy,$scope.index,$scope.reverse);
+
+	 };
+	 
+	 // Table on-load with sort implementation
+	$scope.sortedtable =function(sortvalue,start_index,reverse)
+	{paginationService.setCurrentPage("tcpaginate", start_index);
+		   var token  = AES.getEncryptedValue();
+		         var config = {headers: {
+		                 'Authorization': token
+		                 }};
+		         var vardtfrom = "";
+		 		var vardtto = "";
+
+		 		if ($scope.dfromval == null || $scope.dfromval == undefined
+		 				|| $scope.dfromval == "") {
+		 			vardtfrom = "-";
+		 		} else {
+		 			vardtfrom = $scope.dfromval;
+		 		}
+
+		 		if ($scope.dtoval == null || $scope.dtoval == undefined
+		 				|| $scope.dtoval == "") {
+		 			vardtto = "-";
+		 		} else {
+		 			vardtto = $scope.dtoval;
+		 		}
+	$scope.column=sortvalue;
+	$scope.index=start_index;
+	$scope.order=reverse;
+
+	$http.get("rest/testCaseServices/jiratestcaseData?sortvalue="+$scope.column+"&itemsPerPage="+$scope.itemsPerPage+"&start_index="+$scope.index+"&reverse="+$scope.order+"&dashboardName="+dashboardName+"&domainName="+domainName+"&projectName="+projectName+"&vardtfrom="+vardtfrom+"&vardtto="+vardtto,config).success(function (response) {
+		   $rootScope.tcTableDetails = response;
+			 }) ; 
+	}
+
+	  	  $scope.itemsPerPage = 5; 
+	  	  
+	  	  
+	  	  // search
+	  	$scope.search = function(start_index,searchField,searchText){ 
+	  		$scope.start_index = start_index;
+	  		$scope.searchField = searchField;
+	  		$scope.searchText = searchText;
+	  		$rootScope.sortkey= false;
+	     	$rootScope.searchkey= true;
+	     	$scope.key = false;
+	     	
+	     	if($scope.searchField == "issueID"){
+				$rootScope.issueID = searchText;
+				$scope.key = true;
+				}
+				else if($scope.searchField == "summary"){
+					$rootScope.summary = searchText;
+					$scope.key = true;
+				}
+				else if($scope.searchField == "issueDescription"){
+					$rootScope.issueDescription = searchText;
+					$scope.key = true;
+				}
+				else if($scope.searchField == "issueAssignee"){
+					$rootScope.issueAssignee = searchText;
+					$scope.key = true;
+				}
+				else if($scope.searchField == "issuePriority"){
+					$rootScope.issuePriority = searchText;
+					$scope.key = true;
+				}
+				else if($scope.searchField == "issueStatus"){
+					$rootScope.issueStatus = searchText;
+					$scope.key = true;
+				}
+	     	
+	        $scope.searchable() ; 	
+	      
+	  	}
+	  	
+	  	$scope.searchable = function(start_index,searchField,searchText){
+	  		 var token  = AES.getEncryptedValue();
+	  	        var config = {headers: {
+	  	                'Authorization': token
+	  	                }};
+	  	      if($rootScope.issueID == undefined){
+			    	 $rootScope.issueID = 0;
+			     } 
+	  	      
+	  	    var vardtfrom = "";
+			var vardtto = "";
+
+			if ($scope.dfromval == null || $scope.dfromval == undefined
+					|| $scope.dfromval == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $scope.dfromval;
+			}
+
+			if ($scope.dtoval == null || $scope.dtoval == undefined
+					|| $scope.dtoval == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $scope.dtoval;
+			}
+			
+	  		$http.get("./rest/testCaseServices/jirasearchpagecount?testID="+$rootScope.issueID+"&summary="+$rootScope.summary+"&issuePriority="+$rootScope.issuePriority+"&testDescription="+$rootScope.issueDescription+"&testDesigner="+$rootScope.issueAssignee+"&testDesignStatus="+$rootScope.issueStatus+"&dashboardName="+dashboardName+"&domainName="+domainName+"&projectName="+projectName+"&vardtfrom="+vardtfrom+"&vardtto="+vardtto,config).success(function (response) {
+	  			  $rootScope.testdatapaginate = response; 
+	  		});
+	  		paginationService.setCurrentPage("tcpaginate", start_index);
+	  		$scope.itemsPerPage = 5;
+	  	$http.get("./rest/testCaseServices/jirasearchTest?testID="+$rootScope.issueID+"&summary="+$rootScope.summary+"&issuePriority="+$rootScope.issuePriority+"&testDescription="+$rootScope.issueDescription+"&testDesigner="+$rootScope.issueAssignee+"&testDesignStatus="+$rootScope.testDesignStatus+"&itemsPerPage="+$scope.itemsPerPage+"&start_index="+$scope.start_index+"&dashboardName="+dashboardName+"&domainName="+domainName+"&projectName="+projectName+"&vardtfrom="+vardtfrom+"&vardtto="+vardtto,config).success(function (response) {
+	  		if(response == "" && $scope.key == false){
+	  			$rootScope.searchkey= false;
+	  			$scope.initialcountpaginate();
+	  			$scope.jiraDesignTable(1);
+	  		}  
+	  		else{
+	  			paginationService.setCurrentPage("tcpaginate", $scope.start_index);
+	  			$rootScope.tcTableDetails = response; 
+	  		}
+	  	  }) ;
+	  	}
+	  	
+	  	 //TC Lazy Load Table Code Starts Here 
+	  	$scope.tcpageChangedLevel=function(pageno){
+	  		
+	  		$scope.pageno = pageno;
+	  			   if( $scope.sortBy==undefined && $rootScope.sortkey == false && $rootScope.searchkey == false)
+	  				 {
+	  				   $scope.jiraDesignTable($scope.pageno) ; 
+	  				 }else if ($rootScope.sortkey == true)
+	  				 {
+	  				$scope.sortedtable($scope.sortBy,$scope.pageno,$scope.reverse);
+	  				 } 
+	  				 else if($rootScope.searchkey == true){
+	  				
+	  						 $scope.search($scope.pageno,$scope.searchField,$scope.searchText);
+	  					 }
+	  			}
+
 
 	}
 })();

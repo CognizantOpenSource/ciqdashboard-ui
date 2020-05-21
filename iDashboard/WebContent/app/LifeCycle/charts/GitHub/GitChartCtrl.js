@@ -8,16 +8,16 @@
 			'GitChartCtrl', GitChartCtrl);
 
 	/** @ngInject */
-	function GitChartCtrl($scope, $rootScope, $state, $http, $timeout,
+	function GitChartCtrl($scope, $rootScope, AES, $state, $http, $timeout,
 			baConfig, $element, layoutPaths,$base64,localStorageService) {
-		function getEncryptedValue()
+		/*function AES.getEncryptedValue()
 		  {
 			 var username= localStorageService.get('userIdA');
 		     var password= localStorageService.get('passwordA');
 		        var tokeen =$base64.encode(username+":"+password);
 		        
 		        return tokeen;
-		        }
+		        }*/
 		$rootScope.loggedInuserId=localStorageService.get('loggedInuserId');
 		
 		//check if component is available
@@ -48,7 +48,6 @@
 			
 		}
 		
-		
 		$scope.getvalues=function(){
 			$rootScope.selectedtype;
 			$rootScope.UserName;
@@ -60,7 +59,7 @@
 	/*	$scope.types = ['User','Organization'];*/
 		
 		$scope.settype=function(){
-			var token  = getEncryptedValue();
+			var token  = AES.getEncryptedValue();
 	        var config = {headers: {
 	                'Authorization': token
 	                }};
@@ -71,7 +70,7 @@
 		
 		// Get selected type and generate gitname list
 		$scope.getusertype=function(selectedtype){
-			var token  = getEncryptedValue();
+			var token  = AES.getEncryptedValue();
 	        var config = {headers: {
 	                'Authorization': token
 	                }};
@@ -82,7 +81,7 @@
 	}
 		 // Get RepoList based on git name
 		 $scope.getRepoList = function(UserName){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -99,7 +98,7 @@
 		// Get contribuitor list for trend 
 		
 		 $scope.getcontributor = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -117,7 +116,7 @@
 		 $scope.getcontributorselection = function(committer){
 			 localStorageService.set('committer',committer);
 			 $rootScope.committer = localStorageService.get('committer');
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -130,7 +129,7 @@
 		 $scope.gettimeperiodselection = function(timeperiod){
 			 localStorageService.set('timeperiod',timeperiod);
 			 $rootScope.timeperiod = localStorageService.get('timeperiod');
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -173,7 +172,7 @@
 		 
 		 // File count ba-panel
 		 $scope.getfilesize = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -184,7 +183,7 @@
 		 
 		 // Commits count ba-panel
 		 $scope.commitscount = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -195,7 +194,7 @@
 
 		 // Contributors count ba-panel
 		 $scope.contributorscount = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -206,7 +205,7 @@
 		 
 		 // Watchers count ba-panel
 		 $scope.watcherscount = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -218,7 +217,7 @@
 		
 		 // Stars count ba-panel
 		 $scope.starscount = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -231,7 +230,7 @@
 	// Pull request progress bar	 
 		 
 		 $scope.pullrequest = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -250,7 +249,7 @@
 		 // Issues progress bar 
 		 
 		 $scope.issuecount = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -264,7 +263,7 @@
 
 		 
 		 $scope.topcontributorscount = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -274,7 +273,7 @@
 			 }
 		 
 		 $scope.commitTrend = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -324,22 +323,28 @@
 			  		  		     },
 			  		  		 scaleLabel : {
 									display : true,
-									labelString : 'Time Period'
+									labelString : 'Time Period',
+									fontColor: '#4c4c4c'
 								},
 			  		  		     gridLines: {
-			  		  		         color: "rgba(255,255,255,0.2)",
-			  		  		     }
+			  		  		         color: "#d8d3d3",
+			  		  		     },
+			  		  		 ticks: {
+		  		  	             fontColor: '#4c4c4c'
+		  		  	         }
 			  		  		 }],
 			  		  		 yAxes: [{
 			  		  		     gridLines: {
-			  		  		         color: "rgba(255,255,255,0.2)",
+			  		  		         color: "#d8d3d3",
 			  		  		     },
 			  		  		 scaleLabel : {
 									display : true,
-									labelString : 'Number of Commits'
+									labelString : 'Number of Commits',
+									fontColor: '#4c4c4c'
 								},
 			  		  		     ticks: {
-			  		  	             beginAtZero:true
+			  		  	             beginAtZero:true,
+			  		  	             fontColor: '#4c4c4c'
 			  		  	         }
 			  		  		 }]
 
@@ -374,9 +379,8 @@
 
 		 }
 		 
-		 
 		 $scope.weeklyCommitTrend = function(){
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -428,14 +432,18 @@
 		  		  		       unit: "day"
 		  		  		     },
 		  		  		     gridLines: {
-		  		  		         color: "rgba(255,255,255,0.2)",
-		  		  		     }
+		  		  		         color: "#d8d3d3",
+		  		  		     },
+		  		  		 ticks: {
+		  		  			fontColor: '#4c4c4c'
+		  		  		 }
 		  		  		 }],		  		  		 yAxes: [{
 		  		  		     gridLines: {
-		  		  		         color: "rgba(255,255,255,0.2)",
+		  		  		         color: "#d8d3d3",
 		  		  		     },
 		  		  		     ticks: {
 		  		  	             beginAtZero:true,
+		  		  	             fontColor: '#4c4c4c',
 		  		  	             stepSize: 5,
 		  		  	             min: 0,
 		  		  	             max: 20

@@ -26,8 +26,8 @@ public class ChefMetrics implements IDTMetrics {
 	
 	public long getTotalRunsSuccessCount(String authString, String cookbookName, String dashboardName) {
 		long runsCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if (LCAccess) {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if (authenticateToken) {
 		
 			try {
 				runsCount = ChefMongoOperations.getTotalRunsSuccessCountQuery(cookbookName);
@@ -45,8 +45,8 @@ public class ChefMetrics implements IDTMetrics {
 	
 	public long getTotalRunsCountForCookbook(String authString, String cookbookName, String dashboardName){
 		long runsCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if (LCAccess) {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if (authenticateToken) {
 		try {
 			runsCount = ChefMongoOperations.getTotalRunsCountForCookbookQuery(cookbookName);
 			
@@ -64,8 +64,8 @@ public class ChefMetrics implements IDTMetrics {
 
 	public long getTotalReportCount(String authString, String dashboardName){
 		long runsCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess){
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken){
 		try {
 		runsCount = ChefMongoOperations.getTotalReportCountQuery();
 		
@@ -111,9 +111,9 @@ public class ChefMetrics implements IDTMetrics {
 	}
 	
 	public List<String> getRecordsRunsCookbookNames(String authString, String dashboardName){
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<String> cookbookNamesList=new ArrayList<String>();
-		if(LCAccess){
+		if(authenticateToken){
 		try {
 			cookbookNamesList = ChefMongoOperations.getRecordsRunsCookbookNamesQuery();
 			
@@ -129,10 +129,10 @@ public class ChefMetrics implements IDTMetrics {
 	
 	public List<ChefRunsVO> getLastRunDetails(String authString, int itemsPerPage, int start_index, String cookbookName, String dashboardName){
 		
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		List<ChefRunsVO> lastrunsList = new ArrayList<ChefRunsVO>();	
-		if(LCAccess){
+		if(authenticateToken){
 		try {
 			lastrunsList=ChefMongoOperations.getLastRunDetailsQuery(itemsPerPage, start_index, cookbookName);
 			
@@ -179,9 +179,9 @@ public class ChefMetrics implements IDTMetrics {
 	}
 	
 	public List<ChefRunsVO> getLastSuccessfulRunDetails(String authString, int itemsPerPage, int start_index, String cookbookName, String dashboardName){
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<ChefRunsVO> lastSuccessfulRunsList = new ArrayList<ChefRunsVO>();
-		if(LCAccess){
+		if(authenticateToken){
 		try {
 			lastSuccessfulRunsList=ChefMongoOperations.getLastRunDetailsQuery(cookbookName);
 			
@@ -247,8 +247,8 @@ public class ChefMetrics implements IDTMetrics {
 	public List<ChefRunsVO> getRecordsRuns(String authString, int itemsPerPage, int start_index, String cookbookName,
 			String dashboardName) {
 		List<ChefRunsVO> runsList=new ArrayList<ChefRunsVO>();
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess){
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken){
 		try {
 			runsList=ChefMongoOperations.runsListQuery(itemsPerPage, start_index, cookbookName);
 			
@@ -294,9 +294,9 @@ public class ChefMetrics implements IDTMetrics {
 	
 	public List<ChefRunsStatusDetailsCountVO> getRunsmultibarchart(String authString, String cookbookName,
 			String dashboardName) {
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<ChefRunsStatusDetailsCountVO> finalresult = new ArrayList<ChefRunsStatusDetailsCountVO>();
-		if(LCAccess){
+		if(authenticateToken){
 		try {
 			finalresult = ChefMongoOperations.getRunsmultibarchartQuery(cookbookName);
 			
@@ -313,9 +313,9 @@ public class ChefMetrics implements IDTMetrics {
 	
 	public List<ChefRunsNodeVO> getRunsOnEachNodeChartData(String authString, String cookbookName,
 			String dashboardName) {
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		List<ChefRunsNodeVO> result=new ArrayList<ChefRunsNodeVO>();
-		if(LCAccess){
+		if(authenticateToken){
 		try {
 			result = ChefMongoOperations.getRunsOnEachNodeChartDataQuery(cookbookName);
 			
@@ -332,9 +332,9 @@ public class ChefMetrics implements IDTMetrics {
 	}
 	
 	public List<ChefRunsTrendVO> getRunstrendchart(String authString, String cookbookName, String dashboardName) {
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);		
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);		
 		List<ChefRunsTrendVO> trendvolist=new ArrayList<ChefRunsTrendVO>();
-		if(LCAccess){
+		if(authenticateToken){
 		try {
 			trendvolist = ChefMongoOperations.getRunstrendchartQuery(cookbookName);
 			

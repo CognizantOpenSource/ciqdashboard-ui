@@ -9,16 +9,10 @@
 			'LifeCycleDashboardCtrl', LifeCycleDashboardCtrl);
 
 	/** @ngInject */
-	function LifeCycleDashboardCtrl($sessionStorage, localStorageService,
+	function LifeCycleDashboardCtrl($sessionStorage, AES, localStorageService,
 			baSidebarService, $base64, $element, $scope, $http, $timeout,
 			$uibModal, $rootScope, baConfig, layoutPaths, $state, toastr) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
+	
 		$rootScope.buildJob = "";
 		$rootScope.caProjectName = "";
 		$rootScope.menubar = false;
@@ -27,10 +21,11 @@
 		$rootScope.var3 = false;
 		$rootScope.var4 = false;
 		$rootScope.var5 = false;
+		$rootScope.var6 = false;
 		$scope.selected = localStorageService.get('selected');
 		$scope.itemsPerPage = 5;
 
-		var token = getEncryptedValue();
+		var token = AES.getEncryptedValue();
 		var config = {
 			headers : {
 				'Authorization' : token
@@ -58,33 +53,16 @@
 
 		}
 
-		/*$scope.lifecycleDashboardDetails = function(start_index) {
-			$scope.index = start_index;
-			$http.get(
-					"./rest/lifeCycleServices/lifecycleDashboardDetails?itemsPerPage="
-							+ $scope.itemsPerPage + "&start_index="
-							+ $scope.index, config).success(function(response) {
-				$scope.lifecycleDashboardTableDetails = response;
-			});
-		};
-		// Dashboard details count	
-		$rootScope.initialcountofDetails = function() {
-			$http.get("rest/lifeCycleServices/DashboardDetailsCount", config)
-					.success(function(response) {
-						$rootScope.detailsCount = response;
-					});
-		};*/
 		
 		$rootScope.initialcountofDetails = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
-			$http
-					.get("rest/lifeCycleServices/DashboardDetailsCount",
+			$http.get("rest/lifeCycleServices/DashboardDetailsCount",
 							config)
 					.success(
 							function(response) {
@@ -92,9 +70,7 @@
 								
 								$scope.lifecycleDashboardDetails(1);
 
-								$http
-										.get(
-												"rest/lifeCycleServices/DashboardDetailspulicCount",
+								$http.get("rest/lifeCycleServices/DashboardDetailspulicCount",
 												config)
 										.success(
 												function(response) {
@@ -108,14 +84,12 @@
 													}
 
 												});
-
 							});
-
 		};
 
 		$scope.lifecycleDashboardDetails = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -137,7 +111,7 @@
 
 		$scope.lifecycleDashboardpublicDetails = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -203,7 +177,7 @@
 			$scope.description = form.description;
 			$scope.owner = form.owner;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			/*   var config = {headers: {
 			         'Authorization': token
 			         }};*/
@@ -224,6 +198,9 @@
 					'transactionName' : $rootScope.selectedtransaction,
 					'rallyProject' : $rootScope.selectedRallyProject,
 					'jiraProject' : $rootScope.selectedJiraProject,
+					'fortifyProject' : $rootScope.selectedFortifyProject,
+					'fortifyVersion' : $rootScope.selectedFortifyVersion,
+					'octaneProject' : $rootScope.selectedOctaneProject,
 					'cookbookName' : $rootScope.cookbookname
 				}
 			}
@@ -289,6 +266,7 @@
 					'transactionName' : $rootScope.selectedtransaction,
 					'rallyProject' : $rootScope.selectedRallyProject,
 					'jiraProject' : $rootScope.selectedJiraProject,
+					'octaneProject' : $rootScope.selectedOctaneProject,
 					'cookbookName' : $rootScope.cookbookname
 				}
 			}
@@ -341,7 +319,7 @@
 		// Removes Dashboard information completely	  
 		$scope.deleteDashboardInfo = function(item) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -466,7 +444,7 @@
 
 		}
 		$scope.getRelEndDate = function() {
-			alert("getRelEndDat");
+			//alert("getRelEndDat");
 			$scope.selected = localStorageService.get('selected');
 			$http.get(
 					"./rest/lifeCycleServices/getRelEndDate?selected="
@@ -485,7 +463,7 @@
 					"./rest/lifeCycleServices/getispublic?selected="
 							+ $scope.selected, config).success(
 					function(response) {
-						alert(response);
+						//alert(response);
 						$scope.kpiisdashboardpublic=response;
 					});
 
@@ -536,7 +514,7 @@
 
 			$scope.relName = form.relname;
 			$scope.products = $rootScope.prodsel;
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var productData = {
 				relName : $scope.relName,
 				products : $scope.products,
@@ -578,7 +556,7 @@
 			var todt = localStorageService.get('dtto');
 			$scope.selectedKpiList = [];
 			$scope.getonlyselected;
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			$scope.getSelectedkpi = localStorageService.get('selectKpiItems');
 			$scope.kpiispublic=form.kpiispublic;
 
@@ -636,7 +614,7 @@
 			$scope.tae = form.fromdt;
 			$scope.ispublic=form.ispublic;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var productData = {
 				relName : $scope.relName,
 				products : $scope.products,
@@ -700,7 +678,7 @@
 					"./rest/lifeCycleServices/updateProductTableDetails?selected="
 							+ $scope.selected, config).success(
 					function(response) {
-						
+						debugger;
 						$scope.upprodTabDet = response;
 						/*$scope.upselproducts = [];
 						$scope.upselproduct = [];
@@ -726,7 +704,7 @@
 					"./rest/lifeCycleServices/updateProdTableDetails?selected="
 							+ $scope.selected, config).success(
 					function(response) {
-						
+						debugger;
 						$scope.upprodTableDet = response;
 						/*$scope.upselproducts = [];
 						$scope.upselproduct = [];
@@ -794,7 +772,7 @@
 
 		$rootScope.initialkpicountofDetails = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -928,7 +906,7 @@
 
 		// Removes Dashboard information completely	  
 		$scope.deleteRelDashboardInfo = function(id) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -964,7 +942,7 @@
 
 		// Removes KPI Dashboard information completely	  
 		$scope.deleteKpiDashboardInfo = function(id) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -999,9 +977,7 @@
 		}
 		$scope.getSelectedTools = function() {
 			$http
-					.get(
-							"./rest/lifeCycleServices/getSelectedLCTools?loggedInuserId="
-									+ $rootScope.loggedInuserId, config)
+					.get("./rest/lifeCycleServices/getSelectedLCTools", config)
 					.success(
 							function(response) {
 
@@ -1048,6 +1024,20 @@
 												.push({
 													"title" : "User Story Data",
 													"path" : "app\\LifeCycle\\lifecycle\\userstories\\UserStoryAnalysisHome.html"
+												});
+									}
+									if ($scope.selectedLCTools[i].key == "fortify") {
+										$scope.selectedKeyLists
+												.push({
+													"title" : "Fortify",
+													"path" : "app\\LifeCycle\\lifecycle\\fortify\\fortifyHome.html"	
+												});
+									}
+									if ($scope.selectedLCTools[i].key == "octane") {
+										$scope.selectedKeyLists
+												.push({
+													"title" : "ALM Octane",
+													"path" : "app\\LifeCycle\\charts\\Octane\\OctaneHome.html"
 												});
 									}
 

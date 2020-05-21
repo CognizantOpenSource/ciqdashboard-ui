@@ -307,6 +307,7 @@
 					Period:</label> <select class="form-control"
 					style="outline: 0; background-color: rgba(87, 95, 118, 1); margin-left: 194px; width: 11%; height: 1%; margin-top: -29px;"
 					name='rollingperioddrop' id="rollingperioddrop"
+				
 					ng-model="selectedRollingPeriod"
 					ng-options="rollingperioddrop for rollingperioddrop in rollingperioddrops"
 					ng-change="getSelectedRollingPeriod(selectedRollingPeriod)"
@@ -360,14 +361,14 @@
 
 
 
-								<ul dnd-list keep-scroll dnd-drop="onDrop(list, item, index)"
-									id="available" class="wrapperrs"
+								<ul dnd-list keep-scroll  dnd-drop="onDrop(list, item, index)" id="available" class="wrapperrs"
 									ng-style="{'display':$index==0?'block':'none'}">
 									<li ng-repeat="item in list.Available"
 										dnd-draggable="getSelectedItemsIncluding(list, item)"
 										dnd-dragstart="onDragstart(list, event)"
 										dnd-moved="onMoved(list)" dnd-dragend="list.dragging = false"
-										dnd-selected="item.selected = item.selected">
+										dnd-selected="item.selected = item.selected"
+										>
 										{{item.metricName}}</li>
 								</ul>
 
@@ -388,7 +389,7 @@
 						<div class="panel panel-info panel-body">
 							<div class="panel-heading" style="margin-bottom: inherit;">
 								<h3 class="panel-title" style="font-weight: bold;">Selected
-									Metrics [ maximum metrics allowed : 8 ]</h3>
+									Metrics  [ maximum metrics allowed : 8 ]</h3>
 
 							</div>
 							<div ng-repeat="list in templatemodels">
@@ -398,7 +399,8 @@
 									<li ng-repeat="item in list.Selected"
 										dnd-draggable="getSelectedItemsIncluding1(list, item)"
 										dnd-dragstart="onDragstart(list, event)"
-										dnd-moved="onMoved1(list)" dnd-dragend="list.dragging = false">
+										dnd-moved="onMoved1(list)" dnd-dragend="list.dragging = false"
+										>
 										{{item.metricName}}</li>
 									<br>
 
@@ -422,35 +424,32 @@
 
 
 
-			<div ba-panel ba-panel-class="with-scroll" class="col-md-12 ">
+			<div ba-panel 
+				ba-panel-class="with-scroll" class="col-md-12 " >
 				<div>
-					<div class="panel-heading clearfix">
-						<h3 class="panel-title"
-							style="font-weight: bold; margin-left: -14px;">About to
-							create a new template:</h3>
-					</div>
+				<div class="panel-heading clearfix"><h3 class="panel-title"style="font-weight: bold;
+    margin-left: -14px;">About to create a new template:</h3></div>
 					<div ng-init="selectedMetric()" style="margin-bottom: -47px">
-						<table class="table">
+						<table class="table">  
 							<thead>
 								<tr class="sortable">
 
-									<th style="width: 10%; font-weight: bold">Template Name</th>
-									<th style="width: 10%; font-weight: bold">Rolling Period</th>
-									<th style="width: 10%; font-weight: bold">Tools used by
-										projects</th>
-									<th style="width: 10%; font-weight: bold">Selected Metrics</th>
+									<th style="width: 10%; font-weight:bold">Template Name</th>
+									<th style="width: 10%; font-weight:bold">Rolling Period</th>
+									<th style="width: 10%;font-weight:bold">Tools used by projects</th>
+									<th style="width: 10%;font-weight:bold">Selected Metrics</th>
 
 								</tr>
 
 							</thead>
-
+							
 							<tbody>
-								<td>{{selectedcustomtemplate}}</td>
-								<td>{{selectedRollingPeriod}}</td>
-								<td>{{valueOfTool}}</td>
-
-								<td>
-									<!-- <div ng-hide="metricSelected.length>0">
+									<td>{{selectedcustomtemplate}}</td>
+									<td>{{selectedRollingPeriod}}</td>
+									<td>{{valueOfTool}}</td>
+									
+							      <td>  
+								<!-- <div ng-hide="metricSelected.length>0">
 
 								<ul >
 									<li ng-repeat="item in metricSelected">
@@ -460,36 +459,31 @@
 
 								</ul>
 </div> -->
-									<div>
-										<ul>
-											<li ng-repeat="item in metricSelected">
-												{{item.metricName}}</li>
-											<br>
+							<div > 
+							<ul >
+									<li ng-repeat="item in metricSelected">
+										{{item.metricName}}</li>
+									<br>
 
 
-										</ul>
-
-									</div>
-								</td>
+								</ul>
+						
+ </div>
+ </td>
 							</tbody>
 
 
-
-
+						
+							
 
 
 						</table>
 
 					</div>
-
-					<div style="float: right; margin-right: 88px; margin-top: -2px;">
-						<button
-							style="margin-left: -2%; padding-left: 19px; padding-right: 18px; margin-right: 10px;"
-							class="btn btn-success"
-							ng-click="updateSelectedTemplateDetails()">Save</button>
-						<button type="button" style="margin-left: 2%;"
-							class="btn btn-danger"
-							ng-click="TemplateSavingCancel();$dismiss();">Cancel</button>
+					
+					<div style="float: right;margin-right: 88px;margin-top: -2px;">
+						<button style="margin-left: -2%; padding-left: 19px; padding-right: 18px; margin-right: 10px;" class="btn btn-success" ng-click="updateSelectedTemplateDetails()">Save</button>
+							<button type="button" style="margin-left: 2%;" class="btn btn-danger" ng-click="TemplateSavingCancel();$dismiss();">Cancel</button>
 					</div>
 				</div>
 			</div>

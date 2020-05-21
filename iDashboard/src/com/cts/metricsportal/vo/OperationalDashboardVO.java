@@ -17,6 +17,14 @@ public class OperationalDashboardVO {
 	private Date createddate;
 	private Date modifieddate;
 	
+	private List<OperationalDashboardsProjectsVO> projects = new ArrayList<OperationalDashboardsProjectsVO>();
+	private List<OperationalDashboardsSprintsVO> sprints = new ArrayList<OperationalDashboardsSprintsVO>();
+	private List<OperationalDashboardsEpicsVO> epics = new ArrayList<OperationalDashboardsEpicsVO>();
+
+	private List<OperationalDashboardsVersionsVO> versions = new ArrayList<OperationalDashboardsVersionsVO>();
+	private List<OperationalDashboardsCyclesVO> cycles = new ArrayList<OperationalDashboardsCyclesVO>();
+	private List<OperationalDashboardsTestRunsVO> testruns = new ArrayList<OperationalDashboardsTestRunsVO>();
+	
 	// Levis Columns
 	
 	public Date getCreateddate() {
@@ -31,13 +39,6 @@ public class OperationalDashboardVO {
 	public void setModifieddate(Date modifieddate) {
 		this.modifieddate = modifieddate;
 	}
-	private List<OperationalDashboardsProjectsVO> projects = new ArrayList<OperationalDashboardsProjectsVO>();
-	private List<OperationalDashboardsSprintsVO> sprints = new ArrayList<OperationalDashboardsSprintsVO>();
-	private List<OperationalDashboardsEpicsVO> epics = new ArrayList<OperationalDashboardsEpicsVO>();
-
-	private List<OperationalDashboardsVersionsVO> versions = new ArrayList<OperationalDashboardsVersionsVO>();
-	private List<OperationalDashboardsCyclesVO> cycles = new ArrayList<OperationalDashboardsCyclesVO>();
-	private List<OperationalDashboardsTestRunsVO> testruns = new ArrayList<OperationalDashboardsTestRunsVO>();
 	
 	
 	

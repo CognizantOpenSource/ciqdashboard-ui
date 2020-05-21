@@ -7,7 +7,7 @@
 	
 			<div class="row">
 				<div class="col-md-12">
-					<div class="form-group" ng-init="initialJiraProjects();intervalJira(selectedJiraProject);">
+					<div class="form-group" ng-init="initialJiraProjects();">
 						<select ng-disabled="!formelem"
 							style="outline: 0; width: 35%; height: 10%; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
 							name='projectName' id="projectNamehome" class="form-control"
@@ -32,7 +32,7 @@
 						style="font-size: 14px; margin-top: 8%">Active Sprint : {{jiraUserStoryactiveSprintName}}</div>
 						
 					<div class="description-stats" ng-init="initLifeSprintdaysleft(selectedJiraProject)" 
-						style="margin-top: 4%;font-size: 14px"><label style="font-size: 18px">{{sprintDaysLeft}}</label>&nbsp;Days left in Sprint </div>
+						style="margin-top: 4%;font-size: 14px"><label style="font-size: 17px">{{sprintDaysLeft}}</label>&nbsp;Days left in Sprint </div>
 					
 					<div class="description-stats" ng-init="initLifeSprintStatus(selectedJiraProject)"
 						style="font-size: 14px; margin-top: 4%"> To-Do : {{jirauserstorytodo}} &nbsp;    In-Progress : {{jirauserstoryprogress}}  &nbsp;  Done : {{jirauserstorycompleted}} </div>

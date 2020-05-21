@@ -1,81 +1,76 @@
 
-<div class="widgets">
+<div class="widgets" >
+ 
 
+<div class="col-md-12" ba-panel ba-panel-title="Edit Dashboard"
+			ba-panel-class="with-scroll" style="padding-left:0px"  >
+<form name="form" ng-submit=updateDashboard(form,operationaldashid,selectedtemplate) ng-controller="OperationalDashboardCtrl" >
 
-	<div class="col-md-12" ba-panel ba-panel-title="Edit Dashboard"
-		ba-panel-class="with-scroll" style="padding-left: 0px">
-		<form name="form"
-			ng-submit=updateDashboard(form,operationaldashid,selectedtemplate)
-			ng-controller="OperationalDashboardCtrl">
-
-			<div class="form-group col-md-3">
-				<label for="dashboardName">Dashboard Name</label> <input
-					type="input" class="form-control" id="dashboardName"
-					ng-model="form.dashname"
-					ng-init="form.dashname=operationaldashboardName"
-					placeholder="Dashboard" maxlength="70" required>
-			</div>
-
-
-			<div class="form-group col-md-3">
-				<label for="description">Description</label> <input type="input"
-					class="form-control" id="description" ng-model="form.description"
-					ng-init="form.description=operationaldescription"
-					placeholder="Description" maxlength="140" required>
-			</div>
-
-			<div class="form-group col-md-3">
-				<label for="owner">Owner</label> <input type="input"
-					class="form-control" id="owner" ng-model="form.owner"
-					ng-init="form.owner=operationalowner" placeholder="Owner"
-					disabled="disabled">
-			</div>
-
-			<div class="form-group col-md-3" ng-init="getTemplatesList();">
-
-				<label>Use Templates </label> <a
-					ng-click="open('app/pages/operational/customTemplateView.html','lg')">
-					<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-					height="20">
-				</a> <select style="outline: 0; background-color: rgba(87, 95, 118, 1)"
+  <div class="form-group col-md-3"  >
+    <label for="dashboardName">Dashboard Name</label>
+    <input type="input" class="form-control" id="dashboardName" ng-model="form.dashname"  ng-init="form.dashname=operationaldashboardName" placeholder="Dashboard" maxlength="20" required>
+  </div>
+    
+ 
+  <div class="form-group col-md-3">
+    <label for="description">Description</label>
+    <input type="input" class="form-control" id="description" ng-model="form.description" 
+    ng-init="form.description=operationaldescription" 
+    placeholder="Description" maxlength="60" required>
+  </div>
+  
+   <div class="form-group col-md-3" >
+    <label for="owner">Owner</label>
+    <input type="input" class="form-control" id="owner" ng-model="form.owner"  ng-init="form.owner=operationalowner" placeholder="Owner" disabled="disabled">
+  </div>
+  
+  <div class="form-group col-md-3" ng-init="getTemplatesList();">
+			 	
+			<label>Use Templates </label> 
+			
+            <a ng-click="open('app/pages/operational/customTemplateView.html','lg')">
+            <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20"  ></a>      		
+      		
+       		<select style="outline: 0; background-color: rgba(87, 95, 118, 1)" 
 					name='templatelist' id="templatelist" class="form-control"
 					ng-model="selectedtemplate"
 					ng-options="templatelist for templatelist in templatelists"
 					ng-change="gettemplatelistselection(selectedtemplate)" required>
-					<option value="">Select Template</option>
-				</select>
-			</div>
+					<option value="" >Select Template</option>	
+				</select> 
+			</div> 
+  
 
-
-			<!-- Tree Code -->
+  <!-- Tree Code -->
 
 			<div class="col-md-12" ba-panel
 				ba-panel-title="Project/Release Selection"
 				ba-panel-class="with-scroll" style="padding-left: 0px">
 
-				<div class="col-md-6" ba-panel ba-panel-title="HP ALM :"
+				<div class="col-md-6" ba-panel
+					ba-panel-title="HP ALM :"
 					ba-panel-class="with-scroll" style="padding-left: 0px">
 
-					<table style="margin-left: 1cm; width: 80%">
+				<table  style="margin-left: 1cm;width: 80%">
 						<thead>
-							<tr>
-								<th colspan=2 align="left" height=50px><B> <input
-										id=alm_select_all type="checkbox"
-										ng-click="selectalm('alm_select_all')"> Select ALL
-								</B></th>
+							<tr>							
+								<th colspan=2 align="left" height=50px>
+									<B>
+									<input id=alm_select_all type="checkbox" ng-click="selectalm('alm_select_all')"> Select ALL
+									</B>
+								</th>
 							</tr>
 						</thead>
 
-						<tbody ng-repeat="item in rel_items"
-							ng-include="'tree_domain.html'">
+						<tbody ng-repeat="item in rel_items" ng-include="'tree_domain.html'">
 
-						</tbody>
+					    </tbody>
 
-					</table>
-
-					<!-- 	<div ng-hide="rel_items_val"> <h2>You don't have access to any of the projects. Please contact Admin.</h2></div> -->
-
-					<script type="text/ng-template" id="tree_domain.html">
+				</table>
+				
+			<!-- 	<div ng-hide="rel_items_val"> <h2>You don't have access to any of the projects. Please contact Admin.</h2></div> -->
+				
+				<script type="text/ng-template" id="tree_domain.html">
 					<tr>	
         				<td height=30px width="3%" valign="middle" align="left" >				
  							<IMG id=Mod{{item.level1ID}} ng-src='app/pages/operational/collapse.png' width=15 height=15  ng-click="expandCompress(item.level1ID)"/>		
@@ -96,8 +91,8 @@
         					</td>
     				</tr>				
 				</script>
-
-					<script type="text/ng-template" id="tree_project.html">
+				
+				<script type="text/ng-template" id="tree_project.html">
 					<tr>	
 						<td height=30px width="3%" valign="middle" align="left" >			
  							
@@ -123,12 +118,14 @@
     				</tr>
 								
 				</script>
-					<script type="text/ng-template" id="tree_release.html">
+				<script type="text/ng-template" id="tree_release.html">
 					<tr>	
 						<td height=30px width="6%" valign="middle" align="left" >			
  							
 						</td>						        				
-        				
+        				<td height=30px width="3%" valign="middle" align="left" >				
+ 							<IMG id=Mod{{item.level3ID}} ng-src='app/pages/operational/collapse.png' width=14 height=14  ng-click="expandCompress(item.level3ID)"/>		
+						</td>
 						<td width="60%" valign="middle" align="left">
 							<span ng-bind-html="&nbsp;"></span>
 							<input  type="checkbox" ng-model=item.selected ng-change="vm.Click(item,item.selected)"/>&nbsp;{{item.level3}}							
@@ -137,36 +134,32 @@
 					
 								
 				</script>
-				</div>
-
-<!-- <td height=30px width="3%" valign="middle" align="left" >				
- 							<IMG id=Mod{{item.level3ID}} ng-src='app/pages/operational/collapse.png' width=14 height=14  ng-click="expandCompress(item.level3ID)"/>		
-						</td> -->
-
-				<div class="col-md-6" ba-panel ba-panel-title="JIRA :"
+			</div>
+			
+										<div class="col-md-6" ba-panel
+					ba-panel-title="JIRA :"
 					ba-panel-class="with-scroll" style="padding-left: 0px">
-
-					<table style="margin-left: 1cm; width: 80%">
-						<!-- ng-if="rel_items_val" -->
+					
+				<table  style="margin-left: 1cm;width: 80%" > <!-- ng-if="rel_items_val" -->
 						<thead>
-							<tr>
-								<th colspan=2 align="left" height=50px><B> <input disabled
-										id=jira_select_all type="checkbox"
-										ng-click="selectjira('jira_select_all')"> Select ALL
-								</B></th>
+							<tr>							
+								<th colspan=2 align="left" height=50px>
+									<B>
+									<input id=jira_select_all type="checkbox" ng-click="selectjira('jira_select_all')"> Select ALL
+									</B>
+								</th>
 							</tr>
 						</thead>
 
-						<tbody ng-repeat="item in rel_jira_items"
-							ng-include="'tree_jira_domain.html'">
+						<tbody ng-repeat="item in rel_jira_items" ng-include="'tree_jira_domain.html'">
 
-						</tbody>
+					    </tbody>
 
-					</table>
-
-					<!-- <div ng-hide="rel_items_val"> <h2>You don't have access to any of the projects. Please contact Admin.</h2></div> -->
-
-					<script type="text/ng-template" id="tree_jira_domain.html">
+				</table>
+				
+				<!-- <div ng-hide="rel_items_val"> <h2>You don't have access to any of the projects. Please contact Admin.</h2></div> -->
+				
+				<script type="text/ng-template" id="tree_jira_domain.html">
 					<tr>	
         				<td height=30px width="3%" valign="middle" align="left" >				
  							<IMG id=JiraMod{{item.level1ID}} ng-src='app/pages/operational/collapse.png' width=15 height=15  ng-click="expandCompressJira(item.level1ID)"/>		
@@ -187,8 +180,8 @@
         					</td>
     				</tr>				
 				</script>
-
-					<script type="text/ng-template" id="tree_jira_project.html">
+				
+				<script type="text/ng-template" id="tree_jira_project.html">
 					<tr>	
 						<td height=30px width="3%" valign="middle" align="left" >			
  							
@@ -214,7 +207,7 @@
     				</tr>
 								
 				</script>
-					<script type="text/ng-template" id="tree_jira_release.html">
+				<script type="text/ng-template" id="tree_jira_release.html">
 					<tr>	
 						<td height=30px width="6%" valign="middle" align="left" >			
  							
@@ -230,30 +223,24 @@
 					
 								
 				</script>
-				</div>
+			</div>
 
 			</div>
 
 			<!-- Tree Code -->
-			<div class="col-md-12" ba-panel ba-panel-title="" ng-hide="!isVisiablepubicview"
+			<div class="col-md-12" ba-panel ba-panel-title=""
 				ba-panel-class="with-scroll" style="padding-left: 0px">
-				<label class="container">View
-					the Dashboard as public
 				<input type="checkbox" id="chkpublic" name="chkpublic"
 					value="option3" ng-model="form.ispublic"
-					ng-init="form.ispublic=isdashboardpublic">
-					  <span class="checkmark"></span>
-</label>
+					ng-init="form.ispublic=isdashboardpublic"><span>View
+					the Dashboard as public</span>
 			</div>
-			<div class="form-group col-md-3" style="padding-left: 0px">
-				<button type="submit" class="btn btn-success col-md-1 "
-					style="margin-left: 10%; margin-top: 7%; margin-right: 6%; width: 30%; float: left">Save</button>
-				<button type="button" class="btn btn-danger col-md-1 "
-					style="margin-left: 2%; margin-top: 7%; width: 30%; float: left"
-					ng-click="cancel();$dismiss();">Cancel</button>
-			</div>
-		</form>
-	</div>
-
-
+  <div class="form-group col-md-3"  style="padding-left: 0px">
+		  <button type="submit" class="btn btn-success col-md-1 " style="margin-left: 10%;margin-top:7%;margin-right:6%;width:30%;float:left">Save</button>
+		  <button type="button" class="btn btn-danger col-md-1 " style="margin-left: 2%;margin-top:7%;width:30%;float: left" ng-click="cancel();$dismiss();">Cancel</button>
+		  </div>
+</form>
+</div>
+	
+	
 </div>

@@ -1,4 +1,4 @@
-<div ng-if="tool == 'ALM'" class="widgets gridster" ng-controller="slideShowCtrl" ng-init="menubar = true">
+<div ng-if="tool == 'ALM'" class="widgets gridster" ng-controller="slideShowCtrl">
 
 	
 
@@ -9,7 +9,7 @@
 			<div uib-slide ng-repeat="slide in slides track by slide.id"
 				index="slide.id">
 				<ng-include src="slide.image" id="closeddefect" style="margin:auto;"></ng-include>
-				{{slide.text}}
+				<p style="color:#4c4c4c;">{{slide.text}}</p>
 			</div>
 		</div>
 

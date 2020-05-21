@@ -24,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.IdashboardConstantsUtil;
 import com.cts.metricsportal.util.PropertyManager;
@@ -51,11 +52,10 @@ public class ReportDataServices extends BaseMongoOperation {
 		}
 
 		String[] verticallist = null;
-		if(vertical!=null)
-		verticallist = vertical.split(",");
+		if (vertical != null)
+			verticallist = vertical.split(",");
 
 		return verticallist;
-
 	}
 
 	/*
@@ -65,29 +65,25 @@ public class ReportDataServices extends BaseMongoOperation {
 	 * 
 	 * @Produces(MediaType.APPLICATION_JSON) public List<String>
 	 * getgittypes(@HeaderParam("Authorization") String authString ) throws
-	 * JsonParseException, JsonMappingException, IOException,
-	 * NumberFormatException, BaseException, BadLocationException { List<String>
-	 * verticallist = new ArrayList<String>(); AuthenticationService UserEncrypt
-	 * = new AuthenticationService(); String userId =
-	 * UserEncrypt.getUser(authString); boolean LCAccess =
-	 * UserEncrypt.checkLCLayerAccess(authString); if(LCAccess){ verticallist =
-	 * getMongoOperation().getCollection("TDMdata") .distinct("vertical");
-	 * return verticallist;} else{ return verticallist; } }
+	 * JsonParseException, JsonMappingException, IOException, NumberFormatException,
+	 * BaseException, BadLocationException { List<String> verticallist = new
+	 * ArrayList<String>(); AuthenticationService UserEncrypt = new
+	 * AuthenticationService(); String userId = UserEncrypt.getUser(authString);
+	 * boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString); if(LCAccess){
+	 * verticallist = getMongoOperation().getCollection("TDMdata")
+	 * .distinct("vertical"); return verticallist;} else{ return verticallist; } }
 	 */
 
 	@GET
 	@Path("/getGeoDropData")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String[] getGeoDropData() throws Exception {
 		String Geo = "";
-			try {
-				Geo = PropertyManager.getProperty("Geo", "properties/reportData.properties");
-			} catch (Exception e) {
-				logger.error("vertical" + e.getMessage());
-			}
-		
-
+		try {
+			Geo = PropertyManager.getProperty("Geo", "properties/reportData.properties");
+		} catch (Exception e) {
+			logger.error("vertical" + e.getMessage());
+		}
 		String[] geolist;
 		geolist = Geo.split(",");
 
@@ -98,12 +94,10 @@ public class ReportDataServices extends BaseMongoOperation {
 	@GET
 	@Path("/getTypeofSupportData")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String[] getTypeofSupportData() throws Exception {
 		String TypeOfSupport = "";
-		
-			TypeOfSupport = PropertyManager.getProperty("TypeOfSupport", "properties/reportData.properties");
-		
+
+		TypeOfSupport = PropertyManager.getProperty("TypeOfSupport", "properties/reportData.properties");
 
 		String[] supportdatalist;
 		supportdatalist = TypeOfSupport.split(",");
@@ -142,7 +136,6 @@ public class ReportDataServices extends BaseMongoOperation {
 	@GET
 	@Path("/getTDMTableData")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public List<TDMDataVO> getTDMTableData(@HeaderParam("Authorization") String authString,
 			@QueryParam("Vertical") String Vertical, @QueryParam("Geo") String Geo,
 			@QueryParam("isItAHighiImpactContribution") String isItAHighiImpactContribution,
@@ -155,8 +148,6 @@ public class ReportDataServices extends BaseMongoOperation {
 		/*
 		 * long count = 0;
 		 */
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
 		TDMdata = new ArrayList<TDMDataVO>();
 		Query query1 = new Query();
 		if (!Vertical.equalsIgnoreCase("undefined")) {
@@ -200,8 +191,8 @@ public class ReportDataServices extends BaseMongoOperation {
 	 * 
 	 * @Produces(MediaType.APPLICATION_JSON)
 	 * 
-	 * public List<TDMDataVO>
-	 * getVerticalTableData( @HeaderParam("Authorization") String authString,
+	 * public List<TDMDataVO> getVerticalTableData( @HeaderParam("Authorization")
+	 * String authString,
 	 * 
 	 * @QueryParam("Vertical") String Vertical,
 	 * 
@@ -241,19 +232,19 @@ public class ReportDataServices extends BaseMongoOperation {
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
 		List<TDMDataVO> tdminfoo = null;
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean authenticationToken = LayerAccess.authenticateToken(authString);
+		if(authenticationToken) {
+			tdminfoo = new ArrayList<TDMDataVO>();
+			String sizequery = "{},{_id:0,userId:1}";
+			Query query = new BasicQuery(sizequery);
 
-		tdminfoo = new ArrayList<TDMDataVO>();
-		String sizequery = "{},{_id:0,userId:1}";
-		Query query = new BasicQuery(sizequery);
-
-		tdminfoo = getMongoOperation().find(query, TDMDataVO.class);
-		/* if(tdminfoo.) */
-		/* tdminfoo.remove('='); */
-		logger.error("tdd" + tdminfoo);
+			tdminfoo = getMongoOperation().find(query, TDMDataVO.class);
+			/* if(tdminfoo.) */
+			/* tdminfoo.remove('='); */
+			logger.error("tdd" + tdminfoo);
+			
+		}
 		return tdminfoo;
-
 	}
 
 	// table details on page load
@@ -266,17 +257,18 @@ public class ReportDataServices extends BaseMongoOperation {
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
 		List<TDMDataVO> tdminfo = null;
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean authenticationToken = LayerAccess.authenticateToken(authString);
+		
+		if(authenticationToken) {
+			tdminfo = new ArrayList<TDMDataVO>();
+			String sizequery = "{},{_id:0,userId:1}";
+			Query query = new BasicQuery(sizequery);
+			query.skip(itemsPerPage * (start_index - 1));
+			query.limit(itemsPerPage);
 
-		tdminfo = new ArrayList<TDMDataVO>();
-		String sizequery = "{},{_id:0,userId:1}";
-		Query query = new BasicQuery(sizequery);
-		query.skip(itemsPerPage * (start_index - 1));
-		query.limit(itemsPerPage);
-
-		tdminfo = getMongoOperation().find(query, TDMDataVO.class);
-		logger.error("tdd" + tdminfo);
+			tdminfo = getMongoOperation().find(query, TDMDataVO.class);
+			logger.error("tdd" + tdminfo);
+		}
 		return tdminfo;
 
 	}
@@ -288,17 +280,15 @@ public class ReportDataServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public long dashboardTableRecordsCount(@HeaderParam("Authorization") String authString)
 			throws JsonParseException, JsonMappingException, IOException, BadLocationException {
-		Query query1 = new Query();
-		AuthenticationService AuthServ = new AuthenticationService();
-
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
 		long count = 0;
-
-		String sizequery1 = "{},{_id:0,userId:1}";
-		Query query = new BasicQuery(sizequery1);
-
-		count = getMongoOperation().count(query1, TDMDataVO.class);
-		logger.error("count" + count);
+		boolean authenticationToken = LayerAccess.authenticateToken(authString);
+		if(authenticationToken) {
+			String sizequery1 = "{},{_id:0,userId:1}";
+			Query query = new BasicQuery(sizequery1);
+			count = getMongoOperation().count(query, TDMDataVO.class);
+			logger.error("count" + count);
+		}
+		
 		return count;
 
 	}
@@ -314,7 +304,7 @@ public class ReportDataServices extends BaseMongoOperation {
 		Query query1 = new Query();
 		AuthenticationService AuthServ = new AuthenticationService();
 
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		long count = 0;
 
 		String sizequery1 = "{},{_id:0,userId:1}";
@@ -548,9 +538,8 @@ public class ReportDataServices extends BaseMongoOperation {
 	 * @Path("/coEDashboardChartView")
 	 * 
 	 * @Produces(MediaType.APPLICATION_JSON) public List<TDMDataVO>
-	 * getCoEDashboardChartView() throws JsonParseException,
-	 * JsonMappingException, IOException, NumberFormatException, BaseException,
-	 * BadLocationException {
+	 * getCoEDashboardChartView() throws JsonParseException, JsonMappingException,
+	 * IOException, NumberFormatException, BaseException, BadLocationException {
 	 * 
 	 * List<TDMDataVO> tdmchartdata = null;
 	 * 

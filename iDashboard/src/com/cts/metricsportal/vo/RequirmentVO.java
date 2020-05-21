@@ -100,6 +100,7 @@ public class RequirmentVO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
 	public String getReleaseName() {
 		return releaseName;
 	}

@@ -1,8 +1,5 @@
 package com.cts.metricsportal.bo;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,10 +12,6 @@ import java.util.Map;
 
 import javax.swing.text.BadLocationException;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
@@ -32,8 +25,6 @@ import com.cts.metricsportal.vo.RollupsheetVO;
 
 public class SummaryValueMetrics implements MetricSummary {
 
-	int rowCount = 0;
-
 	public String getMetricValue(int customTemplateMetricId, String authString, String dashboardName, String domain,
 			String project, String vardtfrom, String vardtto, String rollingPeriod, long levelId)
 			throws JsonParseException, JsonMappingException, NumberFormatException, BaseException, IOException,
@@ -43,22 +34,6 @@ public class SummaryValueMetrics implements MetricSummary {
 		Date startDate = dateTimeCalc.getStartDate(vardtfrom);
 		Date endDate = dateTimeCalc.getEndDate(vardtto);
 		Date dates = new Date();
-		
-		Calendar c = Calendar.getInstance(); 
-		
-		String pattern = "yyyy-MM-dd";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		
-		
-		dates = simpleDateFormat.parse(simpleDateFormat.format(c.getTime()));
-		
-		
-		c.setTime(dates); 
-		c.add(Calendar.DATE, 1);
-		dates = c.getTime();
-		
-		
-		
 		Date dateBefore7Days = dateTimeCalc.getDateForTimeperiod(rollingPeriod);
 		String metricValue = null;
 		// String userId = LayerAccess.getUser(authString);
@@ -75,9 +50,6 @@ public class SummaryValueMetrics implements MetricSummary {
 		if (customTemplateMetricId == 2002) {
 			List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domain,
 					project);
-			
-			
-			
 			long totalReq = OperationalMongoOperations.getRequirementCountFilter(startDate, endDate, dates,
 					dateBefore7Days, levelIdList);
 			metricValue = Long.toString(totalReq);
@@ -93,9 +65,7 @@ public class SummaryValueMetrics implements MetricSummary {
 					levelIdList);
 
 			if (tcsexecuted > 0 && tcsplannedtoexecute > 0)
-				// exeCoverage = Math.round((tcsexecuted * 100) /
-				// tcsplannedtoexecute);
-				exeCoverage = Math.round(((double) tcsexecuted * 100) / ((double) tcsplannedtoexecute));
+				exeCoverage = tcsexecuted * 100 / tcsplannedtoexecute;
 			String exeCoveragePercent = Long.toString(exeCoverage);
 			metricValue = exeCoveragePercent.concat(" %");
 		}
@@ -110,9 +80,15 @@ public class SummaryValueMetrics implements MetricSummary {
 		}
 
 		if (customTemplateMetricId == 2005) {
-			/*List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domain,
-					project);*/
-			
+			/*
+			 * List<String> levelIdList =
+			 * AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domain,
+			 * project); int defRejRate =
+			 * OperationalMongoOperations.getdefectRejectionRateFilterQuery(dashboardName,
+			 * domain, project, startDate, endDate, dateBefore7Days, dates,levelIdList);
+			 * metricValue = Integer.toString(defRejRate);
+			 */
+
 			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
 			List<Integer> defRejRate = OperationalMongoOperations.getdefectRejectionRateFilterQuery(dashboardName,
 					domain, project, startDate, endDate, dateBefore7Days, dates, levelIdList);
@@ -129,13 +105,12 @@ public class SummaryValueMetrics implements MetricSummary {
 					dateBefore7Days, dates);
 			long bugOpenRate = 0;
 			if (openedCount > 0 && defecTotCount > 0) {
-				// bugOpenRate = Math.round((openedCount * 100) /
-				// defecTotCount);
+				// bugOpenRate = (openedCount * 100 / defecTotCount);
 				bugOpenRate = Math.round(((double) openedCount * 100) / ((double) defecTotCount));
 			} else {
 				bugOpenRate = 0;
 			}
-
+			
 			metricValue = Long.toString(bugOpenRate) + "%";
 		}
 
@@ -159,30 +134,44 @@ public class SummaryValueMetrics implements MetricSummary {
 		if (customTemplateMetricId == 2012) {
 			/*
 			 * List<String> levelIdList =
-			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName,
-			 * userId, domain, project);
-			 */
-			long firstPassRate = 0;
-			List<Long> firstTimePass = new ArrayList<Long>();
-
-			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-			firstTimePass = AlmMongoOperations.firstTimePass(startDate, dates,endDate, dateBefore7Days, levelIdList);
-
-			/*
-			 * long tcsexecuted =
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project); long firstPassRate = 0; long tcsexecuted =
 			 * OperationalMongoOperations.getTcExec(startDate, endDate, dates,
 			 * dateBefore7Days, levelIdList); long tcsplannedtoexecute =
 			 * OperationalMongoOperations.getTcPlan(startDate, endDate, dates,
 			 * dateBefore7Days, levelIdList);
 			 * 
-			 * if (tcsexecuted > 0 && tcsplannedtoexecute > 0) firstPassRate =
-			 * tcsexecuted * 100 / tcsplannedtoexecute;
+			 * if(tcsexecuted>0 && tcsplannedtoexecute>0) firstPassRate = tcsexecuted * 100
+			 * / tcsplannedtoexecute; String firstPassRatePercent =
+			 * Long.toString(firstPassRate); metricValue =
+			 * firstPassRatePercent.concat(" %");
+			 */
+
+			/*
+			 * List<String> levelIdList =
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project);
+			 */
+			long firstPassRate = 0;
+			List<Long> firstTimePass = new ArrayList<Long>();
+
+			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
+			firstTimePass = AlmMongoOperations.firstTimePass(startDate, dates, endDate, dateBefore7Days, levelIdList);
+
+			/*
+			 * long tcsexecuted = OperationalMongoOperations.getTcExec(startDate, endDate,
+			 * dates, dateBefore7Days, levelIdList); long tcsplannedtoexecute =
+			 * OperationalMongoOperations.getTcPlan(startDate, endDate, dates,
+			 * dateBefore7Days, levelIdList);
+			 * 
+			 * if (tcsexecuted > 0 && tcsplannedtoexecute > 0) firstPassRate = tcsexecuted *
+			 * 100 / tcsplannedtoexecute;
 			 */
 			String firstPassRatePercent = Long.toString(firstTimePass.get(2));
 			metricValue = firstPassRatePercent.concat(" %");
-		}
-
-		if (customTemplateMetricId == 2013) {
+			}
+		
+		if(customTemplateMetricId == 2013){
 			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
 			long errDiscovery = OperationalMongoOperations.errorDiscovery1(startDate, endDate, dates, dateBefore7Days,
 					levelIdList);
@@ -195,16 +184,16 @@ public class SummaryValueMetrics implements MetricSummary {
 			long bugReopenCount = OperationalMongoOperations.getreopenCountQuery(authString, dashboardName, domain,
 					project, dates, dateBefore7Days, levelIdList);
 			metricValue = Long.toString(bugReopenCount);
-		}
-
-		if (customTemplateMetricId == 2015) {
+			}
+			
+		if(customTemplateMetricId == 2015){
 			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDefects(dashboardName, userId, domain, project);
 			long totalUserStoryDefectCount = OperationalMongoOperations.getUserStoryDefectCount(authString,
 					dashboardName, domain, project, dates, dateBefore7Days, levelIdList);
 			metricValue = Long.toString(totalUserStoryDefectCount);
-		}
-
-		if (customTemplateMetricId == 2016) {
+			}
+			
+		if(customTemplateMetricId == 2016){
 			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDefects(dashboardName, userId, domain, project);
 			long bugClosedCount = OperationalMongoOperations.getDefClosedCountQuery(authString, dashboardName, domain,
 					project, vardtfrom, vardtto, levelIdList);
@@ -285,8 +274,8 @@ public class SummaryValueMetrics implements MetricSummary {
 		if (customTemplateMetricId == 2027) {
 			/*
 			 * List<String> levelIdList =
-			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName,
-			 * userId, domain, project);
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project);
 			 */
 
 			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
@@ -300,13 +289,13 @@ public class SummaryValueMetrics implements MetricSummary {
 		if (customTemplateMetricId == 2028) {
 			/*
 			 * List<String> levelIdList =
-			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName,
-			 * userId, domain, project);
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project);
 			 */
 
 			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
 
-			List<Long> funcPercent = OperationalMongoOperations.getFunctionalPercent(startDate, dates,endDate,
+			List<Long> funcPercent = OperationalMongoOperations.getFunctionalPercent(startDate, dates, endDate,
 					dateBefore7Days, levelIdList);
 			String resultPercent = Long.toString(funcPercent.get(2));
 			metricValue = resultPercent.concat(" %");
@@ -315,12 +304,12 @@ public class SummaryValueMetrics implements MetricSummary {
 		if (customTemplateMetricId == 2029) {
 			/*
 			 * List<Integer> levelIdList =
-			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName,
-			 * userId, domain, project);
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project);
 			 */
 
 			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-			List<Long> regPercent = OperationalMongoOperations.getRegressionPercent(startDate, dates,endDate,
+			List<Long> regPercent = OperationalMongoOperations.getRegressionPercent(startDate, dates, endDate,
 					dateBefore7Days, levelIdList);
 			String resultPercent = Long.toString(regPercent.get(2));
 			metricValue = resultPercent.concat(" %");
@@ -328,13 +317,17 @@ public class SummaryValueMetrics implements MetricSummary {
 		}
 
 		if (customTemplateMetricId == 2030) {
-			/*List<String> DefectlevelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domain,
-					project);
-			List<String> TestExecutionlevelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId,
-					domain, project);*/
-			
+			/*
+			 * List<String> DefectlevelIdList =
+			 * AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domain,
+			 * project); List<String> TestExecutionlevelIdList =
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project);
+			 */
+
 			List<Integer> DefectlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-			List<Integer> TestExecutionlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
+			List<Integer> TestExecutionlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain,
+					project);
 
 			List<Long> defdensityCount = OperationalMongoOperations.getDefectDensityrQuery(dashboardName, domain,
 					project, startDate, endDate, dateBefore7Days, dates, TestExecutionlevelIdList, DefectlevelIdList);
@@ -346,8 +339,8 @@ public class SummaryValueMetrics implements MetricSummary {
 		if (customTemplateMetricId == 2031) {
 			/*
 			 * List<Integer> levelIdList =
-			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName,
-			 * userId, domain, project);
+			 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+			 * project);
 			 */
 
 			List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domain,
@@ -375,21 +368,18 @@ public class SummaryValueMetrics implements MetricSummary {
 			Date startDate = dateTimeCalc.getStartDate(vardtfrom);
 			Date endDate = dateTimeCalc.getEndDate(vardtto);
 			Date dates = new Date();
-			
-			Calendar c = Calendar.getInstance(); 
-			
+
+			Calendar c = Calendar.getInstance();
+
 			String pattern = "yyyy-MM-dd";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			
-			
+
 			dates = simpleDateFormat.parse(simpleDateFormat.format(c.getTime()));
-			
-			
-			c.setTime(dates); 
+
+			c.setTime(dates);
 			c.add(Calendar.DATE, 1);
 			dates = c.getTime();
-			
-			
+
 			Date dateBefore7Days = dateTimeCalc.getDateForTimeperiod(rollingPeriod);
 
 			for (int m = 0; m < prjlevel.size(); m++) {
@@ -403,14 +393,14 @@ public class SummaryValueMetrics implements MetricSummary {
 				// Total Execution Count
 				List<String> ExecutionlevelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId,
 						domain, project);
-				long totalTcExeCount = OperationalMongoOperations.getTcCount(startDate, dates,endDate, dateBefore7Days,
+				long totalTcExeCount = OperationalMongoOperations.getTcCount(startDate, dates, endDate, dateBefore7Days,
 						ExecutionlevelIdList);
 
 				rollupsheet.setField1(Long.toString(totalTcExeCount));
 
 				List<Integer> firstTimepasslevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain,
 						project);
-				List<Long> firstTimePass = AlmMongoOperations.firstTimePass(startDate, dates,endDate, dateBefore7Days,
+				List<Long> firstTimePass = AlmMongoOperations.firstTimePass(startDate, dates, endDate, dateBefore7Days,
 						firstTimepasslevelIdList);
 
 				rollupsheet.setField2(firstTimePass.get(0).toString());
@@ -446,19 +436,23 @@ public class SummaryValueMetrics implements MetricSummary {
 				rollupsheet.setField13(regPercent.get(2).toString() + "%");
 
 				List<Integer> UATlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-				List<Long> uatPercent = OperationalMongoOperations.getUatPercent(startDate, dates ,endDate, 
+				List<Long> uatPercent = OperationalMongoOperations.getUatPercent(startDate, dates, endDate,
 						dateBefore7Days, UATlevelIdList);
 
 				rollupsheet.setField14(uatPercent.get(0).toString());
 				rollupsheet.setField15(uatPercent.get(1).toString());
 				rollupsheet.setField16(uatPercent.get(2).toString() + "%");
 
-				//1-13-2020 code changed
-				/*List<String> defectrejlevelIdListrollup = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName,
-						userId, domain, project);*/
-				
-				List<Integer> defectrejlevelIdListrollup = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-				
+				// 1-13-2020 code changed
+				/*
+				 * List<String> defectrejlevelIdListrollup =
+				 * AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domain,
+				 * project);
+				 */
+
+				List<Integer> defectrejlevelIdListrollup = OperationalDAO.getGlobalLevelIds(dashboardName, userId,
+						domain, project);
+
 				List<Integer> defRejRaterollup = OperationalMongoOperations.getdefectRejectionRateFilterQuery(
 						dashboardName, domain, project, startDate, endDate, dateBefore7Days, dates,
 						defectrejlevelIdListrollup);
@@ -467,14 +461,18 @@ public class SummaryValueMetrics implements MetricSummary {
 				rollupsheet.setField18(defRejRaterollup.get(1).toString());
 				rollupsheet.setField19(defRejRaterollup.get(2).toString() + "%");
 
-				/*List<String> DefectlevelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId,
-						domain, project);
-				List<String> TestExecutionlevelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName,
-						userId, domain, project);*/
-				
-				List<Integer> DefectlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-				List<Integer> TestExecutionlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
-				
+				/*
+				 * List<String> DefectlevelIdList =
+				 * AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domain,
+				 * project); List<String> TestExecutionlevelIdList =
+				 * AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+				 * project);
+				 */
+
+				List<Integer> DefectlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain,
+						project);
+				List<Integer> TestExecutionlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain,
+						project);
 
 				List<Long> defdensityCount = OperationalMongoOperations.getDefectDensityrQuery(dashboardName, domain,
 						project, startDate, endDate, dateBefore7Days, dates, TestExecutionlevelIdList,

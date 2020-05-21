@@ -16,14 +16,9 @@
 		});
 
   /** @ngInject */
- function chefRunsDetailsCtrl($sessionStorage, paginationService, $element,$scope,$state,$base64,$http,$timeout,$uibModal,$rootScope, baConfig, layoutPaths, localStorageService) {
-	function getEncryptedValue() {
-		var username= localStorageService.get('userIdA');;
-		var password= localStorageService.get('passwordA');
-		var tokeen =$base64.encode(username+":"+password);
-	        
-		return tokeen;
-	}
+ function chefRunsDetailsCtrl($sessionStorage, paginationService, AES, $element, $scope, $state, $base64, $http, $timeout, $uibModal,
+		 $rootScope, baConfig, layoutPaths, localStorageService) {
+	  
 	$rootScope.sortkey = false;
 	$rootScope.searchkey = false;
 	$rootScope.menubar = false;
@@ -45,7 +40,7 @@
 
 	// Cookbook Names
 	$scope.chefCookbookNamesData = function(){
-	 	var token  = getEncryptedValue();
+	 	var token  = AES.getEncryptedValue();
         var config = {headers: {
         	'Authorization': token
         }};
@@ -87,7 +82,7 @@
 	}
 
 	$scope.getSelectedNodeDetails = function() {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -121,7 +116,7 @@
 
      // Table details
 	function chefRunsTableData(start_index, cookbookname){
-	 	var token  = getEncryptedValue();
+	 	var token  = AES.getEncryptedValue();
         var config = {headers: {
         	'Authorization': token
         }};
@@ -138,7 +133,7 @@
 		 
 	// Find Last Cookbook Run On Nodes 
 	function findLastRunDetails(selectedCookbook){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -173,7 +168,7 @@
 	
 	// Find Last Cookbook Run On Nodes 
 	function findLastRunDetailsForNode(selectedNode, selectedCookbook){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -208,7 +203,7 @@
 	
 	// Find Last Cookbook Run On Nodes 
 	function findLastSuccessfulRunDetails(selectedCookbook){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -242,7 +237,7 @@
 	
 	// Find Last Cookbook Run On Nodes 
 	function findLastSuccessfulRunDetailsForNode(selectedNode, selectedCookbook){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -278,7 +273,7 @@
 	};
 	
 	function totalCookbookRunsCount(selectedCookbook) {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -290,7 +285,7 @@
 	}
 	
 	function totalCookbooksCountForNode(selectedNode, selectedCookbook) {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -305,7 +300,7 @@
 	}
 	
 	function totalCookbookRunsCountForNode(selectedNode, selectedCookbook) {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -318,7 +313,7 @@
 	}
 	
 	function totalSuccessCount(selectedCookbook) {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -331,7 +326,7 @@
 	}
 	
 	function totalSuccessCountForNode(selectedNode, selectedCookbook) {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -352,7 +347,7 @@
  
 	function runsByStatusBarChart(selectedCookbook) {
 	
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 	    var config = {headers: {
 	    	'Authorization': token
 	    }};
@@ -455,7 +450,7 @@
 	}
  
 	function runsByStatusMultipleBarChart(selectedCookbook) {
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 	    var config = {headers: {
 	    	'Authorization': token
 	    }};
@@ -505,6 +500,8 @@
 				pointFillColors:['#ffffff'],
 				pointStrokeColors: ['black'],
 				lineColors:['gray','red'],
+				gridTextColor : '#4C4C4C',
+				labelFontColor: "#4C4C4C"
 			});
 			$("#barchart").css("height","400");
 			bar.redraw();
@@ -524,7 +521,7 @@
 	 
 	// Runs on Nodes Funnel Chart - Dashboard
 	function runsOnEachNodeFunnelChart(selectedCookbook){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -581,7 +578,7 @@
 					"rgba(153, 102, 255, 0.8)",
 					"rgba(255, 159, 64, 0.8)"],
 				
-				labelFontColor: "rgba(255, 255, 255, 0.8)"
+				labelFontColor: "#4C4C4C" //"rgba(255, 255, 255, 0.8)"
 			});
 		};
 		runsTrendChart(selectedCookbook);
@@ -598,7 +595,7 @@
  	/* Runs Trend Chart */
 
 	function runsTrendChart(selectedCookbook){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -681,20 +678,25 @@
 								unit: "month"
 							},
 							gridLines: {
-								color: "rgba(255,255,255,0.2)",
-							}
+								color: "#e3e5e6"//"rgba(255,255,255,0.2)",
+							},
+							ticks : {
+								beginAtZero: true,
+								fontColor: '#4c4c4c'}
 						}],
 						yAxes: [{
 							scaleLabel : {
 								display : true,
-								labelString : 'Number of Deployments'
+								labelString : 'Number of Deployments',
+								fontColor: '#4c4c4c'
 							},
 					
 							gridLines: {
-								color: "rgba(255,255,255,0.2)",
+								color: "#e3e5e6" //"rgba(255,255,255,0.2)",
 							},
 							 ticks : {
-									beginAtZero: true}
+									beginAtZero: true,
+									fontColor: '#4c4c4c'}
 						}]
 					},
 					pan: {
@@ -723,7 +725,7 @@
 		      
 	// Total Runs count details
 	$scope.totalRunsCount=function(){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
 		var config = {headers: {
 			'Authorization': token
 		}};
@@ -741,7 +743,7 @@
 	 
 	 // Nodes by OS donut chart	  
 	$scope.nodesByOSPieChart=function(){
-	 var token  = getEncryptedValue();
+	 var token  = AES.getEncryptedValue();
         var config = {headers: {
                 'Authorization': token
                 }};

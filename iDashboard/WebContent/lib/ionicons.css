@@ -444,7 +444,7 @@
 
 .ion-easel:before { content: "\f3c2"; }
 
-.ion-edit:before { color:#4c4c4c; content: "\f2bf"; }
+.ion-edit:before { content: "\f2bf"; }
 
 .ion-egg:before { content: "\f277"; }
 
@@ -1485,3 +1485,4 @@
 /* indication icon */
 .ion-minus-circled-blue:before {color:#0039a6; content: "\f207"; }
 .ion-minus-circled-red:before {color:#e85656; content: "\f207"; }
+

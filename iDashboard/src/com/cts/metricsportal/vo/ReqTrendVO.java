@@ -10,13 +10,10 @@ public class ReqTrendVO {
 	private int notcovered = 0;
 	private int passed = 0;
 	private int norun = 0;
-	
 	private int notcompleted = 0;
 	private int notapplicable = 0;
 	private int blocked = 0;
 	private int nostatus = 0;
-	private int obsolete = 0;
-	
 	public String getDate() {
 		return Date;
 	}
@@ -81,13 +78,6 @@ public class ReqTrendVO {
 	public void setDate(Date date2) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public int getObsolete() {
-		return obsolete;
-	}
-	public void setObsolete(int obsolete) {
-		this.obsolete = obsolete;
 	}
 	
 	

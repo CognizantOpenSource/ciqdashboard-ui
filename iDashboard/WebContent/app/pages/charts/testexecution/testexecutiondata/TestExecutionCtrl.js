@@ -1,4 +1,6 @@
-
+/**
+ * @author v.lugovksy created on 16.12.2015
+ */
 (function() {
 	'use strict';
 
@@ -14,45 +16,39 @@
 			});
 
 	/** @ngInject */
-	function TestExecutionCtrl($element, paginationService, UserService,
+	function TestExecutionCtrl($element, paginationService, AES, UserService,
 			localStorageService, $scope, $base64, $http, $timeout, $uibModal,
 			$rootScope, baConfig, layoutPaths, $sessionStorage, $filter) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
 
-			return tokeen;
+		$rootScope.timeperiodTe = localStorageService.get('timeperiod');
+
+		if ($scope.dtto != null) {
+
+			var dtToDate = new Date($scope.dtto);
+			dtToDate.setDate(dtToDate.getDate() + 1);
+
+			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)),
+					'MM/dd/yyyy');
+
+			localStorageService.set('dttoPlus', dtToDateStr);
 		}
+
+		$rootScope.sortkey = false;
+		$rootScope.searchkey = false;
+		$rootScope.menubar = true;
+		var dashboardName = localStorageService.get('dashboardName');
+		var owner = localStorageService.get('owner');
+		var domainName = localStorageService.get('domainName');
+		var projectName = localStorageService.get('projectName');
 
 		$scope.init = function() {
 			$rootScope.dataloader = true;
 		}
 
-		$rootScope.timeperiodTe = localStorageService.get('timeperiod');
-		
-		if ($scope.dtto != null) {
-			
-			var dtToDate = new Date($scope.dtto);			
-			dtToDate.setDate(dtToDate.getDate() + 1);			
-			
-			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-			
-			localStorageService.set('dttoPlus', dtToDateStr);			
-		}
-		
-		$rootScope.sortkey = false;
-		$rootScope.searchkey = false;
-		$rootScope.MetricsName = "Test Execution";
-		/* $rootScope.menubar = true; */
-		var dashboardName = localStorageService.get('dashboardName');
-		var owner = localStorageService.get('owner');
-		var domainName = localStorageService.get('domainName');
-		var projectName = localStorageService.get('projectName');
 		// Total Test Case Count
 
 		$rootScope.initialtccount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -75,11 +71,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/almMetricsServices/tcexeCount?dashboardName="
 							+ dashboardName + "&owner=" + owner
@@ -91,48 +87,10 @@
 						$rootScope.tcexecnt = response;
 					});
 		}
-		// 
-
-		// Unique Test Execution Count
-		$rootScope.initaluniqueExeCount = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-			$http.get(
-					"rest/almMetricsServices/tcuniqueexeCount?dashboardName="
-							+ dashboardName + "&owner=" + owner
-							+ "&domainName=" + domainName + "&projectName="
-							+ projectName + "&vardtfrom=" + vardtfrom
-							+ "&vardtto=" + vardtto + "&timeperiod="
-							+ $rootScope.timeperiodTe, config).success(
-					function(response) {
-						$rootScope.tcuniqueexecnt = response;
-					});
-		}
 		// Manual Test Case Count
 
 		$rootScope.manualtccount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -155,6 +113,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/almMetricsServices/tcmanualCount?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -169,7 +132,7 @@
 		// Automated Test Case Count
 
 		$rootScope.autotccount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -192,6 +155,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/almMetricsServices/tcautoCount?dashboardName="
 							+ dashboardName + "&owner=" + owner
@@ -204,9 +172,9 @@
 					});
 		}
 
-		// First Time Pass Rate percentage
-		$rootScope.firstpassrate = function() {
-			var token = getEncryptedValue();
+		// Regression Automation
+		$rootScope.RegressionAutomation = function() {
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -229,30 +197,29 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
-					"./rest/almMetricsServices/firstTimePass?dashboardName="
+					"./rest/almMetricsServices/RegressionAutomation?dashboardName="
 							+ dashboardName + "&owner=" + owner
 							+ "&domainName=" + domainName + "&projectName="
 							+ projectName + "&vardtfrom=" + vardtfrom
 							+ "&vardtto=" + vardtto + "&timeperiod="
 							+ $rootScope.timeperiodTe, config).success(
 					function(response) {
-						$rootScope.passratedata = response;
+						$rootScope.regatuo = response;
 
-						$scope.loadPieCharts('#passrate',
-								$rootScope.passratedata);
+						$scope.loadPieCharts('#regatuo', $rootScope.regatuo);
 					});
 
 		}
 
 		// UAT Automation
 		$rootScope.UATAutomation = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -275,11 +242,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"./rest/almMetricsServices/UATAutomation?dashboardName="
 							+ dashboardName + "&owner=" + owner
@@ -298,7 +265,7 @@
 		// Functional Automation
 
 		$rootScope.FuncationalAutomation = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -321,11 +288,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"./rest/almMetricsServices/FuncationalAutomation?dashboardName="
 							+ dashboardName + "&owner=" + owner
@@ -341,9 +308,9 @@
 
 		}
 
-		// Regression Automation
-		$rootScope.RegressionAutomation = function() {
-			var token = getEncryptedValue();
+		// First Time Pass Rate percentage
+		$rootScope.firstpassrate = function() {
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -366,28 +333,31 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
-					"./rest/almMetricsServices/RegressionAutomation?dashboardName="
+					"./rest/almMetricsServices/firstTimePass?dashboardName="
 							+ dashboardName + "&owner=" + owner
 							+ "&domainName=" + domainName + "&projectName="
 							+ projectName + "&vardtfrom=" + vardtfrom
 							+ "&vardtto=" + vardtto + "&timeperiod="
 							+ $rootScope.timeperiodTe, config).success(
 					function(response) {
-						$rootScope.regatuo = response;
+						$rootScope.passratedata = response;
 
-						$scope.loadPieCharts('#regatuo', $rootScope.regatuo);
+						$scope.loadPieCharts('#passrate',
+								$rootScope.passratedata);
 					});
 
 		}
-		// Error Discovery Rate percentage
-		$rootScope.errordiscoveryrate = function() {
-			var token = getEncryptedValue();
+
+		// FunctionalUitilizaiton - Trend Graph
+
+		$scope.functionalUtilChart = function() {
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -410,6 +380,420 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http
+					.get(
+							"rest/almMetricsServices/FunctionalUtilChart?dashboardName="
+									+ dashboardName + "&domainName="
+									+ domainName + "&projectName="
+									+ projectName + "&vardtfrom=" + vardtfrom
+									+ "&vardtto=" + vardtto + "&timeperiod="
+									+ $rootScope.timeperiodTe, config)
+					.success(
+							function(response) {
+								$scope.data = response;
+								if ($scope.data.length != 0) {
+									$scope
+											.functionaldesignerbarchart($scope.data);
+								} else {
+									$('#functionalutilbarchart').remove(); // this
+									// is
+									// my
+									// <canvas>
+									// element
+									$('#exefunctionalutildiv')
+											.append(
+													'<canvas id="functionalutilbarchart"> </canvas>');
+								}
+							});
+
+			$scope.functionaldesignerbarchart = function(lineresult) {
+				$scope.result = lineresult;
+				$scope.labels1 = [];
+				$scope.labels2 = [];
+				$scope.data1 = [];
+				var colors = [];
+
+				for (var i = 0; i < $scope.result.length; i++) {
+					$scope.labels1.push($scope.result[i].isoTestExecutionMonth);
+					$scope.labels2.push($scope.result[i].testExecutionMonth);
+					$scope.data1.push($scope.result[i].funcUtilValue);
+
+					//colors.push("rgba(0, 0, 128, 0.8)");
+
+				}
+				$scope.labelspie = $scope.labels1;
+				$scope.datapie = $scope.data1;
+				var layoutColors = baConfig.colors;
+
+				$('#functionalutilbarchart').remove(); // this is my <canvas>
+				// element
+				$('#exefunctionalutildiv').append(
+						'<canvas id="functionalutilbarchart"> </canvas>');
+
+				var ctx = document.getElementById("functionalutilbarchart");
+				var functionalutilbarchart = new Chart(
+						ctx,
+						{
+							type : 'bar',
+							data : {
+								labels : $scope.labels1,
+								datasets : [ {
+									data : $scope.data1,
+									backgroundColor : "rgba(0, 0, 128, 0.3)",
+									borderColor : "rgba(0, 0, 128, 0.8)",
+									borderWidth : 1,
+
+								} ]
+							},
+							options : {
+								responsive : true,
+								maintainAspectRatio : false,
+								hover : {
+									animationDuration : 0
+								},
+								"animation" : {
+									"duration" : 1,
+									"onComplete" : function() {
+										var chartInstance = this.chart, ctx = chartInstance.ctx;
+
+										ctx.font = Chart.helpers
+												.fontString(
+														Chart.defaults.global.defaultFontSize,
+														Chart.defaults.global.defaultFontStyle,
+														Chart.defaults.global.defaultFontFamily);
+										ctx.textAlign = 'center';
+										ctx.textBaseline = 'bottom';
+
+										this.data.datasets
+												.forEach(function(dataset, i) {
+													var meta = chartInstance.controller
+															.getDatasetMeta(i);
+													meta.data
+															.forEach(function(
+																	bar, index) {
+																var meta = chartInstance.controller
+																		.getDatasetMeta(i);
+																meta.data
+																		.forEach(function(
+																				bar,
+																				index) {
+
+																			//var data = dataset.data[index] + "%";
+																			if (dataset.data[index] != 0) {
+																				var data = dataset.data[index]
+																						+ "%";
+																			} else {
+																				var data = "";
+																			}
+
+																			var centerPoint = bar
+																					.getCenterPoint();
+																			ctx
+																					.fillText(
+																							data,
+																							centerPoint.x,
+																							centerPoint.y - 2);
+																		});
+															});
+												});
+									}
+								},
+								//								tooltips : {
+								//									enabled : true
+								//								},
+								scales : {
+									yAxes : [ {
+										ticks : {
+											beginAtZero : true,
+											fontColor : '#000000', //text color											
+										},
+										scaleLabel : {
+											display : true,
+											labelString : 'Functional Utilization %',
+											fontColor : '#4c4c4c',
+											fontStyle : 'bold'
+										},
+										gridLines : {
+											color : "#d8d3d3"
+										}
+									} ],
+									xAxes : [ {
+										barThickness : 30,
+										//										bounds : 'data',
+										type : "time",
+										//										offset: true,
+										time : {
+											//max: 1473853353000,										
+											displayFormats : {
+												month : "MMM YYYY",
+											},
+											tooltipFormat : "MMM YYYY",
+											unit : "month"
+										},
+										scaleLabel : {
+											display : true,
+											labelString : 'Month(s)',
+											fontColor : '#4c4c4c',
+											fontStyle : 'bold'
+										},
+										gridLines : {
+											color : "rgba(192,192,192,0.2)",
+											offsetGridLines : true
+										},
+										ticks : {
+											fontColor : '#4c4c4c',
+										//											 source: 'auto'
+										}
+									} ]
+
+								}
+							}
+
+						});
+			};
+
+		}
+
+		// RegressionUitilizaiton - Trend Graph
+
+		$scope.regressionUtilChart = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http
+					.get(
+							"rest/almMetricsServices/RegressionUtilChart?dashboardName="
+									+ dashboardName + "&domainName="
+									+ domainName + "&projectName="
+									+ projectName + "&vardtfrom=" + vardtfrom
+									+ "&vardtto=" + vardtto + "&timeperiod="
+									+ $rootScope.timeperiodTe, config)
+					.success(
+							function(response) {
+								$scope.data = response;
+								
+								if ($scope.data.length != 0) {
+									$scope
+											.regressiondesignerbarchart($scope.data);
+								} else {
+									$('#regressionutilbarchart').remove(); // this
+									// is
+									// my
+									// <canvas>
+									// element
+									$('#exeregressionutildiv')
+											.append(
+													'<canvas id="regressionutilbarchart"> </canvas>');
+								}
+							});
+
+			$scope.regressiondesignerbarchart = function(lineresult) {
+				$scope.result = lineresult;
+				$scope.labels1 = [];
+				$scope.labels2 = [];
+				$scope.data1 = [];
+				var colors = [];
+
+				for (var i = 0; i < $scope.result.length; i++) {
+					$scope.labels1.push($scope.result[i].isoTestExecutionMonth);
+					$scope.labels2.push($scope.result[i].testExecutionMonth);
+					$scope.data1.push($scope.result[i].regUtilValue);
+
+					//colors.push("rgba(0, 0, 128, 0.8)");
+
+				}
+				$scope.labelspie = $scope.labels1;
+				$scope.datapie = $scope.data1;
+				var layoutColors = baConfig.colors;
+
+				$('#regressionutilbarchart').remove(); // this is my <canvas>
+				// element
+				$('#exeregressionutildiv').append(
+						'<canvas id="regressionutilbarchart"> </canvas>');
+
+				var ctx = document.getElementById("regressionutilbarchart");
+				var regressionutilbarchart = new Chart(
+						ctx,
+						{
+							type : 'bar',
+							data : {
+								labels : $scope.labels1,
+								datasets : [ {
+									data : $scope.data1,
+									backgroundColor : "rgba(0, 0, 128, 0.3)",
+									borderColor : "rgba(0, 0, 128, 0.8)",
+									borderWidth : 1,
+
+								} ]
+							},
+							options : {
+								responsive : true,
+								maintainAspectRatio : false,
+								hover : {
+									animationDuration : 0
+								},
+								"animation" : {
+									"duration" : 1,
+									"onComplete" : function() {
+										var chartInstance = this.chart, ctx = chartInstance.ctx;
+
+										ctx.font = Chart.helpers
+												.fontString(
+														Chart.defaults.global.defaultFontSize,
+														Chart.defaults.global.defaultFontStyle,
+														Chart.defaults.global.defaultFontFamily);
+										ctx.textAlign = 'center';
+										ctx.textBaseline = 'bottom';
+
+										this.data.datasets
+												.forEach(function(dataset, i) {
+													var meta = chartInstance.controller
+															.getDatasetMeta(i);
+													meta.data
+															.forEach(function(
+																	bar, index) {
+																var meta = chartInstance.controller
+																		.getDatasetMeta(i);
+																meta.data
+																		.forEach(function(
+																				bar,
+																				index) {
+
+																			//var data = dataset.data[index] + "%";
+																			if (dataset.data[index] != 0) {
+																				var data = dataset.data[index]
+																						+ "%";
+																			} else {
+																				var data = "";
+																			}
+																			var centerPoint = bar
+																					.getCenterPoint();
+																			ctx
+																					.fillText(
+																							data,
+																							centerPoint.x,
+																							centerPoint.y - 2);
+																		});
+															});
+												});
+									}
+								},
+								//									tooltips : {
+								//										enabled : true
+								//									},
+								scales : {
+									yAxes : [ {
+										ticks : {
+											beginAtZero : true,
+											fontColor : '#000000', //text color											
+										},
+										scaleLabel : {
+											display : true,
+											labelString : 'Regression Utilization %',
+											fontColor : '#4c4c4c',
+											fontStyle : 'bold'
+										},
+										gridLines : {
+											color : "#d8d3d3"
+										}
+									} ],
+									xAxes : [ {
+										barThickness : 30,
+										//											bounds : 'data',
+										type : "time",
+										//											offset: true,
+										time : {
+											//max: 1473853353000,										
+											displayFormats : {
+												month : "MMM YYYY",
+											},
+											tooltipFormat : "MMM YYYY",
+											unit : "month"
+										},
+										scaleLabel : {
+											display : true,
+											labelString : 'Month(s)',
+											fontColor : '#4c4c4c',
+											fontStyle : 'bold'
+										},
+										gridLines : {
+											color : "rgba(192,192,192,0.2)",
+											offsetGridLines : true
+										},
+										ticks : {
+											fontColor : '#4c4c4c',
+										//												 source: 'auto'
+										}
+									} ]
+
+								}
+							}
+
+						});
+			};
+
+		}
+
+		// Error Discovery Rate percentage
+		$rootScope.errordiscoveryrate = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"./rest/almMetricsServices/errorDiscovery?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -428,7 +812,7 @@
 
 		// TestCase Execution by Pie Chart
 		$scope.testExeStatusPie = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -451,11 +835,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
-			
+
 			$http.get(
 					"rest/almMetricsServices/testcaseExeStatus?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -480,7 +864,7 @@
 				$scope.datapie = $scope.data1;
 				var layoutColors = baConfig.colors;
 				$('#statusdoughnutchart').remove(); // this is my <canvas>
-													// element
+				// element
 				$('#statuspiediv').append(
 						'<canvas id="statusdoughnutchart"> </canvas>');
 
@@ -491,22 +875,20 @@
 						labels : $scope.labelspie,
 						datasets : [ {
 							data : $scope.datapie,
-							backgroundColor : [ "rgba(255, 31, 0, 0.8)",
+							backgroundColor : [ "rgba(9, 191, 22, 0.8)",
+									"rgba(255, 31, 0, 0.8)",
 									"rgba(255, 134, 0, 0.8)",
-									"rgba(129, 208, 228, 0.8)",
 									"rgba(236, 255, 0, 0.8)",
 									"rgba(153, 102, 255, 0.8)",
 									"rgba(67, 154, 213, 0.8)",
-									"rgba(255, 113, 189, 0.8)",
-									"rgba(9, 191, 22, 0.6)" ],
-							borderColor : [ "rgba(255, 31, 0, 1)",
+									"rgba(255, 113, 189, 0.8)" ],
+							borderColor : [ "rgba(9, 191, 22, 1)",
+									"rgba(255, 31, 0, 1)",
 									"rgba(255, 134, 0, 1)",
-									"rgba(129, 208, 228, 1)",
 									"rgba(236, 255, 0, 1)",
 									"rgba(153, 102, 255, 1)",
 									"rgba(67, 154, 213, 1)",
-									"rgba(255, 113, 189, 1)",
-									"rgba(9, 191, 22, 0.9)" ],
+									"rgba(255, 113, 189, 1)" ],
 							borderWidth : 1
 						} ]
 					},
@@ -520,7 +902,7 @@
 
 						legend : {
 							display : true,
-							position : 'right',
+							position : 'bottom',
 							labels : {
 								fontColor : '#4c4c4c',
 								boxWidth : 20,
@@ -535,7 +917,7 @@
 
 		// TC coverage percentage
 		$rootScope.tccoverage = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -558,6 +940,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"./rest/almMetricsServices/tccoverage?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -627,7 +1014,7 @@
 
 		// TC by owner Chart
 		$scope.testOwnerChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -650,11 +1037,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
-			
+
 			$http
 					.get(
 							"rest/almMetricsServices/testOwnerChart?dashboardName="
@@ -670,9 +1057,9 @@
 									$scope.designerchart($scope.data);
 								} else {
 									$('#designerbarchart').remove(); // this
-																		// is my
-																		// <canvas>
-																		// element
+									// is my
+									// <canvas>
+									// element
 									$('#exediv')
 											.append(
 													'<canvas id="designerbarchart"> </canvas>');
@@ -683,20 +1070,17 @@
 				$scope.result = result;
 				$scope.labels1 = [];
 				$scope.data1 = [];
-				var colors = [];
 
 				for (var i = 0; i < $scope.result.length; i++) {
 					$scope.labels1.push($scope.result[i].testTester);
 					$scope.data1.push($scope.result[i].statusCnt);
-
-					colors.push("rgba(189, 5, 171, 0.6)");
 				}
 				$scope.labelspie = $scope.labels1;
 				$scope.datapie = $scope.data1;
 				var layoutColors = baConfig.colors;
 
 				$('#designerbarchart').remove(); // this is my <canvas>
-													// element
+				// element
 				$('#exediv').append('<canvas id="designerbarchart"> </canvas>');
 
 				var ctx = document.getElementById("designerbarchart");
@@ -708,8 +1092,37 @@
 								labels : $scope.labelspie,
 								datasets : [ {
 									data : $scope.datapie,
-									backgroundColor : colors,
-									borderColor : colors,
+									backgroundColor : [
+											"rgba(199, 99, 5, 0.9)",
+											"rgba(255, 31, 0, 0.8)",
+											"rgba(6, 239, 212, 0.8)",
+											"rgba(189, 5, 171, 0.8)",
+											"rgba(153, 102, 255, 0.8)",
+											"rgba(67, 154, 213, 0.8)",
+											"rgba(255, 113, 189, 0.8)",
+											"rgba(54, 162, 235, 0.8)",
+											"rgba(153, 102, 255, 0.8)",
+											"rgba(75, 192, 192, 0.8)",
+											"rgba(255, 159, 64, 0.8)",
+											"rgba(255, 99, 132, 0.8)",
+											"#429bf4", "#723f4e",
+											"rgba(255, 206, 86, 0.8)",
+											"#835C3B" ],
+									borderColor : [ "rgba(199, 99, 5, 0.8)",
+											"rgba(255, 31, 0, 0.8)",
+											"rgba(6, 239, 212, 0.8)",
+											"rgba(189, 5, 171, 0.8)",
+											"rgba(153, 102, 255, 0.8)",
+											"rgba(67, 154, 213, 0.8)",
+											"rgba(255, 113, 189, 0.8)",
+											"rgba(54, 162, 235, 0.8)",
+											"rgba(153, 102, 255, 0.8)",
+											"rgba(75, 192, 192, 0.8)",
+											"rgba(255, 159, 64, 0.8)",
+											"rgba(255, 99, 132, 0.8)",
+											"#429bf4", "#723f4e",
+											"rgba(255, 206, 86, 0.8)",
+											"#835C3B" ],
 									borderWidth : 1,
 
 								} ]
@@ -820,14 +1233,14 @@
 										}
 									} ],
 									xAxes : [ {
-										barThickness : 30,
+										barThickness : 40,
 										scaleLabel : {
 											display : true,
 											labelString : 'Owner',
 											fontColor : '#4c4c4c'
 										},
 										gridLines : {
-											color : "rgba(255,255,255,0.2)"
+											color : "#d8d3d3"
 										},
 										ticks : {
 											fontColor : '#4c4c4c'
@@ -842,420 +1255,9 @@
 
 		}
 
-		// FunctionalUitilizaiton - Trend Graph
-
-		$scope.functionalUtilChart = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-			
-			$http
-					.get(
-							"rest/almMetricsServices/FunctionalUtilChart?dashboardName="
-									+ dashboardName + "&domainName="
-									+ domainName + "&projectName="
-									+ projectName + "&vardtfrom=" + vardtfrom
-									+ "&vardtto=" + vardtto + "&timeperiod="
-									+ $rootScope.timeperiodTe, config)
-					.success(
-							function(response) {
-								$scope.data = response;
-								if ($scope.data.length != 0) {
-									$scope
-											.functionaldesignerbarchart($scope.data);
-								} else {
-									$('#functionalutilbarchart').remove(); // this
-																			// is
-																			// my
-																			// <canvas>
-																			// element
-									$('#exefunctionalutildiv')
-											.append(
-													'<canvas id="functionalutilbarchart"> </canvas>');
-								}
-							});
-
-			$scope.functionaldesignerbarchart = function(lineresult) {
-				$scope.result = lineresult;
-				$scope.labels1 = [];
-				$scope.labels2 = [];
-				$scope.data1 = [];
-				var colors = [];
-
-				for (var i = 0; i < $scope.result.length; i++) {
-					$scope.labels1.push($scope.result[i].isoTestExecutionMonth);
-					$scope.labels2.push($scope.result[i].testExecutionMonth);
-					$scope.data1.push($scope.result[i].funcUtilValue);
-
-					//colors.push("rgba(0, 0, 128, 0.8)");
-					
-				}
-				$scope.labelspie = $scope.labels1;
-				$scope.datapie = $scope.data1;
-				var layoutColors = baConfig.colors;
-
-				$('#functionalutilbarchart').remove(); // this is my <canvas>
-													// element
-				$('#exefunctionalutildiv').append('<canvas id="functionalutilbarchart"> </canvas>');
-
-				var ctx = document.getElementById("functionalutilbarchart");
-				var functionalutilbarchart = new Chart(
-						ctx,
-						{
-							type : 'bar',
-							data : {
-								labels : $scope.labels1,
-								datasets : [ {
-									data : $scope.data1,
-									backgroundColor : "rgba(0, 0, 128, 0.3)",
-									borderColor : "rgba(0, 0, 128, 0.8)",
-									borderWidth : 1,
-									
-								} ]
-							},
-							options : {
-								responsive : true,
-								maintainAspectRatio : false,
-								hover : {
-									animationDuration : 0
-								},
-								"animation" : {
-									"duration" : 1,
-									"onComplete" : function() {
-										var chartInstance = this.chart, ctx = chartInstance.ctx;
-
-										ctx.font = Chart.helpers
-												.fontString(
-														Chart.defaults.global.defaultFontSize,
-														Chart.defaults.global.defaultFontStyle,
-														Chart.defaults.global.defaultFontFamily);
-										ctx.textAlign = 'center';
-										ctx.textBaseline = 'bottom';
-
-										this.data.datasets
-												.forEach(function(dataset, i) {
-													var meta = chartInstance.controller
-															.getDatasetMeta(i);
-													meta.data
-															.forEach(function(
-																	bar, index) {
-																var meta = chartInstance.controller
-																		.getDatasetMeta(i);
-																meta.data
-																		.forEach(function(
-																				bar,
-																				index) {
-																			
-																			//var data = dataset.data[index] + "%";
-																			if (dataset.data[index] != 0) {
-																				var data = dataset.data[index] + "%";
-																			} else {
-																				var data = "";																				
-																			}
-																			
-																			var centerPoint = bar
-																					.getCenterPoint();
-																			ctx
-																					.fillText(
-																							data,
-																							centerPoint.x,
-																							centerPoint.y - 2);
-																		});
-															});
-												});
-									}
-								},
-//								tooltips : {
-//									enabled : true
-//								},
-								scales : {
-									yAxes : [ {
-										ticks : {
-											beginAtZero : true,
-											fontColor : '#000000', //text color											
-										},
-										scaleLabel : {
-											display : true,
-											labelString : 'Functional Utilization %',
-											fontColor : '#4c4c4c',
-											fontStyle : 'bold'
-										},
-										gridLines : {
-											color : "#d8d3d3"
-										}
-									} ],
-									xAxes : [ {
-										barThickness : 30,
-//										bounds : 'data',
-										type : "time",
-//										offset: true,
-										time : {
-											//max: 1473853353000,										
-											displayFormats : {
-												month : "MMM YYYY",
-											},
-											tooltipFormat : "MMM YYYY",
-											unit : "month"											
-										},
-										scaleLabel : {
-											display : true,
-											labelString : 'Month(s)',
-											fontColor : '#4c4c4c',
-											fontStyle : 'bold'
-										},
-										gridLines : {
-											color : "rgba(192,192,192,0.2)",
-											offsetGridLines: true
-										},
-										ticks : {
-											fontColor : '#4c4c4c',
-//											 source: 'auto'
-										}
-									} ]
-
-								}
-							}
-
-						});
-			};
-
-		}
-
-		// End of FuncionalUtilizaiton - Trend Graph
-
-		// RegressionUitilizaiton - Trend Graph
-		
-		$scope.regressionUtilChart = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-			
-			$http
-					.get(
-							"rest/almMetricsServices/RegressionUtilChart?dashboardName="
-									+ dashboardName + "&domainName="
-									+ domainName + "&projectName="
-									+ projectName + "&vardtfrom=" + vardtfrom
-									+ "&vardtto=" + vardtto + "&timeperiod="
-									+ $rootScope.timeperiodTe, config)
-					.success(
-							function(response) {
-								$scope.data = response;
-								console.log(response);
-								if ($scope.data.length != 0) {
-									$scope
-											.regressiondesignerbarchart($scope.data);
-								} else {
-									$('#regressionutilbarchart').remove(); // this
-																			// is
-																			// my
-																			// <canvas>
-																			// element
-									$('#exeregressionutildiv')
-											.append(
-													'<canvas id="regressionutilbarchart"> </canvas>');
-								}
-							});
-
-			$scope.regressiondesignerbarchart = function(lineresult) {
-				$scope.result = lineresult;
-				$scope.labels1 = [];
-				$scope.labels2 = [];
-				$scope.data1 = [];
-				var colors = [];
-
-				for (var i = 0; i < $scope.result.length; i++) {
-					$scope.labels1.push($scope.result[i].isoTestExecutionMonth);
-					$scope.labels2.push($scope.result[i].testExecutionMonth);
-					$scope.data1.push($scope.result[i].regUtilValue);
-
-					//colors.push("rgba(0, 0, 128, 0.8)");
-					
-				}
-				$scope.labelspie = $scope.labels1;
-				$scope.datapie = $scope.data1;
-				var layoutColors = baConfig.colors;
-
-				$('#regressionutilbarchart').remove(); // this is my <canvas>
-													// element
-				$('#exeregressionutildiv').append('<canvas id="regressionutilbarchart"> </canvas>');
-
-				var ctx = document.getElementById("regressionutilbarchart");
-				var regressionutilbarchart = new Chart(
-						ctx,
-						{
-							type : 'bar',
-							data : {
-								labels : $scope.labels1,
-								datasets : [ {
-									data : $scope.data1,
-									backgroundColor : "rgba(0, 0, 128, 0.3)",
-									borderColor : "rgba(0, 0, 128, 0.8)",
-									borderWidth : 1,
-									
-								} ]
-							},
-							options : {
-								responsive : true,
-								maintainAspectRatio : false,
-								hover : {
-									animationDuration : 0
-								},
-								"animation" : {
-									"duration" : 1,
-									"onComplete" : function() {
-										var chartInstance = this.chart, ctx = chartInstance.ctx;
-
-										ctx.font = Chart.helpers
-												.fontString(
-														Chart.defaults.global.defaultFontSize,
-														Chart.defaults.global.defaultFontStyle,
-														Chart.defaults.global.defaultFontFamily);
-										ctx.textAlign = 'center';
-										ctx.textBaseline = 'bottom';
-
-										this.data.datasets
-												.forEach(function(dataset, i) {
-													var meta = chartInstance.controller
-															.getDatasetMeta(i);
-													meta.data
-															.forEach(function(
-																	bar, index) {
-																var meta = chartInstance.controller
-																		.getDatasetMeta(i);
-																meta.data
-																		.forEach(function(
-																				bar,
-																				index) {
-																			
-																			//var data = dataset.data[index] + "%";
-																			if (dataset.data[index] != 0) {
-																				var data = dataset.data[index] + "%";
-																			} else {
-																				var data = "";
-																			}
-																			var centerPoint = bar
-																					.getCenterPoint();
-																			ctx
-																					.fillText(
-																							data,
-																							centerPoint.x,
-																							centerPoint.y - 2);
-																		});
-															});
-												});
-									}
-								},
-//								tooltips : {
-//									enabled : true
-//								},
-								scales : {
-									yAxes : [ {
-										ticks : {
-											beginAtZero : true,
-											fontColor : '#000000', //text color											
-										},
-										scaleLabel : {
-											display : true,
-											labelString : 'Regression Utilization %',
-											fontColor : '#4c4c4c',
-											fontStyle : 'bold'
-										},
-										gridLines : {
-											color : "#d8d3d3"
-										}
-									} ],
-									xAxes : [ {
-										barThickness : 30,
-//										bounds : 'data',
-										type : "time",
-//										offset: true,
-										time : {
-											//max: 1473853353000,										
-											displayFormats : {
-												month : "MMM YYYY",
-											},
-											tooltipFormat : "MMM YYYY",
-											unit : "month"											
-										},
-										scaleLabel : {
-											display : true,
-											labelString : 'Month(s)',
-											fontColor : '#4c4c4c',
-											fontStyle : 'bold'
-										},
-										gridLines : {
-											color : "rgba(192,192,192,0.2)",
-											offsetGridLines: true
-										},
-										ticks : {
-											fontColor : '#4c4c4c',
-//											 source: 'auto'
-										}
-									} ]
-
-								}
-							}
-
-						});
-			};
-
-		}
-		
-
-		// End of RegressionUtilizaiton - Trend Graph
-
 		// Execution Trend chart
 		$scope.executionTrendChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1278,11 +1280,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
+
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/almMetricsServices/executiontrendchartdata?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1410,6 +1412,9 @@
 								},
 								gridLines : {
 									color : "#d8d3d3",
+								},
+								ticks : {
+									fontColor : '#4c4c4c'
 								}
 							} ],
 							yAxes : [ {
@@ -1466,7 +1471,6 @@
 
 				var ctx = document.getElementById("teline");
 				window.teline = new Chart(ctx, config);
-				$rootScope.dataloader = false;
 
 			}
 		}
@@ -1489,7 +1493,9 @@
 
 		// Table on-load
 		$scope.tcexeTableData = function(start_index) {
-			var token = getEncryptedValue();
+			
+						
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1515,8 +1521,8 @@
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			vardtto = localStorageService.get('dttoPlus');
+
 			$scope.index = start_index;
 			$http.get(
 					"./rest/almMetricsServices/tcexeTableDetails?itemsPerPage="
@@ -1533,7 +1539,7 @@
 		};
 
 		$scope.initialcountpaginate = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1559,8 +1565,8 @@
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/almMetricsServices/tcexeCountForTable?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1574,32 +1580,33 @@
 
 		// Execution Table Code starts here
 		$scope.pageChangedLevel = function(pageno) {
-			
+
 			$scope.pageno = pageno;
-			
-//			if ($scope.sortBy == undefined && $rootScope.sortkey == false
-//					&& $rootScope.searchkey == false) {
-//				$scope.tcexeTableData($scope.pageno);
-//			} else if ($rootScope.sortkey == true) {
-//				$scope
-//						.sortedtable($scope.sortBy, $scope.pageno,
-//								$scope.reverse);
-//			}
-//			if ($rootScope.searchkey == true) {
-//				$scope.search($scope.pageno, $scope.searchField,
-//						$scope.searchText);
-//			}
-			
+
+			// if ($scope.sortBy == undefined && $rootScope.sortkey == false
+			// && $rootScope.searchkey == false) {
+			// $scope.tcexeTableData($scope.pageno);
+			// } else if ($rootScope.sortkey == true) {
+			// $scope
+			// .sortedtable($scope.sortBy, $scope.pageno,
+			// $scope.reverse);
+			// }
+			// if ($rootScope.searchkey == true) {
+			// $scope.search($scope.pageno, $scope.searchField,
+			// $scope.searchText);
+			// }
+
 			if ($rootScope.sortkey == true) {
-				$scope.sortedtable($scope.sortBy, $scope.pageno,
-						$scope.reverse);
+				$scope
+						.sortedtable($scope.sortBy, $scope.pageno,
+								$scope.reverse);
 			} else if ($rootScope.searchkey == true) {
 				$scope.search($scope.pageno, $scope.searchField,
 						$scope.searchText);
 			} else {
 				$scope.tcexeTableData($scope.pageno);
 			}
-			
+
 		}
 		// Sort function starts here
 		$scope.sort = function(keyname, start_index) {
@@ -1608,14 +1615,14 @@
 			$rootScope.searchkey = false;
 			$scope.index = start_index;
 			$scope.reverse = !$scope.reverse;
-			$scope.sortedtable($scope.sortBy, $scope.index, $scope.reverse);			
-			
+			$scope.sortedtable($scope.sortBy, $scope.index, $scope.reverse);
+
 		};
 
 		// Table on-load with sort implementation
 		$scope.sortedtable = function(sortvalue, start_index, reverse) {
 			paginationService.setCurrentPage("tepaginate", start_index);
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1669,26 +1676,23 @@
 			$rootScope.sortkey = false;
 			$rootScope.searchkey = true;
 			$scope.key = false;
-			
-			
-			
+
 			if ($scope.searchField == "testID") {
 				$rootScope.testID = searchText;
 				$scope.key = true;
-			}else if ($scope.searchField == "releaseName") {
+			} else if ($scope.searchField == "releaseName") {
 				$rootScope.releaseName = searchText;
 				$scope.key = true;
-			}else if ($scope.searchField == "cycleName") {
+			} else if ($scope.searchField == "cycleName") {
 				$rootScope.cycleName = searchText;
 				$scope.key = true;
-			}else if ($scope.searchField == "testName") {
+			} else if ($scope.searchField == "testName") {
 				$rootScope.testName = searchText;
 				$scope.key = true;
-			} 
-			else if ($scope.searchField == "testRunID") {
+			} else if ($scope.searchField == "testRunID") {
 				$rootScope.testRunID = searchText;
 				$scope.key = true;
-			}  else if ($scope.searchField == "testTester") {
+			} else if ($scope.searchField == "testTester") {
 				$rootScope.testTester = searchText;
 				$scope.key = true;
 			} else if ($scope.searchField == "testType") {
@@ -1698,14 +1702,12 @@
 				$rootScope.testExecutionStatus = searchText;
 				$scope.key = true;
 			}
-			
-			
 
 			$scope.searchable();
 		}
 
 		$scope.searchable = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1714,11 +1716,11 @@
 			if ($rootScope.testID == undefined) {
 				$rootScope.testID = 0;
 			}
-			
+
 			if ($rootScope.testRunID == undefined) {
 				$rootScope.testRunID = 0;
 			}
-			
+
 			var vardtfrom = "";
 			var vardtto = "";
 
@@ -1739,10 +1741,8 @@
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
-			
-			
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"./rest/almMetricsServices/searchpagecountexe?releaseName="
 							+ $rootScope.releaseName + "&cycleName="
@@ -1763,9 +1763,9 @@
 					});
 			paginationService.setCurrentPage("tepaginate", $scope.start_index);
 			$scope.itemsPerPage = 5;
-			
-			$scope.index=$scope.start_index; // Fix
-			
+
+			$scope.index = $scope.start_index; // Fix
+
 			$http.get(
 					"./rest/almMetricsServices/searchExe?releaseName="
 							+ $rootScope.releaseName + "&cycleName="
@@ -1775,10 +1775,9 @@
 							+ $rootScope.testType + "&testRunID="
 							+ $rootScope.testRunID + "&testTester="
 							+ $rootScope.testTester + "&testExecutionStatus="
-							+ $rootScope.testExecutionStatus							
-							+ "&itemsPerPage=" + $scope.itemsPerPage
-							+ "&start_index=" + $scope.index
-							+ "&dashboardName=" + dashboardName
+							+ $rootScope.testExecutionStatus + "&itemsPerPage="
+							+ $scope.itemsPerPage + "&start_index="
+							+ $scope.index + "&dashboardName=" + dashboardName
 							+ "&domainName=" + domainName + "&projectName="
 							+ projectName + "&vardtfrom=" + vardtfrom
 							+ "&vardtto=" + vardtto + "&timeperiod="
@@ -1788,7 +1787,7 @@
 							$rootScope.searchkey = false;
 							$scope.initialcountpaginate();
 							$scope.tcexeTableData(1);
-						}else if(response == null){
+						} else if (response == null) {
 							$rootScope.searchkey = false;
 							$scope.initialcountpaginate();
 							$scope.tcexeTableData(1);
@@ -1800,6 +1799,57 @@
 					});
 		}
 
+		// CYCLE DROP DOWN CHANGES
+		$scope.getCycleDetails = function() {
+			debugger;
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+			$http.get(
+					"./rest/almMetricsServices/exeCycleList?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodTe, config)
+					.success(function(response) {
+						$scope.cycles = response;
+						$scope.multicycles = [];
+						for (var i = 0; i < $scope.cycles.length; i++) {
+							$scope.multicycles.push({
+								"label" : $scope.cycles[i]
+							});
+						}
+						$scope.selectcycles = [];
+						for (var i = 0; i < $scope.multicycles.length; i++) {
+							$scope.selectcycles.push($scope.multicycles[i]);
+						}
+
+						$scope.selcycle = $scope.selectcycles;
+						onSelectionChangedcycle();
+						// $scope.selcycle = [];
+					});
+		}
+
 		/* Tree Structure Ends Here */
 
 		/* Date Filter Code Starts Here */
@@ -1807,64 +1857,55 @@
 		// GET SELECTED FROM DATE CALENDAR
 		// Get start date
 		$scope.getfromdate = function(dtfrom) {
-			$rootScope.dataloader = true;
+			
 			$rootScope.dfromvalTe = dtfrom;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtfrom', dtfrom);
 			localStorageService.set('timeperiod', null);
 			$rootScope.timeperiodTe = localStorageService.get('timeperiod');
-			
+
 			$scope.dtto = localStorageService.get('dtto');
-			
+
 			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
+
+				var dtToDate = new Date($scope.dtto);
+				dtToDate.setDate(dtToDate.getDate() + 1);
+
+				var dtToDateStr = $filter('date')(
+						new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');
+
+				localStorageService.set('dttoPlus', dtToDateStr);
 			}
-			
+
 			$rootScope.exefilterfunction();
-			$scope.tcexeTableDataExport(1);
 		}
 		// Get end date
 		$scope.gettodate = function(dtto) {
-			$rootScope.dataloader = true;
-			//$rootScope.dtovalTe = dtto;			
-				
-			var dtToDate = new Date(dtto);			
-			dtToDate.setDate(dtToDate.getDate() + 1);			
-			
-			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');
-			$rootScope.dtovalTe = dtToDateStr;
-			
+			$rootScope.dtovalTe = dtto;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtto', dtto);
 			localStorageService.set('timeperiod', null);
 			$rootScope.timeperiodTe = localStorageService.get('timeperiod');
-			
+
 			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
+
+				var dtToDate = new Date($scope.dtto);
+				dtToDate.setDate(dtToDate.getDate() + 1);
+
+				var dtToDateStr = $filter('date')(
+						new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');
+
+				localStorageService.set('dttoPlus', dtToDateStr);
 			}
-			
+
 			$rootScope.exefilterfunction();
-			$scope.tcexeTableDataExport(1);
 		}
 
 		$scope.gettimeperiod = function() {
-
-			$rootScope.timeperiodTedrops = [ "Last 7 days", "Last 15 days",
-					"Last 30 days", "Last 60 days", "Last 90 days",
-					"Last 180 days", "Last 365 days" ];
-			$rootScope.noofdays = [ "7", "15", "30", "60", "90", "180", "365" ];
+			debugger;
+			$rootScope.timeperiodTedrops = [ "Last 30 days", "Last 60 days",
+					"Last 90 days", "Last 180 days", "Last 365 days" ];
+			$rootScope.noofdays = [ "30", "60", "90", "180", "365" ];
 
 			if (localStorageService.get('dtfrom') != null
 					&& localStorageService.get('dtto') == null) {
@@ -1897,7 +1938,7 @@
 		}
 
 		$scope.gettimeperiodselection = function(timeperiod) {
-			$rootScope.dataloader = true;
+			
 			localStorageService.set('timeperiod', timeperiod);
 			$rootScope.timeperiodTe = localStorageService.get('timeperiod');
 			var index = $rootScope.timeperiodDashdrops.indexOf(timeperiod);
@@ -1910,19 +1951,7 @@
 					- selectednoofdays));
 
 			$scope.convertDateToString($scope.dtfrom, $scope.dtto);
-			
-			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
-			}		
-			
 			$rootScope.exefilterfunction(); // drop-down change
-			$scope.tcexeTableDataExport(1);
 		}
 
 		$scope.convertDateToString = function(dtfrom, dtto) {
@@ -1963,7 +1992,9 @@
 		// Function call for each dropdown 'change'--imp
 
 		$rootScope.exefilterfunction = function() {
-
+			
+			alert("exfilterfunction");
+			
 			$rootScope.initialtccount();
 			$rootScope.manualtccount();
 			$rootScope.autotccount();
@@ -1975,7 +2006,10 @@
 			$scope.testOwnerChart();
 			$scope.tcexeTableData(1);
 			$scope.initialcountpaginate();
+			$scope.getCycleDetails();
 
+			$scope.FuncationalAutomation();
+			
 			$scope.FuncationalAutomation();
 			$scope.functionalUtilChart();
 			
@@ -2024,7 +2058,7 @@
 			destinationCanvas.height = canvas.height;
 			var destCtx = destinationCanvas.getContext('2d');
 			destCtx.drawImage(canvas, 0, 0);
-			fillCanvasBackgroundWithColor(destinationCanvas, '#fcfcfc');
+			fillCanvasBackgroundWithColor(destinationCanvas, '#4F5D77');
 			if (format === 'jpeg') {
 				saveCanvasAs(destinationCanvas, filename + ".jpg");
 			}
@@ -2034,7 +2068,7 @@
 
 		}
 		$scope.tcexeTableDataExport = function(start_index) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2057,11 +2091,6 @@
 			} else {
 				vardtto = $rootScope.dtovalTe;
 			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
 			var index = start_index;
 			var itemsPerPage = 0;
 			$http.get(
@@ -2074,6 +2103,7 @@
 							+ $rootScope.timeperiodTe, config).success(
 					function(response) {
 						$scope.tcexeTableDetailsExport = response;
+						
 					});
 		};
 
@@ -2090,7 +2120,7 @@
 					csvString = csvString + "\n";
 				}
 				csvString = csvString.substring(0, csvString.length - 1);
-				// console.log(csvString);
+				
 				var blob = new Blob([ csvString ], {
 					type : "text/csv;charset=utf-8;"
 				});
@@ -2106,9 +2136,6 @@
 			}
 		}
 		/* Export graphs and tables */
-		$scope.htmlToPlaintext = function(text) {
-			return text ? String(text).replace(/<[^>]+>/gm, '') : '';
-		}
 
 	}
 })();

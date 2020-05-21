@@ -9,7 +9,7 @@
       .controller('ModifiedRequirementsCtrl', ModifiedRequirementsCtrl);
 
   /** @ngInject */
-  function ModifiedRequirementsCtrl($http, $scope, $filter, $uibModal, editableOptions, editableThemes,$window) {
+  function ModifiedRequirementsCtrl($http, $scope, AES, $filter, $uibModal, editableOptions, editableThemes,$window) {
 	  function getEncryptedValue()
 	  {
 		 var username= localStorageService.get('userIdA');
@@ -18,7 +18,7 @@
 	        
 	        return tokeen;
 	        }
-	  var token  = getEncryptedValue();
+	  var token  = AES.getEncryptedValue();
       var config = {headers: {
               'Authorization': token
               }};

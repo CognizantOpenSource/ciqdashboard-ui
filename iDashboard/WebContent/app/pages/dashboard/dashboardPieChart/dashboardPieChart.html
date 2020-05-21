@@ -1,12 +1,6 @@
 
 <div ng-if="tool == 'ALM'" class="row pie-charts"
-	ng-controller="DashboardPieChartCtrl" ng-init="init()">
-
-	<!-- <div id="cover-spin">
-				<div><img src="./assets/img/loader.gif" style="margin-left:80px;"></div>
-			    </div>  -->
-
-
+	ng-controller="DashboardPieChartCtrl">
 
 	<div class="row">
 		<div class="form-group col-md-2" ng-init="gettimeperiod();">
@@ -42,20 +36,19 @@
 	</div>
 
 	<div class="pie-chart-item-container">
-		<div ba-panel style="margin-top: 20px;" ng-init="">
+		<div ba-panel style="margin-top: 20px;">
+
 			<div class="pie-chart-item" id="totalreqlist"
 				ng-init="dashboardReqCount()">
-
 				<a href="#requirements" class="descriptionLink"><div
 						style="font-size: 15px; text-align: center">Total
 						Requirements Count</div>
 					<div class="description-stats"
-						style="font-size: 40px; margin-top: 33px; text-align: center">{{totalreqdata}}</div></a>
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{totalreqdata}}</div></a>
 				<div>
 					<a
-						ng-click="open('app/pages/charts/requirements/requirementsdata/reqcount.html','lg')">
-						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 20px">
+						ng-click="open('app/pages/charts/requirements/requirementsdata/reqcount.html','sm')">
+						<!-- <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-top:20px" > -->
 					</a>
 				</div>
 
@@ -63,34 +56,29 @@
 		</div>
 	</div>
 
-
-
-	<!-- <div class="pie-chart-item-container">
+	<div class="pie-chart-item-container">
 		<div ba-panel style="margin-top: 20px">
 			<div class="pie-chart-item" ng-init="dashboardReqVolatility()">
 				<a href="#requirements" class="descriptionLink"><div
 						class="chart" id="dashreqvola" rel="rgba(64, 146, 217, 0.9)">
 						<span class="percent"> </span>
 					</div>
+
 					<div
-						style="font-size: 15px; padding-top: 35px; padding-left: 100px !important;"
-						class="description-stats">Requirement Stability</div>
-					</a>
+						style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+						class="description-stats">Requirement Volatility</div></a>
 				<div class="description-stats"></div>
+
 				<div>
 					<a
 						ng-click="open('app/pages/charts/requirements/requirementsdata/reqvolatility.html','lg')">
 						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 28px;">
+						height="20" style="float: right; margin-top: 20px">
 					</a>
 				</div>
 			</div>
-
 		</div>
-
-	</div> -->
-
-
+	</div>
 
 
 
@@ -106,7 +94,7 @@
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
-						style="font-size: 40px; margin-top: 33px; text-align: center;">{{testCount}}
+						style="font-size: 40px; margin-top: 20px; text-align: center;">{{testCount}}
 					</div>
 				</a>
 				<div>
@@ -119,12 +107,11 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="pie-chart-item-container" style="margin-right: auto">
 		<div ba-panel style="margin-top: 20px;">
-			<div class="pie-chart-item" ng-init="regressionautomationFilter()">
+			<div class="pie-chart-item" ng-init="dashboardDesignCoverage()">
 				<a href="#testcases" class="descriptionLink">
-					<div class="chart" id="regautofilter"
+					<div class="chart" id="dashdesigncov"
 						rel="rgba(162, 116, 189, 0.9)">
 						<span class="percent"> </span>
 					</div>
@@ -132,15 +119,17 @@
 					<div class="">
 
 						<div
-							style="font-size: 15px; padding-top: 33px; padding-left: 100px !important;"
-							class="description-stats">Regression Automation Coverage</div>
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Test Design Coverage</div>
+						<div class="description-stats"></div>
+
 					</div>
 				</a>
 				<div>
 					<a
-						ng-click="open('app/pages/dashboard/infoDialog/regressionautomation.html','lg')">
+						ng-click="open('app/pages/dashboard/infoDialog/test_case_cov.html','lg')">
 						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 28px">
+						height="20" style="float: right; margin-top: 20px">
 					</a>
 				</div>
 			</div>
@@ -148,20 +137,18 @@
 	</div>
 
 	<div class="pie-chart-item-container" style="margin-left: auto">
-		<div ba-panel style="margin-top: 20px">
+		<div ba-panel>
 			<div class="pie-chart-item" id="onChangeTcCount">
 
 				<a href="#testexecution" class="descriptionLink">
 					<div style="font-size: 15px; text-align: center"
-						ng-init="dashboardExeCount();">Total Execution Count</div> <!-- dashboarduniqueExeCount(); -->
+						ng-init="dashboardExeCount()">Total Execution Count</div>
 
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
-						style="font-size: 40px; margin-top: 33px; text-align: center">{{tcexecnt}}
-					</div> <!-- <div class="description-stats"
-						style="font-size: 16px; margin-top: 20px; text-align: center">Unique Test Count :{{tcuniqueexecnt}}
-					</div> -->
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{tcexecnt}}
+					</div>
 				</a>
 				<div>
 					<a
@@ -173,9 +160,7 @@
 			</div>
 		</div>
 	</div>
-
-
-	<!-- <div class="pie-chart-item-container" style="margin-right: auto">
+	<div class="pie-chart-item-container" style="margin-right: auto">
 		<div ba-panel>
 			<div class="pie-chart-item" ng-init="dashboardExeCoverage()">
 				<a href="#testexecution" class="descriptionLink">
@@ -201,131 +186,7 @@
 				</div>
 			</div>
 		</div>
-	</div> -->
-
-	<div class="pie-chart-item-container" style="margin-right: auto"
-		ng-init="firstpassrate()">
-		<div ba-panel>
-			<div class="pie-chart-item">
-				<a href="#testexecution" class="descriptionLink">
-					<div class="chart" id="passrate" rel="rgba(255,255,255,0.4)">
-						<span class="percent"> </span>
-					</div>
-					<div class="">
-						<div
-							style="font-size: 15px; padding-top: 35px; padding-left: 100px !important;"
-							class="description-stats">First Time Pass Rate</div>
-						<div class="description-stats"></div>
-					</div>
-				</a>
-			</div>
-			<div>
-				<a
-					ng-click="open('app/pages/dashboard/infoDialog/passrate.html','lg')">
-					<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-					height="20" style="float: right;; margin-top: 28px">
-				</a>
-			</div>
-
-
-		</div>
-
-
 	</div>
-
-	<div class="pie-chart-item-container" style="margin-right: auto"
-		ng-init="FuncationalAutomation()">
-		<div ba-panel>
-			<div class="pie-chart-item">
-
-				<a href="#testexecution" class="descriptionLink">
-					<div class="chart" id="funcatuo" rel="rgba(64, 146, 217, 0.9)">
-						<span class="percent"> </span>
-					</div>
-
-					<div class="">
-
-						<div
-							style="font-size: 15px; padding-top: 30px; padding-left: 100px !important;"
-							class="description-stats">Functional Automation Utilization</div>
-
-					</div>
-				</a>
-				<div>
-					<a
-						ng-click="open('app/pages/dashboard/infoDialog/funcauto.html','lg')">
-						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 28px">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="pie-chart-item-container" style="margin-right: auto"
-		ng-init="RegressionAutomation()">
-		<div ba-panel>
-			<div class="pie-chart-item">
-
-				<a href="#testexecution" class="descriptionLink">
-					<div class="chart" id="regatuo" rel="rgba(64, 146, 217, 0.9)">
-						<span class="percent"> </span>
-					</div>
-
-					<div class="">
-
-						<div
-							style="font-size: 15px; padding-top: 33px; padding-left: 93px !important;"
-							class="description-stats">Regression Automation Utilization</div>
-					</div>
-				</a>
-				<div>
-					<a
-						ng-click="open('app/pages/dashboard/infoDialog/regauto.html','lg')">
-						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 28px">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-
-	<div class="pie-chart-item-container" style="margin-right: auto"
-		ng-init="UATAutomation()">
-		<div ba-panel>
-			<div class="pie-chart-item">
-
-				<a href="#testexecution" class="descriptionLink">
-					<div class="chart" id="uatatuo" rel="rgba(64, 146, 217, 0.9)">
-						<span class="percent"> </span>
-					</div>
-
-					<div class="">
-
-						<div
-							style="font-size: 15px; padding-top: 31px; padding-left: 100px !important;"
-							class="description-stats">UAT Automation Utilization</div>
-
-
-					</div>
-				</a>
-				<div>
-					<a
-						ng-click="open('app/pages/dashboard/infoDialog/uatauto.html','lg')">
-						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 28px">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-
-
-
 
 	<div class="pie-chart-item-container" style="margin-left: auto">
 		<div ba-panel>
@@ -337,7 +198,7 @@
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
-						style="font-size: 40px; margin-top: 33px; text-align: center">{{defectCount}}
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{defectCount}}
 					</div> </a>
 				<div>
 					<a
@@ -362,8 +223,8 @@
 					<div class="">
 
 						<div
-							style="font-size: 15px; padding-top: 33px; padding-left: 100px !important;"
-							class="description-stats">Defect Rejection Rate(QA)</div>
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Defect Rejection Rate</div>
 						<div class="description-stats"></div>
 
 					</div>
@@ -373,19 +234,160 @@
 					<a
 						ng-click="open('app/pages/dashboard/infoDialog/defrejrate.html','lg')">
 						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 28px">
+						height="20" style="float: right; margin-top: 20px">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<!-- 	NEW METRICS -->
+
+<div class="pie-chart-item-container" style="margin-right: auto">
+		<div ba-panel style="margin-top: 0px;">
+			<div class="pie-chart-item" ng-init="regressionautomationFilter()">
+				<a href="#testcases" class="descriptionLink">
+					<div class="chart" id="regautofilter"
+						rel="rgba(162, 116, 189, 0.9)">
+						<span class="percent"> </span>
+					</div>
+
+					<div class="">
+
+						<div
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Regression Automation Coverage</div>
+					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/regressionautomation.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 5px">
+					</a>
+				</div>
+			</div>
+		</div>
+		</div>
+	
+	
+	<div class="pie-chart-item-container" style="margin-right: auto"
+		ng-init="firstpassrate()">
+		<div ba-panel>
+			<div class="pie-chart-item">
+				<a href="#testexecution" class="descriptionLink">
+					<div class="chart" id="passrate" rel="rgba(255,255,255,0.4)">
+						<span class="percent"> </span>
+					</div>
+					<div class="">
+						<div
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">First Time Pass Rate</div>
+						<div class="description-stats"></div>
+					</div>
+				</a>
+			</div>
+			<div>
+				<a
+					ng-click="open('app/pages/dashboard/infoDialog/passrate.html','lg')">
+					<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+					height="20" style="float: right;; margin-top: 20px">
+				</a>
+			</div>
+
+
+		</div>
+
+
+	</div>
+	
+	<div class="pie-chart-item-container" style="margin-right: auto"
+		ng-init="FuncationalAutomation()">
+		<div ba-panel>
+			<div class="pie-chart-item">
+
+				<a href="#testexecution" class="descriptionLink">
+					<div class="chart" id="funcatuo" rel="rgba(64, 146, 217, 0.9)">
+						<span class="percent"> </span>
+					</div>
+
+					<div class="">
+
+						<div
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Functional Automation Utilization</div>
+
+					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/funcauto.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 5px">
 					</a>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<div class="pie-chart-item-container" style="margin-right: auto"
+		ng-init="RegressionAutomation()">
+		<div ba-panel>
+			<div class="pie-chart-item">
+
+				<a href="#testexecution" class="descriptionLink">
+					<div class="chart" id="regatuo" rel="rgba(64, 146, 217, 0.9)">
+						<span class="percent"> </span>
+					</div>
+
+					<div class="">
+
+						<div
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Regression Automation Utilization</div>
+					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/regauto.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 5px">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="pie-chart-item-container" style="margin-right: auto"
+		ng-init="UATAutomation()">
+		<div ba-panel>
+			<div class="pie-chart-item">
+
+				<a href="#testexecution" class="descriptionLink">
+					<div class="chart" id="uatatuo" rel="rgba(64, 146, 217, 0.9)">
+						<span class="percent"> </span>
+					</div>
+
+					<div class="">
+
+						<div
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">UAT Automation Utilization</div>
 
 
-
-
-
-
+					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/uatauto.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 5px">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="pie-chart-item-container" style="margin-right: auto"
 		ng-init="defectdensityfilter()">
 		<div ba-panel>
@@ -400,7 +402,7 @@
 					<div class="">
 
 						<div
-							style="font-size: 15px; padding-top: 35px; padding-left: 100px !important;"
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
 							class="description-stats">Defect Density</div>
 						<div class="description-stats"></div>
 
@@ -417,44 +419,23 @@
 		</div>
 	</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- END of NEW METRICS -->
 
 </div>
 
 
 
 
-
-
-<!-- Levis code ends here -->
-
-
-
-
-
-
 <div ng-if="tool == 'JIRA'" class="row pie-charts"
 	ng-controller="DashboardPieChartCtrl" ng-init="getRollingPeriod()">
-	<!-- Rally Code Added Here -->
+	
 	<div class="pie-chart-item-container" style="margin-left: auto;"
 		ng-controller="UserStoryCtrl">
 
 		<div ba-panel style="margin-top: 20px;">
 
-			<div class="pie-chart-item" id="totalsprintcount" ng-init="">
+			<div class="pie-chart-item" id="totalsprintcount"
+				ng-init="">
 				<a href="#userstoriesdetails" class="descriptionLink">
 					<div style="font-size: 15px; text-align: center">Total
 						Sprints Count</div>
@@ -470,7 +451,8 @@
 
 		<div ba-panel style="margin-top: 20px;">
 
-			<div class="pie-chart-item" id="totaluserstorycount" ng-init="">
+			<div class="pie-chart-item" id="totaluserstorycount"
+				ng-init="">
 				<a href="#userstoriesdetails" class="descriptionLink">
 					<div style="font-size: 15px; text-align: center">Total User
 						Stories Count</div>
@@ -480,19 +462,19 @@
 			</div>
 		</div>
 	</div>
-	<!-- Rally Code Added Here -->
 
 
 	<!-- Total Story Point -->
 	<div class="pie-chart-item-container" ng-controller="RequirementsCtrl">
 		<div ba-panel style="margin-top: 20px;">
 
-			<div class="pie-chart-item" id="totstorypoint" ng-init="">
+			<div class="pie-chart-item" id="totstorypoint"
+				ng-init="">
 				<a href="#requirements" class="descriptionLink">
-					<div style="color: white; font-size: 15px; text-align: center">Total
+					<div style="font-size: 15px; text-align: center">Total
 						Story Points</div>
 					<div class="description-stats"
-						style="color: white; font-size: 40px; margin-top: 20px; text-align: center">{{totstorypoint}}</div>
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{totstorypoint}}</div>
 				</a>
 			</div>
 		</div>
@@ -504,12 +486,13 @@
 		ng-controller="TestCasesCtrl" style="margin-top : 20px;">
 
 		<div ba-panel style="margin-top: 20px;">
-			<div class="pie-chart-item" id="totaltestcount" ng-init="">
+			<div class="pie-chart-item" id="totaltestcount"
+				ng-init="">
 				<a href="#testcases" class="descriptionLink">
-					<div style="color: white; font-size: 15px; text-align: center">Total
+					<div style="font-size: 15px; text-align: center">Total
 						Tests Count</div>
 					<div class="description-stats"
-						style="color: white; font-size: 40px; margin-top: 20px; text-align: center">{{testCountdash}}</div>
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{testCountdash}}</div>
 				</a>
 			</div>
 		</div>
@@ -521,8 +504,8 @@
 			<div class="pie-chart-item" id="totaldefect">
 
 				<a href="#defects" class="descriptionLink">
-					<div style="font-size: 15px; text-align: center" ng-init="">Total
-						Bugs Count</div>
+					<div style="font-size: 15px; text-align: center"
+						ng-init="">Total Bugs Count</div>
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
@@ -571,8 +554,8 @@
 			<div class="pie-chart-item" id="onChangeTcCount">
 
 				<a href="#testexecution" class="descriptionLink">
-					<div style="font-size: 15px; text-align: center" ng-init="">Total
-						Tests Executed</div>
+					<div style="font-size: 15px; text-align: center"
+						ng-init="">Total Tests Executed</div>
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
 						style="font-size: 40px; margin-top: 20px; text-align: center">{{totexecount}}
@@ -589,7 +572,7 @@
 			<div class="pie-chart-item" ng-init="">
 				<a href="#testexecution" class="descriptionLink">
 					<div style="font-size: 15px; text-align: center">Linked Bugs
-					</div>
+						</div>
 
 
 					<div style="font-size: 15px; text-align: center"></div>
@@ -609,7 +592,7 @@
 
 	</div>
 
-
+	<!-- Levis code ends here -->
 
 </div>
 

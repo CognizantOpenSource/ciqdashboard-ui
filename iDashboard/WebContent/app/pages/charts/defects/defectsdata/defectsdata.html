@@ -1,7 +1,7 @@
 <info-Dialog></info-Dialog>
- <div ng-if="tool == 'ALM'" ng-controller="defectsCtrl" ng-init="menubar = true;init();">
+ <div ng-if="tool == 'ALM'" ng-controller="defectsCtrl">
 
-	<div class="row">
+	<div class="row pie-charts">
 		<div class="form-group col-md-2" ng-init="gettimeperiod();">
 			<label>Time Period:</label> <select
 				style="outline: 0; background-color: rgba(87, 95, 118, 1)"
@@ -24,17 +24,18 @@
 
 		<div class="form-group col-md-2" ng-init="">
 			<label>To:</label> <input style="width: 100%" type="date"
+				class="form-control"
 				ng-change="gettodate(dtto | date:'MM/dd/yyyy');"
-				class="form-control" uib-datepicker-popup="MM/dd/yyyy" 
-				datepicker-options="options" ng-model="dtto" is-open="opened2" 
-				ng-required="true" close-text="Close" 
-				alt-input-formats="altInputFormats" show-button-bar="false" />
+				uib-datepicker-popup="MM/dd/yyyy" datepicker-options="options"
+				ng-model="dtto" is-open="opened2" ng-required="true"
+				close-text="Close" alt-input-formats="altInputFormats"
+				show-button-bar="false" />
 		</div>
 		<div id="analyse" class="form-group col-md-2" style="margin-top: 2%">
 			<button type="button" data-toggle="modal"
 				class="btn btn-default btn-raised"
 				style="background: #1c3f5d; margin-bottom: 15px"
-				ng-click="openpopup('lg')">Analyze More...</button>
+				ng-click="openpopup('lg')">Analyse More...</button>
 		</div>
 	</div>
 
@@ -74,8 +75,8 @@
 					<div class="">
 
 						<div
-							style="font-size: 15px; padding-top: 35px; padding-left: 100px !important;"
-							class="description-stats">Defect Rejection Rate(QA)</div>
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Defect Rejection Rate</div>
 						<div class="description-stats"></div>
 
 					</div>
@@ -83,40 +84,43 @@
 						<a
 							ng-click="open('app/pages/dashboard/infoDialog/defrejrate.html','lg')">
 							<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-							height="20" style="float: right; margin-top: 38px">
+							height="20" style="float: right; margin-top: 5%">
 						</a>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div class="pie-chart-item-container" style="margin-right: auto">
-			<div ba-panel>
-				<div class="pie-chart-item" ng-init="defectdensityfilter()">
+		<div class="pie-chart-item-container" style="margin-right: auto"
+		ng-init="defectdensityfilter()">
+		<div ba-panel>
+			<div class="pie-chart-item">
+
+				<a href="#defects" class="descriptionLink">
 					<div class="chart" id="defdensityfilter"
-						rel="rgba(255,255,255,0.4)">
+						rel="rgba(64, 146, 217, 0.9)">
 						<span class="percent"> </span>
 					</div>
 
 					<div class="">
 
 						<div
-							style="font-size: 15px; padding-top: 35px; padding-left: 100px !important;"
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
 							class="description-stats">Defect Density</div>
 						<div class="description-stats"></div>
 
 					</div>
-					<div>
-						<a
-							ng-click="open('app/pages/dashboard/infoDialog/defdensity.html','lg')">
-							<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-							height="20" style="float: right; margin-top: 38px">
-						</a>
-					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/defdensity.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 38px">
+					</a>
 				</div>
 			</div>
 		</div>
-		
+	</div>
 	</div>
 
 	<div class="row">
@@ -245,6 +249,161 @@
 
 	<div class="row"></div>
 
+	<!-- <div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Defect Details
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadTable('csv','defectTable','Defect Details')"><i
+										class="ion-document"></i>Export in CSV</a></li>
+								<li><a href=""
+									ng-click="downloadTable('xls','defectTable','Defect Details')"><i
+										class="ion-document-text"></i>Export in XLS</a></li>
+							</ul>
+						</div>
+					</h3>
+					</div>
+					<div class="panel-body" style="padding-right: 0px;">
+						<div class="horizontal-scroll">
+							<table ng-table="defecttable" class="table"
+								ng-init="defectTableData(1);initialcountpaginate()">
+								<thead>
+									<tr class="sortable ">
+
+										<th style="width: 5%" ng-click="sort('defectId',1)">ID <span
+											class="glyphicon sort-icon" ng-show="sortBy=='defectId'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span></th>
+										<th style="width: 20%" ng-click="sort('summary',1)">Name
+											<span class="glyphicon sort-icon" ng-show="sortBy=='summary'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span>
+										</th>
+										<th style="width: 30%" ng-click="sort('description',1)">Description
+											<span class="glyphicon sort-icon"
+											ng-show="sortBy=='description'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span>
+										</th>
+										<th style="width: 15%" ng-click="sort('priority',1)">Priority
+											<span class="glyphicon sort-icon"
+											ng-show="sortBy=='priority'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span>
+										</th>
+										<th style="width: 15%" ng-click="sort('severity',1)">Severity
+											<span class="glyphicon sort-icon"
+											ng-show="sortBy=='severity'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span>
+										</th>
+										<th style="width: 15%" ng-click="sort('assignedto',1)">Owner
+											<span class="glyphicon sort-icon"
+											ng-show="sortBy=='assignedto'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span>
+										</th>
+										<th style="width: 15%" ng-click="sort('status',1)">Status
+											<span class="glyphicon sort-icon" ng-show="sortBy=='status'"
+											ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+										</span>
+										</th>
+
+
+
+
+									</tr>
+									<tr>
+										<th style="width: 10%"><input class="form-control"
+											ng-model="defectIdsearch" placeholder="Search" type="search"
+											onkeypress="return event.charCode > 47 && event.charCode < 58;"
+											ng-change="search(1,'defectId',defectIdsearch)" /></th>
+										<th style="width: 15%"><input class="form-control"
+											ng-model="summarysearch" placeholder="Search" type="search"
+											ng-change="search(1,'summary',summarysearch)" /></th>
+										<th style="width: 20%"><input class="form-control"
+											ng-model="descriptionsearch" placeholder="Search"
+											type="search"
+											ng-change="search(1,'description',descriptionsearch)" /></th>
+										<th style="width: 10%"><input class="form-control"
+											ng-model="prioritysearch" placeholder="Search" type="search"
+											ng-change="search(1,'priority', prioritysearch)" /></th>
+										<th style="width: 15%"><input class="form-control"
+											ng-model="severitysearch" placeholder="Search" type="search"
+											ng-change="search(1,'severity',severitysearch)" /></th>
+										<th style="width: 20%"><input class="form-control"
+											ng-model="assignedtosearch" placeholder="Search"
+											type="search"
+											ng-change="search(1,'assignedto',assignedtosearch)" /></th>
+										<th style="width: 15%"><input class="form-control"
+											ng-model="statussearch" placeholder="Search" type="search"
+											ng-change="search(1,'status',statussearch)" /></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr dir-paginate="item in defectTableDetails | itemsPerPage: 5"
+										total-items="defdatapaginatecount" current-page="pageno"
+										pagination-id="defpaginate">
+										<td style="width: 5%">{{item.defectId}}</td>
+										<td style="width: 15%" class="trim-info"
+											title="{{item.summary}}">{{item.summary|limitTo:15}}{{item.summary.length>15
+											? '...' : ''}}</td>
+										<td style="width: 30%" title="{{item.description| htmlToPlaintext}}">{{item.description|htmlToPlaintext|limitTo:25}}{{item.description.length>25
+											? '...' : ''| htmlToPlaintext}}</td>
+										<td style="width: 10%">{{item.priority}}</td>
+										<td style="width: 15%">{{item.severity}}</td>
+										<td style="width: 10%">{{item.assignedto}}</td>
+										<td style="width: 15%">{{item.status}}</td>
+
+
+									</tr>
+								</tbody>
+							</table>
+							<div>
+								<dir-pagination-controls directions-links="true"
+									boundary-links="true" pagination-id="defpaginate"
+									on-page-change="pageChangedLevel(newPageNumber)"></dir-pagination-controls>
+									</div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div ng-init="downloadDefectTableData(1)"></div>
+		<div ng-hide=true id="exportableTable">
+			<table class="table" id="defectTable">
+				<tr>
+					<th>ID</th>
+					<th>Summary</th>
+					<th>Description</th>
+					<th>Severity</th>
+					<th>Status</th>
+					<th>Priority</th>
+					<th>Owner</th>
+				</tr>
+				<tr ng-repeat="item in defectTableDetails">
+					<td>{{item.defectId}}</td>
+					<td>{{item.summary | trimDesc}}</td>
+					<td>{{item.description | trimDesc}}</td>
+					<td>{{item.severity}}</td>
+					<td>{{item.status}}</td>
+					<td>{{item.priority}}</td>
+					<td>{{item.assignedto}}</td>
+				</tr>
+			</table>
+		</div>
+	</div> -->
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
 			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
@@ -472,7 +631,7 @@
 	<div class="row pie-charts">
 
 
-		<div class="pie-chart-item-container" style="margin-left: auto">
+		<div class="pie-chart-item-container" style="margin-left: auto; margin-top: 2%">
 			<div ba-panel>
 				<div class="pie-chart-item" id="closeddefect">
 
@@ -494,7 +653,7 @@
 			</div> 
 		</div>
 
-		<div class="pie-chart-item-container" style="margin-right: auto">
+		<div class="pie-chart-item-container" style="margin-right: auto; margin-top: 2%">
 			<div ba-panel>
 				<div class="pie-chart-item" id="reopendefect">
 

@@ -13,32 +13,18 @@ public class TestCaseVO {
 	private int levelId;
 	private String reqId;
 	private String testName;
+	// private String testDescription;
 	private String description;
 	private String testDesigner;
 	private String testType;
 	private String testDesignStatus;
 	private Date testCreationDate;
+
 	private String automationType;
-    private String automationStatus;
-    private String releaseName;
-	
-	public String getAutomationType() {
-		return automationType;
-	}
+	private String automationStatus;
+	private String releaseName;
 
-	public void setAutomationType(String automationType) {
-		this.automationType = automationType;
-	}
-
-	public String getAutomationStatus() {
-		return automationStatus;
-	}
-
-	public void setAutomationStatus(String automationStatus) {
-		this.automationStatus = automationStatus;
-	}
-
-	List<LevelItemsVO> duplication =  new ArrayList<LevelItemsVO>();
+	List<LevelItemsVO> duplication = new ArrayList<LevelItemsVO>();
 
 	public List<LevelItemsVO> getDuplication() {
 		return duplication;
@@ -84,11 +70,11 @@ public class TestCaseVO {
 	
 
 	public String getTestDescription() {
-		try{
-			 description.replaceAll("\\<.*?>","");}
-			catch(Exception e){
-				}
-			return description;
+		try {
+			description.replaceAll("\\<.*?>", "");
+		} catch (Exception e) {
+		}
+		return description;
 	}
 
 	public void setTestDescription(String testDescription) {
@@ -135,6 +121,22 @@ public class TestCaseVO {
 		this.testCreationDate = testCreationDate;
 	}
 
+	public String getAutomationType() {
+		return automationType;
+	}
+
+	public void setAutomationType(String automationType) {
+		this.automationType = automationType;
+	}
+
+	public String getAutomationStatus() {
+		return automationStatus;
+	}
+
+	public void setAutomationStatus(String automationStatus) {
+		this.automationStatus = automationStatus;
+	}
+
 	public String getReleaseName() {
 		return releaseName;
 	}
@@ -143,6 +145,4 @@ public class TestCaseVO {
 		this.releaseName = releaseName;
 	}
 
-	
-	
 }

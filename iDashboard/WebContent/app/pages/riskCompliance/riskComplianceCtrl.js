@@ -27,7 +27,7 @@
 		$rootScope.var3 = false;
 		$rootScope.var4 = false;
 		$rootScope.var5 = false;
-		$rootScope.var7 = true;
+		$rootScope.var6 = true;
 
 		$rootScope.menuItems = [ {
 			"name" : "openRisks",
@@ -143,6 +143,7 @@
 
 		$scope.openUsTransferAgencyGraph = function(selectedDivision) {
 			$rootScope.selectedDivision=selectedDivision;
+			console.log(		$rootScope.selectedDivision)
 			$state.go('usAgengyTrendOpenRisks');
 		}
 
@@ -189,9 +190,9 @@
 							config)
 					.success(
 							function(response) {
-								
+								console.log(response);
 								$rootScope.countdetails1 = response;
-								
+								console.log("iuhilh0",$rootScope.countdetails1 );
 							
 
 								for (var i = 0; i < $rootScope.countdetails1.length; i++) {
@@ -200,7 +201,7 @@
 									}
 									else if ($rootScope.countdetails1[i].division == "IOT") {
 										$scope.openRiskusAgency1 = $scope.countdetails1[i].count;
-										
+										console.log("$scope.openRiskusAgency ",$scope.openRiskusAgency1 )
 									}
 									else if ($scope.countdetails1[i].division == "Automation") {
 										$scope.openRiskEMEACount1 = $scope.countdetails1[i].count;
@@ -331,6 +332,7 @@
 $scope.getDetailsOfEthicalData=function(selectedDivision){
 
 	$rootScope.selectedDivision=selectedDivision;
+	console.log("5532",$rootScope.selectedDivision)
 	var token  = getEncryptedValue();
 	
 	      var config = {headers: {
@@ -341,7 +343,7 @@ $scope.getDetailsOfEthicalData=function(selectedDivision){
 			function(response) {
 				$rootScope.ethicalDetails = response;
 				$rootScope.rowCollection=response;
-				
+				console.log($scope.ethicalDetails);
 			});
 	
 }
@@ -362,7 +364,7 @@ $scope.getNetworkDetailsData=function(selectedDivision){
 $scope.getDetailsOfNetworkData=function(selectedDivision){
 
 $rootScope.selectedDivision=selectedDivision;
-
+console.log("5532",$rootScope.selectedDivision)
 var token  = getEncryptedValue();
 
   var config = {headers: {
@@ -374,7 +376,7 @@ $http.get("./rest/RiskComplianceServices/networkDetailsData?division="+ $rootSco
 		$rootScope.networkDetails = response;
 		$timeout(function(){moreLink()},100);
 		$rootScope.rowCollection=response;
-		
+		console.log($scope.networkDetails);
 	});
 
 }
@@ -395,7 +397,7 @@ $scope.getArchersDetailsData=function(selectedDivision){
 $scope.getDetailsOfArcherData=function(selectedDivision){
 
 $rootScope.selectedDivision=selectedDivision;
-
+console.log("5532",$rootScope.selectedDivision)
 var token  = getEncryptedValue();
 
   var config = {headers: {
@@ -407,7 +409,7 @@ $http.get("./rest/RiskComplianceServices/archerDetailsData?division="+ $rootScop
 		$rootScope.archerDetails = response;
 		$timeout(function(){moreLink()},100);
 		$rootScope.rowCollection=response;
-
+		console.log($scope.archerDetails);
 	});
 
 }
@@ -435,7 +437,7 @@ $scope.getQualysDetailsData=function(selectedDivision){
 $scope.getDetailsOfQualysData=function(selectedDivision){
 
 $rootScope.selectedDivision=selectedDivision;
-
+console.log("5532",$rootScope.selectedDivision)
 var token  = getEncryptedValue();
 
   var config = {headers: {
@@ -447,7 +449,7 @@ $http.get("./rest/RiskComplianceServices/qualysDetailsData?division="+ $rootScop
 		$rootScope.qualysDetails = response;
 		$timeout(function(){moreLink()},100);
 		$rootScope.rowCollection=response;
-		
+		console.log($scope.qualysDetails);
 	});
 
 }
@@ -4101,14 +4103,14 @@ function moreLink() {
 						maintainAspectRatio : false,
 		            	pieceLabel: {
 		            	    render: 'value',
-		            	    fontColor:'white'
+		            	    fontColor:'#4c4c4c'
 		            	  },
 		            	  
 		            	  legend: {
 		                      display: true,
 		                      position: 'bottom',
 		                      labels: {
-		                    	   fontColor: '#ffffff',
+		                    	   fontColor: '#4c4c4c',
 		                    	   boxWidth : 20,
 		                    	   fontSize : 10
 		                      }
@@ -4232,14 +4234,14 @@ function moreLink() {
 						maintainAspectRatio : false,
 		            	pieceLabel: {
 		            	    render: 'value',
-		            	    fontColor:'white'
+		            	    fontColor:'#4c4c4c'
 		            	  },
 		            	  
 		            	  legend: {
 		                      display: true,
 		                      position: 'bottom',
 		                      labels: {
-		                    	   fontColor: '#ffffff',
+		                    	   fontColor: '#4c4c4c',
 		                    	   boxWidth : 20,
 		                    	   fontSize : 10
 		                      }
@@ -4365,14 +4367,14 @@ function moreLink() {
 						maintainAspectRatio : false,
 		            	pieceLabel: {
 		            	    render: 'value',
-		            	    fontColor:'white'
+		            	    fontColor:'#4c4c4c'
 		            	  },
 		            	  
 		            	  legend: {
 		                      display: true,
 		                      position: 'bottom',
 		                      labels: {
-		                    	   fontColor: '#ffffff',
+		                    	   fontColor: '#4c4c4c',
 		                    	   boxWidth : 20,
 		                    	   fontSize : 10
 		                      }
@@ -4497,14 +4499,14 @@ function moreLink() {
 						maintainAspectRatio : false,
 		            	pieceLabel: {
 		            	    render: 'value',
-		            	    fontColor:'white'
+		            	    fontColor:'#4c4c4c'
 		            	  },
 		            	  
 		            	  legend: {
 		                      display: true,
 		                      position: 'bottom',
 		                      labels: {
-		                    	   fontColor: '#ffffff',
+		                    	   fontColor: '#4c4c4c',
 		                    	   boxWidth : 20,
 		                    	   fontSize : 10
 		                      }
@@ -4690,15 +4692,17 @@ function moreLink() {
 		                scales: {
 		                    yAxes: [{
 		                        ticks: {
-		                            beginAtZero:true
+		                            beginAtZero:true,
+		                            fontColor: '#4c4c4c'
 		                        },
 		                        scaleLabel:
 		 	                       {
 		 	                    	   display: true,
-		 	                    	   labelString: ' Ethical Hack Count '
+		 	                    	   labelString: ' Ethical Hack Count ',
+		 	                    	   fontColor: '#4c4c4c'
 		 	     		          	},
 		                        gridLines: {
-	                                color: "rgba(255,255,255,0.2)"
+	                                color: "#d8d3d3"
 	                            }
 		                    }],
 		                    xAxes: [{
@@ -4706,10 +4710,14 @@ function moreLink() {
 		                            scaleLabel:
 			 	                       {
 			 	                    	   display: true,
-			 	                    	   labelString: 'Status'
+			 	                    	   labelString: 'Status',
+			 	                    	   fontColor: '#4c4c4c'
 			 	     		          	},
 		                            gridLines: {
-		                                color: "rgba(255,255,255,0.2)"
+		                                color: "#d8d3d3"
+		                            },
+		                            ticks: {
+		                            	fontColor: '#4c4c4c'
 		                            }
 		                        }]
 		                    
@@ -4895,15 +4903,17 @@ function moreLink() {
 		                scales: {
 		                    yAxes: [{
 		                        ticks: {
-		                            beginAtZero:true
+		                            beginAtZero:true,
+		                            fontColor: '#4c4c4c'
 		                        },
 		                        scaleLabel:
 		 	                       {
 		 	                    	   display: true,
-		 	                    	   labelString: ' Archer  Count '
+		 	                    	   labelString: ' Archer  Count ',
+		 	                    	  fontColor: '#4c4c4c'
 		 	     		          	},
 		                        gridLines: {
-	                                color: "rgba(255,255,255,0.2)"
+	                                color: "#d8d3d3"
 	                            }
 		                    }],
 		                    xAxes: [{
@@ -4911,10 +4921,14 @@ function moreLink() {
 		                            scaleLabel:
 			 	                       {
 			 	                    	   display: true,
-			 	                    	   labelString: 'Status'
+			 	                    	   labelString: 'Status',
+			 	                    	   fontColor: '#4c4c4c'
 			 	     		          	},
 		                            gridLines: {
-		                                color: "rgba(255,255,255,0.2)"
+		                                color: "#d8d3d3"
+		                            },
+		                            ticks: {
+		                            	fontColor: '#4c4c4c'
 		                            }
 		                        }]
 		                    

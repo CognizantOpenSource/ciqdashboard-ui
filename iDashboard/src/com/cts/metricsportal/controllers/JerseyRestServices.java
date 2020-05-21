@@ -3,12 +3,14 @@ package com.cts.metricsportal.controllers;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import org.apache.log4j.Logger;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 import org.apache.poi.util.IOUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -48,14 +52,17 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.cognizant.cimesg.accessjl.core.LdapAuthentication;
+import com.cognizant.cimesg.encryptl.core.EncryptL;
 import com.cognizant.idashboard.iAuthentication;
 import com.cts.metricsportal.LicenseReader.LicenseReader;
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.dao.AlmMongoOperations;
 import com.cts.metricsportal.emailScheduler.MailScheduler;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.IdashboardConstantsUtil;
 import com.cts.metricsportal.util.PropertyManager;
+import com.cts.metricsportal.util.SessionHandler;
 import com.cts.metricsportal.vo.ALMdetailsVO;
 import com.cts.metricsportal.vo.AvailableMetricVO;
 import com.cts.metricsportal.vo.BuildJobsVO;
@@ -65,14 +72,12 @@ import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DefectVO;
 import com.cts.metricsportal.vo.DomainProjectVO;
 import com.cts.metricsportal.vo.DomainVO;
-import com.cts.metricsportal.vo.LCDashboardVO;
 import com.cts.metricsportal.vo.LevelItemsVO;
 import com.cts.metricsportal.vo.LicenseVO;
 import com.cts.metricsportal.vo.MenuItemsVO;
 import com.cts.metricsportal.vo.MenuListVO;
 import com.cts.metricsportal.vo.OperationDashboardDetailsVO;
 import com.cts.metricsportal.vo.OperationalDashboardVO;
-import com.cts.metricsportal.vo.ProductDashboardVO;
 import com.cts.metricsportal.vo.ProjectVO;
 import com.cts.metricsportal.vo.ReleaseVO;
 import com.cts.metricsportal.vo.RequirmentVO;
@@ -85,7 +90,6 @@ import com.cts.metricsportal.vo.UserVO;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
@@ -96,6 +100,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 	// Tool Selection Details
 	static final Logger logger = Logger.getLogger(JerseyRestServices.class);
+	SessionHandler sessionHandler = new SessionHandler();
 
 	@GET
 	@Path("/saveToolDetails")
@@ -108,39 +113,41 @@ public class JerseyRestServices extends BaseMongoOperation {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
-		String templatelist[] = template.split(",");
+		if (adminstatus) {
+			String templatelist[] = template.split(",");
 
-		ToolSelectionVO toolDetails = new ToolSelectionVO();
+			ToolSelectionVO toolDetails = new ToolSelectionVO();
 
-		ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper = new ObjectMapper();
 
-		JsonFactory jf = new MappingJsonFactory();
+			JsonFactory jf = new MappingJsonFactory();
 
-		JsonParser jsonParser = jf.createJsonParser(toolsSelected);
+			JsonParser jsonParser = jf.createJsonParser(toolsSelected);
 
-		List<ToolSelectionVO> toolSelection = null;
-		TypeReference<List<ToolSelectionVO>> tRef = new TypeReference<List<ToolSelectionVO>>() {
-		};
+			List<ToolSelectionVO> toolSelection = null;
+			TypeReference<List<ToolSelectionVO>> tRef = new TypeReference<List<ToolSelectionVO>>() {
+			};
 
-		toolSelection = mapper.readValue(jsonParser, tRef);
+			toolSelection = mapper.readValue(jsonParser, tRef);
 
-		getMongoOperation().dropCollection(ToolSelectionVO.class);
+			getMongoOperation().dropCollection(ToolSelectionVO.class);
 
-		for (int i = 0; i < toolSelection.size(); i++) {
+			for (int i = 0; i < toolSelection.size(); i++) {
 
-			toolDetails.setImagePath(toolSelection.get(i).getImagePath());
-			toolDetails.setKey(toolSelection.get(i).getKey());
-			toolDetails.setLabel(toolSelection.get(i).getLabel());
-			toolDetails.setUserId(userId);
-			toolDetails.setPosition(toolSelection.get(i).getPosition());
-			toolDetails.setTemplate(templatelist[i]);
+				toolDetails.setImagePath(toolSelection.get(i).getImagePath());
+				toolDetails.setKey(toolSelection.get(i).getKey());
+				toolDetails.setLabel(toolSelection.get(i).getLabel());
+				toolDetails.setUserId(userId);
+				toolDetails.setPosition(toolSelection.get(i).getPosition());
+				toolDetails.setTemplate(templatelist[i]);
 
-			getMongoOperation().save(toolDetails, "toolSelection");
+				getMongoOperation().save(toolDetails, "toolSelection");
 
+			}
 		}
+
 		return 1;
 	}
 
@@ -150,11 +157,10 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int saveMetricDetails(@HeaderParam("Authorization") String authString,
 			@QueryParam("selectedTemplate") String selectedTemplate,
-			@QueryParam("selectMetrics") List<String> selectMetrics,
-
-			@QueryParam("rollingPeriod") String rollingPeriod, @QueryParam("isJiratool") boolean isJiratool,
-			@QueryParam("isAlmtool") boolean isAlmtool) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException, ParseException {
+			@QueryParam("selectMetrics") List<String> selectMetrics, @QueryParam("rollingPeriod") String rollingPeriod,
+			@QueryParam("isJiratool") boolean isJiratool, @QueryParam("isAlmtool") boolean isAlmtool)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException, ParseException {
 
 		int count = 0;
 		String newtempId = "";
@@ -162,8 +168,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		if (adminstatus) {
 
@@ -206,7 +211,6 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 			CustomTemplateVO dashvo = new CustomTemplateVO();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-			Date dateobj = new Date();
 			Calendar calobj = Calendar.getInstance();
 			String createdDt = df.format(calobj.getTime());
 			Date createdDate = df.parse(createdDt);
@@ -236,20 +240,16 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int updateMetricDetails(@HeaderParam("Authorization") String authString,
 			@QueryParam("selectedTemplate") String selectedTemplate,
-			@QueryParam("selectMetrics") List<String> selectMetrics,
-
-			@QueryParam("rollingPeriod") String rollingPeriod, @QueryParam("isJiratool") boolean isJiratool,
-			@QueryParam("isAlmtool") boolean isAlmtool) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("selectMetrics") List<String> selectMetrics, @QueryParam("rollingPeriod") String rollingPeriod,
+			@QueryParam("isJiratool") boolean isJiratool, @QueryParam("isAlmtool") boolean isAlmtool)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 
 		int count = 0;
-		String newtempId = "";
-
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		if (adminstatus) {
 
@@ -298,8 +298,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public long templateNameInOperational(@HeaderParam("Authorization") String authString,
 			@QueryParam("templateName") String templateName) throws Exception {
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		long templateList = 0;
 
 		if (adminstatus) {
@@ -320,7 +319,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int deleteTemplateName(@HeaderParam("Authorization") String authString,
 			@QueryParam("templateName") String templateName) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		List<String> templateList = new ArrayList<String>();
 
 		int count = 0;
@@ -357,7 +356,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int deleteUnusedTemplateName(@HeaderParam("Authorization") String authString,
 			@QueryParam("templateName") String templateName) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		int count = 0;
 		if (adminstatus) {
@@ -380,7 +379,6 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 	@GET
 	@Path("/getNumberOfTemplate")
-
 	public int getverticaldata() throws Exception {
 		String numberOfTemplate = null;
 		if (numberOfTemplate == null) {
@@ -405,7 +403,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			BadLocationException {
 		List<AvailableMetricVO> availableMetric = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			availableMetric = new ArrayList<AvailableMetricVO>();
 			if (jiraMetric || almMetric) {
@@ -429,7 +427,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			@QueryParam("selectTemplate") String selectTemplate) throws Exception {
 		boolean exist = false;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		if (adminstatus) {
 
@@ -457,7 +455,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		String query = "{},{_id:0}";
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean adminstatus = UserEncrypt.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		List<CustomTemplateVO> templateDetails = new ArrayList<CustomTemplateVO>();
 		if (adminstatus) {
@@ -541,7 +539,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		String userId = UserEncrypt.getUser(authString);
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		if (!adminstatus) {
 			Update update = new Update();
@@ -567,7 +565,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			NumberFormatException, BaseException, BadLocationException {
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		String licenseKeyFinal = licenseKey.replaceAll("%2B", "+");
 
@@ -624,49 +622,52 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@POST
 	@Path("/authentication")
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserVO getUserInfo(@HeaderParam("Authorization") String auth) throws Exception {
+	public UserVO getUserInfo(@HeaderParam("Authorization") String authString) throws Exception {
+		AuthenticationService authenticationService = new AuthenticationService();
+
+		UserVO authUser = authenticationService.getUserDetails(authString);
 
 		UserVO userInfo = new UserVO();
+		UserVO ldapInfo = new UserVO();
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(authUser.getUserId()));
+		UserVO userFromDb = getMongoOperation().findOne(query1, UserVO.class);
+		boolean authStatus = false;
 
-		AuthenticationService authServ = new AuthenticationService();
+		/*
+		 * UserVO uvo = authenticatee(auth); String userId = uvo.getUserId(); //653731
+		 * String password = uvo.getPassword()
+		 */; // mcWLbn6/9l7VZVaeDPsjqQ==
 
-		List<UserVO> userDetails = getMongoOperation().findAll(UserVO.class);
-
-		UserVO uvo = authenticatee(auth);
-		String userId = uvo.getUserId();
-		String password = uvo.getPassword();
-
-		for (UserVO vo : userDetails) {
-			if (vo.getUserId().equalsIgnoreCase(userId)) {
-				if (vo.isLdap()) {
+		if (userFromDb != null) {
+			if (userFromDb.getUserId().equals(authUser.getUserId())) {
+				if (userFromDb.isLdap()) {
 					try {
-						boolean authStatus = authServ.authenticateInternal(userId, password);
+						authStatus = authenticationService.authenticateLdap(userFromDb.getUserId(),
+								authUser.getPassword());
 						if (authStatus) {
-							// vo.setProfilePhoto(getLdapProfilePicture(userId,
-							// password));
 
-							List<String> ldapUserDetails = new ArrayList();
+							List<String> ldapUserDetails = new ArrayList<String>();
 							String Photo = null;
 							String userName = null;
 							String mobile = "";
 							String mail = "";
 
-							String encpassword = iAuthentication.read(password);
-							ldapUserDetails = getLdapUserDetails(userId, encpassword);
+							ldapUserDetails = getLdapUserDetails(userFromDb.getUserId(), authUser.getPassword());
 
 							Photo = ldapUserDetails.get(0);
 							userName = ldapUserDetails.get(1);
 							mobile = ldapUserDetails.get(3);
 							mail = ldapUserDetails.get(2);
 
-							vo.setProfilePhoto(Photo);
-							vo.setUserName(userName);
-							vo.setEmail(mail);
-							vo.setMobileNum(mobile);
+							ldapInfo.setProfilePhoto(Photo);
+							ldapInfo.setUserName(userName);
+							ldapInfo.setEmail(mail);
+							ldapInfo.setMobileNum(mobile);
 
 							// Update User Info;
 							Query query = new Query();
-							query.addCriteria(Criteria.where("userId").is(userId));
+							query.addCriteria(Criteria.where("userId").is(userFromDb.getUserId()));
 
 							Update update = new Update();
 							update.set("userName", userName);
@@ -676,27 +677,42 @@ public class JerseyRestServices extends BaseMongoOperation {
 							getMongoOperation().updateFirst(query, update, UserVO.class);
 
 						}
-						if (authStatus == true) {
 
-							userInfo = vo;
-							return userInfo;
-						} else {
-							throw new Exception();
-						}
 					} catch (Exception e) {
 						logger.error("Wrong LDAP Password");
 					}
 				} else {
-					boolean authStatus = authServ.authenticate1(userId, password);
-					logger.error("Authentication");
-					if (authStatus == true) {
-						userInfo = vo;
+					EncryptL encrypt = new EncryptL();
+					String HashedPwd = encrypt.calculateHash(authUser.getPassword());
+					authStatus = userFromDb.getPassword().equals(HashedPwd);
+					if (authStatus) {
+						userFromDb.setPassword(HashedPwd);
 					}
-					return userInfo;
+				}
+
+				if (authStatus) {
+					Query query2 = new Query();
+					if (userFromDb.isLdap()) {
+						
+						query2.addCriteria(Criteria.where("userId").is(authUser.getUserId()));
+						UserVO userupdateinfo = getMongoOperation().findOne(query2, UserVO.class);
+					
+						userInfo = userupdateinfo;
+						/*userInfo=ldapInfo*/;
+					
+					} else {
+						userInfo = userFromDb;
+						userInfo.setAuthStatus(true);
+					}
 				}
 			}
+		} // session by 653731
+		if (userInfo != null && userInfo.isActive()) {
+			boolean isPlugin = false;
+			String sId = sessionHandler.createNewSesion(userInfo.getUserId(), isPlugin);
+			userInfo.set_id(sId);
 		}
-		return null;
+		return userInfo;
 	}
 
 	public List<String> getLdapUserDetails(String username, String password) throws Exception {
@@ -707,7 +723,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		String usermobile = "";
 		String name = "";
 		String sn = "";
-		List<String> ldapUserDetails = new ArrayList();
+		List<String> ldapUserDetails = new ArrayList<String>();
 		Properties ldapSettings = new Properties();
 		try {
 			ldapSettings = PropertyManager.getProperties("ldapSettings.properties");
@@ -745,67 +761,22 @@ public class JerseyRestServices extends BaseMongoOperation {
 		return ldapUserDetails;
 	}
 
-	// Basic Authentication and Authorization
-	public UserVO authenticatee(String authCredentials) {
-
-		UserVO vo = new UserVO();
-		// header value format will be "Basic encodedstring" for Basic
-		// authentication. Example "Basic YWRtaW46YWRtaW4="
-		final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
-		String usernameAndPassword = null;
+	@POST
+	@Path("/logout")
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean logoutlogs(@HeaderParam("Authorization") String authString) throws Exception {
+		boolean result = false;
+		AuthenticationService authenticationService = new AuthenticationService();
 		try {
-			byte[] decodedBytes = DatatypeConverter.parseBase64Binary(encodedUserPassword);
-			usernameAndPassword = new String(decodedBytes, "UTF-8");
-		} catch (IOException e) {
-			/* e.printStackTrace(); */
+
+			UserVO userInfo = authenticationService.getUserDetailsPassEncrypted(authString);
+			sessionHandler.logoutCurrentSession(userInfo);
+			result = true;
+		} catch (Exception e) {
+			logger.error(e);
 		}
-		StringBuilder sb = new StringBuilder();
-		final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-
-		final String userId = tokenizer.nextToken();
-		String password1 = tokenizer.nextToken();
-
-		byte[] decodedBytesPassword = DatatypeConverter.parseBase64Binary(password1);
-		char[] password = null;
-
-		try {
-			password = iAuthentication.write(decodedBytesPassword);
-
-			for (char ch : password) {
-				sb.append(ch);
-			}
-
-			vo.setUserId(userId);
-			vo.setPassword(sb.toString());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			password1 = null;
-			sb.setLength(0);
-			Arrays.fill(password, ' ');
-		}
-
-		return vo;
+		return result;
 	}
-
-	/*
-	 * public String getLdapProfilePicture(String username, String password) {
-	 * String photoString = null; Properties ldapSettings = new Properties();
-	 * try { ldapSettings =
-	 * PropertyManager.getProperties("ldapSettings.properties"); } catch
-	 * (Exception e) { // TODO Auto-generated catch block e.printStackTrace(); }
-	 * LdapAuthentication authenticator = new LdapAuthentication(ldapSettings);
-	 * try { if (authenticator.getPhoto(username, password) != null) { byte[]
-	 * photo = authenticator.getPhoto(username, password); //photoString = new
-	 * sun.misc.BASE64Encoder().encode(photo); photoString = ""; } else {
-	 * photoString = ""; } } catch (NamingException e) { // TODO Auto-generated
-	 * catch block e.printStackTrace(); throw new
-	 * BaseException("Some error occured while getting the user's ldap profile picture"
-	 * , e); }
-	 * 
-	 * return photoString; }
-	 */
 
 	@SuppressWarnings("unchecked")
 	@GET
@@ -817,7 +788,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		int domainID = 1;
 		int projectID = 1;
@@ -843,9 +814,8 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		/*
 		 * Query domainquery = new Query();
-		 * domainquery.addCriteria(Criteria.where("userId").is(userId));
-		 * List<String> domain =
-		 * getMongoOperation().getCollection("userInfo").distinct(
+		 * domainquery.addCriteria(Criteria.where("userId").is(userId)); List<String>
+		 * domain = getMongoOperation().getCollection("userInfo").distinct(
 		 * "selectedProjects.level1", domainquery.getQueryObject());
 		 */
 		// end of domain
@@ -928,7 +898,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		int domainID = 1;
 		int projectID = 1;
@@ -1034,7 +1004,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		int levelId = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		Query almquery = new Query();
 		almquery.addCriteria(Criteria.where("SourceTool").is("ALM"));
@@ -1119,7 +1089,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		int levelId = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		Query almquery = new Query();
 		almquery.addCriteria(Criteria.where("SourceTool").is("JIRA"));
@@ -1200,7 +1170,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		int count = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		if (adminstatus) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -1267,12 +1237,11 @@ public class JerseyRestServices extends BaseMongoOperation {
 	 * 
 	 * @Path("/projectaccess")
 	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public List<String>
-	 * getprojectaccess() throws JsonParseException, JsonMappingException,
-	 * IOException, NumberFormatException, BaseException, BadLocationException {
-	 * { List<String> coll =
-	 * getMongoOperation().getCollection("levelId").distinct("level2"); return
-	 * coll; }
+	 * @Produces(MediaType.APPLICATION_JSON) public List<String> getprojectaccess()
+	 * throws JsonParseException, JsonMappingException, IOException,
+	 * NumberFormatException, BaseException, BadLocationException { { List<String>
+	 * coll = getMongoOperation().getCollection("levelId").distinct("level2");
+	 * return coll; }
 	 * 
 	 * }
 	 */
@@ -1364,7 +1333,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		int count = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		UserVO uservo = new UserVO();
 		Query query = new Query();
@@ -1429,19 +1398,25 @@ public class JerseyRestServices extends BaseMongoOperation {
 	/* create new admin */
 	@POST
 	@Path("/createAdminUser")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int getcreateAdminUser(@HeaderParam("Authorization") String authString, @QueryParam("userId") String userId,
-			@QueryParam("password") String password, @QueryParam("userName") String userName,
-			@QueryParam("email") String email, @QueryParam("mobileNum") String mobileNum,
-			@QueryParam("ldap") boolean isLadp) throws Exception {
 
+	public int getcreateAdminUser(@HeaderParam("Authorization") String authString,
+			@FormDataParam("userId") String userId, @FormDataParam("password") String password,
+			@FormDataParam("userName") String userName, @FormDataParam("email") String email,
+			@FormDataParam("mobileNum") String mobileNum, @FormDataParam("ldap") boolean isLadp) throws Exception {
+		AuthenticationService authenticateService = new AuthenticationService();
 		int count = 0;
-		String auth = "password";
-		String iauth = "";
-
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		String password1 = null;
+		String auth = password;
+		EncryptL encrypt = new EncryptL();
+		if (!isLadp) {
+			password1 = encrypt.calculateHash(authenticateService.decryptHeader(password));
+		} else {
+			password1 = null;
+		}
+		;
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		UserVO uservo = new UserVO();
 		Query query = new Query();
@@ -1449,25 +1424,12 @@ public class JerseyRestServices extends BaseMongoOperation {
 		if (adminstatus) {
 			uservo.setAdmin(false);
 			uservo.setUserId(userId);
-			// String encryptedPassword=iAuthentication.write(password);
-			iauth = password;
-			if (auth == null || auth == "") {
-				iauth = auth;
-			}
 
-			StringBuilder sb = new StringBuilder();
-			byte[] decoded = DatatypeConverter.parseBase64Binary(iauth);
-			char[] encryptedPassword = iAuthentication.write(decoded);
-
-			for (char ch : encryptedPassword) {
-				sb.append(ch);
-			}
-
-			uservo.setPassword(sb.toString());
+			uservo.setPassword(password1);
 
 			uservo.setLdap(isLadp);
 
-			// Check PasswordRest
+			// Check PasswordReset
 			if (isLadp) {
 
 				uservo.setIspassReset(false);
@@ -1540,16 +1502,16 @@ public class JerseyRestServices extends BaseMongoOperation {
 	/* Admin Details Update */
 	@POST
 	@Path("/adminupdate")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int getadminupdate(@HeaderParam("Authorization") String authString, @QueryParam("userId") String userId,
-			@QueryParam("userName") String userName, @QueryParam("email") String email,
-			@QueryParam("mobileNum") String mobileNum) throws Exception {
+	public int getadminupdate(@HeaderParam("Authorization") String authString, @FormDataParam("userId") String userId,
+			@FormDataParam("userName") String userName, @FormDataParam("email") String email,
+			@FormDataParam("mobileNum") String mobileNum) throws Exception {
 
 		int count = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		UserVO uservo = new UserVO();
 		Query query = new Query();
@@ -1567,24 +1529,27 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 			query.addCriteria(Criteria.where("userId").is(userId));
 
-			/*
-			 * for (UserVO vo : userInfo) { if
-			 * (vo.getUserId().equalsIgnoreCase(userId)) {
-			 * 
-			 * count = 1; break; } else if
-			 * (vo.getUserName().equalsIgnoreCase(userName)) {
-			 * 
-			 * count = 2; break; } else if
-			 * (vo.getEmail().equalsIgnoreCase(email)) {
-			 * 
-			 * count = 3; break; } else if
-			 * (vo.getMobileNum().equalsIgnoreCase(mobileNum)) {
-			 * 
-			 * count = 4; break; } }
-			 */
+			for (UserVO vo : userInfo) {
+				if (vo.getUserId().equalsIgnoreCase(userId)) {
+
+					count = 1;
+					break;
+				} else if (vo.getUserName().equalsIgnoreCase(userName)) {
+
+					count = 2;
+					break;
+				} else if (vo.getEmail().equalsIgnoreCase(email)) {
+
+					count = 3;
+					break;
+				} else if (vo.getMobileNum().equalsIgnoreCase(mobileNum)) {
+
+					count = 4;
+					break;
+				}
+			}
 			if (count == 0) {
 				getMongoOperation().updateFirst(query, update, UserVO.class);
-
 			}
 			return count;
 		} else {
@@ -1600,7 +1565,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<UserVO> admininfo = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			admininfo = new ArrayList<UserVO>();
 
@@ -1623,7 +1588,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			BadLocationException {
 		List<UserCountVO> adminUserCount = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			adminUserCount = new ArrayList<UserCountVO>();
 			UserCountVO userCount = new UserCountVO();
@@ -1665,7 +1630,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<UserVO> userInfo = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			userInfo = new ArrayList<UserVO>();
 			Query query = new Query();
@@ -1687,7 +1652,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			BadLocationException {
 		List<UserVO> userInfo = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			userInfo = new ArrayList<UserVO>();
 			Query query = new Query();
@@ -1707,7 +1672,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int loginRequests(@HeaderParam("Authorization") String authString, String output) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		int count = 0;
 		if (adminstatus) {
 
@@ -1764,7 +1729,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int lockRequests(@HeaderParam("Authorization") String authString, String output) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		int count = 0;
 		if (adminstatus) {
 
@@ -1814,20 +1779,27 @@ public class JerseyRestServices extends BaseMongoOperation {
 	/* Save new password */
 	@POST
 	@Path("/savenewpassword")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int savenewpassword(@HeaderParam("Authorization") String authString, String data) throws Exception {
+	public int savenewpassword(@HeaderParam("Authorization") String authString,
+			@HeaderParam("oldpassword") String oldPassword, @HeaderParam("newpassword") String newPassword)
+			throws Exception {
 		int count = 0;
 
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
+		AuthenticationService authenticationService = new AuthenticationService();
+		String userId = authenticationService.getUser(authString);
 		Query query1 = new Query();
 		query1.addCriteria(Criteria.where("userId").is(userId));
-		Update update = new Update();
-		String decoded = new String(Base64.getDecoder().decode(data));
-		String password = iAuthentication.write(decoded);
-		update.set("password", password);
-		getMongoOperation().updateFirst(query1, update, UserVO.class);
+
+		EncryptL encrypt = new EncryptL();
+		String oldPassword1 = encrypt.calculateHash(authenticationService.decryptHeader(oldPassword));
+		if (getMongoOperation().find(query1, UserVO.class).get(0).getPassword().equalsIgnoreCase(oldPassword1)) {
+			String newPassword1 = encrypt.calculateHash(authenticationService.decryptHeader(newPassword));
+			Update update = new Update();
+			update.set("password", newPassword1);
+			getMongoOperation().updateFirst(query1, update, UserVO.class);
+			count++;
+		}
+
 		return count;
 	}
 
@@ -1839,20 +1811,20 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int Resetpassword(@HeaderParam("Authorization") String authString, String data) throws Exception {
 		int count = 0;
 
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
+		AuthenticationService authenticationService = new AuthenticationService();
+		String userId = authenticationService.getUser(authString);
 
 		Query query1 = new Query();
 		query1.addCriteria(Criteria.where("userId").is(userId));
 		Update update = new Update();
-		String decoded = new String(Base64.getDecoder().decode(data));
-		String password = iAuthentication.write(decoded);
+		EncryptL encrypt = new EncryptL();
+		String password = encrypt.calculateHash(authenticationService.decryptHeader(data));
 		update.set("password", password);
 		update.set("ispassReset", false);
 		/*
 		 * Query query2 = new Query();
-		 * query2.addCriteria(Criteria.where("userId").is(userId)); Update
-		 * update1 = new Update(); update1.unset("ispassReset");
+		 * query2.addCriteria(Criteria.where("userId").is(userId)); Update update1 = new
+		 * Update(); update1.unset("ispassReset");
 		 */
 		getMongoOperation().updateFirst(query1, update, UserVO.class);
 		/* getMongoOperation().updateFirst(query2, update1, UserVO.class); */
@@ -1868,7 +1840,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		List<UserVO> userInfo = null;
 		Object[] objArray = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			userInfo = new ArrayList<UserVO>();
 			Query query = new Query();
@@ -1890,7 +1862,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int inactivateUsers(@HeaderParam("Authorization") String authString, String output) throws Exception {
 		int count = 0;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -1948,7 +1920,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int activateUsers(@HeaderParam("Authorization") String authString, String output) throws Exception {
 		int count = 0;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -2006,7 +1978,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public Object[] getInactiveUsers(@HeaderParam("Authorization") String authString) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		List<UserVO> userInfo = null;
 		Object[] objArray = null;
 		if (adminstatus) {
@@ -2033,7 +2005,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		int count = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			UserVO uservo = new UserVO();
 			ObjectMapper obj = new ObjectMapper();
@@ -2073,7 +2045,6 @@ public class JerseyRestServices extends BaseMongoOperation {
 			update.set("isQbot", testedUserInfo.get(0).isQbot());
 			update.set("isCoEDashboard", testedUserInfo.get(0).isCoEDashboard());
 			update.set("isRiskCompliance", testedUserInfo.get(0).isRiskCompliance());
-			update.set("isEnbPublicOpt", testedUserInfo.get(0).isEnbPublicOpt());
 			if (testedUserInfo.get(0).isRiskCompliance() == true || testedUserInfo.get(0).isCoEDashboard() == true) {
 				update.set("isCustomMetrics", true);
 			} else {
@@ -2123,7 +2094,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int deleteUserInfo(@HeaderParam("Authorization") String authString, String userId) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		int count = 0;
 		if (adminstatus) {
@@ -2153,7 +2124,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int deleteUserList(@HeaderParam("Authorization") String authString, String output) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		int count = 0;
 		if (adminstatus) {
 
@@ -2184,12 +2155,11 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 			for (int i = 0; i < testedUserInfo.size(); i++) {
 				/*
-				 * boolean value= testedUserInfo.get(i).unavailable();
-				 * if(value==true){ Query query = new Query();
-				 * query.addCriteria(Criteria.where("userId").is(testedUserInfo.
-				 * get(i).getUserId())); getMongoOperation().remove(query,
-				 * UserVO.class); count = 1; } } return count; } else { return
-				 * count; }
+				 * boolean value= testedUserInfo.get(i).unavailable(); if(value==true){ Query
+				 * query = new Query();
+				 * query.addCriteria(Criteria.where("userId").is(testedUserInfo.get(i).getUserId
+				 * ())); getMongoOperation().remove(query, UserVO.class); count = 1; } } return
+				 * count; } else { return count; }
 				 * 
 				 * }
 				 */
@@ -2224,7 +2194,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		AuthenticationService AuthServ = new AuthenticationService();
 
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		DomainProjectVO dashvo = new DomainProjectVO();
 		ALMdetailsVO almvo = new ALMdetailsVO();
 		if (adminstatus) {
@@ -2269,10 +2239,10 @@ public class JerseyRestServices extends BaseMongoOperation {
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		/*
-		 * String decoded = new String(Base64.getDecoder().decode(password));
-		 * String encryptedPassword=iAuthentication.write(decoded);
+		 * String decoded = new String(Base64.getDecoder().decode(password)); String
+		 * encryptedPassword=iAuthentication.write(decoded);
 		 */ Query query1 = new Query();
 		query1.addCriteria(Criteria.where("instanceName").is(instanceName));
 		query1.addCriteria(Criteria.where("userId").is(userId));
@@ -2314,7 +2284,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		int count = 0;
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		ALMdetailsVO almvo = new ALMdetailsVO();
 		Query query = new Query();
@@ -2375,7 +2345,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			BadLocationException {
 		List<ALMdetailsVO> instanceinfo = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		if (adminstatus) {
 			instanceinfo = new ArrayList<ALMdetailsVO>();
 
@@ -2396,7 +2366,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int deleteHPALMRoww(@HeaderParam("Authorization") String authString, @QueryParam("domain") String domain,
 			@QueryParam("project") String project) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		int count = 0;
 		if (adminstatus) {
@@ -2452,7 +2422,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public int deleteALMInstance(@HeaderParam("Authorization") String authString,
 			@QueryParam("instanceName") String instanceName) throws Exception {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
 		int count = 0;
 		if (adminstatus) {
@@ -2603,9 +2573,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 		String query2 = "{},{_id: 0, tc_id: 1}";
 		Query query3 = new BasicQuery(query2);
 		long totalTestCases = getMongoOperation().count(query3, TestCaseVO.class);
-		// long errorDiscoveryRate = Math.round((totalDefects * 100 /
-		// totalTestCases));
-		long errorDiscoveryRate = Math.round(((double) totalDefects * 100) / ((double) totalTestCases));
+		long errorDiscoveryRate = (totalDefects * 100 / totalTestCases);
 		return errorDiscoveryRate;
 	}
 
@@ -2783,7 +2751,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			@QueryParam("role") String role) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		int change = 1;
 		if (adminstatus) {
 			Query query = new Query();
@@ -2803,36 +2771,139 @@ public class JerseyRestServices extends BaseMongoOperation {
 		}
 	}
 
+	/*
+	 * @POST
+	 * 
+	 * @Path("/uploadOrgLogo")
+	 * 
+	 * @Consumes(MediaType.MULTIPART_FORM_DATA)
+	 * 
+	 * @Produces(MediaType.APPLICATION_JSON)
+	 * 
+	 * public int getuploadImage(@HeaderParam("Authorization") String authString,
+	 * 
+	 * @FormDataParam("orgName") String orgName,
+	 * 
+	 * @FormDataParam("orgLogo") InputStream orgLogo,
+	 * 
+	 * @FormDataParam("usersel") String usersel,
+	 * 
+	 * @FormDataParam("filename") String profileFileName) throws JsonParseException,
+	 * JsonMappingException, IOException, NumberFormatException, BaseException,
+	 * BadLocationException { int change = 1; AuthenticationService AuthServ = new
+	 * AuthenticationService(); boolean adminstatus =
+	 * LayerAccess.getAdminLayerAccess(authString); String photoString; List<String>
+	 * users = new ArrayList<String>(); for (String retval : usersel.split(",")) {
+	 * users.add(retval); } if (adminstatus) {
+	 * 
+	 * Update update = new Update();
+	 * 
+	 * if ((FilenameUtils.isExtension(profileFileName, "jpg") ||
+	 * FilenameUtils.isExtension(profileFileName, "jpeg") ||
+	 * FilenameUtils.isExtension(profileFileName, "png") ||
+	 * FilenameUtils.isExtension(profileFileName, "gif")) &&
+	 * (!profileFileName.equalsIgnoreCase("undefined"))) {
+	 * 
+	 * byte[] imageBytes = IOUtils.toByteArray(orgLogo); photoString =
+	 * Base64.getEncoder().encodeToString(imageBytes); update.set("orgLogo",
+	 * photoString); update.set("orgName", orgName); } else
+	 * if(profileFileName.equalsIgnoreCase("undefined")){ update.set("orgName", "");
+	 * update.set("orgLogo", ""); } else { update.set("orgName", "");
+	 * update.set("orgLogo", ""); change=0; return change; //throw new
+	 * BaseException("Please upload image with extension as .jpg or .jpeg only!");
+	 * 
+	 * }
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * byte[] imageBytes = IOUtils.toByteArray(orgLogo); photoString =
+	 * Base64.getEncoder().encodeToString(imageBytes);
+	 * 
+	 * update.set("orgLogo", photoString);
+	 * 
+	 * Query query = new Query();
+	 * query.addCriteria(Criteria.where("userId").in(users));
+	 * 
+	 * getMongoOperation().updateMulti(query, update, UserVO.class);
+	 * 
+	 * return change; } else { return change; } }
+	 */
+
+	// ***********************************************************************************
+	// Function : Upload Organization Logo Image
+	//
+	// Description : To check the header information , when upload the image
+	//
+	// Date of Change : 4 / 8 /2020
+	//
+	// Changed By : Subbu (138497)
+	// ***********************************************************************************
 	@POST
 	@Path("/uploadOrgLogo")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 
 	public int getuploadImage(@HeaderParam("Authorization") String authString, @FormDataParam("orgName") String orgName,
-			@FormDataParam("orgLogo") InputStream orgLogo, @FormDataParam("usersel") String usersel)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@FormDataParam("orgLogo") InputStream orgLogo, @FormDataParam("usersel") String usersel,
+			@FormDataParam("filename") String profileFileName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		int change = 1;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		String photoString;
 		List<String> users = new ArrayList<String>();
 		for (String retval : usersel.split(",")) {
 			users.add(retval);
 		}
 		if (adminstatus) {
+
 			Update update = new Update();
-			update.set("orgName", orgName);
 
-			byte[] imageBytes = IOUtils.toByteArray(orgLogo);
-			photoString = Base64.getEncoder().encodeToString(imageBytes);
+			if ((FilenameUtils.isExtension(profileFileName, "jpg") || FilenameUtils.isExtension(profileFileName, "jpeg")
+					|| FilenameUtils.isExtension(profileFileName, "png")
+					|| FilenameUtils.isExtension(profileFileName, "gif"))
+					&& (!profileFileName.equalsIgnoreCase("undefined"))) {
 
-			update.set("orgLogo", photoString);
+				byte[] imageBytes = IOUtils.toByteArray(orgLogo);
 
-			Query query = new Query();
-			query.addCriteria(Criteria.where("userId").in(users));
+				String contentType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(imageBytes));
+				if (contentType == null) {
+					change = 0;
+				} else if (contentType.startsWith("image/")) {
+					photoString = Base64.getEncoder().encodeToString(imageBytes);
 
-			getMongoOperation().updateMulti(query, update, UserVO.class);
+					update.set("orgLogo", photoString);
+					update.set("orgName", orgName);
+
+					Query query = new Query();
+					query.addCriteria(Criteria.where("userId").in(users));
+
+					getMongoOperation().updateMulti(query, update, UserVO.class);
+				} else {
+					change = 0;
+				}
+
+			} else if (profileFileName.equalsIgnoreCase("undefined")) {
+				update.set("orgName", "");
+				update.set("orgLogo", "");
+				change = 0;
+			} else {
+				update.set("orgName", "");
+				update.set("orgLogo", "");
+				change = 0;
+				// throw new BaseException("Please upload image with extension as .jpg or .jpeg
+				// only!");
+
+			}
+
+			/*
+			 * byte[] imageBytes = IOUtils.toByteArray(orgLogo); photoString =
+			 * Base64.getEncoder().encodeToString(imageBytes);
+			 * 
+			 * update.set("orgLogo", photoString);
+			 */
 
 			return change;
 		} else {
@@ -2840,14 +2911,25 @@ public class JerseyRestServices extends BaseMongoOperation {
 		}
 	}
 
+	// ***************************************************************************************
+	// Function : Upload User Image
+	//
+	// Description : To check the header information , when upload the User image
+	//
+	// Date of Change : 4 / 8 /2020
+	//
+	// Changed By : Subbu (138497)
+	// ***********************************************************************************
+
 	@POST
 	@Path("/uploadUserImg")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 
 	public int getuploadUserImg(@HeaderParam("Authorization") String authString,
-			@FormDataParam("userImg") InputStream userImg) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@FormDataParam("userImg") InputStream userImg, @FormDataParam("filename") String profileFileName)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		int change = 1;
 		AuthenticationService AuthServ = new AuthenticationService();
 		String userId = AuthServ.getUser(authString);
@@ -2855,19 +2937,92 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		Update update = new Update();
 
-		byte[] imageBytes = IOUtils.toByteArray(userImg);
-		photoString = Base64.getEncoder().encodeToString(imageBytes);
+		if ((FilenameUtils.isExtension(profileFileName, "jpg") || FilenameUtils.isExtension(profileFileName, "jpeg")
+				|| FilenameUtils.isExtension(profileFileName, "png"))
+				&& (!profileFileName.equalsIgnoreCase("undefined"))) {
 
-		update.set("userImg", photoString);
+			byte[] imageBytes = IOUtils.toByteArray(userImg);
+			String contentType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(imageBytes));
+			if (contentType == null) {
+				change = 0;
+				// throw new BaseException("Please upload validate image file only !");
+			} else if (contentType.startsWith("image/")) {
+				photoString = Base64.getEncoder().encodeToString(imageBytes);
+				update.set("userImg", photoString);
 
-		Query query = new Query();
-		query.addCriteria(Criteria.where("userId").is(userId));
+				Query query = new Query();
+				query.addCriteria(Criteria.where("userId").is(userId));
 
-		getMongoOperation().updateFirst(query, update, UserVO.class);
+				getMongoOperation().updateFirst(query, update, UserVO.class);
+			} else {
+				change = 0;
+				// throw new BaseException("Please upload validate image file only!");
+			}
+		} else if (profileFileName.equalsIgnoreCase("undefined")) {
+			update.set("userImg", "");
+			change = 0;
+		} else {
+			update.set("userImg", "");
+			change = 0;
+			// return change;
+			// throw new BaseException("Please upload image with extension as .jpg or .jpeg
+			// only!");
+
+		}
 
 		return change;
 
 	}
+
+	/*
+	 * @POST
+	 * 
+	 * @Path("/uploadUserImg")
+	 * 
+	 * @Consumes(MediaType.MULTIPART_FORM_DATA)
+	 * 
+	 * @Produces(MediaType.APPLICATION_JSON)
+	 * 
+	 * public int getuploadUserImg(@HeaderParam("Authorization") String authString,
+	 * 
+	 * @FormDataParam("userImg") InputStream userImg, @FormDataParam("filename")
+	 * String profileFileName) throws JsonParseException, JsonMappingException,
+	 * IOException, NumberFormatException, BaseException, BadLocationException { int
+	 * change = 1; AuthenticationService AuthServ = new AuthenticationService();
+	 * String userId = AuthServ.getUser(authString); String photoString;
+	 * 
+	 * Update update = new Update();
+	 * 
+	 * if ((FilenameUtils.isExtension(profileFileName, "jpg") ||
+	 * FilenameUtils.isExtension(profileFileName, "jpeg") ||
+	 * FilenameUtils.isExtension(profileFileName, "png")) &&
+	 * (!profileFileName.equalsIgnoreCase("undefined"))) {
+	 * 
+	 * byte[] imageBytes = IOUtils.toByteArray(userImg); photoString =
+	 * Base64.getEncoder().encodeToString(imageBytes); update.set("userImg",
+	 * photoString); } else if (profileFileName.equalsIgnoreCase("undefined")) {
+	 * update.set("userImg", ""); } else { update.set("userImg", ""); change = 0;
+	 * return change; // throw new BaseException("Please upload image with extension
+	 * as .jpg or .jpeg // only!");
+	 * 
+	 * }
+	 * 
+	 * 
+	 * Update update = new Update();
+	 * 
+	 * byte[] imageBytes = IOUtils.toByteArray(userImg); photoString =
+	 * Base64.getEncoder().encodeToString(imageBytes);
+	 * 
+	 * 
+	 * Query query = new Query();
+	 * query.addCriteria(Criteria.where("userId").is(userId));
+	 * 
+	 * getMongoOperation().updateFirst(query, update, UserVO.class);
+	 * 
+	 * return change;
+	 * 
+	 * }
+	 */
 
 	@GET
 	@Path("/removeImg")
@@ -2877,7 +3032,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		int change = 1;
 
 		if (adminstatus) {
@@ -2902,7 +3057,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	public List<String> isToolSelectedAlready(@HeaderParam("Authorization") String authString) throws Exception {
 		Query query1 = new Query();
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 		List<String> toolLabel = new ArrayList<String>();
 		List<ToolSelectionVO> toolDetails = new ArrayList<ToolSelectionVO>();
 		if (adminstatus) {

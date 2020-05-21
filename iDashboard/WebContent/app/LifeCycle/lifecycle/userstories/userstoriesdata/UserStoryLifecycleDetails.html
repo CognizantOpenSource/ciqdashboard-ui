@@ -52,41 +52,6 @@
 		</div>
 		
 	</div>
-	
-<!-- 	<div class="row pie-charts">
-		<div class="pie-chart-item-container">
-			<div ba-panel>
-				<div class="pie-chart-item" id="totaljirastorycount">
-					<div style="font-size: 15px; text-align: center"
-						ng-init="">Total User Story Count</div>
-					<div class="description-stats"
-						style="font-size: 40px; margin-top: 20px; text-align: center">{{totalstorycount}}</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="pie-chart-item-container">
-			<div ba-panel>
-				<div class="pie-chart-item" id="totaljirastorypoint">
-					<div style="font-size: 15px; text-align: center"
-						ng-init="">Total Story Points</div>
-					<div class="description-stats"
-						style="font-size: 40px; margin-top: 20px; text-align: center">{{totalstorypoint}}</div>
-				</div>
-			</div>
-		</div>
-		<div class="pie-chart-item-container">
-			<div ba-panel>
-				<div class="pie-chart-item" id="totaljirabug">
-					<div style="font-size: 15px; text-align: center"
-						ng-init="">Total Bugs Reported</div>
-					<div class="description-stats"
-						style="font-size: 40px; margin-top: 20px; text-align: center">{{bugcount}}</div>
-				</div>
-			</div>
-		</div>
-		
-	</div> -->
 	 <div class="row pie-charts">
 		<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
 			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
@@ -94,6 +59,7 @@
 				<div class="panel-heading clearfix">
 					<h3 class="panel-title">
 						Defects By Priority
+						
 						<div uib-dropdown style="float: right;">
 							<a id="exportThis" uib-dropdown-toggle> <i
 								class="fa fa fa-bars"></i>
@@ -104,8 +70,8 @@
 									ng-click="downloadImg('png','.ct-chart','Defects By Priority')"><i
 										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
 								<li><a href=""
-									ng-click="downloadImg('jpeg','.ct-chart','Defects By Priority')"><i
-										class="fa fa fa-area-chart" download="Defects By Priority.jpg"></i>Download JPEG</a></li>
+									ng-click="downloadImg('png','.ct-chart','Defects By Priority')"><i
+										class="fa fa fa-area-chart" download="DefectsByPriority.jpg"></i>Download JPEG</a></li>
 							</ul>
 						</div> 
 					</h3>

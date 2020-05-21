@@ -11,7 +11,7 @@ public class TestExecutionVO {
 
 	private String  defectId=null;
 	private int levelId;
-	private Double testID;
+	private String testID=null;
 	private String testName=null;
 	private String testDescription=null;
 	private String testTester = null;
@@ -26,7 +26,6 @@ public class TestExecutionVO {
 	private int testRunID;
 	private String releaseName=null;
 	private int count;
-	
 	List<LevelItemsVO> duplication =  new ArrayList<LevelItemsVO>();
 	
 	
@@ -49,7 +48,12 @@ public class TestExecutionVO {
 		this.defectId = defectId;
 	}
 	
-	
+	public String getTestID() {
+		return testID;
+	}
+	public void setTestID(String testID) {
+		this.testID = testID;
+	}
 	public String getTestName() {
 		return testName;
 	}
@@ -121,6 +125,7 @@ public class TestExecutionVO {
 	public void setCount(int count) {
 		this.count = count;
 	}
+	
 	public String getCycleName() {
 		return cycleName;
 	}
@@ -139,16 +144,6 @@ public class TestExecutionVO {
 	public void setTestRunID(int testRunID) {
 		this.testRunID = testRunID;
 	}
-	public Double getTestID() {
-		return testID;
-	}
-	public void setTestID(Double testID) {
-		this.testID = testID;
-	}
-	
-	
-	
-	
 	
 	
 	

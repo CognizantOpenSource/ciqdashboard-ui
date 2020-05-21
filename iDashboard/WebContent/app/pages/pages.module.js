@@ -4,13 +4,14 @@
 (function() {
 	'use strict';
 
-	angular.module(
-			'MetricsPortal.pages',
-			[ 'ui.router', 'MetricsPortal.pages.dashboard',
-					'MetricsPortal.pages.reportData',
-					'MetricsPortal.pages.charts',
-					'MetricsPortal.pages.riskCompliance',
-					'MetricsPortal.pages.login' ]).config(routeConfig);
+	angular
+			.module(
+					'MetricsPortal.pages',
+					[ 'ui.router', 'MetricsPortal.pages.dashboard',
+							'MetricsPortal.pages.reportData',
+							'MetricsPortal.pages.charts',
+							   'MetricsPortal.pages.riskCompliance',
+							'MetricsPortal.pages.login' ]).config(routeConfig);
 
 	/** @ngInject */
 	function routeConfig($urlRouterProvider, baSidebarServiceProvider,
@@ -33,8 +34,7 @@
 
 						})
 
-				.state(
-						'requirements',
+				.state('requirements',
 						{
 							url : '/requirements',
 							title : 'Requirements',
@@ -53,8 +53,7 @@
 							}
 						})
 
-				.state(
-						'testcases',
+				.state('testcases',
 						{
 							url : '/testcases',
 							title : 'Test Design',
@@ -75,8 +74,7 @@
 							}
 						})
 
-				.state(
-						'testexecution',
+				.state('testexecution',
 						{
 							url : '/testexecution',
 							title : 'Test Execution',
@@ -116,7 +114,6 @@
 																'app/pages/charts/defects/defectsdata/defectsCtrl.js',
 																'app/pages/charts/defects/defectsdata/defectPopupDataCtrl.js',
 																'app/pages/charts/defects/defectsdata/defectsJiraCtrl.js',
-																'app/pages/charts/requirements/requirementsdata/RequirementsCtrl.js',
 																'lib/angularjs-dropdown-multiselect.js' ],
 													});
 										} ]
@@ -158,15 +155,16 @@
 							templateUrl : 'app/pages/custommetrics/addNewMetrics/createMetrics.html'
 
 						})
-				.state('register', {
+						
+				.state('register', 
+						{
 					url : '/register',
 					title : 'SignUp',
 					templateUrl : 'app/pages/login/register.html'
 
 				})
 
-				.state(
-						'admin',
+				.state('admin',
 						{
 							url : '/admin',
 							templateUrl : 'app/pages/admin/admin.html',
@@ -178,7 +176,6 @@
 											return $ocLazyLoad
 													.load({
 														files : [
-																'app/pages/admin/admin.module.js',
 																'app/pages/admin/AdminCtrl.js',
 																'app/pages/operational/operationalDashBoardCtrl.js',
 																'lib/angularjs-dropdown-multiselect.js',
@@ -205,7 +202,7 @@
 														files : [
 																'app/pages/operational/operationalDashBoardCtrl.js',
 																'lib/angularjs-dropdown-multiselect.js',
-																'lib/ui-bootstrap-tpls.js' ],
+																'lib/ui-bootstrap-tpls.js'],
 													});
 										} ]
 							}
@@ -268,32 +265,10 @@
 													.load({
 														files : [
 																'app/pages/operational/operationalDashBoardCtrl.js',
-																'lib/angularjs-dropdown-multiselect.js'
-																],
+																'lib/angularjs-dropdown-multiselect.js' ],
 													});
 										} ]
 							}
-						})
-				.state(
-						'Summaryslideshowpopup',
-						{
-							url : '/Summaryslideshowpopup',
-							directive : 'baSidebar',
-							templateUrl : 'app/pages/operational/SummarySlideShow/Summaryslideshowpopup.html',
-							title : '',
-							resolve : {
-								loadMyCtrl : [
-										'$ocLazyLoad',
-										function($ocLazyLoad) {
-											return $ocLazyLoad
-													.load({
-														files : ['lib//jquery.easing.js', 
-																'app/pages/operational/SummarySlideShow/SummaryslideShowCtrl.js'
-																 ],
-													});
-										} ]
-							}
-
 						})
 				.state('hpalmdetails', {
 					url : '/hpalmdetails',
@@ -394,22 +369,27 @@
 							templateUrl : 'app/pages/custommetrics/addNewMetrics/addWidgets.html'
 
 						})
+				.state(
+						'Summaryslideshowpopup',
+						{
+							url : '/Summaryslideshowpopup',
+							directive : 'baSidebar',
+							templateUrl : 'app/pages/operational/SummarySlideShow/Summaryslideshowpopup.html',
+							title : '',
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [
+																'lib//jquery.easing.js',
+																'app/pages/operational/SummarySlideShow/SummaryslideShowCtrl.js' ],
+													});
+										} ]
+							}
 
-		;
-
-		/*
-		 * baSidebarServiceProvider.addStaticItem({ title: 'Admin', icon:
-		 * 'ion-document', subMenu: [{ title: 'Sign In', fixedHref: 'auth.html',
-		 * blank: true }, { title: 'Sign Up', fixedHref: 'reg.html', blank: true }, {
-		 * title: 'User Profile', stateRef: 'profile' }, { title: '404 Page',
-		 * fixedHref: '404.html', blank: true }] });
-		 */
-		/*
-		 * baSidebarServiceProvider.addStaticItem({ title: 'Menu Level 1', icon:
-		 * 'ion-ios-more', subMenu: [{ title: 'Menu Level 1.1', disabled: true }, {
-		 * title: 'Menu Level 1.2', subMenu: [{ title: 'Menu Level 1.2.1',
-		 * disabled: true }] }] });
-		 */
+						});
 	}
 
 })();

@@ -19,9 +19,6 @@ import javax.swing.text.BadLocationException;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.dao.JiraMongoOperations;
@@ -33,7 +30,6 @@ import com.cts.metricsportal.vo.DefectChartVO;
 import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DomainVO;
 import com.cts.metricsportal.vo.JiraDefectVO;
-import com.cts.metricsportal.vo.JiraTestExecutionVO;
 import com.cts.metricsportal.vo.JiraUserStoryStatusVO;
 import com.cts.metricsportal.vo.JiraUserStoryVO;
 import com.cts.metricsportal.vo.LevelItemsVO;
@@ -51,7 +47,7 @@ public class JiraMetrics {
 	public List<DomainVO> getJiraOperationDashboard(String authString) {
 
 		String userId = LayerAccess.getUser(authString);
-		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		int domainID = 1;
 		int projectID = 1;
@@ -82,7 +78,7 @@ public class JiraMetrics {
 		List<ReleaseVO> endjson = new ArrayList<ReleaseVO>();
 		ProjectVO selectproject = null;
 
-		if (operationalAccess) {
+		if (authenticateToken) {
 
 			for (int i = 0; i < domain.size(); i++) {
 				List<String> projectlist = new ArrayList<String>();
@@ -146,6 +142,16 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		List<String> prolist = null;
 		List<String> levelIdList;
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
+		
 		if (operationalAccess) {
 
 			List<JiraDefectVO> idlist = new ArrayList<JiraDefectVO>();
@@ -177,6 +183,16 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		List<String> versionList = null;
 		List<String> levelIdList;
+		
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		if (operationalAccess) {
 			try {
@@ -191,29 +207,30 @@ public class JiraMetrics {
 		return versionList;
 	}
 
-	public long getTotExecutionCount(String authString, String dashboardName, String domainName, String projectName, String vardtfrom, String vardtto) {
+	public long getTotExecutionCount(String authString, String dashboardName, String domainName, String projectName, String vardtfrom, String vardtto) throws ParseException {
 		String userId = LayerAccess.getUser(authString);
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		long totExeCount = 0;
 		List<String> levelIdList;
 		
 		Date startDate = null;	Date endDate = null;
-		
-		try {
 			 startDate = dateTimeCalc.getStartDate(vardtfrom);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
+		
 			 endDate = dateTimeCalc.getEndDate(vardtto);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 
 		if (operationalAccess) {
 			try {
+				String owner = "";
+
+				// Check the Dashboard is set as public
+				owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+				if (owner != "") {
+					userId = owner;
+				}
+				// End of the check value
+				
+				
 				levelIdList = getJiraGlobalLevelIdExecution(dashboardName, userId, domainName, projectName);
 				totExeCount = JiraMongoOperations.getTotExecutionCount(levelIdList, startDate, endDate);
 			} catch (NumberFormatException | BaseException | BadLocationException e) {
@@ -250,6 +267,16 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		HashMap<String, String> testsCreatedVsExecuted = new HashMap<String, String>();
 		List<String> levelIdList;
+		
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		if (operationalAccess) {
 			try {
@@ -266,7 +293,7 @@ public class JiraMetrics {
 	}
 
 	public HashMap<String, String> getBugsdetectedcountbyprojects(String authString, String dashboardName,
-			String domainName, String projectName, String selectedproject, String vardtfrom, String vardtto) {
+			String domainName, String projectName, String selectedproject, String vardtfrom, String vardtto) throws ParseException {
 		String userId = LayerAccess.getUser(authString);
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		HashMap<String, String> testsCreatedVsExecuted = new HashMap<String, String>();
@@ -275,21 +302,23 @@ public class JiraMetrics {
 		Date startDate = null;
 		Date endDate = null;
 		
-		try {
+		
 			 startDate = dateTimeCalc.getStartDate(vardtfrom);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
 			 endDate = dateTimeCalc.getEndDate(vardtto);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 
 		if (operationalAccess) {
 			try {
+				
+				String owner = "";
+
+				// Check the Dashboard is set as public
+				owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+				if (owner != "") {
+					userId = owner;
+				}
+				// End of the check value
+				
 				levelIdList = getJiraGlobalLevelIdDesign(dashboardName, userId, domainName, projectName);
 				testsCreatedVsExecuted = JiraMongoOperations.getBugsdetectedcountbyprojects(levelIdList,
 						selectedproject, userId, startDate, endDate);
@@ -308,6 +337,15 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		long testsCreatedVsExecuted = 0;
 		List<String> levelIdList;
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		if (operationalAccess) {
 			try {
@@ -329,6 +367,15 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		HashMap<String, String> ratiooftestcasefails = new HashMap<String, String>();
 		List<String> levelIdList;
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		if (operationalAccess) {
 			try {
@@ -350,6 +397,15 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		List<CyclesTrendVO> ratiooftestcasefails = new ArrayList<CyclesTrendVO>();
 		List<String> levelIdList;
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		if (operationalAccess) {
 			try {
@@ -415,7 +471,7 @@ public class JiraMetrics {
 
 	public List<DefectStatusVO> getpassfailtrendchart(String authString, String dashboardName, String domainName,
 			String projectName, String vardtfrom, String vardtto)
-			throws NumberFormatException, BaseException, BadLocationException {
+			throws NumberFormatException, BaseException, BadLocationException, ParseException {
 
 		String userId = LayerAccess.getUser(authString);
 		String owner = "";
@@ -434,8 +490,10 @@ public class JiraMetrics {
 		long diff = 0;
 		long noOfDays = 0;
 
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
+
+		 Date startDate = dateTimeCalc.getStartDate(vardtfrom);
+		 Date endDate = dateTimeCalc.getEndDate(vardtto);
+	
 
 		diff = endDate.getTime() - startDate.getTime();
 		noOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
@@ -517,7 +575,7 @@ public class JiraMetrics {
 
 	public List<DefectChartVO> getdefectStatusChart(String authString, String dashboardName, String domainName,
 			String projectName, String vardtfrom, String vardtto)
-			throws NumberFormatException, BaseException, BadLocationException {
+			throws NumberFormatException, BaseException, BadLocationException, ParseException {
 		String userId = LayerAccess.getUser(authString);
 		String owner = "";
 
@@ -532,11 +590,10 @@ public class JiraMetrics {
 
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 
-		long diff = 0;
-		long noOfDays = 0;
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
 
+		 Date startDate = dateTimeCalc.getStartDate(vardtfrom);
+		 Date endDate = dateTimeCalc.getEndDate(vardtto);
+	
 		if (operationalAccess) {
 			List<String> levelIdList = getJiraGlobalLevelIdDefects(dashboardName, userId, domainName, projectName);
 			List<JiraDefectVO> reqlist = new ArrayList<JiraDefectVO>();
@@ -547,7 +604,9 @@ public class JiraMetrics {
 			for (int i = 0; i < reqlist.size(); i++) {
 				for (int j = 0; j < levelIdList.size(); j++) {
 					if (reqlist.get(i).get_id().equalsIgnoreCase(levelIdList.get(j))) {
-						statlist.add(reqlist.get(i).getIssueStatus());
+						
+						statlist.add(reqlist.get(i).getIssueStatus()); 
+						
 					}
 				}
 			}
@@ -594,7 +653,7 @@ public class JiraMetrics {
 
 	public List<DefectChartVO> getdefectsOpenStatusPriority(String authString, String dashboardName, String domainName,
 			String projectName, String vardtfrom, String vardtto)
-			throws NumberFormatException, BaseException, BadLocationException {
+			throws NumberFormatException, BaseException, BadLocationException, ParseException {
 		String userId = LayerAccess.getUser(authString);
 		String owner = "";
 
@@ -609,10 +668,10 @@ public class JiraMetrics {
 
 		List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
 
-		long noOfDays = 0;
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
 
+		 Date startDate = dateTimeCalc.getStartDate(vardtfrom);
+		 Date endDate = dateTimeCalc.getEndDate(vardtto);
+	
 		if (operationalAccess) {
 			List<String> levelIdList = getJiraGlobalLevelIdDefects(dashboardName, userId, domainName, projectName);
 			List<JiraDefectVO> reqlist = new ArrayList<JiraDefectVO>();
@@ -859,7 +918,7 @@ public class JiraMetrics {
 		List<String> levelIdList = JiraMongoOperations.getJiraGlobalLevelIdUserStoryQuery(dashboardName, userId,
 				domainName, projectName);
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		List<UserStoryTrendVO> trendvolist = null;
 		UserStoryTrendVO userStoryTrendVO = new UserStoryTrendVO();
@@ -867,7 +926,7 @@ public class JiraMetrics {
 
 		List<JiraUserStoryStatusVO> result = null;
 
-		if (operationalAccess || LCAccess) {
+		if (operationalAccess || authenticateToken) {
 			result = JiraMongoOperations.getUserStoryTrendChart(levelIdList);
 
 			for (int i = 0; i < result.size(); i++) {
@@ -1133,9 +1192,16 @@ public class JiraMetrics {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		List<Date> finalDateList = new ArrayList<Date>();
 
@@ -1153,9 +1219,16 @@ public class JiraMetrics {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		List<Date> finalDateList = new ArrayList<Date>();
 
@@ -1170,12 +1243,20 @@ public class JiraMetrics {
 	public static String getRollingPeriod(String authString, String dashboardName, String domainName,
 			String projectName) throws NumberFormatException, BaseException, BadLocationException {
 
+		String owner="";
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
+		
+		//Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if(owner != "") {
+			userId = owner;
+		}
+
 
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		String rollingPeriod;
 
@@ -1193,6 +1274,15 @@ public class JiraMetrics {
 		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		List<String> versionList = null;
 		List<String> levelIdList;
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		if (operationalAccess) {
 			try {

@@ -46,8 +46,8 @@ public class GitMetrics implements ISCMMetrics{
     	
     	List<String> gitTypeList = null;
     	
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess){
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken){
 			gitTypeList = GitMongoOperations.getGitTypes();
 		}
 		
@@ -66,9 +66,9 @@ public class GitMetrics implements ISCMMetrics{
 		List<String> gitNameList = new ArrayList<String>();
 		List<RepositoryDetailsVO> gitdata = null;
 		
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getGitName(type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -91,9 +91,9 @@ public class GitMetrics implements ISCMMetrics{
 	JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = null;
 		
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess)
+		if(authenticateToken)
 		gitdata = GitMongoOperations.getGitData(type, userName);
 		
 		return gitdata;
@@ -110,9 +110,9 @@ public class GitMetrics implements ISCMMetrics{
 	public long getFileSize(String authString, String user, String repo, String type) {
 		List<RepositoryDetailsVO> gitdata = null;
 		long fileSize = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getFileSize(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -137,9 +137,9 @@ public class GitMetrics implements ISCMMetrics{
 	JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = null;
 		List<String> repoList =  new ArrayList<String>();
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getRepoList(userName);
 
 			if(gitdata != null && !gitdata.isEmpty()){
@@ -162,9 +162,9 @@ public class GitMetrics implements ISCMMetrics{
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = null;
 		long commitCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getCommitCount(user, repo, type);
 		
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -188,9 +188,9 @@ public class GitMetrics implements ISCMMetrics{
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = null;
 		long contributorCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata= GitMongoOperations.getContributorsList(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -217,9 +217,9 @@ public class GitMetrics implements ISCMMetrics{
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = null;
 		long watchers = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata= GitMongoOperations.getWatchers(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -246,9 +246,9 @@ public class GitMetrics implements ISCMMetrics{
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
 		long starCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getStarsCount(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -275,9 +275,9 @@ public class GitMetrics implements ISCMMetrics{
 			List<RepositoryDetailsVO> gitdata = null;
 			List<Integer> pullDetails = new ArrayList<Integer>();
 			int totalPulls = 0; int mergeCount = 0;
-			boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+			boolean authenticateToken = LayerAccess.authenticateToken(authString);
 			
-			if(LCAccess) {
+			if(authenticateToken) {
 				gitdata = GitMongoOperations.getPullRequest(user, repo, type);
 				
 				if(gitdata != null && !gitdata.isEmpty()) {
@@ -308,8 +308,8 @@ public class GitMetrics implements ISCMMetrics{
 		List<Integer> issueDetails = new ArrayList<Integer>();
 		List<RepositoryDetailsVO> gitdata = null;
 		int totalIssues = 0; int closedIssueCount = 0;
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess) {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getIssues(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -342,8 +342,8 @@ public class GitMetrics implements ISCMMetrics{
 		List<ContributorsDetailsVO> final_List = new ArrayList<ContributorsDetailsVO>();
 		int count = 0;
 
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess) {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getTopContributors(user, repo, type);
 	
 		if(gitdata != null && !gitdata.isEmpty()) {
@@ -408,7 +408,7 @@ public class GitMetrics implements ISCMMetrics{
 		List<RepositoryDetailsVO> gitdata = null;
 		List<CommitTrendVO> trendvoList=new ArrayList<CommitTrendVO>();
 		List<CommitDetailsVO> commitDetails = new ArrayList<CommitDetailsVO>();
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		/*Date date=new Date(); //current date
 		Calendar cal = Calendar.getInstance();
@@ -416,7 +416,7 @@ public class GitMetrics implements ISCMMetrics{
 		cal.add(Calendar.DATE, -365);
 		Date dateBefore7Days = cal.getTime();*/
 		
-		if(LCAccess) {
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getCommits(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty())
@@ -469,8 +469,8 @@ public class GitMetrics implements ISCMMetrics{
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<RepositoryDetailsVO> gitdata = null;
 		List<CommitTrendVO> trendvoList=new ArrayList<CommitTrendVO>();
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess) {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getCommits(user, repo, type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
@@ -581,8 +581,8 @@ public class GitMetrics implements ISCMMetrics{
 		cal.add(Calendar.DATE, -7);
 		Date dateBefore7Days = cal.getTime();
 		
-		boolean LCAccess = LayerAccess.getLCLayerAccess(authString);
-		if(LCAccess) {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if(authenticateToken) {
 			gitdata = GitMongoOperations.getCommits(user, repo, type);
 			
 			logger.error(gitdata.size());

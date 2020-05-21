@@ -9,65 +9,16 @@
 			'KpiDashboardCtrl', KpiDashboardCtrl);
 
 	/** @ngInject */
-	function KpiDashboardCtrl($sessionStorage, localStorageService,
+	function KpiDashboardCtrl($sessionStorage, AES, localStorageService,
 			baSidebarService, $base64, $element, $scope, $http, $timeout,
 			$uibModal, $rootScope, baConfig, layoutPaths, $state, toastr) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
 
 		$rootScope.menubar = false;
-		$rootScope.var1 = false;
+		$rootScope.var1 = true;
 		$rootScope.var5 = false;
 		$scope.selected = localStorageService.get('selected');
 
-		$rootScope.menuItems = [ {
-			"name" : "dashboard",
-			"title" : "KPI Dashboard",
-			"level" : 0,
-			"order" : 0,
-			"icon" : "ion-android-home",
-			"stateRef" : "updateKpiDashbaord",
-			"subMenu" : null
-		}, {
-			"name" : "charts",
-			"title" : "Metrics",
-			"level" : 0,
-			"order" : 150,
-			"icon" : "ion-stats-bars",
-			"stateRef" : "charts",
-			"subMenu" : [ {
-				"name" : "",
-				"title" : "Requirement",
-				"level" : 1,
-				"order" : 0,
-				"stateRef" : "requirementKpi"
-			}, {
-				"name" : "",
-				"title" : "Development",
-				"level" : 1,
-				"order" : 0,
-				"stateRef" : ""
-			}, {
-				"name" : "",
-				"title" : "Testing",
-				"level" : 1,
-				"order" : 0,
-				"stateRef" : ""
-			}, {
-				"name" : "charts.testexecution",
-				"title" : "Build and Deploy",
-				"level" : 1,
-				"order" : 0,
-				"stateRef" : "charts.testexecution"
-			}, ]
-		} ];
-
-		var token = getEncryptedValue();
+		var token = AES.getEncryptedValue();
 		var config = {
 			headers : {
 				'Authorization' : token
@@ -107,6 +58,13 @@
 		};
 		// Dashboard details count	
 		$rootScope.initialcountofDetails = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
 			$http.get("rest/lifeCycleServices/DashboardDetailsCount", config)
 					.success(function(response) {
 						$rootScope.detailsCount = response;
@@ -124,7 +82,6 @@
 		}
 
 		$scope.updateKpiDashboard = function(form) {
-			;
 			var oldrel = localStorageService.get('selected');
 			$scope.relName = form.relname;
 			$scope.kpiispublic = form.kpiispublic;
@@ -132,7 +89,7 @@
 			var fromdat = $scope.fromdate;
 			var todat = $scope.todate;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var productData = {
 				oldRelName : oldrel,
 				relName : $scope.relName,
@@ -154,14 +111,10 @@
 							function(response) {
 
 								if (response == 0) {
-									$scope
-											.open(
-													'app/LifeCycle/lifecycle/saveDashboardMsg.html',
+									$scope.open('app/LifeCycle/lifecycle/saveDashboardMsg.html',
 													'sm');
 								} else {
-									$scope
-											.open(
-													'app/LifeCycle/lifecycle/existDashboardMsg.html',
+									$scope.open('app/LifeCycle/lifecycle/existDashboardMsg.html',
 													'sm');
 								}
 							});
@@ -189,7 +142,7 @@
 		// Removes Dashboard information completely	  
 		$scope.deleteDashboardInfo = function(item) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -209,9 +162,7 @@
 
 								if (response == 0) {
 									$scope.$dismiss();
-									$scope
-											.open(
-													'app/LifeCycle/lifecycle/deletedDashboardMsg.html',
+									$scope.open('app/LifeCycle/lifecycle/deletedDashboardMsg.html',
 													'sm');
 								}
 								$rootScope.initialcountofDetails();
@@ -275,7 +226,7 @@
 
 		// PRODUCT DROP DOWN LIST
 		$scope.getProductName = function(start_index) {
-			;
+			
 			$scope.index = start_index;
 			$http.get(
 					"./rest/lifeCycleServices/lifecycleDashboardDetails?itemsPerPage="
@@ -366,7 +317,6 @@
 		// Get update KPI dashboard products 
 
 		$scope.updateKpiTableDetails = function() {
-			;
 			$scope.selected = localStorageService.get('selected');
 
 			$http.get(

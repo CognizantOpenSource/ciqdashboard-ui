@@ -6,7 +6,7 @@
 			'ExecutionAnalyzeCtrl', ExecutionAnalyzeCtrl);
 
 	/** @ngInject */
-	function ExecutionAnalyzeCtrl($sessionStorage, $scope, UserService,
+	function ExecutionAnalyzeCtrl($sessionStorage,AES,$scope, UserService,
 			localStorageService, baConfig, $rootScope, $element, layoutPaths,
 			$http, $base64) {
 		function getEncryptedValue() {
@@ -23,7 +23,7 @@
 		$scope.cancel = function() {
 			$rootScope.teanalyse.close();
 		};
-		var token = getEncryptedValue();
+		var token = AES.getEncryptedValue();
 		var config = {
 			headers : {
 				'Authorization' : token

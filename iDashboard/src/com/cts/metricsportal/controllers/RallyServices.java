@@ -39,6 +39,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.cognizant.cimesg.accessjl.core.LdapAuthentication;
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.IdashboardConstantsUtil;
 import com.cts.metricsportal.util.PropertyManager;
@@ -59,22 +60,19 @@ public class RallyServices extends BaseMongoOperation {
 	/*
 	 * Metric : lifecycle/User Stories/ User story owner chart Rest URL :
 	 * rest/RallyServices/userstoryownerchartdata JS File : WebContent JS File:
-	 * UserStoryCtrl.js JS Function: UserStoryCtrl/
-	 * newOwnerCountChart=function()
+	 * UserStoryCtrl.js JS Function: UserStoryCtrl/ newOwnerCountChart=function()
 	 */
 
 	@GET
 	@Path("/userstoryownerchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryStatusVO> getuserstorynowner(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject
-			) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		List<UserStoryStatusVO> result = null;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		 	if(operationalAccess){
+		boolean authenticateToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authenticateToken) {
 			Aggregation agg;
 			if (!"".equals(userStrproject) && !"undefined".equals(userStrproject)) {
 				agg = newAggregation(match(Criteria.where("projectName").is(userStrproject)),
@@ -90,11 +88,11 @@ public class RallyServices extends BaseMongoOperation {
 
 			result = groupResults.getMappedResults();
 
-			return result;}
-		 	else{
-		 		return result;	
-		 	}
-	
+			return result;
+		} else {
+			return result;
+		}
+
 	}
 
 	@GET
@@ -102,24 +100,23 @@ public class RallyServices extends BaseMongoOperation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryStatusVO> getlifeUserstoryStatuschartdata(@HeaderParam("Authorization") String authString,
 			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject,
-			@QueryParam("userStrIter") String userStrIter) throws JsonParseException,
-			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("userStrIter") String userStrIter) throws JsonParseException, JsonMappingException, IOException,
+			NumberFormatException, BaseException, BadLocationException {
 		List<UserStoryStatusVO> result = null;
-		
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
 
-		//System.out.println("lifeUserstoryStatuschartdata >>>> 1111:::2222" + userStrproject);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+
+		// System.out.println("lifeUserstoryStatuschartdata >>>> 1111:::2222" +
+		// userStrproject);
 
 		// System.out.println("lifeUserstoryStatuschartdata >>>> 1111:::2222" +
 		// userStrIter);
 
-		
-			Aggregation agg = null;
+		Aggregation agg = null;
 
-			// if(!"".equals(userStrproject)&& !
-			// "undefined".equals(userStrproject) ){
-			if(LCAccess){
+		// if(!"".equals(userStrproject)&& !
+		// "undefined".equals(userStrproject) ){
+		if (authenticateToken) {
 			if (!"undefined".equals(userStrproject)) {
 
 				// System.out.println("if first if >>>>>");
@@ -145,14 +142,15 @@ public class RallyServices extends BaseMongoOperation {
 					List<UserStoriesIterationVO> iterations = getMongoOperation().find(query1,
 							UserStoriesIterationVO.class);
 					String currentIteration = null;
-					if(!iterations.isEmpty()){
-						currentIteration = iterations.get(0).getIterationName();}
-				if(currentIteration!=null)
-					agg = newAggregation(
-							match(Criteria.where("projectName").is(userStrproject).and("iteration")
-									.is(currentIteration)),
-							group("storyStatus").count().as("typecount"),
-							project("typecount").and("storyStatus").previousOperation());
+					if (!iterations.isEmpty()) {
+						currentIteration = iterations.get(0).getIterationName();
+					}
+					if (currentIteration != null)
+						agg = newAggregation(
+								match(Criteria.where("projectName").is(userStrproject).and("iteration")
+										.is(currentIteration)),
+								group("storyStatus").count().as("typecount"),
+								project("typecount").and("storyStatus").previousOperation());
 
 				}
 
@@ -162,46 +160,42 @@ public class RallyServices extends BaseMongoOperation {
 						project("typecount").and("storyStatus").previousOperation());
 
 			}
-			if(agg!=null){
-				AggregationResults<UserStoryStatusVO> groupResults = getMongoOperation().aggregate(agg, UserStoriesVO.class,
-						UserStoryStatusVO.class);
+			if (agg != null) {
+				AggregationResults<UserStoryStatusVO> groupResults = getMongoOperation().aggregate(agg,
+						UserStoriesVO.class, UserStoryStatusVO.class);
 
 				result = groupResults.getMappedResults();
 			}
-			
 
-			return result;}
-			else{
-				return result;	
-			}
-		
+			return result;
+		} else {
+			return result;
+		}
+
 	}
 
-	
 	// User Story Count
 	/*
 	 * Metric : lifecycle/User Stories/ User story count Rest URL :
-	 * rest/RallyServices/userStoryCount : WebContent JS File: UserStoryCtrl.js
-	 * JS Function: UserStoryCtrl/ initialUserStorycount=function()
+	 * rest/RallyServices/userStoryCount : WebContent JS File: UserStoryCtrl.js JS
+	 * Function: UserStoryCtrl/ initialUserStorycount=function()
 	 */
 
 	@GET
 	@Path("/lifeuserStoryCount")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getlifeUserStoryCount(@HeaderParam("Authorization") String authString,
-			@QueryParam("userStrproject") String userStrproject)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("userStrproject") String userStrproject) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		long totalUserStories = 0;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
 
-			// System.out.println("userStoryCount>>>>>4444::::userStrproject
-			// :::"+ userStrproject);
-			String query = "{},{storyID:'US1'}";
-			Query query1 = new BasicQuery(query);
-			if(operationalAccess){
+		boolean authenticateToken = LayerAccess.getOperationalLayerAccess(authString);
+
+		// System.out.println("userStoryCount>>>>>4444::::userStrproject
+		// :::"+ userStrproject);
+		String query = "{},{storyID:'US1'}";
+		Query query1 = new BasicQuery(query);
+		if (authenticateToken) {
 			if (!"undefined".equals(userStrproject)) {
 				Criteria criteria1 = new Criteria();
 				criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
@@ -211,37 +205,32 @@ public class RallyServices extends BaseMongoOperation {
 				totalUserStories = getMongoOperation().count(query1, UserStoriesVO.class);
 			}
 
-		return totalUserStories;}
-			else{
-				return totalUserStories;	
-			}
+			return totalUserStories;
+		} else {
+			return totalUserStories;
+		}
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/projectDetails")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getprojectDetails(@HeaderParam("Authorization") String authString) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
-		long totalUserStories = 0;
+	public List<String> getprojectDetails(@HeaderParam("Authorization") String authString) throws JsonParseException,
+			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<String> projectcoll = null;
 
-		//System.out.println("authenticateresult >>>>>" + authenticateresult);
+		// System.out.println("authenticateresult >>>>>" + authenticateresult);
 
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
-		 if(operationalAccess){
+		if (authenticateToken) {
 			projectcoll = getMongoOperation().getCollection("userstories").distinct("projectName");
-		
 
-		//System.out.println("projectDetails>>>>>4444::::" + projectcoll);
-
-		return projectcoll;}
-		 else{
-			 return projectcoll; 
-		 }
+			return projectcoll;
+		} else {
+			return projectcoll;
+		}
 
 	}
 
@@ -249,19 +238,17 @@ public class RallyServices extends BaseMongoOperation {
 	@Path("/iterationDetailsList")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getiterationDetailsList(@HeaderParam("Authorization") String authString,
-		@QueryParam("userStrproject") String userStrproject)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
-		long totalUserStories = 0;
-		
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
+			@QueryParam("userStrproject") String userStrproject) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
+
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		String query = "{},{_id:0,iterationName:1}";
 		BasicQuery query1 = new BasicQuery(query);
 
-		//System.out.println("calling iterationDetailsList >>>>4444:::" + userStrproject);
-		
+		// System.out.println("calling iterationDetailsList >>>>4444:::" +
+		// userStrproject);
+
 		Criteria criteria1 = new Criteria();
 		criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
 		query1.addCriteria(criteria1);
@@ -269,17 +256,17 @@ public class RallyServices extends BaseMongoOperation {
 
 		List<UserStoriesIterationVO> iterations = getMongoOperation().find(query1, UserStoriesIterationVO.class);
 		List<String> iterationList = new ArrayList<String>();
-		if(LCAccess){
-		for (int i = 0; i < iterations.size(); i++) {
-			iterationList.add(iterations.get(i).getIterationName());
-		}
+		if (authenticateToken) {
+			for (int i = 0; i < iterations.size(); i++) {
+				iterationList.add(iterations.get(i).getIterationName());
+			}
 
-		// System.out.println("calling iterationDetailsList
-		// >>>>4444:::"+iterationList);
+			// System.out.println("calling iterationDetailsList
+			// >>>>4444:::"+iterationList);
 
-		return iterationList;}
-		else{
-			return iterationList;	
+			return iterationList;
+		} else {
+			return iterationList;
 		}
 
 	}
@@ -288,45 +275,46 @@ public class RallyServices extends BaseMongoOperation {
 	@Path("/iterationDetails")
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserStoriesIterationVO getiterationDetails(@HeaderParam("Authorization") String authString,
-			 @QueryParam("userStrproject") String userStrproject,
-			@QueryParam("userStrIter") String userStrIter) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
-		long totalUserStories = 0;
+			@QueryParam("userStrproject") String userStrproject, @QueryParam("userStrIter") String userStrIter)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		// List<UserStoriesIterationVO> iterations=new
 		// ArrayList<UserStoriesIterationVO>();
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
+
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		UserStoriesIterationVO userStrObj = null;
 		List<UserStoriesIterationVO> result = new ArrayList<UserStoriesIterationVO>();
-		if(LCAccess){
-		if (!"undefined".equals(userStrproject)) {
-			String query = "{},{_id:0,iterationName:1}";
-			BasicQuery query1 = new BasicQuery(query);
-			BasicQuery query2 = new BasicQuery(query);
+		if (authenticateToken) {
+			if (!"undefined".equals(userStrproject)) {
+				String query = "{},{_id:0,iterationName:1}";
+				BasicQuery query1 = new BasicQuery(query);
+				BasicQuery query2 = new BasicQuery(query);
 
-			Criteria criteria1 = new Criteria();
+				Criteria criteria1 = new Criteria();
 
-			if (!"undefined".equals(userStrIter)) {
-				Criteria criteria2 = new Criteria();
-				criteria2.andOperator(Criteria.where("projectName").is(userStrproject),
-						Criteria.where("iterationName").is(userStrIter));
-				query2.addCriteria(criteria2);
-				result = getMongoOperation().find(query2, UserStoriesIterationVO.class);
-				if(!result.isEmpty()){
-				userStrObj = result.get(0);}
-			} else {
-				criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
-				query1.addCriteria(criteria1);
-				query1.with(new Sort(Sort.Direction.DESC, "endDate"));
-				result = getMongoOperation().find(query1, UserStoriesIterationVO.class);
-				if(!result.isEmpty()){
-				userStrObj = result.get(0);}
+				if (!"undefined".equals(userStrIter)) {
+					Criteria criteria2 = new Criteria();
+					criteria2.andOperator(Criteria.where("projectName").is(userStrproject),
+							Criteria.where("iterationName").is(userStrIter));
+					query2.addCriteria(criteria2);
+					result = getMongoOperation().find(query2, UserStoriesIterationVO.class);
+					if (!result.isEmpty()) {
+						userStrObj = result.get(0);
+					}
+				} else {
+					criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
+					query1.addCriteria(criteria1);
+					query1.with(new Sort(Sort.Direction.DESC, "endDate"));
+					result = getMongoOperation().find(query1, UserStoriesIterationVO.class);
+					if (!result.isEmpty()) {
+						userStrObj = result.get(0);
+					}
+				}
+
 			}
-
-		}
-		return userStrObj;}
-		else{
-			return userStrObj;	
+			return userStrObj;
+		} else {
+			return userStrObj;
 		}
 
 	}
@@ -335,60 +323,59 @@ public class RallyServices extends BaseMongoOperation {
 	@Path("/iterationStoryCount")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getiterationStoryCount(@HeaderParam("Authorization") String authString,
-			@QueryParam("userStrproject") String userStrproject,
-			@QueryParam("userStrIter") String userStrIter) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("userStrproject") String userStrproject, @QueryParam("userStrIter") String userStrIter)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		long totalUserStories = 0;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
-		// System.out.println("iterationStoryCount userStrproject >>>
-		// 44444::::66666" + userStrproject);
-		// System.out.println("iterationStoryCount userStrIter >>> 4444:::66666"
-		// + userStrIter);
-if(LCAccess){
-		if (!"undefined".equals(userStrproject)) {
-			String query = "{},{_id:0,iterationName:1}";
-			BasicQuery query1 = new BasicQuery(query);
-			BasicQuery query2 = new BasicQuery(query);
 
-			Criteria criteria1 = new Criteria();
-			criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
-			query1.addCriteria(criteria1);
-			query1.with(new Sort(Sort.Direction.DESC, "endDate"));
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		
+		if (authenticateToken) {
+			if (!"undefined".equals(userStrproject)) {
+				String query = "{},{_id:0,iterationName:1}";
+				BasicQuery query1 = new BasicQuery(query);
+				BasicQuery query2 = new BasicQuery(query);
 
-			List<UserStoriesIterationVO> iterations = getMongoOperation().find(query1, UserStoriesIterationVO.class);
-			Criteria criteria2 = new Criteria();
+				Criteria criteria1 = new Criteria();
+				criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
+				query1.addCriteria(criteria1);
+				query1.with(new Sort(Sort.Direction.DESC, "endDate"));
 
-			if (!"undefined".equals(userStrIter)) {
+				List<UserStoriesIterationVO> iterations = getMongoOperation().find(query1,
+						UserStoriesIterationVO.class);
+				Criteria criteria2 = new Criteria();
 
-				//System.out.println("in if>>>>>");
+				if (!"undefined".equals(userStrIter)) {
 
-				criteria2 = new Criteria();
-				criteria2.andOperator(Criteria.where("projectName").is(userStrproject),
-						Criteria.where("iteration").is(userStrIter));
-				query2.addCriteria(criteria2);
-				totalUserStories = getMongoOperation().count(query2, UserStoriesVO.class);
+					// System.out.println("in if>>>>>");
 
-			} else {
-				//System.out.println("in else>>>>>");
-				String currentIter = IdashboardConstantsUtil.NULL;
-				if(!iterations.isEmpty()){
-					currentIter = iterations.get(0).getIterationName();}
-				if(currentIter!=null)
-				criteria2.andOperator(Criteria.where("projectName").is(userStrproject),
-						Criteria.where("iteration").is(currentIter));
-				query2.addCriteria(criteria2);
-				totalUserStories = getMongoOperation().count(query2, UserStoriesVO.class);
+					criteria2 = new Criteria();
+					criteria2.andOperator(Criteria.where("projectName").is(userStrproject),
+							Criteria.where("iteration").is(userStrIter));
+					query2.addCriteria(criteria2);
+					totalUserStories = getMongoOperation().count(query2, UserStoriesVO.class);
+
+				} else {
+					// System.out.println("in else>>>>>");
+					String currentIter = IdashboardConstantsUtil.NULL;
+					if (!iterations.isEmpty()) {
+						currentIter = iterations.get(0).getIterationName();
+					}
+					if (currentIter != null)
+						criteria2.andOperator(Criteria.where("projectName").is(userStrproject),
+								Criteria.where("iteration").is(currentIter));
+					query2.addCriteria(criteria2);
+					totalUserStories = getMongoOperation().count(query2, UserStoriesVO.class);
+				}
 			}
+
+			// System.out.println("in iterationStoryCount totalUserStories >>>>>" +
+			// totalUserStories);
+
+			return totalUserStories;
+		} else {
+			return totalUserStories;
 		}
-
-		// System.out.println("in iterationStoryCount totalUserStories >>>>>" +
-		// totalUserStories);
-
-		return totalUserStories;}
-else{
-	return totalUserStories;	
-}
 
 	}
 
@@ -396,66 +383,65 @@ else{
 	@Path("/initIterationUserStoryPoints")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getIterationUserStoryPoints(@HeaderParam("Authorization") String authString,
-			@QueryParam("userStrproject") String userStrproject,
-			@QueryParam("userStrIter") String userStrIter) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("userStrproject") String userStrproject, @QueryParam("userStrIter") String userStrIter)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		long totalUserStoriesPoints = 0;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
-		//System.out.println("initIterationUserStoryPoints >>>>77777:::888888" + userStrproject);
-		if(LCAccess){
-		if (!"undefined".equals(userStrproject)) {
-			String query = "{},{_id:0,iterationName:1}";
-			BasicQuery query1 = new BasicQuery(query);
 
-			Criteria criteria1 = new Criteria();
-			criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
-			query1.addCriteria(criteria1);
-			query1.with(new Sort(Sort.Direction.DESC, "endDate"));
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		// System.out.println("initIterationUserStoryPoints >>>>77777:::888888" +
+		// userStrproject);
+		if (authenticateToken) {
+			if (!"undefined".equals(userStrproject)) {
+				String query = "{},{_id:0,iterationName:1}";
+				BasicQuery query1 = new BasicQuery(query);
 
-			if (!"undefined".equals(userStrIter)) {
+				Criteria criteria1 = new Criteria();
+				criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
+				query1.addCriteria(criteria1);
+				query1.with(new Sort(Sort.Direction.DESC, "endDate"));
 
-				Aggregation agg = newAggregation(match(Criteria.where("iteration").is(userStrIter)),
-						group("iteration").sum("planEstimate").as("sumct"),
-						project("sumct").and("storyID").previousOperation());
+				if (!"undefined".equals(userStrIter)) {
 
-				AggregationResults<UserStoryStatusVO> groupResults = getMongoOperation().aggregate(agg,
-						UserStoriesVO.class, UserStoryStatusVO.class);
-				if(!groupResults.getMappedResults().isEmpty()){
-				totalUserStoriesPoints = (long) groupResults.getMappedResults().get(0).getSumct();
-				}
-			} else {
-				List<UserStoriesIterationVO> iterations = getMongoOperation().find(query1,
-						UserStoriesIterationVO.class);
-				String currentIter = IdashboardConstantsUtil.NULL;
-				if(!iterations.isEmpty()){
-				currentIter = iterations.get(0).getIterationName();
-				}
-				Aggregation agg = null;
-				AggregationResults<UserStoryStatusVO> groupResults = null;
-				if(currentIter!=null)
-					agg = newAggregation(match(Criteria.where("iteration").is(currentIter)),
-						group("iteration").sum("planEstimate").as("sumct"),
-						project("sumct").and("storyID").previousOperation());
-				if(agg != null){
-					 groupResults = getMongoOperation().aggregate(agg,
+					Aggregation agg = newAggregation(match(Criteria.where("iteration").is(userStrIter)),
+							group("iteration").sum("planEstimate").as("sumct"),
+							project("sumct").and("storyID").previousOperation());
+
+					AggregationResults<UserStoryStatusVO> groupResults = getMongoOperation().aggregate(agg,
 							UserStoriesVO.class, UserStoryStatusVO.class);
+					if (!groupResults.getMappedResults().isEmpty()) {
+						totalUserStoriesPoints = (long) groupResults.getMappedResults().get(0).getSumct();
+					}
+				} else {
+					List<UserStoriesIterationVO> iterations = getMongoOperation().find(query1,
+							UserStoriesIterationVO.class);
+					String currentIter = IdashboardConstantsUtil.NULL;
+					if (!iterations.isEmpty()) {
+						currentIter = iterations.get(0).getIterationName();
+					}
+					Aggregation agg = null;
+					AggregationResults<UserStoryStatusVO> groupResults = null;
+					if (currentIter != null)
+						agg = newAggregation(match(Criteria.where("iteration").is(currentIter)),
+								group("iteration").sum("planEstimate").as("sumct"),
+								project("sumct").and("storyID").previousOperation());
+					if (agg != null) {
+						groupResults = getMongoOperation().aggregate(agg, UserStoriesVO.class, UserStoryStatusVO.class);
+					}
+
+					if (!groupResults.getMappedResults().isEmpty()) {
+						totalUserStoriesPoints = (long) groupResults.getMappedResults().get(0).getSumct();
+					}
 				}
-				
-				
-				if(!groupResults.getMappedResults().isEmpty()){
-				totalUserStoriesPoints = (long) groupResults.getMappedResults().get(0).getSumct();
-				}
+
 			}
 
-		}
+			// System.out.println("initIterationUserStoryPoints
+			// totalUserStoriesPoints >>>>77777:::888888" + totalUserStoriesPoints);
 
-		// System.out.println("initIterationUserStoryPoints
-		// totalUserStoriesPoints >>>>77777:::888888" + totalUserStoriesPoints);
-
-		return totalUserStoriesPoints;}
-		else{
-			return totalUserStoriesPoints;	
+			return totalUserStoriesPoints;
+		} else {
+			return totalUserStoriesPoints;
 		}
 
 	}
@@ -471,31 +457,30 @@ else{
 	@GET
 	@Path("/userStoryBackLogCount")
 	@Produces(MediaType.APPLICATION_JSON)
-	public long getuserStoryBackLogCount(@HeaderParam("Authorization") String authString) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+	public long getuserStoryBackLogCount(@HeaderParam("Authorization") String authString) throws JsonParseException,
+			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		long totalUserStoriesBacklog = 0;
 
-		
-			String hasChildren = "false";
-			String backlogStr = "true";
+		String hasChildren = "false";
+		String backlogStr = "true";
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			searchvalues.put("hasChildren", hasChildren);
-			searchvalues.put("backlogStr", backlogStr);
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		searchvalues.put("hasChildren", hasChildren);
+		searchvalues.put("backlogStr", backlogStr);
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
-				if (!entry.getValue().equals("undefined")) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+		for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
+			if (!entry.getValue().equals("undefined")) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
-
 			}
 
-			totalUserStoriesBacklog = getMongoOperation().count(query1, UserStoriesVO.class);
+		}
+
+		totalUserStoriesBacklog = getMongoOperation().count(query1, UserStoriesVO.class);
 
 		return totalUserStoriesBacklog;
 
@@ -505,27 +490,22 @@ else{
 	@Path("/initIterationUserStoryBackLogCount")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getinitIterationUserStoryBackLogCount(@HeaderParam("Authorization") String authString,
-			@QueryParam("userStrproject") String userStrproject)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("userStrproject") String userStrproject) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		long totalUserStoriesBacklog = 0;
-		
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.getOperationalLayerAccess(authString);
 
+		String hasChildren = "false";
+		String backlogStr = "true";
 
-			String hasChildren = "false";
-			String backlogStr = "true";
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		searchvalues.put("hasChildren", hasChildren);
+		searchvalues.put("backlogStr", backlogStr);
+		searchvalues.put("projectName", userStrproject);
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			searchvalues.put("hasChildren", hasChildren);
-			searchvalues.put("backlogStr", backlogStr);
-			searchvalues.put("projectName", userStrproject);
-
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
-			if(operationalAccess){
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
+		if (authenticateToken) {
 			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
 				if (!entry.getValue().equals("undefined")) {
 					if (!entry.getValue().equals("null")) {
@@ -537,36 +517,28 @@ else{
 
 			totalUserStoriesBacklog = getMongoOperation().count(query1, UserStoriesVO.class);
 
-		
-
-		return totalUserStoriesBacklog;}
-			else{
-				return totalUserStoriesBacklog;
-			}
+			return totalUserStoriesBacklog;
+		} else {
+			return totalUserStoriesBacklog;
+		}
 
 	}
 
-	
 	@GET
 	@Path("/lifeuserStorySprintCount")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getlifeuserStorySprintCount(@HeaderParam("Authorization") String authString,
-			@QueryParam("userStrproject") String userStrproject)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("userStrproject") String userStrproject) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 
 		// System.out.println("lifeuserStorySprintCount >>>>> userStrproject
 		// >>>" + userStrproject);
 
 		long totalUserStoriesSprint = 0;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-
-
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
-			if(operationalAccess){
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
+		if (authenticateToken) {
 			if (!"undefined".equals(userStrproject)) {
 				Criteria criteria1 = new Criteria();
 				criteria1.andOperator(Criteria.where("projectName").is(userStrproject));
@@ -577,21 +549,19 @@ else{
 				totalUserStoriesSprint = getMongoOperation().count(query1, UserStoriesIterationVO.class);
 			}
 
-		
+			// System.out.println("lifeuserStorySprintCount >>>>>
+			// totalUserStoriesSprint >>>" + totalUserStoriesSprint);
 
-		// System.out.println("lifeuserStorySprintCount >>>>>
-		// totalUserStoriesSprint >>>" + totalUserStoriesSprint);
-
-		return totalUserStoriesSprint;}
-			else{
-				return totalUserStoriesSprint;		
-			}
+			return totalUserStoriesSprint;
+		} else {
+			return totalUserStoriesSprint;
+		}
 
 	}
 
 	/*
-	 * User Story Test count - On Load Metric : Operational/userstories/user
-	 * story Testcase Rest URL : rest/rallyServices/userStoryTestCount JS File :
+	 * User Story Test count - On Load Metric : Operational/userstories/user story
+	 * Testcase Rest URL : rest/rallyServices/userStoryTestCount JS File :
 	 * userstoriesdata\UserStoryCtrl.js
 	 */
 
@@ -599,25 +569,22 @@ else{
 	@Path("/userStoryTestCount")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getUserStoryTestCount(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 
 		long totaluserStoryTest = 0;
 
-			String query = "{},{_id:0,storyID:1,testID:1,testCreationDate:1,testLastUpdateDate:1}";
-			BasicQuery query2 = new BasicQuery(query);
-			totaluserStoryTest = getMongoOperation().count(query2, UserStoryTestCasesVO.class);
-
-		
+		String query = "{},{_id:0,storyID:1,testID:1,testCreationDate:1,testLastUpdateDate:1}";
+		BasicQuery query2 = new BasicQuery(query);
+		totaluserStoryTest = getMongoOperation().count(query2, UserStoryTestCasesVO.class);
 
 		return totaluserStoryTest;
 
 	}
 
 	/*
-	 * User Story Defect count - On Load Metric : Operational/userstories/user
-	 * story defect Rest URL : rest/rallyServices/userStoryDefectCount JS File :
+	 * User Story Defect count - On Load Metric : Operational/userstories/user story
+	 * defect Rest URL : rest/rallyServices/userStoryDefectCount JS File :
 	 * userstoriesdata\UserStoryCtrl.js
 	 */
 
@@ -625,24 +592,22 @@ else{
 	@Path("/userStoryDefectCount")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getUserStoryDefectCount(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
+
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		long totaluserStoryDefectCount = 0;
-		if(operationalAccess){
+		if (authenticateToken) {
 			String query = "{},{storyID:'US1'}";
 			Query query1 = new BasicQuery(query);
 			totaluserStoryDefectCount = getMongoOperation().count(query1, UserStoryDefectsVO.class);
 
-			return totaluserStoryDefectCount;}
-		else{
+			return totaluserStoryDefectCount;
+		} else {
 			return totaluserStoryDefectCount;
 		}
-	
+
 	}
 
 	// Design Count by Test Type
@@ -658,15 +623,11 @@ else{
 	@Path("/userstorydefchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryDefectsStatusVO> getUserStoryDef(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		List<UserStoryDefectsStatusVO> result = null;
-		
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		 if(operationalAccess){
+		boolean authenticateToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authenticateToken) {
 			Aggregation agg = newAggregation(group("storyID").count().as("typecount"),
 					project("typecount").and("storyID").previousOperation());
 
@@ -675,105 +636,104 @@ else{
 
 			result = groupResults.getMappedResults();
 
-			return result;}
-		 else{
-			 return result; 
-		 }
+			return result;
+		} else {
+			return result;
+		}
 	}
 
 	@GET
 	@Path("/sprintdefchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryDefectsStatusVO> getSprintdefchartdata(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		List<UserStoryDefectsStatusVO> result = null;
 
-			// System.out.println("from sprintdefchartdata 44444:::::444444");
+		// System.out.println("from sprintdefchartdata 44444:::::444444");
 
-			Aggregation agg = newAggregation(group("SprintID").count().as("typecount"),
-					project("typecount").and("SprintID").previousOperation());
+		Aggregation agg = newAggregation(group("SprintID").count().as("typecount"),
+				project("typecount").and("SprintID").previousOperation());
 
-			AggregationResults<UserStoryDefectsStatusVO> groupResults = getMongoOperation().aggregate(agg,
-					UserStoryDefectsVO.class, UserStoryDefectsStatusVO.class);
+		AggregationResults<UserStoryDefectsStatusVO> groupResults = getMongoOperation().aggregate(agg,
+				UserStoryDefectsVO.class, UserStoryDefectsStatusVO.class);
 
-			result = groupResults.getMappedResults();
+		result = groupResults.getMappedResults();
 
-			return result;
+		return result;
 	}
 
 	// User Story Owner on Load
 	/*
 	 * Metric : lifecycle/User Stories/ User story project pie chart Rest URL :
 	 * rest/RallyServices/userstorysprintchartdata JS File : WebContent JS File:
-	 * UserStoryCtrl.js JS Function: UserStoryCtrl/
-	 * userStorySprintChart=function()
+	 * UserStoryCtrl.js JS Function: UserStoryCtrl/ userStorySprintChart=function()
 	 */
 
 	@GET
 	@Path("/userstorysprintchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryStatusVO> getUserStorySprint(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		// List<UserStoryDefectsStatusVO> result=null;
 		List<UserStoryStatusVO> result = null;
-	
-			// System.out.println("calling userstorysprintchartdata >>>>
-			// 4444::::");
-			// Aggregation agg =
-			// newAggregation(group("SprintID").count().as("typecount"),
-			// project("typecount").and("SprintID").previousOperation(),
-			// sort(Direction.ASC, "SprintID"));
 
-			Aggregation agg = newAggregation(group("iteration").count().as("typecount"),
-					project("typecount").and("iteration").previousOperation(), sort(Direction.ASC, "iteration"));
+		// System.out.println("calling userstorysprintchartdata >>>>
+		// 4444::::");
+		// Aggregation agg =
+		// newAggregation(group("SprintID").count().as("typecount"),
+		// project("typecount").and("SprintID").previousOperation(),
+		// sort(Direction.ASC, "SprintID"));
 
-			AggregationResults<UserStoryStatusVO> groupResults = getMongoOperation().aggregate(agg, UserStoriesVO.class,
-					UserStoryStatusVO.class);
-			result = groupResults.getMappedResults();
+		Aggregation agg = newAggregation(group("iteration").count().as("typecount"),
+				project("typecount").and("iteration").previousOperation(), sort(Direction.ASC, "iteration"));
 
-			//System.out.println("size is >>>> " + result.size());
+		AggregationResults<UserStoryStatusVO> groupResults = getMongoOperation().aggregate(agg, UserStoriesVO.class,
+				UserStoryStatusVO.class);
+		result = groupResults.getMappedResults();
 
-			for (int i = 0; i < result.size(); i++) {
+		// System.out.println("size is >>>> " + result.size());
 
-				//System.out.println("iteration is >>>444::" + result.get(i).getIteration());
+		for (int i = 0; i < result.size(); i++) {
 
-			}
+			// System.out.println("iteration is >>>444::" + result.get(i).getIteration());
 
-			// System.out.println("calling userstorysprintchartdata >>>>
-			// 4444::::"+ result);
+		}
 
-			return result;
+		// System.out.println("calling userstorysprintchartdata >>>>
+		// 4444::::"+ result);
+
+		return result;
 	}
 
 	//////////////////////////// User Story Trend
 	//////////////////////////// Graph//////////////////////////////////////////////////
 
-	@GET 
+	@GET
 	@Path("/userstorytrendchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryTrendVO> getUserStoryrendchart(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		 boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
-		//List<String> levelIdList = RequirementsUtil.getLevelIds(dashboardName, owner);
-		List<UserStoryTrendVO> trendvolist = null;
+			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		
-		//System.out.println("calling authenticateresult >>>4444:::4444:666" + authenticateresult);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+
+		// List<String> levelIdList = RequirementsUtil.getLevelIds(dashboardName,
+		// owner);
+		List<UserStoryTrendVO> trendvolist = null;
+
+		// System.out.println("calling authenticateresult >>>4444:::4444:666" +
+		// authenticateresult);
 
 		UserStoryTrendVO userStoryTrendVO = new UserStoryTrendVO();
 		trendvolist = new ArrayList<UserStoryTrendVO>();
-		
-			//System.out.println("calling userstorytrendchartdata >>>4444:::4444:666");
 
-			Aggregation agg;
-if(operationalAccess || LCAccess){
+		// System.out.println("calling userstorytrendchartdata >>>4444:::4444:666");
+
+		Aggregation agg;
+		if (authenticateToken) {
 			if (!"".equals(userStrproject) && !"undefined".equals(userStrproject)) {
 
 				agg = newAggregation(match(Criteria.where("projectName").is(userStrproject)),
@@ -861,11 +821,10 @@ if(operationalAccess || LCAccess){
 					trendvolist.add(userStoryTrendVO);
 				}
 			}
-			return trendvolist;}
-else{
-	return trendvolist;
-}
-	
+			return trendvolist;
+		} else {
+			return trendvolist;
+		}
 
 	}
 
@@ -877,14 +836,11 @@ else{
 	@Path("/userStorypriorityFunnelchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryStatusVO> getUserStoryFunnelchart(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		List<UserStoryStatusVO> result = null;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		 if(operationalAccess){
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if (authenticateToken) {
 			Aggregation agg = newAggregation(group("storyStatus").count().as("priorityCnt"),
 					project("priorityCnt").and("storyStatus").previousOperation(), sort(Direction.DESC, "priorityCnt"));
 
@@ -892,10 +848,10 @@ else{
 					UserStoryStatusVO.class);
 
 			result = groupResults.getMappedResults();
-			return result;}
-		 else{
-			 return result; 
-		 }
+			return result;
+		} else {
+			return result;
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////
@@ -904,8 +860,7 @@ else{
 	/*
 	 * Metric : lifecycle/User Stories/ User story Data Table Rest URL :
 	 * rest/RallyServices/userStoryTableDetails JS File : WebContent JS File:
-	 * UserStoryCtrl.js JS Function: UserStoryCtrl/
-	 * userStoryTableData=function()
+	 * UserStoryCtrl.js JS Function: UserStoryCtrl/ userStoryTableData=function()
 	 */
 
 	@GET
@@ -913,22 +868,19 @@ else{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoriesVO> getRecordsreq(@HeaderParam("Authorization") String authString,
 			@QueryParam("itemsPerPage") int itemsPerPage, @QueryParam("start_index") int start_index,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 		List<UserStoriesVO> userStoryAnalysisList = null;
-		if(operationalAccess){
+		if (authenticateToken) {
 			String query = "{},{_id:0,storyID:1,storyName:1}";
 			Query query1 = new BasicQuery(query);
 			query1.skip(itemsPerPage * (start_index - 1));
 			query1.limit(itemsPerPage);
 			userStoryAnalysisList = getMongoOperation().find(query1, UserStoriesVO.class);
-			return userStoryAnalysisList;}
-		else{
+			return userStoryAnalysisList;
+		} else {
 			return userStoryAnalysisList;
 		}
 	}
@@ -936,8 +888,8 @@ else{
 	// User Story Test Case search count
 	/*
 	 * Metric : lifecycle/User Stories/ User Test Case search count Rest URL :
-	 * rest/RallyServices/userStorytestCaseSearchpagecount JS File : WebContent
-	 * JS File: UserStoryCtrl.js JS Function: UserStoryCtrl/
+	 * rest/RallyServices/userStorytestCaseSearchpagecount JS File : WebContent JS
+	 * File: UserStoryCtrl.js JS Function: UserStoryCtrl/
 	 * searchableTestCase=function()
 	 */
 
@@ -948,42 +900,41 @@ else{
 			@QueryParam("testID") String testID, @QueryParam("storyID") String storyID,
 			@QueryParam("testName") String testName, @QueryParam("testDescription") String testDescription,
 			@QueryParam("priority") String priority, @QueryParam("status") String status,
-			@QueryParam("projectName") String projectName, @QueryParam("dashboardName") String dashboardName
-			) throws JsonParseException,
+			@QueryParam("projectName") String projectName, @QueryParam("dashboardName") String dashboardName)
+			throws JsonParseException,
 
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		long pagecount = 0;
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			searchvalues.put("storyID", storyID);
-			searchvalues.put("testID", testID);
-			searchvalues.put("projectName", projectName);
-			searchvalues.put("testName", testName);
-			searchvalues.put("testDescription", testDescription);
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		searchvalues.put("storyID", storyID);
+		searchvalues.put("testID", testID);
+		searchvalues.put("projectName", projectName);
+		searchvalues.put("testName", testName);
+		searchvalues.put("testDescription", testDescription);
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
-				if (!entry.getValue().equals("undefined")) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+		for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
+			if (!entry.getValue().equals("undefined")) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
-
 			}
-			pagecount = getMongoOperation().count(query1, UserStoryTestCasesVO.class);
 
-			return pagecount;
-	
+		}
+		pagecount = getMongoOperation().count(query1, UserStoryTestCasesVO.class);
+
+		return pagecount;
+
 	}
 
 	// User Story Test Case Search
 	/*
 	 * Metric : lifecycle/User Stories/ User story Test Case Search Rest URL :
 	 * rest/RallyServices/userStoryTestCaseSearch JS File : WebContent JS File:
-	 * UserStoryCtrl.js JS Function: UserStoryCtrl/
-	 * searchableTestCase=function()
+	 * UserStoryCtrl.js JS Function: UserStoryCtrl/ searchableTestCase=function()
 	 */
 	@GET
 	@Path("/userStoryTestCaseSearch")
@@ -993,38 +944,37 @@ else{
 			@QueryParam("testName") String testName, @QueryParam("testDescription") String testDescription,
 			@QueryParam("priority") String priority, @QueryParam("status") String status,
 			@QueryParam("projectName") String projectName, @QueryParam("itemsPerPage") int itemsPerPage,
-			@QueryParam("start_index") int start_index, @QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("start_index") int start_index, @QueryParam("dashboardName") String dashboardName)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		List<UserStoryTestCasesVO> searchresult = null;
 
-		
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		searchvalues.put("storyID", storyID);
+		searchvalues.put("testID", testID);
+		searchvalues.put("projectName", projectName);
+		searchvalues.put("testName", testName);
+		searchvalues.put("testDescription", testDescription);
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			searchvalues.put("storyID", storyID);
-			searchvalues.put("testID", testID);
-			searchvalues.put("projectName", projectName);
-			searchvalues.put("testName", testName);
-			searchvalues.put("testDescription", testDescription);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
+		for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
 
-			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
-
-				if (!entry.getValue().equals("undefined")) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+			if (!entry.getValue().equals("undefined")) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
 			}
+		}
 
-			query1.skip(itemsPerPage * (start_index - 1));
-			query1.limit(itemsPerPage);
+		query1.skip(itemsPerPage * (start_index - 1));
+		query1.limit(itemsPerPage);
 
-			searchresult = getMongoOperation().find(query1, UserStoryTestCasesVO.class);
+		searchresult = getMongoOperation().find(query1, UserStoryTestCasesVO.class);
 
-			return searchresult;
-	
+		return searchresult;
+
 	}
 
 	/////////////////// for User Story Defect Search
@@ -1034,8 +984,7 @@ else{
 	/*
 	 * Metric : lifecycle/User Stories/ User story Defect Search Rest URL :
 	 * rest/RallyServices/userStoryDefectSearchpagecount JS File : WebContent JS
-	 * File: UserStoryCtrl.js JS Function: UserStoryCtrl/
-	 * searchDefect=function()
+	 * File: UserStoryCtrl.js JS Function: UserStoryCtrl/ searchDefect=function()
 	 */
 
 	@GET
@@ -1044,41 +993,41 @@ else{
 	public long getUserStoryDefectSearchpagecount(@HeaderParam("Authorization") String authString,
 			@QueryParam("defID") String defID, @QueryParam("storyID") String storyID,
 			@QueryParam("defName") String defName, @QueryParam("defDescription") String defDescription,
-			@QueryParam("defPrjName") String defPrjName, @QueryParam("dashboardName") String dashboardName) throws JsonParseException,
+			@QueryParam("defPrjName") String defPrjName, @QueryParam("dashboardName") String dashboardName)
+			throws JsonParseException,
 
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		long pagecount = 0;
 
-			Map<String, String> searcDefecthvalues = new HashMap<String, String>();
+		Map<String, String> searcDefecthvalues = new HashMap<String, String>();
 
-			searcDefecthvalues.put("storyID", storyID);
-			searcDefecthvalues.put("defID", defID);
-			searcDefecthvalues.put("defPrjName", defPrjName);
-			searcDefecthvalues.put("defName", defName);
-			searcDefecthvalues.put("defDescription", defDescription);
+		searcDefecthvalues.put("storyID", storyID);
+		searcDefecthvalues.put("defID", defID);
+		searcDefecthvalues.put("defPrjName", defPrjName);
+		searcDefecthvalues.put("defName", defName);
+		searcDefecthvalues.put("defDescription", defDescription);
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			for (Map.Entry<String, String> entry : searcDefecthvalues.entrySet()) {
-				if (!entry.getValue().equals("undefined")) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+		for (Map.Entry<String, String> entry : searcDefecthvalues.entrySet()) {
+			if (!entry.getValue().equals("undefined")) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
-
 			}
 
-			pagecount = getMongoOperation().count(query1, UserStoryDefectsVO.class);
-			return pagecount;
+		}
+
+		pagecount = getMongoOperation().count(query1, UserStoryDefectsVO.class);
+		return pagecount;
 	}
 
 	// User Story Defect Search
 	/*
 	 * Metric : lifecycle/User Stories/ User story Defect Search Rest URL :
 	 * rest/RallyServices/userStoryDefectSearchpagecount JS File : WebContent JS
-	 * File: UserStoryCtrl.js JS Function: UserStoryCtrl/
-	 * searchDefect=function()
+	 * File: UserStoryCtrl.js JS Function: UserStoryCtrl/ searchDefect=function()
 	 */
 	@GET
 	@Path("/userStoryDefectSearch")
@@ -1087,38 +1036,37 @@ else{
 			@QueryParam("defID") String defID, @QueryParam("storyID") String storyID,
 			@QueryParam("defName") String defName, @QueryParam("defDescription") String defDescription,
 			@QueryParam("defPrjName") String defPrjName, @QueryParam("itemsPerPage") int itemsPerPage,
-			@QueryParam("start_index") int start_index, @QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("start_index") int start_index, @QueryParam("dashboardName") String dashboardName)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		List<UserStoryDefectsVO> searchresult = null;
 
-		
+		Map<String, String> searchvalues1 = new HashMap<String, String>();
 
-			Map<String, String> searchvalues1 = new HashMap<String, String>();
+		searchvalues1.put("storyID", storyID);
+		searchvalues1.put("defID", defID);
+		searchvalues1.put("defPrjName", defPrjName);
+		searchvalues1.put("defName", defName);
+		searchvalues1.put("defDescription", defDescription);
 
-			searchvalues1.put("storyID", storyID);
-			searchvalues1.put("defID", defID);
-			searchvalues1.put("defPrjName", defPrjName);
-			searchvalues1.put("defName", defName);
-			searchvalues1.put("defDescription", defDescription);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
+		for (Map.Entry<String, String> entry : searchvalues1.entrySet()) {
 
-			for (Map.Entry<String, String> entry : searchvalues1.entrySet()) {
-
-				if (!entry.getValue().equals("undefined")) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+			if (!entry.getValue().equals("undefined")) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
 			}
+		}
 
-			query1.skip(itemsPerPage * (start_index - 1));
-			query1.limit(itemsPerPage);
+		query1.skip(itemsPerPage * (start_index - 1));
+		query1.limit(itemsPerPage);
 
-			searchresult = getMongoOperation().find(query1, UserStoryDefectsVO.class);
+		searchresult = getMongoOperation().find(query1, UserStoryDefectsVO.class);
 
-			return searchresult;
+		return searchresult;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -1132,7 +1080,8 @@ else{
 	public long getUserStorysearchpagecount(@HeaderParam("Authorization") String authString,
 			@QueryParam("storyID") String storyID, @QueryParam("storyName") String storyName,
 			@QueryParam("userStrdescription") String userStrdescription, @QueryParam("storyOwner") String storyOwner,
-			@QueryParam("projectName") String projectName, @QueryParam("dashboardName") String dashboardName) throws JsonParseException,
+			@QueryParam("projectName") String projectName, @QueryParam("dashboardName") String dashboardName)
+			throws JsonParseException,
 
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		long pagecount = 0;
@@ -1141,29 +1090,28 @@ else{
 			storyOwner = "null";
 		}
 
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		userStrdescription = (userStrdescription == null) ? "null" : userStrdescription;
+		searchvalues.put("storyID", storyID);
+		searchvalues.put("storyName", storyName);
+		searchvalues.put("userStrdescription", userStrdescription);
+		searchvalues.put("storyOwner", storyOwner);
+		searchvalues.put("projectName", projectName);
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			userStrdescription = (userStrdescription == null) ? "null" : userStrdescription;
-			searchvalues.put("storyID", storyID);
-			searchvalues.put("storyName", storyName);
-			searchvalues.put("userStrdescription", userStrdescription);
-			searchvalues.put("storyOwner", storyOwner);
-			searchvalues.put("projectName", projectName);
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
-
-			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
-				if (!"undefined".equals(entry.getValue())) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+		for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
+			if (!"undefined".equals(entry.getValue())) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
-
 			}
 
-			pagecount = getMongoOperation().count(query1, UserStoriesVO.class);
-			return pagecount;
+		}
+
+		pagecount = getMongoOperation().count(query1, UserStoriesVO.class);
+		return pagecount;
 	}
 
 	@GET
@@ -1173,41 +1121,40 @@ else{
 			@QueryParam("storyID") String storyID, @QueryParam("storyName") String storyName,
 			@QueryParam("userStrdescription") String userStrdescription, @QueryParam("storyOwner") String storyOwner,
 			@QueryParam("projectName") String projectName, @QueryParam("itemsPerPage") int itemsPerPage,
-			@QueryParam("start_index") int start_index, @QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("start_index") int start_index, @QueryParam("dashboardName") String dashboardName)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		List<UserStoriesVO> searchresult = null;
 
 		userStrdescription = (userStrdescription == null) ? "null" : userStrdescription;
 		if ("".equals(storyOwner)) {
 			storyOwner = "null";
 		}
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		searchvalues.put("storyID", storyID);
+		searchvalues.put("storyName", storyName);
+		searchvalues.put("userStrdescription", userStrdescription);
+		searchvalues.put("storyOwner", storyOwner);
+		searchvalues.put("projectName", projectName);
 
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			searchvalues.put("storyID", storyID);
-			searchvalues.put("storyName", storyName);
-			searchvalues.put("userStrdescription", userStrdescription);
-			searchvalues.put("storyOwner", storyOwner);
-			searchvalues.put("projectName", projectName);
+		for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
 
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
-
-			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
-
-				if (!"undefined".equals(entry.getValue())) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+			if (!"undefined".equals(entry.getValue())) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
 			}
+		}
 
-			query1.skip(itemsPerPage * (start_index - 1));
-			query1.limit(itemsPerPage);
+		query1.skip(itemsPerPage * (start_index - 1));
+		query1.limit(itemsPerPage);
 
-			searchresult = getMongoOperation().find(query1, UserStoriesVO.class);
+		searchresult = getMongoOperation().find(query1, UserStoriesVO.class);
 
-			return searchresult;
+		return searchresult;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1223,20 +1170,18 @@ else{
 	@Path("/userstorybyprjchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryStatusVO> getdesigntype(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject
-			) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
-	
+			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
+
 		List<UserStoryStatusVO> result = null;
-		
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
-			//System.out.println(">>>>>>>44444::: userstorybyprjchartdata 444444:::>>>>> " + userStrproject);
+		// System.out.println(">>>>>>>44444::: userstorybyprjchartdata 444444:::>>>>> "
+		// + userStrproject);
 
-			Aggregation agg;
-			if(operationalAccess){
+		Aggregation agg;
+		if (authenticateToken) {
 			if (!"".equals(userStrproject) && !"undefined".equals(userStrproject)) {
 				agg = newAggregation(match(Criteria.where("projectName").is(userStrproject)),
 						group("projectName").count().as("typecount"),
@@ -1260,13 +1205,13 @@ else{
 					UserStoryStatusVO.class);
 			result = groupResults.getMappedResults();
 
-			//System.out.println("result >>>>>44444:::" + result);
+			// System.out.println("result >>>>>44444:::" + result);
 
-			return result;}
-			else{
-				return result;
-			}
-		
+			return result;
+		} else {
+			return result;
+		}
+
 	}
 
 	//////////////////////// Chart by User Story Status
@@ -1275,8 +1220,8 @@ else{
 	// User Story Status bar Chart on Load
 	/*
 	 * Metric : lifecycle/User Stories/ User story Status bar chart Rest URL :
-	 * rest/RallyServices/userstorybystatuschartdata JS File : WebContent JS
-	 * File: UserStoryCtrl.js JS Function: UserStoryCtrl/
+	 * rest/RallyServices/userstorybystatuschartdata JS File : WebContent JS File:
+	 * UserStoryCtrl.js JS Function: UserStoryCtrl/
 	 * userStoryByStatusPieChart=function()
 	 */
 
@@ -1284,16 +1229,15 @@ else{
 	@Path("/userstorybystatuschartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryStatusVO> getuserstorybystatuschartdata(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			@QueryParam("dashboardName") String dashboardName, @QueryParam("userStrproject") String userStrproject)
+			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+			BadLocationException {
 		List<UserStoryStatusVO> result = null;
 
-			Aggregation agg;
-			
-			AuthenticationService UserEncrypt = new AuthenticationService();
-			String userId = UserEncrypt.getUser(authString);
-			 boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-			 if(operationalAccess){
+		Aggregation agg;
+
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		if (authenticateToken) {
 			if (!"".equals(userStrproject) && !"undefined".equals(userStrproject)) {
 
 				agg = newAggregation(match(Criteria.where("projectName").is(userStrproject)),
@@ -1309,10 +1253,10 @@ else{
 					UserStoryStatusVO.class);
 			result = groupResults.getMappedResults();
 
-			return result;}
-			 else{
-				 return result; 
-			 }
+			return result;
+		} else {
+			return result;
+		}
 
 	}
 
@@ -1320,24 +1264,24 @@ else{
 
 	@GET
 	@Path("/userStoryTestCaseTableDetails")
-	// @Path("/reqTableDetailsdata")
 	@Produces(MediaType.APPLICATION_JSON)
-	// public List<RequirmentVO> getRecordsreq(
 	public List<UserStoryTestCasesVO> getRecordsTestCases(@HeaderParam("Authorization") String authString,
 			@QueryParam("itemsPerPage") int itemsPerPage, @QueryParam("start_index") int start_index,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 
 		List<UserStoryTestCasesVO> testCaseAnalysisList = null;
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
-			String query = "{},{_id:0,storyID:1,testID:1}";
-			Query query1 = new BasicQuery(query);
+		String query = "{},{_id:0,storyID:1,testID:1}";
+		Query query1 = new BasicQuery(query);
+		
+		if(authenticateToken) {
 			query1.skip(itemsPerPage * (start_index - 1));
 			query1.limit(itemsPerPage);
 			testCaseAnalysisList = getMongoOperation().find(query1, UserStoryTestCasesVO.class);
-
-			return testCaseAnalysisList;
+		}
+		return testCaseAnalysisList;
 	}
 
 	@GET
@@ -1345,19 +1289,22 @@ else{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserStoryDefectsVO> getRecordsDefectDetails(@HeaderParam("Authorization") String authString,
 			@QueryParam("itemsPerPage") int itemsPerPage, @QueryParam("start_index") int start_index,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 
 		List<UserStoryDefectsVO> defAnalysisList = null;
-
-			String query = "{},{_id:0}";
-			Query query1 = new BasicQuery(query);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+		
+		String query = "{},{_id:0}";
+		Query query1 = new BasicQuery(query);
+		if(authenticateToken)
+		{
 			query1.skip(itemsPerPage * (start_index - 1));
 			query1.limit(itemsPerPage);
 			defAnalysisList = getMongoOperation().find(query1, UserStoryDefectsVO.class);
+		}
 
-			return defAnalysisList;
+		return defAnalysisList;
 	}
 
 	@GET
@@ -1366,34 +1313,33 @@ else{
 	public long getsearchpagecount(@HeaderParam("Authorization") String authString,
 			@QueryParam("storyID") String storyID, @QueryParam("storyName") String storyName,
 			@QueryParam("Description") String Description, @QueryParam("storyOwner") String storyOwner,
-			@QueryParam("dashboardName") String dashboardName)
-			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
-			BadLocationException {
+			@QueryParam("dashboardName") String dashboardName) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
 		long pagecount = 0;
 
-			Map<String, String> searchvalues = new HashMap<String, String>();
-			searchvalues.put("storyName", storyName);
-			searchvalues.put("Description", Description);
-			searchvalues.put("storyName", storyName);
+		Map<String, String> searchvalues = new HashMap<String, String>();
+		searchvalues.put("storyName", storyName);
+		searchvalues.put("Description", Description);
+		searchvalues.put("storyName", storyName);
 
-			String query = "{},{_id: 0, storyID: 1, storyName: 1, Description: 1, storyName: 1, storyCreationDate: 1,storyLastUpdateDate:1}";
-			Query query1 = new BasicQuery(query);
+		String query = "{},{_id: 0, storyID: 1, storyName: 1, Description: 1, storyName: 1, storyCreationDate: 1,storyLastUpdateDate:1}";
+		Query query1 = new BasicQuery(query);
 
-			if (storyID != "") {
-				query1.addCriteria(Criteria.where("storyID").is(storyID));
-			}
+		if (storyID != "") {
+			query1.addCriteria(Criteria.where("storyID").is(storyID));
+		}
 
-			for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
+		for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
 
-				if (!entry.getValue().equals("undefined")) {
-					if (!entry.getValue().equals("null")) {
-						query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
-					}
+			if (!entry.getValue().equals("undefined")) {
+				if (!entry.getValue().equals("null")) {
+					query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
 				}
 			}
-			pagecount = getMongoOperation().count(query1, UserStoriesVO.class);
+		}
+		pagecount = getMongoOperation().count(query1, UserStoriesVO.class);
 
-			return pagecount;
+		return pagecount;
 	}
 
 }

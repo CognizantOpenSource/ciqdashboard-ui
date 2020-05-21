@@ -7,8 +7,6 @@ public class TestCaseStatusVO {
 	private String testDesignStatus;
 	private int statuscount;
 	private String testType;
-	private String automationType;
-	private String automationStatus;
 	private int typecount;
 	private String testDesigner;
 	private int designercount;
@@ -56,18 +54,6 @@ public class TestCaseStatusVO {
 	}
 	public void setDesignercount(int designercount) {
 		this.designercount = designercount;
-	}
-	public String getAutomationType() {
-		return automationType;
-	}
-	public void setAutomationType(String automationType) {
-		this.automationType = automationType;
-	}
-	public String getAutomationStatus() {
-		return automationStatus;
-	}
-	public void setAutomationStatus(String automationStatus) {
-		this.automationStatus = automationStatus;
 	}
 	
 	

@@ -1,5 +1,6 @@
 /**
  * @author v.lugovksy created on 16.12.2015
+ * NOTE: use encodeURIComponent() in template name, dashboard name to include special characters '&' while sending query parameters **653731**
  */
 (function() {
 	'use strict';
@@ -8,24 +9,14 @@
 			'OperationalDashboardCtrl', OperationalDashboardCtrl);
 
 	/** @ngInject */
-	function OperationalDashboardCtrl($sessionStorage, $base64, $element,
+	function OperationalDashboardCtrl($sessionStorage, AES, $base64, $element,
 			$scope, $http, UserService, $timeout, $uibModal, $rootScope,
-			baConfig, layoutPaths, $state, localStorageService, toastr,$window) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
+			baConfig, layoutPaths, $state, localStorageService, toastr) {
+		
 		$rootScope.loggedInuserId = localStorageService.get('loggedInuserId');
 		// $rootScope.templatename = localStorageService.get('templatename');
 		$rootScope.tool = localStorageService.get('tool');
-		
-		$scope.isVisiablepubicview = localStorageService.get('isEnablepublicopt')
-		
-		
-		
+
 		//		$rootScope.buildJob = "Build";
 		//		$rootScope.calevel2 = "Project";
 		$rootScope.menubar = false;
@@ -33,14 +24,10 @@
 		$rootScope.var2 = false;
 		$rootScope.var3 = false;
 		$rootScope.var4 = false;
-		$rootScope.var7 = false;
+		$rootScope.var6 = false;
 		$rootScope.tool = localStorageService.get('tool');
 		$scope.itemsPerPage = 5;
-
-		$scope.init = function() {
-			$rootScope.dataloader = true;
-			
-		}
+		
 
 		$scope.pageChangedLevel = function(pageno) {
 			$rootScope.pageno = pageno;
@@ -58,7 +45,7 @@
 		// Dashboard details count
 		$rootScope.initialcountofDetails = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -92,14 +79,15 @@
 		};
 
 		$scope.operationalDashboardDetails = function(start_index) {
-
-			var token = getEncryptedValue();
+			//alert("dashboarddetails");
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
 			$scope.index = start_index;
+			
 
 			$http.get(
 					"./rest/operationalServices/operationalDashboardDetails?itemsPerPage="
@@ -109,12 +97,11 @@
 				$scope.operationalDashboardTableDetails = response;
 
 			});
-
 		};
 
 		$scope.operationalDashboardpublicDetails = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -136,7 +123,7 @@
 		}
 
 		$scope.loadItems = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -151,7 +138,7 @@
 		};
 
 		$scope.loadJiraItems = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -210,8 +197,8 @@
 			$scope.metric = form.metric;
 			$scope.formula = form.formula;
 
-			//console.log($scope.formula);
-			var token = getEncryptedValue();
+			console.log($scope.formula);
+			var token = AES.getEncryptedValue();
 
 			var metricdata = {
 				metric : $scope.metric,
@@ -307,39 +294,33 @@
 
 			var selectItems = $scope.rel_items;
 
-			if (selectItems == undefined) {
-				selectedItems = "";
-			}
+			for (var m = 0; m < selectItems.length; m++) {
+				var level1 = selectItems[m].level1;
+				var sourceTool = selectItems[m].sourceTool;
+				for (var i = 0; i < selectItems[m].children.length; i++) {
+					var level2 = selectItems[m].children[i].level2;
+					for (var j = 0; j < selectItems[m].children[i].children.length; j++) {
+						var level3 = selectItems[m].children[i].children[j].level3;
+						var levelId = selectItems[m].children[i].children[j].levelId;
+						var rel_selected = selectItems[m].children[i].children[j].selected;
+						if (rel_selected) {
+							var obj = new Object();
+							obj.level1 = level1;
+							obj.level2 = level2;
+							obj.level3 = level3;
+							obj.levelId = levelId;
+							obj.sourceTool = sourceTool;
 
-			if (selectItems != undefined) {
-				for (var m = 0; m < selectItems.length; m++) {
-					var level1 = selectItems[m].level1;
-					var sourceTool = selectItems[m].sourceTool;
-					for (var i = 0; i < selectItems[m].children.length; i++) {
-						var level2 = selectItems[m].children[i].level2;
-						for (var j = 0; j < selectItems[m].children[i].children.length; j++) {
-							var level3 = selectItems[m].children[i].children[j].level3;
-							var levelId = selectItems[m].children[i].children[j].levelId;
-							var rel_selected = selectItems[m].children[i].children[j].selected;
-							if (rel_selected) {
-								var obj = new Object();
-								obj.level1 = level1;
-								obj.level2 = level2;
-								obj.level3 = level3;
-								obj.levelId = levelId;
-								obj.sourceTool = sourceTool;
-
-								var Selectedstring = JSON.stringify(obj);
-								if (selectedItems == "") {
-									selectedItems = Selectedstring;
-								} else {
-									selectedItems = selectedItems + ","
-											+ Selectedstring;
-								}
-
-								// console.log(Selectedstring);
-								// console.log(JSON.parse(string));
+							var Selectedstring = JSON.stringify(obj);
+							if (selectedItems == "") {
+								selectedItems = Selectedstring;
+							} else {
+								selectedItems = selectedItems + ","
+										+ Selectedstring;
 							}
+
+							// console.log(Selectedstring);
+							// console.log(JSON.parse(string));
 						}
 					}
 				}
@@ -355,39 +336,31 @@
 
 			var selectItems = $scope.rel_jira_items;
 
-			if (selectItems == undefined) {
-				selectedItems = "";
-			}
+			for (var m = 0; m < selectItems.length; m++) {
+				var level1 = selectItems[m].level1;
+				var sourceTool = selectItems[m].sourceTool;
+				for (var i = 0; i < selectItems[m].children.length; i++) {
+					var level2 = selectItems[m].children[i].level2;
+					for (var j = 0; j < selectItems[m].children[i].children.length; j++) {
+						var level3 = selectItems[m].children[i].children[j].level3;
+						var levelId = selectItems[m].children[i].children[j].levelId;
+						var rel_selected = selectItems[m].children[i].children[j].selected;
+						if (rel_selected) {
+							var obj = new Object();
+							obj.level1 = level1;
+							obj.level2 = level2;
+							obj.level3 = level3;
+							obj.levelId = levelId;
+							obj.sourceTool = sourceTool;
 
-			if (selectItems != undefined) {
-				for (var m = 0; m < selectItems.length; m++) {
-					var level1 = selectItems[m].level1;
-					var sourceTool = selectItems[m].sourceTool;
-					for (var i = 0; i < selectItems[m].children.length; i++) {
-						var level2 = selectItems[m].children[i].level2;
-						for (var j = 0; j < selectItems[m].children[i].children.length; j++) {
-							var level3 = selectItems[m].children[i].children[j].level3;
-							var levelId = selectItems[m].children[i].children[j].levelId;
-							var rel_selected = selectItems[m].children[i].children[j].selected;
-							if (rel_selected) {
-								var obj = new Object();
-								obj.level1 = level1;
-								obj.level2 = level2;
-								obj.level3 = level3;
-								obj.levelId = levelId;
-								obj.sourceTool = sourceTool;
-
-								var Selectedstring = JSON.stringify(obj);
-								if (selectedItems == "") {
-									selectedItems = Selectedstring;
-								} else {
-									selectedItems = selectedItems + ","
-											+ Selectedstring;
-								}
-
-								// console.log(Selectedstring);
-								// console.log(JSON.parse(string));
+							var Selectedstring = JSON.stringify(obj);
+							if (selectedItems == "") {
+								selectedItems = Selectedstring;
+							} else {
+								selectedItems = selectedItems + ","
+										+ Selectedstring;
 							}
+
 						}
 					}
 				}
@@ -867,7 +840,8 @@
 		}
 
 		$scope.openDashboard = function(item) {
-			if (item.releaseSet.length == 0) {
+			
+			if (item.releaseSet.length == 0 || item.templateName == '') {
 				$scope.open('app/pages/operational/noAccess.html', 'sm');
 			} else {
 				$rootScope.operationaldashid = item._id;
@@ -920,7 +894,7 @@
 				$scope.ispublicselected = false;
 			}
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			$scope.dashName = form.dashname;
 			$scope.description = form.description;
@@ -999,7 +973,7 @@
 			$scope.selectedtemplate = selectedtemplate;
 
 			$scope.id = dashid;
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var selectedItems = getSelectedData();
 			var selectedJiraItems = getJiraSelectedData();
@@ -1061,7 +1035,7 @@
 		$scope.deleteDashboard = function(dashid) {
 
 			$scope.data = dashid;
-			//console.log("data",$scope.data)
+			console.log("data", $scope.data)
 
 			$uibModal
 					.open({
@@ -1083,7 +1057,7 @@
 
 		// Removes Dashboard information completely
 		$scope.deleteDashboardInfo = function(data) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1138,7 +1112,7 @@
 		};
 
 		$scope.dashboardInfo = function(dashboardName, owner) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1170,7 +1144,7 @@
 		};
 
 		$scope.getRollingPeriod = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1179,15 +1153,16 @@
 			$scope.templateName = localStorageService.get('templateName');
 			$http.get(
 					"rest/operationalServices/getRollingPeriod?templateName="
-							+ $scope.templateName, config).success(
-					function(response) {
+							+ encodeURIComponent($scope.templateName), config)
+					.success(
+							function(response) {
 
-						$rootScope.rollingPeriodTime = response[0];
-						localStorageService.set('rollingPeriod',
-								$rootScope.rollingPeriodTime);
-						$rootScope.selectedrollingPeriod();
+								$rootScope.rollingPeriodTime = response[0];
+								localStorageService.set('rollingPeriod',
+										$rootScope.rollingPeriodTime);
+								$rootScope.selectedrollingPeriod();
 
-					});
+							});
 		}
 
 		$scope.convertDateToString = function(fromDate, toDate) {
@@ -1223,77 +1198,77 @@
 			localStorageService.set('dtto', $scope.dttofinal);
 			$rootScope.dfromvalDash = $scope.dtfromfinal; // storage date reset
 			$rootScope.dtovalDash = $scope.dttofinal; // storage date reset
-			$scope.rollupsheet();
 			$scope.globalViewTable();
-			//$rootScope.dataloader = false;
-			$timeout(function () { $scope.closeloader(); }, 2000);
-			
 		}
 
 		$scope.summaryTableMetricTitle = function() {
 
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
+			var token = AES.getEncryptedValue();
+
 			$scope.dashboardName = localStorageService.get('dashboardName');
 			$scope.templateName = localStorageService.get('templateName');
 			$scope.owner = localStorageService.get('owner');
 
-			$http.get(
-					"rest/operationalServices/summaryTableMetricTitle?dashboardName="
-							+ $scope.dashboardName + "&owner=" + $scope.owner
-							+ "&templateName=" + $scope.templateName, config)
-					.success(function(response) {
-						$scope.templateSelectedMetricName = response;
+			var summarydata = {
 
-					});
+				dashboardName : $scope.dashboardName,
+				owner : $scope.owner,
+				templateName : $scope.templateName
+			}
+
+			$http({
+				url : "./rest/operationalServices/summaryTableMetricTitle",
+				method : "GET",
+				params : summarydata,
+				headers : {
+					'Authorization' : token
+				}
+			}).success(function(response) {
+				$scope.templateSelectedMetricName = response;
+
+			});
 		}
 
-		
-		$scope.globalViewTable = function() {
-			
-			$rootScope.dataloader = true;
-			
-			var token = getEncryptedValue();
+		$rootScope.selectedrollingPeriod = function() {
+			$rootScope.rollingPeriod = localStorageService.get('rollingPeriod');
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
+			$http.get(
+					"rest/operationalServices/selectednoofdays?rollingPeriod="
+							+ $rootScope.rollingPeriod, config).success(
+					function(response) {
+						if (response != 0) {
+							var to = new Date();
+							var from = new Date();
+
+							$scope.dtto = to;
+							$scope.dtfrom = new Date(from.setDate(to.getDate()
+									- response + 1));
+							$scope.convertDateToString($scope.dtfrom,
+									$scope.dtto);
+						}
+
+					});
+
+		}
+
+		//NOTE: use encodeURIComponent() in template name, dashboard name to include special characters '&' while sending query parameters **653731**
+		$scope.globalViewTable = function() {
+			
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
 			$scope.dashboardName = localStorageService.get('dashboardName');
 			$scope.templateName = localStorageService.get('templateName');
 			$scope.owner = localStorageService.get('owner');
-			$rootScope.selectedrollingPeriod = function() {
-				$rootScope.rollingPeriod = localStorageService
-						.get('rollingPeriod');
-				var token = getEncryptedValue();
-				var config = {
-					headers : {
-						'Authorization' : token
-					}
-				};
-				$http.get(
-						"rest/operationalServices/selectednoofdays?rollingPeriod="
-								+ $rootScope.rollingPeriod, config).success(
-						function(response) {
-							if (response != 0) {
-								var to = new Date();
-								var from = new Date();
-
-								$scope.dtto = to;
-								$scope.dtfrom = new Date(from.setDate(to
-										.getDate()
-										- response + 1));
-								$scope.convertDateToString($scope.dtfrom,
-										$scope.dtto);
-							}
-
-						});
-
-			}
 
 			var vardtfrom = "";
 			var vardtto = "";
@@ -1314,25 +1289,32 @@
 				vardtto = $rootScope.dtovalDash;
 			}
 
+			/*var dataParam = {
+				dashboardName : $scope.dashboardName,
+				templateName : $scope.templateName,
+				vardtfrom : vardtfrom,
+				vardtto : vardtto
+			}*/
+
 			$http
-					.get(
-							"rest/operationalServices/globalView?dashboardName="
-									+ $scope.dashboardName + "&owner="
-									+ $scope.owner + "&templateName="
-									+ $scope.templateName + "&vardtfrom="
-									+ vardtfrom + "&vardtto=" + vardtto, config)
-					.success(function(response) {
-						$scope.globalViewDetails = response;
-						// Get total project size
-						$rootScope.summaryprojectlen = $scope.globalViewDetails.length;
-						localStorageService.set('summaryprjlen', $rootScope.summaryprojectlen);
-						$scope.safeCollection = response;
-						
-						$scope.getProjectlist($rootScope.summaryprojectlen,$scope.globalViewDetails);
-						
-						
-						
-					});
+			.get(
+					"rest/operationalServices/globalView?dashboardName="
+							+ $scope.dashboardName + "&owner="
+							+ $scope.owner + "&templateName="
+							+ $scope.templateName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto, config)
+			.success(function(response) {
+				$scope.globalViewDetails = response;
+				// Get total project size
+				$rootScope.summaryprojectlen = $scope.globalViewDetails.length;
+				localStorageService.set('summaryprjlen', $rootScope.summaryprojectlen);
+				$scope.safeCollection = response;
+				
+				$scope.getProjectlist($rootScope.summaryprojectlen,$scope.globalViewDetails);
+				
+				
+				
+			});
 		}
 
 		$scope.getProject = function(domainName, projectName, tool) {
@@ -1342,7 +1324,6 @@
 			localStorageService.set('tool', tool);
 			$state.go("dashboard");
 		}
-		
 		
 		$scope.getProjectlist=function(idx,data){
 			$rootScope.prj_array = [];
@@ -1413,7 +1394,7 @@
 		}
 
 		$scope.getTemplatesList = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1438,7 +1419,7 @@
 					selectedcustomtemplate);
 			$scope.selectedcustomtemplate = localStorageService
 					.get('selectedcustomtemplate');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1471,19 +1452,18 @@
 			};
 
 		};
-		
+
 		// Open window from Summary Page
 		$rootScope.openpopupforsummarypage = function(size) {
 			$state.go('Summaryslideshowpopup');
-	    }
-		
-		
+		}
+
 		// Rollup Sheet
-		
-		$scope.rollupsheet= function() {
-			
+
+		$scope.rollupsheet = function() {
+
 			$rootScope.dataloader = true;
-			
+
 			var token = getEncryptedValue();
 			var config = {
 				headers : {
@@ -1493,7 +1473,7 @@
 			$scope.dashboardName = localStorageService.get('dashboardName');
 			$scope.templateName = localStorageService.get('templateName');
 			$scope.owner = localStorageService.get('owner');
-			
+
 			var vardtfrom = "";
 			var vardtto = "";
 
@@ -1523,15 +1503,13 @@
 					.success(function(response) {
 						$scope.rolupsheetTableDetailsExport = response;
 					});
-			
-			
-			
+
 		}
-		
+
 		$scope.downloadTable = function(format, elementId, filename) {
-			
+
 			filename = localStorageService.get('dashboardName');
-			
+
 			if (format === 'csv') {
 				var table = document.getElementById(elementId);
 				var csvString = '';
@@ -1559,16 +1537,6 @@
 				saveAs(blob, filename + ".xls");
 			}
 		}
-		
-		$scope.closeloader = function() {
-			$rootScope.dataloader = false;
-		}
-	
-		
-		
-	
-		
-		
 
 	}
 })();

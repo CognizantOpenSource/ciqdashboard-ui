@@ -22,73 +22,8 @@ public class DefectStatusVO {
 	private int open;
 	private Date isodate;
 
-	
-	/*private int completed=0;
-	private int dropped=0;
-	private int linnew=0;
-	private int readyfortest=0;
-	private int inprogress=0;
-	private int linopen=0;
-	private int assigned=0;
-	private int deferred=0;
-	private int analyzing=0;*/
-	
 	 
 	
-	/*public int getCompleted() {
-		return completed;
-	}
-	public void setCompleted(int completed) {
-		this.completed = completed;
-	}
-	public int getDropped() {
-		return dropped;
-	}
-	public void setDropped(int dropped) {
-		this.dropped = dropped;
-	}
-	public int getLinnew() {
-		return linnew;
-	}
-	public void setLinnew(int linnew) {
-		this.linnew = linnew;
-	}
-	public int getReadyfortest() {
-		return readyfortest;
-	}
-	public void setReadyfortest(int readyfortest) {
-		this.readyfortest = readyfortest;
-	}
-	public int getInprogress() {
-		return inprogress;
-	}
-	public void setInprogress(int inprogress) {
-		this.inprogress = inprogress;
-	}
-	public int getLinopen() {
-		return linopen;
-	}
-	public void setLinopen(int linopen) {
-		this.linopen = linopen;
-	}
-	public int getAssigned() {
-		return assigned;
-	}
-	public void setAssigned(int assigned) {
-		this.assigned = assigned;
-	}
-	public int getDeferred() {
-		return deferred;
-	}
-	public void setDeferred(int deferred) {
-		this.deferred = deferred;
-	}
-	public int getAnalyzing() {
-		return analyzing;
-	}
-	public void setAnalyzing(int analyzing) {
-		this.analyzing = analyzing;
-	}*/
 	public int getClosed() {
 		return closed;
 	}

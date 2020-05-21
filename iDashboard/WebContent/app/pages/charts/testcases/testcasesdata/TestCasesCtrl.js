@@ -1,4 +1,6 @@
-
+/**
+ * @author v.lugovksy created on 16.12.2015
+ */
 (function() {
 	'use strict';
 
@@ -13,24 +15,26 @@
 	});
 
 	/** @ngInject */
-	function TestCasesCtrl($sessionStorage, paginationService, UserService,
-			localStorageService, $element, $scope, $base64, $http, $timeout,
-			$uibModal, $rootScope, baConfig, layoutPaths,$filter) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
+	function TestCasesCtrl($sessionStorage, AES, paginationService,
+			UserService, localStorageService, $element, $scope, $base64, $http,
+			$timeout, $uibModal, $rootScope, baConfig, layoutPaths,$filter) {
+		/* function getEncryptedValue()
+		 {
+		  var username= localStorageService.get('userIdA');
+		     var password= localStorageService.get('passwordA');
+		       var tokeen =$base64.encode(username+":"+password);
+		       
+		       return tokeen;
+		       }*/
+		
 		$rootScope.MetricsName = "Test Design";
-		$scope.init = function(){
-			$rootScope.dataloader=true;
+		$scope.init = function() {
+			$rootScope.dataloader = true;
 		}
 		
 		$rootScope.sortkey = false;
 		$rootScope.searchkey = false;
-		/*$rootScope.menubar = true;*/
+		$rootScope.menubar = true;
 		var dashboardName = localStorageService.get('dashboardName');
 		var owner = localStorageService.get('owner');
 		var domainName = localStorageService.get('domainName');
@@ -38,21 +42,72 @@
 		$rootScope.timeperiodTc = localStorageService.get('timeperiod');
 		
 		if ($scope.dtto != null) {
-			
-			var dtToDate = new Date($scope.dtto);			
-			dtToDate.setDate(dtToDate.getDate() + 1);			
-			
-			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-			
-			localStorageService.set('dttoPlus', dtToDateStr);			
+
+			var dtToDate = new Date($scope.dtto);
+			dtToDate.setDate(dtToDate.getDate() + 1);
+
+			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)),
+					'MM/dd/yyyy');
+
+			localStorageService.set('dttoPlus', dtToDateStr);
 		}
+
 		
 		$rootScope.tool = localStorageService.get('tool');
 
-		/* Tree Level Structure Starts Here */
-		//Total Test Count(BA Panel)
-		$rootScope.initialtestcount = function() {
-			var token = getEncryptedValue();
+		//-----------------------------------------------------------------------
+
+		$scope.tcdesignTableData = function(start_index) {
+			
+			
+
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			$scope.index = start_index;
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTc == null
+					|| $rootScope.dfromvalTc == undefined
+					|| $rootScope.dfromvalTc == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTc;
+			}
+
+			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
+					|| $rootScope.dtovalTc == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTc;
+
+			}
+
+			
+
+			$http.get(
+					"./rest/almMetricsServices/tcTableDetails?itemsPerPage="
+							+ $scope.itemsPerPage + "&start_index="
+							+ $scope.index + "&dashboardName=" + dashboardName
+							+ "&domainName=" + domainName + "&projectName="
+							+ projectName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&timeperiod="
+							+ $rootScope.timeperiodTc, config).success(
+					function(response) {
+						
+						
+						$rootScope.tcTableDetails = response;
+					});
+
+		}
+
+		$scope.initialdesigncountpaginate = function() {
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -74,8 +129,238 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
-				
+
+			}
+
+			$http.get(
+					"rest/testCaseServices/tcTableRecordsCount?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
+					.success(function(response) {
+						$rootScope.testdesigndatapaginate = response;
+					});
+		}
+
+		// Sort function starts here
+		$scope.sort = function(keyname, start_index) {
+			$scope.sortBy = keyname;
+			$rootScope.sortkey = true;
+			$rootScope.searchkey = false;
+			$scope.index = start_index;
+			$scope.reverse = !$scope.reverse;
+			$scope.sortedtable($scope.sortBy, $scope.index, $scope.reverse);
+
+		};
+
+		// Table on-load with sort implementation
+		$scope.sortedtable = function(sortvalue, start_index, reverse) {
+			paginationService.setCurrentPage("tcdesignpaginate", start_index);
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTc == null
+					|| $rootScope.dfromvalTc == undefined
+					|| $rootScope.dfromvalTc == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTc;
+			}
+
+			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
+					|| $rootScope.dtovalTc == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTc;
+			}
+			$scope.column = sortvalue;
+			$scope.index = start_index;
+			$scope.order = reverse;
+
+			$http.get(
+					"rest/testCaseServices/testcaseData?sortvalue="
+							+ $scope.column + "&itemsPerPage="
+							+ $scope.itemsPerPage + "&start_index="
+							+ $scope.index + "&reverse=" + $scope.order
+							+ "&dashboardName=" + dashboardName
+							+ "&domainName=" + domainName + "&projectName="
+							+ projectName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&timeperiod="
+							+ $rootScope.timeperiodTc, config).success(
+					function(response) {
+						$rootScope.tcTableDetails = response;
+					});
+		}
+
+		$scope.itemsPerPage = 5;
+
+		// search
+
+		$scope.search = function(start_index, searchField, searchText) {
+			$scope.start_index = start_index;
+			$scope.searchField = searchField;
+			$scope.searchText = searchText;
+			$rootScope.sortkey = false;
+			$rootScope.searchkey = true;
+			$scope.key = false;
+
+			if ($scope.searchField == "testID") {
+				$rootScope.testID = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "releaseName") {
+				$rootScope.releaseName = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "testName") {
+				$rootScope.testName = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "testDescription") {
+				$rootScope.testDescription = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "testDesigner") {
+				$rootScope.testDesigner = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "automationType") {
+				$rootScope.automationType = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "automationStatus") {
+				$rootScope.automationStatus = searchText;
+				$scope.key = true;
+			} else if ($scope.searchField == "testDesignStatus") {
+				$rootScope.testDesignStatus = searchText;
+				$scope.key = true;
+			}
+
+			$scope.searchable();
+
+		}
+
+		$scope.searchable = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			if ($rootScope.testID == undefined) {
+				$rootScope.testID = 0;
+			}
+
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTc == null
+					|| $rootScope.dfromvalTc == undefined
+					|| $rootScope.dfromvalTc == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTc;
+			}
+
+			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
+					|| $rootScope.dtovalTc == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTc;
+			}
+
+			
+
+			$http.get(
+					"./rest/testCaseServices/searchpagecount?testID="
+							+ $rootScope.testID + "&testName="
+							+ $rootScope.testName + "&releaseName="
+							+ $rootScope.releaseName + "&automationType="
+							+ $rootScope.automationType + "&automationStatus="
+							+ $rootScope.automationStatus + "&testDesigner="
+							+ $rootScope.testDesigner + "&testDesignStatus="
+							+ $rootScope.testDesignStatus + "&dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
+					.success(function(response) {
+						$rootScope.testdesigndatapaginate = response;
+					});
+			paginationService.setCurrentPage("tcdesignpaginate",
+					$scope.start_index);
+			$scope.itemsPerPage = 5;
+			$scope.index = $scope.start_index;
+			$http
+					.get(
+							"./rest/testCaseServices/searchTest?testID="
+									+ $rootScope.testID + "&testName="
+									+ $rootScope.testName + "&releaseName="
+									+ $rootScope.releaseName
+									+ "&automationType="
+									+ $rootScope.automationType
+									+ "&automationStatus="
+									+ $rootScope.automationStatus
+									+ "&testDesigner="
+									+ $rootScope.testDesigner
+									+ "&testDesignStatus="
+									+ $rootScope.testDesignStatus
+									+ "&itemsPerPage=" + $scope.itemsPerPage
+									+ "&start_index=" + $scope.start_index
+									+ "&dashboardName=" + dashboardName
+									+ "&domainName=" + domainName
+									+ "&projectName=" + projectName
+									+ "&vardtfrom=" + vardtfrom + "&vardtto="
+									+ vardtto + "&timeperiod="
+									+ $rootScope.timeperiodTc, config)
+					.success(
+							function(response) {
+								console.log("searchTest response :" + response);
+								if (response == "" && $scope.key == false) {
+									$rootScope.searchkey = false;
+									$scope.initialdesigncountpaginate();
+									$scope.tcdesignTableData(1);
+								} else if (response == null) {
+									$rootScope.searchkey = false;
+									$scope.initialdesigncountpaginate();
+									$scope.tcdesignTableData(1);
+								} else {
+									paginationService.setCurrentPage(
+											"tcdesignpaginate",
+											$scope.start_index);
+									$rootScope.tcTableDetails = response;
+								}
+							});
+		}
+
+		//-----------------------------------------------------------------------
+
+		/* Tree Level Structure Starts Here */
+		//Total Test Count(BA Panel)
+		$rootScope.initialtestcount = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTc == null
+					|| $rootScope.dfromvalTc == undefined
+					|| $rootScope.dfromvalTc == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTc;
+			}
+
+			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
+					|| $rootScope.dtovalTc == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTc;
 			}
 			$http.get(
 					"rest/almMetricsServices/totalTestCountinitial?dashboardName="
@@ -90,7 +375,7 @@
 		}
 		// Test Design Coverage(BA Panel)
 		$rootScope.designCoverage = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -172,7 +457,7 @@
 
 		//Automation Coverage
 		$rootScope.autoCoverage = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -210,7 +495,7 @@
 
 		// Design Trend Chart
 		$scope.TCTrendChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -233,12 +518,11 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/almMetricsServices/tctrendchartdata?dashboardName="
@@ -288,6 +572,7 @@
 						datasets : [ {
 							data : $scope.nostatus,
 							label : "No Status",
+							pointStyle : "line",
 							borderColor : "rgba(67, 154, 213, 0.7)",
 							pointBackgroundColor : "rgba(67, 154, 213, 0.7)"
 						},
@@ -295,35 +580,41 @@
 						{
 							data : $scope.notcompleted,
 							label : "notcompleted",
+							pointStyle : "line",
 							borderColor : "rgba(153, 102, 255, 0.8)",
 							pointBackgroundColor : "rgba(153, 102, 255, 0.8)"
 						}, {
 							data : $scope.imported,
 							label : "Imported",
+							pointStyle : "line",
 							borderColor : "rgba(236, 255, 0, 0.9)",
 							pointBackgroundColor : "rgba(236, 255, 0, 0.9)"
 
 						}, {
 							data : $scope.design,
 							label : "Design",
+							pointStyle : "line",
 							borderColor : "rgba(255, 134, 0, 1)",
 							pointBackgroundColor : "rgba(255, 134, 0, 1)"
 
 						}, {
 							data : $scope.ready,
 							label : "Ready",
+							pointStyle : "line",
 							borderColor : "rgba(9, 191, 22, 1)",
 							pointBackgroundColor : "rgba(9, 191, 22, 1)"
 
 						}, {
 							data : $scope.repair,
 							label : "repair",
+							pointStyle : "line",
 							borderColor : "rgba(255, 31, 0, 0.9)",
 							pointBackgroundColor : "rgba(255, 31, 0, 0.9)"
 
 						}, {
 							data : $scope.stable,
 							label : "stable",
+							pointStyle : "line",
 							borderColor : "rgba(153, 102, 255, 0.8)",
 							pointBackgroundColor : "rgba(153, 102, 255, 0.8)"
 
@@ -353,27 +644,27 @@
 								scaleLabel : {
 									display : true,
 									labelString : 'Time Period',
-									fontColor: '#4c4c4c'
-								},
-								ticks : {
-									fontColor: '#4c4c4c'
+									fontColor : '#4c4c4c'
 								},
 								gridLines : {
 									color : "#d8d3d3",
+								},
+								ticks : {
+									fontColor : '#4c4c4c'
 								}
 							} ],
 							yAxes : [ {
 								scaleLabel : {
 									display : true,
 									labelString : 'Test Count',
-									fontColor: '#4c4c4c'
+									fontColor : '#4c4c4c'
 								},
 								gridLines : {
 									color : "#d8d3d3",
 								},
 								ticks : {
 									beginAtZero : true,
-									fontColor: '#4c4c4c'
+									fontColor : '#4c4c4c'
 								}
 							} ]
 
@@ -417,7 +708,7 @@
 		//Design Status Pie Chart
 		$scope.newStatusChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -447,12 +738,11 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/almMetricsServices/designstatuschartdata?dashboardName="
@@ -463,7 +753,6 @@
 					.success(function(response) {
 						$scope.data = response;
 						$scope.tcstatuschart($scope.data);
-						$rootScope.dataloader=false;
 
 					});
 
@@ -473,13 +762,10 @@
 				$scope.data1 = [];
 
 				for (var i = 0; i < $scope.result.length; i++) {
-					if ($scope.result[i].automationType != null) {
-						$scope.labels1.push($scope.result[i].automationType);
-					}else
-						{
-						$scope.labels1.push("No Category");
-						}
-					
+					if ($scope.result[i].testDesignStatus == "") {
+						$scope.result[i].testDesignStatus = "No Status";
+					}
+					$scope.labels1.push($scope.result[i].testDesignStatus);
 					$scope.data1.push($scope.result[i].statuscount);
 				}
 				$scope.labelspie = $scope.labels1;
@@ -521,12 +807,12 @@
 						maintainAspectRatio : false,
 						pieceLabel : {
 							render : 'value',
-							fontColor: '#4c4c4c'
+							fontColor : '#4c4c4c'
 						},
 
 						legend : {
 							display : true,
-							position : 'right',
+							position : 'bottom',
 							labels : {
 								fontColor : '#4c4c4c',
 								boxWidth : 20,
@@ -543,7 +829,7 @@
 
 		$scope.newTypeChart = function(domain, project, release) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -573,12 +859,11 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/almMetricsServices/designtypechartdata?dashboardName="
@@ -597,14 +882,7 @@
 				$scope.data1 = [];
 
 				for (var i = 0; i < $scope.result.length; i++) {
-					if($scope.result[i].automationStatus!=null)
-					{
-						$scope.labels1.push($scope.result[i].automationStatus);
-						}
-					else{
-						$scope.labels1.push('Blank');
-					}
-					
+					$scope.labels1.push($scope.result[i].testType);
 					$scope.data1.push($scope.result[i].typecount);
 				}
 				$scope.labelspie = $scope.labels1;
@@ -652,12 +930,12 @@
 						maintainAspectRatio : false,
 						pieceLabel : {
 							render : 'value',
-							fontColor: '#4c4c4c'
+							fontColor : '#4c4c4c'
 						},
 
 						legend : {
 							display : true,
-							position : 'right',
+							position : 'bottom',
 							labels : {
 								fontColor : '#4c4c4c',
 								boxWidth : 20,
@@ -674,7 +952,7 @@
 		//Design Count by Owner - BAR CHART
 		$scope.newOwnerCountChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -705,12 +983,11 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
 			
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/almMetricsServices/designownerchartdata?dashboardName="
@@ -762,10 +1039,7 @@
 											"rgba(153, 102, 255, 0.8)",
 											"rgba(75, 192, 192, 0.8)",
 											"rgba(255, 159, 64, 0.8)",
-											"rgba(255, 99, 132, 0.8)",
-											"rgba(75, 192, 192, 0.8)",
-											"rgba(192, 114, 192, 0.8)",
-											"rgba(255, 216, 79, 0.8)"],
+											"rgba(255, 99, 132, 0.8)" ],
 									borderColor : [ "rgba(199, 99, 5, 0.9)",
 											"rgba(255, 31, 0, 0.8)",
 											"rgba(6, 239, 212, 0.8)",
@@ -777,10 +1051,7 @@
 											"rgba(153, 102, 255, 0.8)",
 											"rgba(75, 192, 192, 0.8)",
 											"rgba(255, 159, 64, 0.8)",
-											"rgba(255, 99, 132, 0.8)",
-											"rgba(75, 192, 192, 0.8)",
-											"rgba(192, 114, 192, 0.8)",
-											"rgba(255, 216, 79, 0.8)"],
+											"rgba(255, 99, 132, 0.8)" ],
 									borderWidth : 1
 								} ]
 							},
@@ -836,27 +1107,28 @@
 								},
 								scales : {
 									yAxes : [ {
+
+										ticks : {
+											fontColor : '#4c4c4c'
+										},
 										scaleLabel : {
 											display : true,
-											labelString : 'Test Count',
-											fontColor: '#4c4c4c'
+											labelString : 'Test Count'
 										},
 										ticks : {
 											beginAtZero : true,
-											fontColor: '#4c4c4c'
+											fontColor : '#4c4c4c'
 										}
 									} ],
 									xAxes : [ {
+
+										ticks : {
+											fontColor : '#4c4c4c'
+										},
 										scaleLabel : {
 											display : true,
 											labelString : 'Owner',
-											fontColor: '#4c4c4c'
-										},
-										gridLines: {
-    		                                color: "rgba(255,255,255,0.2)"
-    		                            },
-										ticks: {
-											fontColor: '#4c4c4c'
+											fontColor : '#4c4c4c'
 										},
 										barThickness : 40
 									} ]
@@ -869,11 +1141,9 @@
 
 		}
 
-		$scope.tcdesignTableData = function(start_index) {
-			
-			
+		$scope.tcTableData = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -897,13 +1167,7 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
 			$http.get(
 					"./rest/almMetricsServices/tcTableDetails?itemsPerPage="
 							+ $scope.itemsPerPage + "&start_index="
@@ -915,13 +1179,11 @@
 					function(response) {
 						$rootScope.tcTableDetails = response;
 					});
-			
-			
 
 		}
 
-		$scope.initialdesigncountpaginate = function() {
-			var token = getEncryptedValue();
+		/*$scope.initialcountpaginate = function() {
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -943,13 +1205,7 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
 			$http.get(
 					"rest/testCaseServices/tcTableRecordsCount?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -957,7 +1213,7 @@
 							+ vardtfrom + "&vardtto=" + vardtto
 							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
 					.success(function(response) {
-						$rootScope.testdesigndatapaginate = response;
+						$rootScope.testdatapaginate = response;
 					});
 		}
 
@@ -974,8 +1230,8 @@
 
 		// Table on-load with sort implementation
 		$scope.sortedtable = function(sortvalue, start_index, reverse) {
-			paginationService.setCurrentPage("tcdesignpaginate", start_index);
-			var token = getEncryptedValue();
+			paginationService.setCurrentPage("tcpaginate", start_index);
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1020,7 +1276,6 @@
 		$scope.itemsPerPage = 5;
 
 		// search
-		
 		$scope.search = function(start_index, searchField, searchText) {
 			$scope.start_index = start_index;
 			$scope.searchField = searchField;
@@ -1032,9 +1287,6 @@
 			if ($scope.searchField == "testID") {
 				$rootScope.testID = searchText;
 				$scope.key = true;
-			} else if ($scope.searchField == "releaseName") {
-				$rootScope.releaseName = searchText;
-				$scope.key = true;
 			} else if ($scope.searchField == "testName") {
 				$rootScope.testName = searchText;
 				$scope.key = true;
@@ -1044,11 +1296,8 @@
 			} else if ($scope.searchField == "testDesigner") {
 				$rootScope.testDesigner = searchText;
 				$scope.key = true;
-			} else if ($scope.searchField == "automationType") {
-				$rootScope.automationType = searchText;
-				$scope.key = true;
-			} else if ($scope.searchField == "automationStatus") {
-				$rootScope.automationStatus = searchText;
+			} else if ($scope.searchField == "testType") {
+				$rootScope.testType = searchText;
 				$scope.key = true;
 			} else if ($scope.searchField == "testDesignStatus") {
 				$rootScope.testDesignStatus = searchText;
@@ -1059,9 +1308,8 @@
 
 		}
 
-		
-		$scope.searchable = function() {
-			var token = getEncryptedValue();
+		$scope.searchable = function(start_index, searchField, searchText) {
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1088,18 +1336,13 @@
 			} else {
 				vardtto = $rootScope.dtovalTc;
 			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
 
 			$http.get(
 					"./rest/testCaseServices/searchpagecount?testID="
 							+ $rootScope.testID + "&testName="
-							+ $rootScope.testName + "&releaseName="
-							+ $rootScope.releaseName + "&automationType="
-							+ $rootScope.automationType + "&automationStatus="
-							+ $rootScope.automationStatus + "&testDesigner="
+							+ $rootScope.testName + "&testType="
+							+ $rootScope.testType + "&testDescription="
+							+ $rootScope.testDescription + "&testDesigner="
 							+ $rootScope.testDesigner + "&testDesignStatus="
 							+ $rootScope.testDesignStatus + "&dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1107,19 +1350,17 @@
 							+ vardtfrom + "&vardtto=" + vardtto
 							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
 					.success(function(response) {
-						$rootScope.testdesigndatapaginate = response;
+						$rootScope.testdatapaginate = response;
 					});
-			paginationService.setCurrentPage("tcdesignpaginate", $scope.start_index);
+			paginationService.setCurrentPage("tcpaginate", start_index);
 			$scope.itemsPerPage = 5;
-			$scope.index=$scope.start_index;
 			$http.get(
 					"./rest/testCaseServices/searchTest?testID="
 							+ $rootScope.testID + "&testName="
-							+ $rootScope.testName + "&releaseName="
-							+ $rootScope.releaseName + "&automationType="
-							+ $rootScope.automationType + "&automationStatus="
-							+ $rootScope.automationStatus + "&testDesigner="
-							+ $rootScope.testDesigner + "&testDesignStatus="
+							+ $rootScope.testName + "&testDescription="
+							+ $rootScope.testDescription + "&testDesigner="
+							+ $rootScope.testDesigner + "&testType="
+							+ $rootScope.testType + "&testDesignStatus="
 							+ $rootScope.testDesignStatus + "&itemsPerPage="
 							+ $scope.itemsPerPage + "&start_index="
 							+ $scope.start_index + "&dashboardName="
@@ -1129,30 +1370,24 @@
 							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
 					.success(
 							function(response) {
-								console.log("searchTest response :" + response);
 								if (response == "" && $scope.key == false) {
 									$rootScope.searchkey = false;
-									$scope.initialdesigncountpaginate();
-									$scope.tcdesignTableData(1);
-								}else if(response == null){
-									$rootScope.searchkey = false;
-									$scope.initialdesigncountpaginate();
-									$scope.tcdesignTableData(1);
+									$scope.initialcountpaginate();
+									$scope.tcTableData(1);
 								} else {
 									paginationService.setCurrentPage(
-											"tcdesignpaginate", $scope.start_index);
+											"tcpaginate", $scope.start_index);
 									$rootScope.tcTableDetails = response;
 								}
 							});
-		}
+		}*/
 
 		//TC Lazy Load Table Code Starts Here 
 		$scope.tcpageChangedLevel = function(pageno) {
-			
 			$scope.pageno = pageno;
 			if ($scope.sortBy == undefined && $rootScope.sortkey == false
 					&& $rootScope.searchkey == false) {
-				$scope.tcdesignTableData($scope.pageno);
+				$scope.tcTableData($scope.pageno);
 			} else if ($rootScope.sortkey == true) {
 				$scope
 						.sortedtable($scope.sortBy, $scope.pageno,
@@ -1183,61 +1418,30 @@
 
 		/* Date Filter Code Starts Here */
 		// CALENDER DEFAULT VALUE
-
 		// GET SELECTED FROM DATE CALENDAR
 		// Get start date
 		$scope.getfromdate = function(dtfrom) {
-			$rootScope.dataloader=true;
 			$rootScope.dfromvalTc = dtfrom;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtfrom', dtfrom);
 			localStorageService.set('timeperiod', null);
 			$rootScope.timeperiodTc = localStorageService.get('timeperiod');
-			
-			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
-			}
-			
 			$rootScope.designfilterfunction();
-			$scope.tcdesignTableData(1);
-			$scope.tcTableDataExport(1);
 		}
 		// Get end date
 		$scope.gettodate = function(dtto) {
-			$rootScope.dataloader=true;
 			$rootScope.dtovalTc = dtto;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtto', dtto);
 			localStorageService.set('timeperiod', null);
 			$rootScope.timeperiodTc = localStorageService.get('timeperiod');
-			
-			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
-			}
-			
-			
 			$rootScope.designfilterfunction();
-			$scope.tcdesignTableData(1);
-			$scope.tcTableDataExport(1);
 		}
 
 		$scope.gettimeperiod = function() {
-			$rootScope.timeperiodTcdrops = [ "Last 7 days", "Last 15 days",
-					"Last 30 days", "Last 60 days", "Last 90 days",
-					"Last 180 days", "Last 365 days" ];
-			$rootScope.noofdays = ["7","15", "30", "60", "90", "180", "365" ];
+			$rootScope.timeperiodTcdrops = [ "Last 30 days", "Last 60 days",
+					"Last 90 days", "Last 180 days", "Last 365 days" ];
+			$rootScope.noofdays = [ "30", "60", "90", "180", "365" ];
 
 			if (localStorageService.get('dtfrom') != null
 					&& localStorageService.get('dtto') == null) {
@@ -1270,7 +1474,6 @@
 		}
 
 		$scope.gettimeperiodselection = function(timeperiod) {
-			$rootScope.dataloader=true;			
 			localStorageService.set('timeperiod', timeperiod);
 			$rootScope.timeperiodTc = localStorageService.get('timeperiod');
 			var index = $rootScope.timeperiodDashdrops.indexOf(timeperiod);
@@ -1283,20 +1486,7 @@
 					- selectednoofdays));
 
 			$scope.convertDateToString($scope.dtfrom, $scope.dtto);
-			
-			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
-			}
-			
 			$rootScope.designfilterfunction();
-			$scope.tcdesignTableData(1);
-			$scope.tcTableDataExport(1);
 		}
 
 		$scope.convertDateToString = function(dtfrom, dtto) {
@@ -1346,14 +1536,15 @@
 			$scope.newStatusChart();
 			$scope.newTypeChart();
 			$scope.newOwnerCountChart();
+			//$scope.tcTableData(1);
 			$scope.tcdesignTableData(1);
-			$scope.initialdesigncountpaginate();
+			$scope.initialcountpaginate();
 			$scope.regressionautomationFilter();
 		}
 
 		//Total Test Count(BA Panel)
 		$rootScope.testCountFilter = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1375,12 +1566,7 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalTc;
-				
 			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
 
 			$http.get(
 					"rest/almMetricsServices/totalTestCountFilter?dashboardName="
@@ -1395,7 +1581,7 @@
 		}
 		// Test Design Coverage(BA Panel)
 		$rootScope.designCoverageFilter = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1426,6 +1612,10 @@
 			} else {
 				vardtto = $rootScope.dtovalTc;
 			}
+			
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/almMetricsServices/designCovFilter?dashboardName="
@@ -1444,7 +1634,7 @@
 
 		//Automation Coverage
 		$rootScope.autoCoverageFilter = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1476,6 +1666,11 @@
 			} else {
 				vardtto = $rootScope.dtovalTc;
 			}
+			
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+			
 			$http.get(
 					"rest/almMetricsServices/autoCovFilter?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1490,64 +1685,6 @@
 							});
 
 		}
-
-		// Regression Automation
-
-		$rootScope.regressionautomationFilter = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-
-			var vardtfrom = "";
-			var vardtto = "";
-			//var vartime = "";
-
-			/*if ($rootScope.timeperiodTc == null || $rootScope.timeperiodTc == undefined
-					|| $rootScope.timeperiodTc == "") {
-				vartime = "-";
-			} else {
-				vartime = $rootScope.timeperiodTc;
-			}*/
-
-			if ($rootScope.dfromvalTc == null
-					|| $rootScope.dfromvalTc == undefined
-					|| $rootScope.dfromvalTc == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTc;
-			}
-
-			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
-					|| $rootScope.dtovalTc == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTc;
-				
-			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
-			$http.get(
-					"rest/almMetricsServices/regressionautoFilter?dashboardName="
-							+ dashboardName + "&domainName=" + domainName
-							+ "&projectName=" + projectName + "&vardtfrom="
-							+ vardtfrom + "&vardtto=" + vardtto
-							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
-					.success(
-							function(response) {
-								$scope.regautofilter = response;
-								$scope.loadPieCharts('#regautofilter',
-										$scope.regautofilter);
-							});
-
-		}
-
-		// End of Regression automation 
 
 		/* Date Filter Code Ends Here */
 
@@ -1589,7 +1726,7 @@
 			destinationCanvas.height = canvas.height;
 			var destCtx = destinationCanvas.getContext('2d');
 			destCtx.drawImage(canvas, 0, 0);
-			fillCanvasBackgroundWithColor(destinationCanvas, '#fcfcfc');
+			fillCanvasBackgroundWithColor(destinationCanvas, '#4F5D77');
 			if (format === 'jpeg') {
 				saveCanvasAs(destinationCanvas, filename + ".jpg");
 			}
@@ -1600,7 +1737,7 @@
 		}
 		$scope.tcTableDataExport = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1625,11 +1762,6 @@
 			} else {
 				vardtto = $rootScope.dtovalTc;
 			}
-			
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
-			
 			var itemsPerPage = 0;
 			$http.get(
 					"./rest/almMetricsServices/tcTableDetails?itemsPerPage="
@@ -1658,7 +1790,7 @@
 					csvString = csvString + "\n";
 				}
 				csvString = csvString.substring(0, csvString.length - 1);
-				//console.log(csvString);
+				console.log(csvString);
 				var blob = new Blob([ csvString ], {
 					type : "text/csv;charset=utf-8;"
 				});
@@ -1675,10 +1807,60 @@
 		}
 		/* Export graphs and tables */
 		
-		//Remote the html tag from the data
-		$scope.htmlToPlaintext = function(text) {
-			  return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+		$rootScope.regressionautomationFilter = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			var vardtfrom = "";
+			var vardtto = "";
+			//var vartime = "";
+
+			/*if ($rootScope.timeperiodTc == null || $rootScope.timeperiodTc == undefined
+					|| $rootScope.timeperiodTc == "") {
+				vartime = "-";
+			} else {
+				vartime = $rootScope.timeperiodTc;
+			}*/
+
+			if ($rootScope.dfromvalTc == null
+					|| $rootScope.dfromvalTc == undefined
+					|| $rootScope.dfromvalTc == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTc;
 			}
+
+			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
+					|| $rootScope.dtovalTc == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTc;
+
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"rest/almMetricsServices/regressionautoFilter?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodTc, config)
+					.success(
+							function(response) {
+								$scope.regautofilter = response;
+								$scope.loadPieCharts('#regautofilter',
+										$scope.regautofilter);
+							});
+
+		}
+
 
 	}
 })();

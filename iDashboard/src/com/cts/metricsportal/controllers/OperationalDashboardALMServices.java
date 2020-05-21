@@ -136,27 +136,9 @@ public class OperationalDashboardALMServices {
 			@QueryParam("timeperiod") String timeperiod) throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException, ParseException{
 
 		long totaltexecount=0;
-		totaltexecount = operationalDbAlmMetrics.getExecutionCount(authString, dashboardName, domainName, projectName, vardtfrom, vardtto, timeperiod);
+		totaltexecount = operationalDbAlmMetrics. getExecutionCount(authString, dashboardName, domainName, projectName, vardtfrom, vardtto, timeperiod);
 		return totaltexecount;
 	}
-	
-	//Total Unique Execution Count
-		@GET
-		@Path("/totaluniqueExeCount")
-		@Produces(MediaType.APPLICATION_JSON)
-
-		public  long getuniqueExecutionCount(@HeaderParam("Authorization") String authString,
-				@QueryParam("dashboardName") String dashboardName,
-				@QueryParam("domainName") String domainName,
-				@QueryParam("projectName") String projectName,
-				@QueryParam("vardtfrom") String vardtfrom, 
-				@QueryParam("vardtto") String vardtto,
-				@QueryParam("timeperiod") String timeperiod) throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException, ParseException{
-
-			long totaltuniqueexecount=0;
-			totaltuniqueexecount = operationalDbAlmMetrics. getuniqueExecutionCount(authString, dashboardName, domainName, projectName, vardtfrom, vardtto, timeperiod);
-			return totaltuniqueexecount;
-		}
 
 	// Execution Coverage
 	@GET
@@ -203,7 +185,7 @@ public class OperationalDashboardALMServices {
 	@GET
 	@Path("/defRejectRate")
 	@Produces(MediaType.APPLICATION_JSON)
-	public long defectRejectionRateFilter(@HeaderParam("Authorization") String authString,
+	public int defectRejectionRateFilter(@HeaderParam("Authorization") String authString,
 			@QueryParam("dashboardName") String dashboardName,
 			@QueryParam("domainName") String domainName,
 			@QueryParam("projectName") String projectName,
@@ -214,7 +196,7 @@ public class OperationalDashboardALMServices {
 			)throws JsonParseException,
 	JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException, ParseException {
 
-		long defRejRate = 0;
+		int defRejRate = 0;
 		defRejRate = operationalDbAlmMetrics.defectRejectionRateFilter(authString, dashboardName, domainName, projectName, vardtfrom, vardtto, timeperiod);
 		return defRejRate;
 	}

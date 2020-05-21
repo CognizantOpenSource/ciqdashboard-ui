@@ -1,6 +1,8 @@
 package com.cts.metricsportal.RestAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -15,6 +17,14 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 	public static final String AUTHENTICATION_DASHBOARD_NAME = "dashboardName";
 	public static final String AUTHENTICATION_DOMAIN = "domainName";
 	public static final String AUTHENTICATION_PROJECT = "projectName";
+	private static final List<String> URL_NOT_TO_AUTHENTICATE = new ArrayList<String>();
+	
+	//add all urls which do not need authentication
+	static {
+		URL_NOT_TO_AUTHENTICATE.add("/jsonServices/logout");
+		URL_NOT_TO_AUTHENTICATE.add("/jsonServices/lockAccount");
+		URL_NOT_TO_AUTHENTICATE.add("/jsonServices/Resetpassword");
+	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain filter) throws IOException, ServletException {
@@ -22,22 +32,19 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 		
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-			
+			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
 			String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
 			String dashboardName = httpServletRequest.getParameter(AUTHENTICATION_DASHBOARD_NAME);
 			String domainName = httpServletRequest.getParameter(AUTHENTICATION_DOMAIN);
 			String projectName = httpServletRequest.getParameter(AUTHENTICATION_PROJECT);
-					
-			boolean authenticationStatus = false;
-			boolean projectAccessStatus = false;
-			boolean operationalAccessStatus = false;
-			boolean LCAccessStatus = false;
-			boolean adminStatus = false;
-			boolean qbotAccessStatus = false;
+			Boolean isPlugin = false; //for future referenceas in bots-653731
+			Integer authenticationStatus = AuthenticationService.AUTH_FAILED;;
+			boolean authenticationProject = false;
 			
 			//System.out.println(httpServletRequest.getPathInfo());
 			
-			// skipping signup service
+			// --done by Adhish 653731
 			if(httpServletRequest.getPathInfo().contains("/jsonServices/signup")
 				||	httpServletRequest.getPathInfo().contains("/authentication") || 
 				httpServletRequest.getPathInfo().contains("/licenseDetails") ||
@@ -45,117 +52,96 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 				httpServletRequest.getPathInfo().contains("/lockAccount") ||
 				httpServletRequest.getPathInfo().contains("/reportDataServices") ||
 				
-
 				(!httpServletRequest.getPathInfo().contains("/qbotServices/checkQbotHome")) && httpServletRequest.getPathInfo().contains("/qbotServices")){
 				
-				authenticationStatus =true;
+				authenticationStatus = AuthenticationService.OK;
 			}
 			
 			// Admin check
 			
-			else if(httpServletRequest.getPathInfo().contains("/jsonServices/adminDetails")
-		|| httpServletRequest.getPathInfo().contains("/jsonServices/createAdminUser")
-					){
-				
+			else if(httpServletRequest.getPathInfo().contains("/jsonServices/admin")
+		|| httpServletRequest.getPathInfo().contains("/jsonServices/createAdminUser"))
+			{
 				AuthenticationService authenticationService = new AuthenticationService();
-				boolean authentication = authenticationService.authenticate(authCredentials);
+				authenticationStatus = authenticationService.checkAdminUser(authCredentials);
 				
-				if (authentication == true){
-
-				adminStatus = authenticationService.checkAdminUser(authCredentials);
-				authenticationStatus = adminStatus;}
-				
-				else{
-					authenticationStatus = false;
-				}
 			}
 			
 			//project access check
 			else if(dashboardName != null && domainName != null && projectName != null){
 				
 				AuthenticationService authenticationService = new AuthenticationService();
-				boolean authentication = authenticationService.authenticate(authCredentials);
-				
-				if (authentication == true){
-
-				projectAccessStatus = authenticationService.authenticateProjects(authCredentials,dashboardName,domainName,projectName);
-				authenticationStatus = projectAccessStatus;}
-				
-				else{
-					authenticationStatus = false;
-				}
-				
+				authenticationProject = authenticationService.authenticateProjects(authCredentials,dashboardName,domainName,projectName);
+				if(authenticationProject)
+					authenticationStatus = AuthenticationService.OK;
 			}
 			
-			// operational layer access
+			// operational layer access 
 			else if(httpServletRequest.getPathInfo().contains("/operationalServices")){
 				
 				AuthenticationService authenticationService = new AuthenticationService();
-				boolean authentication = authenticationService.authenticate(authCredentials);
-				
-				if (authentication == true){
-
-				operationalAccessStatus = authenticationService.checkOperationalLayerAccess(authCredentials);
-				authenticationStatus = operationalAccessStatus;}
-				
-				else{
-					authenticationStatus = false;
-				}
-				
+				authenticationStatus = authenticationService.checkOperationalLayerAccess(authCredentials);
 			}
 			
 			// LC layer access
 			else if(httpServletRequest.getPathInfo().contains("/lifeCycleServices")){
 				
 				AuthenticationService authenticationService = new AuthenticationService();
-				boolean authentication = authenticationService.authenticate(authCredentials);
-				
-				if (authentication == true){
-
-				LCAccessStatus = authenticationService.checkLCLayerAccess(authCredentials);
-				authenticationStatus = LCAccessStatus;}
-				
-				else{
-					authenticationStatus = false;
-				}
+				authenticationStatus = authenticationService.checkLifecycleLayerAccess(authCredentials);
 				
 			}
 			
-				else if(httpServletRequest.getPathInfo().contains("/qbotServices/checkQbotHome")){
+			else if(httpServletRequest.getPathInfo().contains("/qbotServices/checkQbotHome")){
 				
 				AuthenticationService authenticationService = new AuthenticationService();
-				boolean authentication = authenticationService.authenticate(authCredentials);
-				
-				if (authentication == true){
-
-				qbotAccessStatus = authenticationService.checkIntelligentLayerAccess(authCredentials);
-				authenticationStatus = qbotAccessStatus;}
-				
-				else{
-					authenticationStatus = false;
-				}
+				authenticationStatus = authenticationService.checkIntelligentLayerAccess(authCredentials);
 				
 			}
+			
 			
 			//other services
 			else{
-				
-				AuthenticationService authenticationService = new AuthenticationService();
-				authenticationStatus = authenticationService.authenticate(authCredentials);
+				for(String url : URL_NOT_TO_AUTHENTICATE)
+				{
+					if(httpServletRequest.getPathInfo().equals(url)) {
+						authenticationStatus = AuthenticationService.OK;
+						break;
+					}
+				}
+				if(authenticationStatus != AuthenticationService.OK) {
+					 AuthenticationService authenticationService = new AuthenticationService();
+					 authenticationStatus = authenticationService.authenticate(authCredentials, isPlugin);	
+				}
+			
 			}
 			
-
-			
-			if (authenticationStatus) {
-				filter.doFilter(request, response);
-			} else {
+			if (authenticationStatus == AuthenticationService.OK) {
+				filter.doFilter(request, httpServletResponse);
+			}
+			else if(authenticationStatus == AuthenticationService.SESSION_TIMEOUT) {
+				if(response instanceof HttpServletResponse){
+					httpServletResponse.sendError(HttpServletResponse.SC_NON_AUTHORITATIVE_INFORMATION,
+							"Session Timeout");
+				}
+			}
+			else if (authenticationStatus == AuthenticationService.OTHER_ACTIVE_SESSION) {
 				if (response instanceof HttpServletResponse) {
-					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-					httpServletResponse
-							.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					httpServletResponse
-							.setHeader("Content-Security-Policy", "frame-ancestors 'self'");
-					//System.out.println(httpServletResponse.getStatus());
+					httpServletResponse.sendError(HttpServletResponse.SC_CONFLICT,
+							"Another Active Session");
+				}
+			}
+			else if (authenticationStatus == AuthenticationService.UNKNOWN_EXCEPTION) {
+				if (response instanceof HttpServletResponse) {
+					httpServletResponse.sendError(HttpServletResponse.SC_EXPECTATION_FAILED,
+							"Unknown Exception in Auth Service");
+				}
+			}
+			else {
+				if (response instanceof HttpServletResponse) {
+					
+					httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+					httpServletResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self'");
+					System.out.println(httpServletResponse.getStatus());
 					/*httpServletResponse.sendRedirect("");*/
 				}
 			}

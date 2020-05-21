@@ -9,15 +9,8 @@
 
 	/** @ngInject */
 	function defectsJiraCtrl($sessionStorage, paginationService,
-			localStorageService, $element, $scope, $base64, $http, $timeout,
+			localStorageService, $element, $scope, $base64, AES, $http, $timeout,
 			$uibModal, $rootScope, baConfig, layoutPaths) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
 
 		var dashboardName = localStorageService.get('dashboardName');
 		var owner = localStorageService.get('owner');
@@ -30,7 +23,7 @@
 
 		// PROJECT DROP DOWN LIST
 		$scope.getprojectName = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -66,7 +59,7 @@
 		};
 
 		function onSelectionChangedproject() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -84,7 +77,7 @@
 
 		$scope.updateProjects = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -125,7 +118,7 @@
 
 		// SPRINT DROP DOWN LIST
 		$scope.getsprintName = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -206,7 +199,7 @@
 		};
 
 		function onSelectionChangedsprint() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -221,7 +214,7 @@
 
 		$scope.updateSprints = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -267,7 +260,7 @@
 
 		$scope.getepicName = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -302,7 +295,7 @@
 		};
 
 		function onSelectionChangedepic() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -317,7 +310,7 @@
 
 		$scope.updateEpics = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -358,7 +351,7 @@
 
 $scope.getRollingPeriod = function() {
 			
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -380,7 +373,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.selectedrollingPeriod = function() {
 			$scope.rollingPeriod = localStorageService.get('rollingPeriod');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -441,7 +434,7 @@ $scope.getRollingPeriod = function() {
 		// CALENDER DEFAULT VALUE
 		$scope.getdefaultdate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -494,7 +487,7 @@ $scope.getRollingPeriod = function() {
 		// CALENDER ON LOAD VALUE
 		$scope.getOnLoaddate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -580,7 +573,7 @@ $scope.getRollingPeriod = function() {
 		// Closed Defect Count
 		$scope.defclosedcount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -619,7 +612,7 @@ $scope.getRollingPeriod = function() {
 		// Re-Open Defect Count - BA Panel
 		$scope.reopencount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -659,7 +652,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.defectpassfailTrend = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -748,7 +741,8 @@ $scope.getRollingPeriod = function() {
 							xAxes : [ {
 								scaleLabel : {
 									display : true,
-									labelString : 'Time Period'
+									labelString : 'Time Period',
+									fontColor: '#4c4c4c'
 								},
 								type : "time",
 								time : {
@@ -767,19 +761,25 @@ $scope.getRollingPeriod = function() {
 									unit : "week"
 								},
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
+								},
+								ticks : {
+									beginAtZero : true,
+									fontColor: '#4c4c4c'
 								}
 							} ],
 							yAxes : [ {
 								scaleLabel : {
 									display : true,
-									labelString : 'Bugs Count'
+									labelString : 'Bugs Count',
+									fontColor: '#4c4c4c'
 								},
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
 								},
 								ticks : {
-									beginAtZero : true
+									beginAtZero : true,
+									fontColor: '#4c4c4c'
 								}
 							} ]
 
@@ -788,7 +788,7 @@ $scope.getRollingPeriod = function() {
 							display : true,
 							position : 'bottom',
 							labels : {
-								fontColor : '#ffffff',
+								fontColor : '#4c4c4c',
 								boxWidth : 20,
 								fontSize : 10
 							}
@@ -831,7 +831,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.defectLoggedTrend = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -979,7 +979,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.newOwnerChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1152,7 +1152,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.defReportedChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1390,7 +1390,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.prioritybarChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1560,7 +1560,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.defStatusChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1715,16 +1715,21 @@ $scope.getRollingPeriod = function() {
 								scales : {
 									yAxes : [ {
 										ticks : {
-											beginAtZero : true
+											beginAtZero : true,
+											fontColor: '#4c4c4c'
 										},
 										gridLines : {
-											color : "rgba(255,255,255,0.2)"
+											color : "#4c4c4c"
 										}
 									} ],
 									xAxes : [ {
 										barThickness : 40,
+										ticks : {
+											beginAtZero : true,
+											fontColor: '#4c4c4c'
+										},
 										gridLines : {
-											color : "rgba(255,255,255,0.2)"
+											color : "#4c4c4c"
 										}
 									} ]
 
@@ -1842,7 +1847,7 @@ $scope.getRollingPeriod = function() {
 							display : true,
 							position : 'bottom',
 							labels : {
-								fontColor : '#ffffff',
+								fontColor : '#4c4c4c',
 								boxWidth : 20,
 								fontSize : 10
 							}
@@ -1859,7 +1864,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.openstatusbarChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -2043,7 +2048,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.defectOpenPriorityPie = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -2156,14 +2161,14 @@ $scope.getRollingPeriod = function() {
 						},
 						pieceLabel : {
 							render : 'value',
-							fontColor : 'white'
+							fontColor : '#4c4c4c'
 						},
 
 						legend : {
 							display : true,
 							position : 'bottom',
 							labels : {
-								fontColor : '#ffffff',
+								fontColor : '#4c4c4c',
 								boxWidth : 20,
 								fontSize : 10
 							}
@@ -2181,7 +2186,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.openstatusbyversion = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -2364,7 +2369,7 @@ $scope.getRollingPeriod = function() {
 
 		$scope.defectTableData = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -2430,7 +2435,7 @@ $scope.getRollingPeriod = function() {
 		/* Landing Page BA Panel Code Starts Here */
 		// Total Defect Count - Landing Page
 		$scope.totDefCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2446,7 +2451,7 @@ $scope.getRollingPeriod = function() {
 
 		// Defect Open Rate - Landing Page
 		$rootScope.defectopenrate = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token

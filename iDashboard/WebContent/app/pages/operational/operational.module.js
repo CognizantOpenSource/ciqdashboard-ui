@@ -21,8 +21,6 @@
         });
         
         
-    
-        
         /*.state('createDashbaordOperational', {
           url: '/createDashbaordOperational',
           directive:'baSidebar',

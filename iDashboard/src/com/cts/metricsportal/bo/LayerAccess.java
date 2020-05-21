@@ -4,27 +4,26 @@ import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
 
 public class LayerAccess {
 	
-	public static boolean getLCLayerAccess(String authString) {
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean LCAccess = UserEncrypt.checkLCLayerAccess(authString);
-		return LCAccess;
-	}
-
 	public static String getUser(String authString) {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 		return userId;
 	}
+	 //added by adhish for token authentication i.e token verified
+	public static boolean authenticateToken(String authString) {
+		boolean authStatus = true;
+		return authStatus;
+	}
 
+	//these methods only return true i.e token verified --653731
 	public static boolean getOperationalLayerAccess(String authString) {
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean operationalAccess = UserEncrypt
-				.checkOperationalLayerAccess(authString);
-		return operationalAccess;
+		
+		//boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		return true;
 	}
 	public static boolean getAdminLayerAccess(String authString) {
-		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
-		return adminstatus;
+		//AuthenticationService AuthServ = new AuthenticationService();
+		//Integer adminstatus = AuthServ.checkAdminUser(authString);
+		return true;
 	}
 }

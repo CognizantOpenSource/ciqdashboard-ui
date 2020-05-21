@@ -5,17 +5,10 @@
 			'JiraTestExecutionCtrl', JiraTestExecutionCtrl);
 
 	/** @ngInject */
-	function JiraTestExecutionCtrl($element, paginationService, UserService,
+	function JiraTestExecutionCtrl($element, AES, paginationService, UserService,
 			localStorageService, $scope, $base64, $http, $timeout, $uibModal,
 			$rootScope, baConfig, layoutPaths, $sessionStorage) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
-
+		
 		$rootScope.sortkey = false;
 		$rootScope.searchkey = false;
 		$rootScope.menubar = true;
@@ -27,7 +20,7 @@
 
 		$scope.getRollingPeriod = function() {
 			
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -50,7 +43,7 @@
 		
 		$scope.selectedrollingPeriod = function() {
 			$scope.rollingPeriod = localStorageService.get('rollingPeriod');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -110,13 +103,12 @@
 		}
 		// VERSION DROP DOWN LIST
 		$scope.getversionName = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
-			$scope.getRollingPeriod
 			$http.get(
 					"./rest/jiraMetricsServices/versionsList?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -194,7 +186,7 @@
 		function onSelectionChangedversion() {
 			document.getElementById('ver').style.pointerEvents = 'none';
 			document.getElementById('cyc').style.pointerEvents = 'none';
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -215,7 +207,7 @@
 
 		$scope.updateVersions = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -251,7 +243,7 @@
 				} else {
 					$scope.getcycleName();
 					$scope.getdefaultdate();
-					$scope.exefilterfunction();
+					//$scope.exefilterfunction();
 				}
 			});
 			
@@ -260,7 +252,7 @@
 		// CYCLE DROP DOWN LIST
 		$scope.getcycleName = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -279,7 +271,6 @@
 								"label" : $scope.cycles[i]
 							});
 						}
-						
 						
 						$scope.selectcycles = [];
 						for ( var i=0;i< $scope.multicycles.length;i++) {
@@ -302,7 +293,7 @@
 			document.getElementById('ver').style.pointerEvents = 'none';
 			document.getElementById('cyc').style.pointerEvents = 'none';
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -323,7 +314,7 @@
 
 		$scope.updateCycles = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -360,7 +351,7 @@
 				} else {
 
 					
-					var token = getEncryptedValue();
+					var token = AES.getEncryptedValue();
 					var config = {
 						headers : {
 							'Authorization' : token
@@ -378,36 +369,9 @@
 								$scope.dtto = date;
 								// date1.setDate(date.getDate() - 30);
 								$scope.dtfrom = date1;
-
-								var dfromval = $scope.dtfrom;
-								var month = dfromval.getMonth() + 1;
-								if (month < 10) {
-									month = '0' + month;
-								}
-								var date = dfromval.getDate();
-								if (date < 10) {
-									date = '0' + date;
-								}
-								var year = dfromval.getFullYear();
-
-								$scope.dfromval = "" + month + "/" + date + "/"
-										+ year;
-
-								var dtoval = $scope.dtto;
-								var month = dtoval.getMonth() + 1;
-								if (month < 10) {
-									month = '0' + month;
-								}
-								var date = dtoval.getDate();
-								if (date < 10) {
-									date = '0' + date;
-								}
-								var year = dtoval.getFullYear();
-
-								$scope.dtoval = "" + month + "/" + date + "/"
-										+ year;
-								//localStorageService.set('fromDateVal', $scope.dfromval);
-								//localStorageService.set('toDateVal', $scope.dtoval);
+								
+								$scope.convertDateToStringVal($scope.dtfrom,$scope.dtto);
+								
 								
 								$scope.exefilterfunction();
 								
@@ -423,7 +387,7 @@
 		// CALENDER DEFAULT VALUE
 		$scope.getdefaultdate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -478,7 +442,7 @@
 		// CALENDER ON LOAD VALUE
 		$scope.getOnLoaddate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -549,8 +513,8 @@
 			$scope.testexecutioncount();
 			//$scope.tcOpenCycle();
 			//$scope.trOpenRun();
-			//$rootScope.bugsdetectedcount();
-			//$rootScope.testscreatedvsexecuted();
+			$rootScope.bugsdetectedcount();
+			$rootScope.testscreatedvsexecuted();
 			$scope.ratiooftestcasefails();
 			$scope.executionPassFail();
 
@@ -569,7 +533,7 @@
 
 		$scope.executionrunTableData = function(start_runindex) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -610,7 +574,7 @@
 		};
 
 		$scope.executionrunTableDataCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -676,7 +640,7 @@
 			$scope.runindex = start_runindex;
 			$scope.runorder = runreverse;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -747,7 +711,7 @@
 		}
 
 		$scope.runsearchable = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -823,7 +787,7 @@
 
 		$scope.executioncycleTableData = function(start_cycleindex) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -864,7 +828,7 @@
 		};
 
 		$scope.executioncycleTableDataCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -942,7 +906,7 @@
 			$scope.cycleindex = start_cycleindex;
 			$scope.cycleorder = cyclereverse;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1019,7 +983,7 @@
 		}
 
 		$scope.cyclesearchable = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1097,7 +1061,7 @@
 
 		$scope.testexecutioncount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1141,7 +1105,7 @@
 		// # of TC open chart
 		$scope.tcOpenCycle = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1443,7 +1407,7 @@
 		// # of TR open chart
 		$scope.trOpenRun = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1742,7 +1706,7 @@
 
 		$rootScope.bugsdetectedcount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1804,7 +1768,7 @@
 
 		$scope.ratiooftestcasefails = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1840,7 +1804,7 @@
 							function(response) {
 
 								$scope.mTCFailsCount = response;
-								//console.log($scope.mTCFailsCount);
+								console.log($scope.mTCFailsCount);
 								for ( var type in $scope.mTCFailsCount) {
 									if (type == "Open") {
 										$rootScope.uitestcasefailsopen = $scope.mTCFailsCount[type];
@@ -1858,7 +1822,7 @@
 		// Execution PASS vs FAIL TREND CHART
 		$scope.executionPassFail = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1981,15 +1945,19 @@
 									unit : "month"
 								},
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3",
+								},
+								ticks: { 
+									fontColor: '#4c4c4c'
 								}
 							} ],
 							yAxes : [ {
 								gridLines : {
-									color : "rgba(255,255,255,0.2)",
+									color : "#d8d3d3"
 								},
 								ticks : {
-									beginAtZero : true
+									beginAtZero : true,
+									fontColor: '#4c4c4c'
 								}
 							} ]
 
@@ -1998,7 +1966,7 @@
 							display : true,
 							position : 'bottom',
 							labels : {
-								fontColor : '#ffffff',
+								fontColor : '#4c4c4c',
 								boxWidth : 20,
 								fontSize : 10
 							}
@@ -2044,7 +2012,7 @@
 		// Total Execution Count
 		$rootScope.totExeCount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -2067,7 +2035,7 @@
 		// Tests Created Vs. Executed
 		$rootScope.testscreatedvsexecuted = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {

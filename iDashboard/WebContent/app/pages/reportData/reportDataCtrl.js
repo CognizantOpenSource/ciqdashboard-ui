@@ -20,7 +20,7 @@ function reportDataCtrl ($scope, $rootScope, $window,$base64,paginationService, 
 		$rootScope.var2 = false;
 		$rootScope.var3 = false;
 		$rootScope.var4 = false;
-		$rootScope.var7 = true;
+		$rootScope.var6 = true;
 	 
 			$rootScope.menuItems = [
 					              	    {
@@ -605,14 +605,14 @@ function reportDataCtrl ($scope, $rootScope, $window,$base64,paginationService, 
 					maintainAspectRatio : false,
 	            	pieceLabel: {
 	            	    render: 'value',
-	            	    fontColor:'white'
+	            	    fontColor:'#4c4c4c'
 	            	  },
 	            	  
 	            	  legend: {
 	                      display: true,
 	                      position: 'bottom',
 	                      labels: {
-	                    	   fontColor: '#ffffff',
+	                    	   fontColor: '#4c4c4c',
 	                    	   boxWidth : 20,
 	                    	   fontSize : 10
 	                      }
@@ -686,14 +686,14 @@ function reportDataCtrl ($scope, $rootScope, $window,$base64,paginationService, 
 					maintainAspectRatio : false,
 	            	pieceLabel: {
 	            	    render: 'value',
-	            	    fontColor:'white'
+	            	    fontColor:'#4c4c4c'
 	            	  },
 	            	  
 	            	  legend: {
 	                      display: true,
 	                      position: 'bottom',
 	                      labels: {
-	                    	   fontColor: '#ffffff',
+	                    	   fontColor: '#4c4c4c',
 	                    	   boxWidth : 20,
 	                    	   fontSize : 10
 	                      }
@@ -772,14 +772,14 @@ $scope.geoChart=function(){
 					maintainAspectRatio : false,
 	            	pieceLabel: {
 	            	    render: 'value',
-	            	    fontColor:'white'
+	            	    fontColor:'#4c4c4c'
 	            	  },
 	            	  
 	            	  legend: {
 	                      display: true,
 	                      position: 'bottom',
 	                      labels: {
-	                    	   fontColor: '#ffffff',
+	                    	   fontColor: '#4c4c4c',
 	                    	   boxWidth : 20,
 	                    	   fontSize : 10
 	                      }
@@ -852,14 +852,14 @@ $scope.coeChart=function(){
 				maintainAspectRatio : false,
             	pieceLabel: {
             	    render: 'value',
-            	    fontColor:'white'
+            	    fontColor:'#4c4c4c'
             	  },
             	  
             	  legend: {
                       display: true,
                       position: 'bottom',
                       labels: {
-                    	   fontColor: '#ffffff',
+                    	   fontColor: '#4c4c4c',
                     	   boxWidth : 20,
                     	   fontSize : 10
                       }
@@ -990,15 +990,17 @@ $scope.supportGroup=function(){
               scales: {
                   yAxes: [{
                       ticks: {
-                          beginAtZero:true
+                          beginAtZero:true,
+                          fontColor: '#4c4c4c'
                       },
                       scaleLabel:
 	                       {
 	                    	   display: true,
-	                    	   labelString: ' Count '
+	                    	   labelString: ' Count ',
+	                    	   fontColor: '#4c4c4c'
 	     		          	},
                       gridLines: {
-                          color: "rgba(255,255,255,0.2)"
+                          color: "#d8d3d3"
                       }
                   }],
                   xAxes: [{
@@ -1006,10 +1008,13 @@ $scope.supportGroup=function(){
                           scaleLabel:
 	 	                       {
 	 	                    	   display: true,
-	 	                    	   labelString: 'Support Group'
+	 	                    	   labelString: 'Support Group',
+	 	                    	  fontColor: '#4c4c4c'
 	 	     		          	},
                           gridLines: {
-                              color: "rgba(255,255,255,0.2)"
+                              color: "#d8d3d3"
+                          },ticks: {
+                        	  fontColor: '#4c4c4c'
                           }
                       }]
                   
@@ -1143,15 +1148,17 @@ $scope.typeOfSupport=function(){
                scales: {
                    yAxes: [{
                        ticks: {
-                           beginAtZero:true
+                           beginAtZero:true,
+                           fontColor: '#4c4c4c'
                        },
                        scaleLabel:
 	                       {
 	                    	   display: true,
-	                    	   labelString: 'Count '
+	                    	   labelString: 'Count ',
+	                    	   fontColor: '#4c4c4c'
 	     		          	},
                        gridLines: {
-                           color: "rgba(255,255,255,0.2)"
+                           color: "#d8d3d3"
                        }
                    }],
                    xAxes: [{
@@ -1159,10 +1166,14 @@ $scope.typeOfSupport=function(){
                            scaleLabel:
 	 	                       {
 	 	                    	   display: true,
-	 	                    	   labelString: 'TypeOf Support '
+	 	                    	   labelString: 'TypeOf Support ',
+	 	                    	   fontColor: '#4c4c4c'
 	 	     		          	},
                            gridLines: {
-                               color: "rgba(255,255,255,0.2)"
+                               color: "#d8d3d3"
+                           },
+                           ticks: {
+                        	   fontColor: '#4c4c4c'
                            }
                        }]
                    

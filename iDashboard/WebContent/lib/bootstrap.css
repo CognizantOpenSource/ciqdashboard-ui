@@ -1296,7 +1296,7 @@ h6,
   font-size: 12px;
 }
 p {
-	color: white;
+	color: #ebebeb;
   margin: 0 0 10px;
 }
 .lead {
@@ -5945,7 +5945,7 @@ button.list-group-item-danger.active:focus {
   font-size: 21px;
   font-weight: bold;
   line-height: 1;
-  color: #fff;
+  color: #000000;
   text-shadow: 0 1px 0 #fff;
   filter: alpha(opacity=20);
   opacity: .2;
@@ -6513,7 +6513,6 @@ button.close {
   width: 60%;
   padding-left: 0;
   margin-left: -30%;
-  top: 667px;
   text-align: center;
   list-style: none;
 }
@@ -6528,14 +6527,12 @@ button.close {
   background-color: rgba(0, 0, 0, 0);
   border: 1px solid #4c4c4c;
   border-radius: 10px;
-  display:none;
 }
 .carousel-indicators .active {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   margin: 0;
   background-color: #00b410;
-  display:none;
 }
 .carousel-caption {
   position: absolute;
@@ -6891,10 +6888,7 @@ button.close {
   font-size:20px;
   outline:none;
   } 
-  
-.metricstextcolor {
-	color:#4c4c4c;
-}
+
  
 
 

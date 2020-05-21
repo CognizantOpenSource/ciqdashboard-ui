@@ -1,197 +1,400 @@
 <info-Dialog></info-Dialog>
-<div class="widgets gridster" ng-controller="RequirementsCtrl" >
+    <div ng-controller="RequirementsCtrl">
 
-	<!-- Levis Code Starts Here  -->
+    <!-- Levis Code Starts Here  -->
 	<!-- Filter Starts Here  -->
-
-	<div class="row">
-		<div class="form-group">
-			<!-- <div class="form-group col-md-2">
-				<label>Project Name</label>
-				<div style="width: 100%" ng-dropdown-multiselect=""
-					options="multiprojects" selected-model="selproject"
-					extra-settings="scrollsettings" events="myEventListenersproject"></div>
-			</div> -->
-
-
-			<div class="form-group col-md-2"
-				ng-init="getprojectName();">
-				<label>Sprint Name</label>
-				<div style="width: 100%" ng-dropdown-multiselect=""
-					options="multisprints" selected-model="selsprint"
-					extra-settings="scrollsettings" events="myEventListenerssprint"></div>
-			</div>
-
-
-			<div class="form-group col-md-2" ng-init="">
-				<label>From:</label> <input style="width: 100%" type="date"
-					ng-change="getfromdatejira(dtfrom | date:'MM/dd/yyyy')"
-					class="form-control" uib-datepicker-popup="MM/dd/yyyy"
-					datepicker-options="options" ng-model="dtfrom" is-open="opened1"
-					ng-required="true" close-text="Close"
-					alt-input-formats="altInputFormats" show-button-bar="false" disabled/>
-			</div>
-
-			<div class="form-group col-md-2" ng-init="">
-				<label>To:</label> <input style="width: 100%" type="date"
-					class="form-control"
-					ng-change="gettodatejira(dtto | date:'MM/dd/yyyy');getcontributor()"
-					uib-datepicker-popup="MM/dd/yyyy" datepicker-options="options"
-					ng-model="dtto" is-open="opened2" ng-required="true"
-					close-text="Close" alt-input-formats="altInputFormats"
-					show-button-bar="false"  disabled />
-			</div>
-		</div>
-
-	</div>
-
+    
 	<div class="row pie-charts">
+            <div class="form-group col-md-2">
+                    <label>Project Name</label>
+                    <div style="width: 100%" ng-dropdown-multiselect=""
+                        options="multiprojects" selected-model="selproject"
+                        extra-settings="scrollsettings" events="myEventListenersproject"></div>
+            </div>
+    
+    
+			<div class="form-group col-md-2" ng-init="getprojectList()">
+                    <label>Sprint Name</label>
+                    <div style="width: 100%" ng-dropdown-multiselect=""
+                        options="multisprints" selected-model="selsprint"
+                        extra-settings="scrollsettings" events="myEventListenerssprint"></div>
+            </div>
 
-		<div class="pie-chart-item-container"
-			style="margin-left: auto; margin-top: 2%;">
-			<div ba-panel>
-				<div class="pie-chart-item" id="storiescount">
 
-					<div style="font-size: 15px; text-align: center"
-						ng-init="totalstoriescount()">Total Stories Count</div>
+                <div class="form-group col-md-2" ng-init="">
+                    <label>From:</label> <input style="width: 100%" type="date"
+                        ng-change="getfromdatejira(dtfrom | date:'MM/dd/yyyy')"
+                        class="form-control" uib-datepicker-popup="MM/dd/yyyy"
+                        datepicker-options="options" ng-model="dtfrom" is-open="opened1"
+                        ng-required="true" close-text="Close"
+                        alt-input-formats="altInputFormats" show-button-bar="false"
+                        disabled />
+                </div>
 
-					<div style="font-size: 15px; text-align: center"></div>
-					<div class="description-stats"
-						style="font-size: 40px; margin-top: 10%; text-align: center">{{uitotalstoriescount}}
-					</div>
-					<!-- 	<div>
-						<a
-							ng-click="open('app/pages/dashboard/infoDialog/tot_stories.html','sm')">
-							<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-							height="20" style="float: right;">
+                <div class="form-group col-md-2" ng-init="">
+                    <label>To:</label> <input style="width: 100%" type="date"
+                        class="form-control"
+                        ng-change="gettodatejira(dtto | date:'MM/dd/yyyy');getcontributor()"
+                        uib-datepicker-popup="MM/dd/yyyy" datepicker-options="options"
+                        ng-model="dtto" is-open="opened2" ng-required="true"
+                        close-text="Close" alt-input-formats="altInputFormats"
+                        show-button-bar="false" disabled />
+                 </div>
+    </div> 
+
+        <div class="row pie-charts">
+        
+             <div class="pie-chart-item-container"
+                style="margin-left: auto; margin-top: 2%;">
+                <div ba-panel>
+                    <div class="pie-chart-item" id="storiescount">
+
+                        <div style="font-size: 15px; text-align: center"
+                            ng-init="totalstoriescount()">Total Stories Count</div>
+
+                        <div style="font-size: 15px; text-align: center"></div>
+                        <div class="description-stats"
+                            style="font-size: 40px; margin-top: 10%; text-align: center">{{ uitotalstoriescount }}
+                        </div>
+                        <!-- 	<div>
+                            <a
+                                ng-click="open('app/pages/dashboard/infoDialog/tot_stories.html','sm')">
+                                <img src="app/pages/dashboard/infoDialog/info.png" width="20"
+                                    height="20" style="float: right;"></img>
 						</a>
-					</div> -->
-				</div>
-			</div>
-		</div>
+					        </div> -->
+				        </div>
+                    </div>
+                </div>
+            
 
-		<div class="pie-chart-item-container"
-			style="margin-right: auto; margin-top: 2%;">
-			<div ba-panel>
-				<div class="pie-chart-item" id="storypoints">
+                <div class="pie-chart-item-container"
+                    style="margin-right: auto; margin-top: 2%;">
+                    <div ba-panel>
+                        <div class="pie-chart-item" id="storypoints">
 
-					<div style="font-size: 15px; text-align: center"
-						ng-init="totalstorypoints()">Total Story Points</div>
+                            <div style="font-size: 15px; text-align: center"
+                                ng-init="totalstorypoints()">Total Story Points</div>
 
-					<div style="font-size: 15px; text-align: center"></div>
-					<div class="description-stats"
-						style="font-size: 40px; margin-top: 10%; text-align: center">{{uitotalstorypoints}}
-					</div>
+                            <div style="font-size: 15px; text-align: center"></div>
+                            <div class="description-stats"
+                                style="font-size: 40px; margin-top: 10%; text-align: center">{{ uitotalstorypoints }}
+                            </div>
+                        <div>
+                            <a
+                                ng-click="open('app/pages/dashboard/infoDialog/tot_storypoints.html','sm')">
+                                <!-- <img src="app/pages/dashboard/infoDialog/info.png" width="20"
+                                    height="20" style="float: right;"></img> -->
+					        </a>
+				        
+                        </div>
+                    </div>
+                    </div>
+                </div>
 
-				</div>
-				<div>
-					<a
-						ng-click="open('app/pages/dashboard/infoDialog/tot_storypoints.html','sm')">
-						<!-- <img src="app/pages/dashboard/infoDialog/info.png" width="20"
-							height="20" style="float: right;"> -->
+
+                    <div class="pie-chart-item-container"
+                        style="margin-right: auto; margin-top: 2%;">
+                        <div ba-panel>
+                            <div class="pie-chart-item" id="storypoints">
+
+                                <div style="font-size: 15px; text-align: center"
+                                    ng-init="totalstoryrej()">Total Stories Rejected</div>
+
+                                <div style="font-size: 15px; text-align: center"></div>
+                                <div class="description-stats"
+                                    style="font-size: 40px; margin-top: 10%; text-align: center">{{ totalstoryrej }}
+                                </div>
+
+                            </div>
+                            <div>
+                                <a
+                                    ng-click="open('app/pages/dashboard/infoDialog/tot_storypoints.html','sm')">
+                                    <!-- <img src="app/pages/dashboard/infoDialog/info.png" width="20"
+                                        height="20" style="float: right;"> </img>-->
 					</a>
-				</div>
-			</div>
+				    </div>
+                            </div>
 
-		</div>
-	</div>
+                        </div>
+                 </div>
 
-	<div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
-		<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
-			style="background-size: 1433px 915px; background-position: 0px -158px;">
-			<div class="panel-heading clearfix">
-				<h3 class="panel-title">
-					Stories Status Trend
+                <div class = "row">
+                <div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+                        <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+                            style="background-size: 1433px 915px; background-position: 0px -158px;">
+                            <div class="panel-heading clearfix">
+                                <h3 class="panel-title">
+                                    Stories Status Trend
+					            <div uib-dropdown style="float: right;">
+                                        <a id="exportThis" uib-dropdown-toggle> <i
+                                            class="fa fa fa-bars"></i>
+                                        </a>
+                                        <ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+                                            <li><i class="dropdown-arr"></i></li>
+                                            <li><a href=""
+                                                ng-click="downloadImg('png','line','User Story Status Trend')"><i
+                                                    class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+                                            <li><a href=""
+                                                ng-click="downloadImg('jpeg','line','User Story Status Trend')"><i
+                                                    class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+                                        </ul>
+                                    </div>
+                                </h3>
+                            </div>
+                            <div class="panel-body" style="padding-right: 0px;">
+                                <div
+                                    ng-include="'app/pages/charts/requirements/requirementsdata/reqlinechart.html'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+                            <div class="panel panel-blur" zoom-in="" ba-panel-blur="">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">
+                                        Stories By Status
+						<div uib-dropdown style="float: right;">
+                                            <a id="exportThis" uib-dropdown-toggle> <i
+                                                class="fa fa fa-bars"></i>
+                                            </a>
+                                            <ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+                                                <li><i class="dropdown-arr"></i></li>
+                                                <li><a href=""
+                                                    ng-click="downloadImg('png','barchart','User Story Status Bar')"><i
+                                                        class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+                                                <li><a href=""
+                                                    ng-click="downloadImg('jpeg','barchart','User Story Status Bar')"><i
+                                                        class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+                                            </ul>
+                                        </div>
+                                    </h3>
+                                </div>
+                                <div class="panel-body" style="padding-right: 0px;">
+                                    <div
+                                        ng-include="'app/pages/charts/requirements/requirementsdata/reqbarChart.html'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+                            <div class="panel panel-blur" zoom-in="" ba-panel-blur="">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">
+                                        Stories By Priority
+						<div uib-dropdown style="float: right;">
+                                            <a id="exportThis" uib-dropdown-toggle> <i
+                                                class="fa fa fa-bars"></i>
+                                            </a>
+                                            <ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+                                                <li><i class="dropdown-arr"></i></li>
+                                                <li><a href=""
+                                                    ng-click="downloadImg('png','doughnut','User Story By Priority')"><i
+                                                        class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+                                                <li><a href=""
+                                                    ng-click="downloadImg('jpeg','doughnut','User Story By Priority')"><i
+                                                        class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+                                            </ul>
+                                        </div>
+                                    </h3>
+                                </div>
+                                <div class="panel-body" style="padding-right: 0px;">
+                                    <div
+                                        ng-include="'app/pages/charts/requirements/requirementsdata/reqpieChart.html'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <!--<div class="col-lg-12 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+                        <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+                            style="background-size: 1433px 915px; background-position: 0px -158px;">
+                            <div class="panel-heading clearfix">
+                                <h3 class="panel-title">
+                                    Stories Assignee
 					<div uib-dropdown style="float: right;">
-						<a id="exportThis" uib-dropdown-toggle> <i
-							class="fa fa fa-bars"></i>
-						</a>
-						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
-							<li><i class="dropdown-arr"></i></li>
-							<li><a href=""
-								ng-click="downloadImg('png','line','User Story Status Trend')"><i
-									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
-							<li><a href=""
-								ng-click="downloadImg('jpeg','line','User Story Status Trend')"><i
-									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
-						</ul>
-					</div>
-				</h3>
-			</div>
-			<div class="panel-body" style="padding-right: 0px;">
-				<div
-					ng-include="'app/pages/charts/requirements/requirementsdata/reqlinechart.html'"></div>
-			</div>
-		</div>
-	</div>
+                                        <a id="exportThis" uib-dropdown-toggle> <i
+                                            class="fa fa fa-bars"></i>
+                                        </a>
+                                        <ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+                                            <li><i class="dropdown-arr"></i></li>
+                                            <li><a href=""
+                                                ng-click="downloadImg('png','line','User Story Status Trend')"><i
+                                                    class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+                                            <li><a href=""
+                                                ng-click="downloadImg('jpeg','line','User Story Status Trend')"><i
+                                                    class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+                                        </ul>
+                                    </div>
+                                </h3>
+                            </div>
+                            <div class="panel-body" style="padding-right: 0px;">
+                                <div
+                                    ng-include="'app/pages/charts/requirements/requirementsdata/reqownerchart.html'"></div>
+                            </div>
+                        </div>
+                    </div>
 
-	
+                    Jira table details code--please implement it in js file
+	 <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12"
+                            ba-panel-class="with-scroll">
+                            <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+                                style="background-size: 1433px 915px; background-position: 0px -158px;">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">
+                                        Requirement Details
+						<div uib-dropdown style="float: right;">
+                                            <a id="exportThis" uib-dropdown-toggle> <i
+                                                class="fa fa fa-bars"></i>
+                                            </a>
+                                            <ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+                                                <li><i class="dropdown-arr"></i></li>
+                                                <li><a href=""
+                                                    ng-click="downloadTable('csv','reqTable','Requirement_Details')"><i
+                                                        class="ion-document"></i>Export in CSV</a></li>
+                                                <li><a href=""
+                                                    ng-click="downloadTable('xls','reqTable','Requirement_Details')"><i
+                                                        class="ion-document-text"></i>Export in XLS</a></li>
+                                            </ul>
+                                        </div>
+                                    </h3>
+                                </div>
+                                <div class="panel-body" style="padding-right: 0px;">
+                                    <div class="horizontal-scroll">
+                                        <div ng-init="reqTableDataJira(1)"></div>
+                                        <table class="table">
+                                            <thead>
 
-	<div class="row">
-	
-	<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
-		<div class="panel panel-blur" zoom-in="" ba-panel-blur="">
-			<div class="panel-heading clearfix">
-				<h3 class="panel-title">
-					Stories By Status
-					<div uib-dropdown style="float: right;">
-						<a id="exportThis" uib-dropdown-toggle> <i
-							class="fa fa fa-bars"></i>
-						</a>
-						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
-							<li><i class="dropdown-arr"></i></li>
-							<li><a href=""
-								ng-click="downloadImg('png','barchart','User Story Status Bar')"><i
-									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
-							<li><a href=""
-								ng-click="downloadImg('jpeg','barchart','User Story Status Bar')"><i
-									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
-						</ul>
-					</div>
-				</h3>
-			</div>
-			<div class="panel-body" style="padding-right: 0px;">
-				<div
-					ng-include="'app/pages/charts/requirements/requirementsdata/reqbarChart.html'"></div>
-			</div>
-		</div>
-	</div>
-	
-	
-		
-		
-		<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
-		<div class="panel panel-blur" zoom-in="" ba-panel-blur="">
-			<div class="panel-heading clearfix">
-				<h3 class="panel-title">
-					Stories By Priority
-					<div uib-dropdown style="float: right;">
-						<a id="exportThis" uib-dropdown-toggle> <i
-							class="fa fa fa-bars"></i>
-						</a>
-						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
-							<li><i class="dropdown-arr"></i></li>
-							<li><a href=""
-								ng-click="downloadImg('png','doughnut','User Story By Priority')"><i
-									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
-							<li><a href=""
-								ng-click="downloadImg('jpeg','doughnut','User Story By Priority')"><i
-									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
-						</ul>
-					</div>
-				</h3>
-			</div>
-			<div class="panel-body" style="padding-right: 0px;">
-				<div
-					ng-include="'app/pages/charts/requirements/requirementsdata/reqpieChart.html'"></div>
-			</div>
-		</div>
-	</div>
+                                                <tr class="sortable ">
 
-		
-	</div>
+                                                    <th style="width: 10%" ng-click="sort('issueID',1)">ID <span
+                                                        class="glyphicon sort-icon" ng-show="sortBy=='issueID'"
+                                                        ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                    </span>
+                                                    </th>
+                                                    <th style="width: 15%" ng-click="sort('reqName',1)">Name <span
+                                                        class="glyphicon sort-icon" ng-show="sortBy=='reqName'"
+                                                        ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                    </span>
+                                                    </th>
+                                                    <th style="width: 20%" ng-click="sort('summary',1)">Summary
+										<span class="glyphicon sort-icon"
+                                                            ng-show="sortBy=='description'"
+                                                            ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                        </span>
+                                                    </th>
+                                                    <th style="width: 10%" ng-click="sort('reqType',1)">Type <span
+                                                        class="glyphicon sort-icon" ng-show="sortBy=='reqType'"
+                                                        ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                    </span>
+                                                    </th>
+                                                    <th style="width: 15%" ng-click="sort('creationTime',1)">Created
+										On <span class="glyphicon sort-icon"
+                                                            ng-show="sortBy=='creationTime'"
+                                                            ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                        </span>
+                                                    </th>
+                                                    <th style="width: 20%" ng-click="sort('status',1)">Status
+										<span class="glyphicon sort-icon" ng-show="sortBy=='status'"
+                                                            ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                        </span>
+                                                    </th>
+                                                    <th style="width: 15%" ng-click="sort('priority',1)">Priority
+										<span class="glyphicon sort-icon" ng-show="sortBy=='priority'"
+                                                            ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                        </span>
+                                                    </th>
+                                                    <th style="width: 15%" ng-click="sort('lastModified',1)">Modified
+										On <span class="glyphicon sort-icon"
+                                                            ng-show="sortBy=='lastModified'"
+                                                            ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+                                                        </span>
+                                                    </th>
 
+                                                </tr>
+                                                <tr>
+                                                    <th style="width: 10%"><input class="form-control"
+                                                        ng-model="issueIDDsearch" placeholder="Search" type="search"
+                                                        onkeypress="return event.charCode > 47 && event.charCode < 58;"
+                                                        ng-change="search(1,'issueID',issueIDDsearch)" /></th>
+                                                    <th style="width: 15%"><input class="form-control"
+                                                        ng-model="reqNamesearch" placeholder="Search" type="search"
+                                                        ng-change="search(1,'reqName',reqNamesearch)" /></th>
+                                                    <th style="width: 20%"><input class="form-control"
+                                                        ng-model="summarysearch" placeholder="Search" type="search"
+                                                        ng-change="search(1,'summary',summarysearch)" /></th>
+                                                    <th style="width: 10%"><input class="form-control"
+                                                        ng-model="issueTypeesearch" placeholder="Search" type="search"
+                                                        ng-change="search(1,'issueType', issueTypeesearch)" /></th>
+                                                    <th style="width: 15%"><input class="form-control"
+                                                        ng-model="creationTimesearch" placeholder="Search"
+                                                        type="search"
+                                                        ng-change="searchdate(1,'creationTime',creationTimesearch)" />
 
+                                                    </th>
+                                                    <th style="width: 20%"><input class="form-control"
+                                                        ng-model="issueStatussearch" placeholder="Search"
+                                                        type="search"
+                                                        ng-change="search(1,'issueStatus',issueStatussearch)" /></th>
+                                                    <th style="width: 15%"><input class="form-control"
+                                                        ng-model="issuePrioritysearch" placeholder="Search"
+                                                        type="search"
+                                                        ng-change="search(1,'issuePriority',issuePrioritysearch)" /></th>
+                                                    <th style="width: 15%"><input class="form-control"
+                                                        ng-model="lastModifiedsearch" placeholder="Search"
+                                                        type="search"
+                                                        ng-change="searchdate(1,'lastModified',lastModifiedsearch)" />
+
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody ng-init="initialReqjirapaginate()">
+
+                                                <tr
+                                                    dir-paginate="item in reqJiraTableDetails|orderBy:sortBy:reverse|itemsPerPage: 5"
+                                                    total-items="jirareqdatapaginate" current-page="pageno"
+                                                    pagination-id="reqpaginate">
+                                                    <td style="width: 10%">{{ item.issueID }}</td>
+                                                    <td style="width: 15%" class="trim-info"
+                                                        title="{{item.reqName}}">{{ item.reqName | limitTo:10}}{{
+                                                            item.reqName.length > 10
+                                                                ? '...' : ''
+                                                        }}</td>
+                                                    <td style="width: 20%" class="trim-info"
+                                                        title="{{item.description}}">{{ item.summary | limitTo:25}}{{
+                                                            item.summary.length > 25
+                                                                ? '...' : ''
+                                                        }}</td>
+                                                    <td style="width: 10%">{{ item.issueType }}</td>
+                                                    <td style="width: 15%">{{
+                                                        item.issueCreated |
+                                                            date:'MM-dd-yyyy'}}</td>
+                                                    <td style="width: 20%">{{ item.issueStatus }}</td>
+                                                    <td style="width: 15%">{{ item.issuePriority }}</td>
+                                                    <td style="width: 15%">{{
+                                                        item.issueUpdated |
+                                                            date:'MM-dd-yyyy'}}</td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                        <dir-pagination-controls directions-links="true"
+                                            pagination-id="reqpaginate" boundary-links="true"
+                                            on-page-change="jirareqpageChangedLevel(newPageNumber)"></dir-pagination-controls>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
 </div>
 
 

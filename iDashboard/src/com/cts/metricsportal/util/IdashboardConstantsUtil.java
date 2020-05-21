@@ -5,8 +5,6 @@ public class IdashboardConstantsUtil {
 	
 	public static final String UNDEFINED = "undefined";
 	public static final String NULL = null;
-	public static final String LAST_7_DAYS = "Last 7 days";
-	public static final String LAST_15_DAYS = "Last 15 days";
 	public static final String LAST_30_DAYS = "Last 30 days";
 	public static final String LAST_60_DAYS = "Last 60 days";
 	public static final String LAST_90_DAYS = "Last 90 days";
@@ -15,7 +13,6 @@ public class IdashboardConstantsUtil {
 	public static final String FALSE = "False";
 	public static final String TRUE = "True";
 	public static final String YYYY_MM_DD = "yyyy-MM-dd";
-	public static final String OBSOLETE = "Obsolete";
 	public static final String BLOCKED = "Blocked";
 	public static final String FAILED = "Failed";
 	public static final String NO_RUN = "No Run";

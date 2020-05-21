@@ -18,17 +18,16 @@
 </div>
 <div class="content-top clearfix">
 
-	<h1  
+	<h1
 		ng-if="adminvalue || operationalvalue || lifecyclevalue || othervalue || riskMetric"
 		class="al-title">{{ activePageTitle }}</h1>
 	<h1 ng-if="globalvalue || lcmetricsvalue" class="al-title">{{
 		activeDashboardName }}</h1>
 
-    <h1 ng-if="dashboardvalue" class="metricsaltitle">{{MetricsName}}&nbsp;</h1>
-	<h1 ng-if="dashboardvalue" class="al-title"> - {{dashboardName}} - {{
+	<h1 ng-if="dashboardvalue" class="al-title">{{dashboardName}} - {{
 		activeDashboardName }}</h1>
 
-
+	<!-- 'on' class for top link(Operational, Lifecycle, Admin -->
 	<div class="back-title" ng-if="(adminvalue || othervalue) && isAdmin">
 		<a href="#/admin" class="homelink" ng-model="role"
 			ng-class="{'on':var1}" ng-click="hideSideBar()"><i
@@ -44,7 +43,7 @@
 	<div class="back-title" ng-if="lifecyclevalue">
 		<a href="#/lifecycledashboard" class="homelink" ng-model="role"
 			ng-class="{'on':var1}" ng-click="hideSideBar()"><i
-			class="ion-home"></i></a>
+			class="fa fa-home"></i></a>
 	</div>
 	<div class="back-title" ng-if="riskMetric">
 		<a href="#/riskCompliance" class="homelink" ng-model="role"
@@ -54,25 +53,25 @@
 
 	<ul ng-if="listvalue" class="breadcrumb al-breadcrumb ">
 		<li><a ng-show="globalvalue" class="homelink"
-			href="#/operationalDashBoard"> <i class="icon ion-arrow-left-a"></i></a>
-
+			href="#/operationalDashBoard"><i class="icon ion-arrow-left-a"></i></a>
+			
 			<a ng-show="dashboardvalue" class="homelink" href="#/globalview"><i
-				class="icon ion-arrow-left-a"></i></a> <a ng-show="lcmetricsvalue"
-			class="homelink" href="#/viewDashbaord"><i
-				class="icon ion-arrow-left-a"></i></a></li>
-
-
-		<!-- <li><a ng-if="globalvalue || dashboardvalue"
-			href="#/operationalDashBoard" class="homelink" ng-model="role"
-			ng-class="{'on':var1}" ng-click="hideSideBar()"><i
-				class="ion-home"></i></a> 
+				class="icon ion-arrow-left-a"></i></a>
 				
-				<a ng-if="lcmetricsvalue || lifecyclevalue"
-			href="#/lifecycledashboard" class="homelink" ng-model="role"
-			ng-class="{'on':var1}" ng-click="hideSideBar()"><i
-				class="ion-home"></i></a>
-				</li> -->
-
+			<a ng-show="lcmetricsvalue" class="homelink" href="#/viewDashbaord"><i
+				class="icon ion-arrow-left-a"></i></a>
+		</li>
+		<li>
+			<a ng-if="globalvalue || dashboardvalue"
+				href="#/operationalDashBoard" class="homelink" ng-model="role"
+				ng-class="{'on':var1}" ng-click="hideSideBar()">
+				<i class="fa fa-home"></i></a>
+				
+			<a ng-if="lcmetricsvalue || lifecyclevalue"
+				href="#/lifecycledashboard" class="homelink" ng-model="role"
+				ng-class="{'on':var1}" ng-click="hideSideBar()"><i
+				class="fa fa-home"></i></a>
+		</li>
 		<li ng-show="value"><a href="" class="homelink"
 			ng-class="{'on':var2}" ng-click="back()">Dashboard</a></li>
 	</ul>

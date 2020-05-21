@@ -34,7 +34,7 @@ import com.cognizant.qbot.vo.DistributionVO;
 import com.cognizant.qbot.vo.QBot_VO;
 import com.cognizant.qbot.vo.TypeSummaryVO;
 
-@Path("/jsonServices")
+@Path("/jsonDataServices")
 public class JsonDataService {
 	
 	static final Logger logger = Logger.getLogger(JsonDataService.class);

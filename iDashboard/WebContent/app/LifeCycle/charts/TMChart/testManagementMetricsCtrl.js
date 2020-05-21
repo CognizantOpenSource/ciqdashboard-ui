@@ -6,25 +6,15 @@
 
 	/** @ngInject */
 
-	function testManagementMetricsCtrl($scope, $state, buildData, baConfig,localStorageService,
+	function testManagementMetricsCtrl($scope, AES, $state, buildData, baConfig,localStorageService,
 			$element, $rootScope, $sessionStorage, layoutPaths, $base64, $http,$timeout,$uibModal) {
 	
-		
-		function getEncryptedValue()
-		  {
-			 var username= localStorageService.get('userIdA');
-		     var password= localStorageService.get('passwordA');
-		     var tokeen =$base64.encode(username+":"+password);
-		        
-		     return tokeen;
-		   }
 		  $rootScope.menubar = false;
 		  $rootScope.sortkey = false;
 		  $rootScope.searchkey = false;
 		  $rootScope.loggedInuserId=localStorageService.get('loggedInuserId');
 		  
 		$scope.open = function() {
-
 			$state.go('testMgmtMetrics');
 
 		};
@@ -63,7 +53,7 @@
 		// Get Domain List
 			$scope.setdomain=function(){
 			
-				var token  = getEncryptedValue();
+				var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -74,7 +64,7 @@
 			
 		// Get Project List
 		$scope.getproject=function(selecteddomain){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
         var config = {headers: {
                 'Authorization': token
                 }};
@@ -86,7 +76,7 @@
 		
 		// Get Release List
 		$scope.getrelease=function(selectedproject){
-		var token  = getEncryptedValue();
+		var token  = AES.getEncryptedValue();
         var config = {headers: {
                 'Authorization': token
                 }};
@@ -107,7 +97,7 @@
 		//Design Status by Count
 		$scope.newStatusChart=function(){
 
-	 		var token  = getEncryptedValue();
+	 		var token  = AES.getEncryptedValue();
 	 		      var config = {headers: {
 	 		              'Authorization': token
 	 		              }};
@@ -171,7 +161,7 @@
 		
 		 // Defect By Severity Chart
 	 	$scope.newSeverityChart=function(){
-	 		var token  = getEncryptedValue();
+	 		var token  = AES.getEncryptedValue();
 	        var config = {headers: {
 	                'Authorization': token
 	                }};
@@ -238,14 +228,14 @@
 			            	 maintainAspectRatio: false,
 				            	pieceLabel: {
 				            	    render: 'value',
-				            	    fontColor:'white'
+				            	    fontColor:'#4c4c4c'
 				            	  },
 				            	  
 				            	  legend: {
 				                      display: true,
 				                      position: 'bottom',
 				                      labels: {
-				                    	   fontColor: '#ffffff',
+				                    	   fontColor: '#4c4c4c',
 				                    	   boxWidth : 7,
 				                    	   fontSize : 10
 				                      }
@@ -260,7 +250,7 @@
 		   // Requirements by Status Chart
 		 $scope.reqStatusChart=function(){
 		
-			 var token  = getEncryptedValue();
+			 var token  = AES.getEncryptedValue();
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
@@ -390,7 +380,7 @@
 			// Requirement Priority Funnel Chart - Dashboard
 		  
 			$rootScope.reqPrioirtyFunnelChart=function(){
-				 var token  = getEncryptedValue();
+				 var token  = AES.getEncryptedValue();
 			        var config = {headers: {
 			                'Authorization': token
 			                }};
@@ -456,14 +446,14 @@
 						                  "rgba(75, 192, 192, 0.8)",
 						                  "rgba(153, 102, 255, 0.8)",
 						                  "rgba(255, 159, 64, 0.8)"],
-						                  labelFontColor: "rgba(255, 255, 255, 0.8)"
+						                  labelFontColor: '#4c4c4c'
 						});
 				  }
 			 } 
 			
 			//TC by owner Chart 
 			 $scope.designTypeChart=function(){
-				 var token  = getEncryptedValue();
+				 var token  = AES.getEncryptedValue();
 			        var config = {headers: {
 			                'Authorization': token
 			                }};
@@ -534,25 +524,31 @@
 			                scales: {
 			                    yAxes: [{
 			                        ticks: {
-			                            beginAtZero:true
+			                            beginAtZero:true,
+			                            fontColor: '#4c4c4c'
 			                        },
 			                        scaleLabel : {
 										display : true,
-										labelString : 'Number of TestCases'
+										labelString : 'Number of TestCases',
+										fontColor: '#4c4c4c'
 									},
 			                        gridLines: {
-		                                color: "rgba(255,255,255,0.2)"
+		                                color: "#d8d3d3"
 		                            }
 			                    }],
 			                    xAxes: [{
 			                            barThickness : 40,
 			                            scaleLabel : {
 											display : true,
-											labelString : 'Test Type'
+											labelString : 'Test Type',
+											fontColor: '#4c4c4c'
 										},
 			                            gridLines: {
-			                                color: "rgba(255,255,255,0.2)"
-			                            }
+			                                color: "#d8d3d3"
+			                            },
+			                            ticks: {
+				                            fontColor: '#4c4c4c'
+				                        },
 			                        }]
 			                    
 			                }
@@ -566,7 +562,7 @@
 				//TestCase Execution by Status Chart 
 				$scope.testExeStatusPie=function(){ 
 
-					var token  = getEncryptedValue();
+					var token  = AES.getEncryptedValue();
 			        var config = {headers: {
 			                'Authorization': token
 			                }};
@@ -623,14 +619,14 @@
 			            	 maintainAspectRatio: false,
 				            	pieceLabel: {
 				            	    render: 'value',
-				            	    fontColor:'white'
+				            	    fontColor:'#4c4c4c'
 				            	  },
 				            	  
 				            	  legend: {
 				                      display: true,
 				                      position: 'bottom',
 				                      labels: {
-				                    	   fontColor: '#ffffff',
+				                    	   fontColor: '#4c4c4c',
 				                    	   boxWidth : 7,
 				                    	   fontSize : 10
 				                      }

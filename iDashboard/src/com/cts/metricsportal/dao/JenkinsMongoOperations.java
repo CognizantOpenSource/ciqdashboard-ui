@@ -231,7 +231,6 @@ public class JenkinsMongoOperations extends BaseMongoOperation {
 	// Output : Get Total Number of Builds for an Application Name
 	// ***************************************************************************************************/
 
-	@SuppressWarnings("deprecation")
 	public static List<BuildTotalVO> Jenkins_ExecuteQuery_GetTotalBuild(String AppName) {
 
 		List<BuildJobsVO> buildJobList = new ArrayList<BuildJobsVO>();
@@ -262,8 +261,6 @@ public class JenkinsMongoOperations extends BaseMongoOperation {
 			int totalbuild = 0;
 
 			String _cdate = "";
-			Date endTime;
-
 			for (int x = buildls.size() - 1; x >= 0; x--) {
 
 				// Date Conversion
@@ -281,8 +278,6 @@ public class JenkinsMongoOperations extends BaseMongoOperation {
 				days = Math.floor((diff / (1000 * 60 * 60 * 24)));
 
 				if (days <= 15) {
-
-					endTime = buildls.get(x).getEndTime();
 
 					ZonedDateTime zdt = ZonedDateTime.parse(date1.toString(), f);
 					LocalDate ld = zdt.toLocalDate();

@@ -7,10 +7,7 @@
 	content="width=device-width, initial-scale=1 , maximum-scale=1, user-scalable=0">
 <title>iDashboard</title>
 
-
-
 <!-- <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
-
 
   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/Metrics_logo_32.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/Metrics_logo_16.png">
@@ -48,22 +45,21 @@
 <link rel="stylesheet" href="lib/ionicons.css">
 <link rel="stylesheet" href="lib/font-awesome.css">
 <link rel="stylesheet" href="lib/morris.css">
-<link rel="stylesheet" href="lib/chartist.min.css">
-<link rel="stylesheet" href="lib/chartist-plugin-tooltip.css">
-<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="lib/chartist.min.css" >
+ <link rel="stylesheet" href="lib/chartist-plugin-tooltip.css" >
+
 <link rel="stylesheet" href="app/main.css">
 <!-- endinject -->
 <!-- endbuild -->
-<body ng-controller="LoginCtrl" ng-init="SessionData()">
-	<!-- //licenseCheck() -->
+<body ng-controller="LoginCtrl" ng-init="licenseCheck();SessionData()">
 
 
-	<div ng-if="aclock || acLock" ng-include="'acLock.html'"></div>
+	<div ng-if="aclockonwrongpassword || acLock" ng-include="'acLock.html'"></div>
 	<div ng-if="passReset"
 		ng-include="'app/pages/login/PasswordReset.html'"></div>
 	<div ng-if="noLicenseMsg" ng-include="'licenseExpiredPage.html'"></div>
 	<div
-		ng-if="!loggedIn && !registration && !registereduser && !licenseExpiry && !noLicenseMsg && !passReset && !aclock "
+		ng-if="!loggedIn && !registration && !registereduser && !licenseExpiry && !noLicenseMsg && !passReset && !aclockonwrongpassword && !acLock"
 		ng-include="'auth.html'"></div>
 	<div ng-if="licenseExpiry" ng-include="'licenseExpiredPage.html'"></div>
 	<div ng-if="registration && !loggedIn"
@@ -71,21 +67,17 @@
 	<div ng-if="registereduser && !loggedIn"
 		ng-include="'app/pages/login/registeredUser.html'"></div>
 	<div
-		ng-if="active && !admin && !operational && !lifeCycle && !qbot && !customMetrics && !passReset"
+		ng-if="active && !admin && !operational && !lifeCycle && !qbot && !customMetrics"
 		ng-include="'app/pages/login/noAccessUser.html'"></div>
 
 	<!--  <div class="body-bg"></div> -->
-	<main ng-show="loggedIn" ng-if="$pageFinishedLoading" 
-		ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed() }">
-	<ba-sidebar ng-show="menubar" ng-if="loggedIn"></ba-sidebar> 
-	
-	<page-top
+	<main ng-show="loggedIn " ng-if="$pageFinishedLoading"
+		ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed()}">
+	<ba-sidebar ng-show="menubar" ng-if="loggedIn"></ba-sidebar> <page-top
 		ng-if="isAdmin || operational || lifeCycle || qbot || customMetrics"></page-top>
 
-	<div
-		ng-class="(menubar == false  ? 'al-mainnew' : 'al-main')">
-		<div
-			ng-class="(hidepagetop == true  ? 'al-slideshowcontent' : 'al-content')">
+	<div ng-class="(menubar == false  ? 'al-mainnew' : 'al-main')">
+		<div ng-class="(hidepagetop == true  ? 'al-slideshowcontent' : 'al-content')">
 			<admin-top
 				ng-show="(operational || lifecycle || qbot || customMetrics) && isAdmin "
 				ng-class="(menubar == false  ? 'content-top-qbot' : 'content-top')"></admin-top>
@@ -116,35 +108,57 @@
 		<div class="al-footer-main clearfix">
 				<img ng-src="cogniant_logo.png">
 		</div>
-	</footer> --> <footer ng-show="menubar" class="al-footer clearfix">
-		<!-- footer Image -->
+	</footer> --> 
+	
+	
+	
+	<!-- <footer ng-show="menubar" class="al-footer clearfix">
+		footer Image
 		<div class="al-footer-left">
 			<div class="al-copy" style="padding-left: 5%;">
 				<img style="height: 25px; margin-top: 5px"
-					ng-src="assets/img/app/profile/COG-Logo-Blue.png"
-					src="assets/img/app/profile/COG-Logo-Blue.png">
+					ng-src="assets/img/app/profile/COG-Logo-White.png"
+					src="assets/img/app/profile/COG-Logo-White.png">
 			</div>
 		</div>
-		<!-- footer copyrights -->
+		footer copyrights
 		<div class="al-footer-right">
 			<div>
-				<br> IDashboard V1.5.0. <br> ©2018-2020 by Cognizant Digital
+				<br> IDashboard V1.5.0. <br> ©2018-19 by Cognizant Digital
 				Assurance CoE. All rights reserved.
 			</div>
 		</div>
 		<div class="al-footer-main clearfix"></div>
-	</footer> <back-top></back-top> </main>
+	</footer>  -->
+	
+	<footer ng-show="menubar" class="al-footer clearfix">
+			<!-- footer Image -->
+			<div class="al-footer-left">
+				<div class="al-copy">
+					<img style="height: 25px;margin-top:5px;margin-left:34px;" src="assets/img/app/profile/footerlogo.png"">
+				</div>
+			</div>
+			<!-- footer copyrights -->
+			<div class="al-footer-right">
+
+				© 2019 Cognizant. All rights reserved. Cognizant Confidential and/or Trade Secret. Click here for<a
+					ng-href="https://www.cognizant.com/privacy-statement" target="_blank" Style="color:#4c4c4c">
+					Cognizant’s Privacy Statement </a>
+
+			</div>
+			<div class="al-footer-main clearfix"></div>
+		</footer>
+	
+	<back-top></back-top> </main>
 
 	<div id="preloader" ng-show="!$pageFinishedLoading">
 		<div></div>
 	</div>
 
-	<div id="cover-spin" ng-show="dataloader"></div>
-
 	<!-- build:js(src) scripts/vendor.js -->
 	<!-- bower:js -->
-	<script src="lib/tableExport.js"></script>
-	<script src="lib/fileSaver.min.js"></script>
+<script src="lib/tableExport.js"></script>
+ <script src="lib/fileSaver.min.js"></script> 
 	<!-- <script src="lib/jquery.js"></script>
 <script src="lib/jquery-ui.js"></script>
 <script src="lib/jquery.shorten.1.0.js"></script>
@@ -236,10 +250,9 @@
     <script src="lib/jquery.datetimepicker.min.css"></script>
      <script src="lib/jquery.datetimepicker.min.js"></script> -->
 
+
 	<script src="lib/angular.js"></script>
-
 	<script src="app/app.js"></script>
-
 	<script src="lib/jquery.js"></script>
 	<script src="lib/jquery-ui.js"></script>
 	<script src="lib/jstree.js"></script>
@@ -248,9 +261,14 @@
 	<script src="lib/jquery.shorten.1.0.js"></script>
 	<script src="lib//jquery.easing.js"></script>
 	<script src="lib/jquery.easypiechart.js"></script>
+	
+	<!-- AES lib files added by 653731-->
+	<script src = "lib/AES/aes.min.js"></script>
+	<script src="lib/AES/pbkdf2.js"></script>
+	<script src="lib/AES/gk.js"></script>
+	<!--  -->
 
 	<script src="lib/bootstrap.min.js"></script>
-
 	<script src="lib/ui-bootstrap-tpls.js"></script>
 	<script src="lib/angular-ui-router.js"></script>
 	<script src="lib/angular-base64.min.js"></script>
@@ -292,9 +310,7 @@
 	<script src="lib/angular-cookies.min.js"></script>
 	<script src="lib/ngStorage.min.js"></script>
 	<script src="lib/angular-route.js"></script>
-	<!-- <script src="lib/angular-idle.min.js"></script> -->
-	<script src="lib/angular-idle.js"></script>
-	
+	<script src="lib/angular-idle.min.js"></script>
 
 	<script src="lib/select.js"></script>
 
@@ -325,10 +341,9 @@
 
 	<script src="app/theme/components/pageTop/pageTop.directive.js"></script>
 	<script src="app/theme/components/pageTop/PageTopCtrl.js"></script>
-	
-	
 
 	<script src="app/pages/dashboard/dashboard.module.js"></script>
+	<script src="app/pages/admin/admin.module.js"></script>
 	<script src="app/pages/operational/operational.module.js"></script>
 	<script src="app/pages/charts/charts.module.js"></script>
 	<script src="app/pages/charts/userstories/userstories.module.js"></script>
@@ -338,7 +353,7 @@
 	<script src="app/pages/charts/testexecution/testexecution.module.js"></script>
 	<script src="app/LifeCycle/LifeCycle.module.js"></script>
 	<script src="app/LifeCycle/lifecycle/lifecycle.module.js"></script>
-	<!-- <script src="app/SlideShow/SlideShow.module.js"></script> -->
+	<script src="app/SlideShow/SlideShow.module.js"></script>
 	<script src="app/LifeCycle/lifecycle/codeRepo/codeRepo.module.js"></script>
 	<script src="app/LifeCycle/dataFactories/code-analysis-data.js"></script>
 	<script src="app/LifeCycle/dataFactories/build-data.js"></script>
@@ -352,11 +367,6 @@
 	<script src="app/theme/components/baSidebar/baSidebar.directive.js"></script>
 	<script src="app/theme/components/baSidebar/baSidebar.service.js"></script>
 	<script src="app/theme/components/baSidebar/BaSidebarCtrl.js"></script>
-	
-	
-	
-	
-	
 
 	<script
 		src="app/pages/charts/testexecution/testexecutiondata/JiraTestExecutionCtrl.js"></script>
@@ -628,5 +638,4 @@ to {
 	animation: spin .8s linear infinite;
 }
 </style>
-
 </html>

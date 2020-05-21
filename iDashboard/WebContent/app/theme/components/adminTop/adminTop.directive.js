@@ -27,7 +27,6 @@
 				$scope.value=false;
 				$scope.riskMetric=false;
 				$scope.$watch(function () {
-					
 					if($state.current.title=='Admin'|| $state.current.title=='HPALMDetails' || $state.current.title=='Tool Selection')
 
 					{        		
@@ -98,10 +97,10 @@
 						$scope.globalvalue=false;
 						$scope.dashboardvalue=true;
 						$scope.lifecyclevalue=false;
-						$scope.othervalue=false;
+						$scope.othervalue=true;
 						$scope.lcdashboardvalue=false;
 						$scope.lcmetricsvalue=false;
-						$scope.value=true;
+						$scope.value=false;
 						$scope.riskMetric=false;
 						$scope.listvalue=true;
 					}
@@ -224,27 +223,8 @@
 						$scope.listvalue=false;
 
 					}
-				
-					else if ($state.current.title=='SlideShow PopUp')
+					else
 					{
-				
-						//$scope.activePageTitle = $state.current.title;
-						//$scope.activeDashboardName = $state.current.title;
-						$scope.adminvalue=false;
-						$scope.operationalvalue=false;
-						$scope.newdashboardvalue=false;
-						$scope.globalvalue=false;
-						$scope.dashboardvalue=false;
-						$scope.lifecyclevalue=false;
-						$scope.othervalue=true;
-						$scope.lcdashboardvalue=false;
-						$scope.lcmetricsvalue=false;
-						$scope.value=false;
-						$scope.riskMetric=false;
-						$scope.listvalue=false;
-
-
-					}   else {
 						$scope.activePageTitle = $state.current.title;
 						$scope.activeDashboardName = $state.current.title;
 						$scope.adminvalue=false;
@@ -259,8 +239,9 @@
 						$scope.value=false;
 						$scope.riskMetric=false;
 						$scope.listvalue=false;
-					}
-						
+
+
+					}     	
 				});
 			}
 		};

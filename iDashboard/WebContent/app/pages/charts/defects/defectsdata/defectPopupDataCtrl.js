@@ -8,7 +8,7 @@
 			'defectPopupDataCtrl', defectPopupDataCtrl);
 
 	/** @ngInject */
-	function defectPopupDataCtrl($sessionStorage, $scope, localStorageService,
+	function defectPopupDataCtrl($sessionStorage,AES, $scope, localStorageService,
 			UserService, baConfig, $rootScope, $element, layoutPaths, $http,
 			$base64) {
 		function getEncryptedValue() {
@@ -26,7 +26,7 @@
 			$rootScope.defectsanalyse.close();
 		};
 
-		var token = getEncryptedValue();
+		var token = AES.getEncryptedValue();
 		var config = {
 			headers : {
 				'Authorization' : token

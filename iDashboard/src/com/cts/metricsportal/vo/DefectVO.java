@@ -36,15 +36,6 @@ public class DefectVO {
 	
 	private String testId;
 	List<Integer> atestId =  new ArrayList<Integer>();
-	
-//	public List<Integer> getTestId() {
-//		//testId=testId.re
-//		//&nbsp
-//		return testId;
-//	}
-//	public void setTestId(List<Integer> testId) {
-//		this.testId = testId;
-//	}
 
 
 	public String get_id() {
@@ -143,6 +134,7 @@ public class DefectVO {
 	public void setDefectType(String defectType) {
 		this.defectType = defectType;
 	}
+	
 	public String getReleaseName() {
 		return releaseName;
 	}
@@ -155,6 +147,7 @@ public class DefectVO {
 	public void setCycleName(String cycleName) {
 		this.cycleName = cycleName;
 	}
+	
 	public String getTestId() {
 		testId=testId.replace("[", "").replace("]", "");
 		return testId;

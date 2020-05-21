@@ -11,16 +11,16 @@
         .module('MetricsPortal.LifeCycle')
         .factory('buildData', buildData);
 
-    function buildData($http, $base64,localStorageService) {       
+    function buildData($http, AES, $base64, localStorageService) {       
     	
-    	 function getEncryptedValue()
+    	/* function getEncryptedValue()
    	  {
    		 var username= localStorageService.get('userIdA');
    	     var password= localStorageService.get('passwordA');
    	        var tokeen =$base64.encode(username+":"+password);
    	        
    	        return tokeen;
-   	        }
+   	       }*/
 
         return {
             details: details
@@ -30,7 +30,7 @@
 
         // search for current builds
         function details() {
-        	 var token  = getEncryptedValue();
+        	 var token  = AES.getEncryptedValue();
              var config = {headers: {
                      'Authorization': token
                      }};

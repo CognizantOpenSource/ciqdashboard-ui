@@ -81,7 +81,6 @@ public class OperationalDAO extends BaseMongoOperation {
 		try {
 			operational = getMongoOperation().find(query1,OperationalDashboardVO.class);
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
-			// TODO Auto-generated catch block
 			logger.error(e.getMessage());
 		}
 		if(!operational.isEmpty()){

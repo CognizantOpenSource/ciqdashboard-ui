@@ -88,7 +88,7 @@
 														files : [
 																'app/LifeCycle/lifecycle/LifeCycleDashboardCtrl.js',
 																'lib/raphael.min.js',
-																'lib/justgage.js'],
+																'lib/justgage.js' ],
 													});
 										} ]
 							}
@@ -97,7 +97,7 @@
 						 * sidebarMeta: { icon: 'ion-ionic', order: 0, },
 						 */
 						})
-					.state(
+				.state(
 						'updateKpiDashbaord',
 						{
 							url : '/updateKpiDashbaord',
@@ -114,7 +114,7 @@
 																'app/LifeCycle/lifecycle/KpiDashboardCtrl.js',
 																'lib/angularjs-dropdown-multiselect.js',
 																'lib/raphael.min.js',
-																'lib/justgage.js'],
+																'lib/justgage.js' ],
 													});
 										} ]
 							}
@@ -122,30 +122,31 @@
 						/*
 						 * sidebarMeta: { icon: 'ion-ionic', order: 0, },
 						 */
-						}).state(
-								'requirementKpi',
-								{
-									url : '/requirementKpi',
-									directive : 'baSidebar',
-									templateUrl : 'app/LifeCycle/lifecycle/requirementKpi.html',
-									title : 'Requirements/User Stories',
-									resolve : {
-										loadMyCtrl : [
-												'$ocLazyLoad',
-												function($ocLazyLoad) {
-													return $ocLazyLoad
-															.load({
-																files : [
-																		'app/LifeCycle/lifecycle/KpiDashboardCtrl.js',
-																		'lib/angularjs-dropdown-multiselect.js'],
-															});
-												} ]
-									}
+						})
+				.state(
+						'requirementKpi',
+						{
+							url : '/requirementKpi',
+							directive : 'baSidebar',
+							templateUrl : 'app/LifeCycle/lifecycle/requirementKpi.html',
+							title : 'Requirements/User Stories',
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [
+																'app/LifeCycle/lifecycle/KpiDashboardCtrl.js',
+																'lib/angularjs-dropdown-multiselect.js' ],
+													});
+										} ]
+							}
 
-								/*
-								 * sidebarMeta: { icon: 'ion-ionic', order: 0, },
-								 */
-								})
+						/*
+						 * sidebarMeta: { icon: 'ion-ionic', order: 0, },
+						 */
+						})
 
 				.state(
 						'codeanalysis',
@@ -154,16 +155,16 @@
 							title : 'Code Analysis',
 							templateUrl : 'app/LifeCycle/lifecycle/codeAnalysis/codeAnalysis.html',
 							resolve : {
-									loadMyCtrl : [
-											'$ocLazyLoad',
-											function($ocLazyLoad) {
-												return $ocLazyLoad
-														.load({
-															files : [
-																	'app/LifeCycle/charts/CodeAnalysisChart/CodeAnalysisChartCtrl.js', ],
-														});
-											} ]
-								}
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [
+																'app/LifeCycle/charts/CodeAnalysisChart/CodeAnalysisChartCtrl.js', ],
+													});
+										} ]
+							}
 						})
 				.state(
 						'buildMetrics',
@@ -171,21 +172,20 @@
 							url : '/buildMetrics',
 							title : 'Build Metrics',
 							templateUrl : 'app/LifeCycle/charts/buildChart/buildMetrics.html',
-								resolve : {
-									loadMyCtrl : [
-											'$ocLazyLoad',
-											function($ocLazyLoad) {
-												return $ocLazyLoad
-														.load({
-															files : [
-																	'app/LifeCycle/charts/buildChart/buildMetricsCtrl.js',
-																	'lib/moment.js',
-																	'lib/underscore.js',
-																	'lib/underscore-min.js',
-																	],
-														});
-											} ]
-								}
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [
+																'app/LifeCycle/charts/buildChart/buildMetricsCtrl.js',
+																'lib/moment.js',
+																'lib/underscore.js',
+																'lib/underscore-min.js', ],
+													});
+										} ]
+							}
 						})
 				.state(
 						'testMgmtMetrics',
@@ -194,18 +194,18 @@
 							title : 'Test Management Metrics',
 							templateUrl : 'app/LifeCycle/charts/TMChart/testManagementMetrics.html',
 							resolve : {
-									loadMyCtrl : [
-											'$ocLazyLoad',
-											function($ocLazyLoad) {
-												return $ocLazyLoad
-														.load({
-															files : [ 'app/LifeCycle/charts/TMChart/testManagementMetricsCtrl.js',
-																	  'lib/funnel-chart.js',
-															          'lib/chart.funnel.js'
-															        ],
-														});
-											} ]
-								}
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [
+																'app/LifeCycle/charts/TMChart/testManagementMetricsCtrl.js',
+																'lib/funnel-chart.js',
+																'lib/chart.funnel.js' ],
+													});
+										} ]
+							}
 						})
 
 				.state(
@@ -214,19 +214,37 @@
 							url : '/viewgitdashboard',
 							title : 'SCM Dashboard',
 							templateUrl : 'app/LifeCycle/charts/GitHub/viewGitDashboard.html',
-								resolve : {
-									loadMyCtrl : [
-											'$ocLazyLoad',
-											function($ocLazyLoad) {
-												return $ocLazyLoad
-														.load({
-															files : [ 'app/LifeCycle/charts/GitHub/GitChartCtrl.js' ],
-														});
-											} ]
-								}
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [ 'app/LifeCycle/charts/GitHub/GitChartCtrl.js' ],
+													});
+										} ]
+							}
 						})
-						
-						.state(
+
+				.state(
+						'viewfortifydashboard',
+						{
+							url : '/viewfortifydashboard',
+							title : 'Fortify Dashboard',
+							templateUrl : 'app/LifeCycle/lifecycle/fortify/fortifydata/viewFortifyDashboard.html',
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [ 'app/LifeCycle/lifecycle/fortify/fortifydata/FortifyCtrl.js'],
+													});
+										} ]
+							}
+						})
+
+				.state(
 						'userstorieslifecycledetails',
 						{
 							url : '/userstorieslifecycledetails',
@@ -240,7 +258,7 @@
 													.load({
 														files : [
 																'app/LifeCycle/lifecycle/userstories/userstoriesdata/UserStoryLifeCtrl.js',
-																'app/pages/charts/requirements/requirementsdata/RequirementsCtrl.js'],
+																'app/pages/charts/requirements/requirementsdata/RequirementsCtrl.js' ],
 													});
 										} ]
 							}
@@ -251,19 +269,38 @@
 							url : '/chefrundetails',
 							title : 'Chef Run Details',
 							templateUrl : 'app/LifeCycle/lifecycle/chefDeploy/chefDeploy.html',
-								resolve : {
-									loadMyCtrl : [
-											'$ocLazyLoad',
-											function($ocLazyLoad) {
-												return $ocLazyLoad
-														.load({
-															files : [
-																	'lib/funnel-chart.js',
-																	'app/LifeCycle/charts/chefDataChart/chefRunsDetailsCtrl.js', ],
-														});
-											} ]
-								}
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [
+																'lib/funnel-chart.js',
+																'app/LifeCycle/charts/chefDataChart/chefRunsDetailsCtrl.js', ],
+													});
+										} ]
+							}
 						})
+						
+						.state(
+						'octanelifecycledetails',
+						{
+							url : '/octanelifecycledetails',
+							title : 'ALMOctane',
+							templateUrl : 'app/LifeCycle/charts/Octane/viewOctaneDashboard.html',
+							resolve : {
+								loadMyCtrl : [
+										'$ocLazyLoad',
+										function($ocLazyLoad) {
+											return $ocLazyLoad
+													.load({
+														files : [ 'app/LifeCycle/charts/Octane/OctaneLifeCtrl.js' ],
+													});
+										} ]
+							}
+						})
+						
 				.state(
 						'chefnodedetails',
 						{

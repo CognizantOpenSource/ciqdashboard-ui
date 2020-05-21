@@ -11,6 +11,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.proj
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -53,9 +55,7 @@ import com.cts.metricsportal.vo.JiraUserStoryVO;
 import com.cts.metricsportal.vo.LevelItemsVO;
 import com.cts.metricsportal.vo.OperationalDashboardVO;
 import com.cts.metricsportal.vo.OperationalDashboardsCyclesVO;
-import com.cts.metricsportal.vo.OperationalDashboardsTestRunsVO;
 import com.cts.metricsportal.vo.TestCaseVO;
-import com.cts.metricsportal.vo.TestExecutionVO;
 import com.cts.metricsportal.vo.UserStoriesIterationVO;
 import com.cts.metricsportal.vo.UserStoryDefectsStatusVO;
 import com.cts.metricsportal.vo.UserStoryDefectsVO;
@@ -291,9 +291,19 @@ public class JiraMongoOperations extends BaseMongoOperation {
 		logger.info("Fetching Test Execution Count..");
 		long testExecutionCount = 0;
 		String query = "{},{_id:0,levelId:1}";
-
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		
+		Date startDate=null, endDate=null;
+		try {
+			startDate = formatter.parse(vardtfrom);
+			
+			 endDate = formatter.parse(vardtto);
+		} catch (ParseException e1) {
+			
+			e1.printStackTrace();
+		}
+		
 
 		Query zephyrQuery = new BasicQuery(query);
 
@@ -969,9 +979,19 @@ public class JiraMongoOperations extends BaseMongoOperation {
 			String projectName, String vardtfrom, String vardtto, List<String> levelIdList) {
 		logger.info("Fetching defect closed count..");
 		long defTestExecutionCount = 0;
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
-
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		
+		Date startDate=null, endDate=null;
+		try {
+			startDate = formatter.parse(vardtfrom);
+			
+			 endDate = formatter.parse(vardtto);
+		} catch (ParseException e1) {
+			
+			e1.printStackTrace();
+		}
+		
 		List<String> prolist = new ArrayList<String>();
 		prolist = getprolistQuery(dashboardName, userId);
 
@@ -992,6 +1012,11 @@ public class JiraMongoOperations extends BaseMongoOperation {
 		query1.addCriteria(Criteria.where("issueStatus").is("Closed"));
 
 		if (prolist.size() > 0) {
+			for(int lst=0;lst<prolist.size();lst++) {
+				if(prolist.get(lst).equals("undefined")) {
+					prolist.remove(lst);
+				}
+			}
 			query1.addCriteria(Criteria.where("prjName").in(prolist));
 		}
 		if (sprintlist.size() > 0) {
@@ -1004,7 +1029,7 @@ public class JiraMongoOperations extends BaseMongoOperation {
 		try {
 			defTestExecutionCount = getMongoOperation().count(query1, JiraDefectVO.class);
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
-			// TODO Auto-generated catch block
+			
 			logger.error("Failed to fetch defect closed count" + e.getMessage());
 		}
 
@@ -1015,9 +1040,19 @@ public class JiraMongoOperations extends BaseMongoOperation {
 			String projectName, String vardtfrom, String vardtto, List<String> levelIdList) {
 		logger.info("Fetching defect Open count..");
 		long defreopenCount = 0;
-		Date startDate = new Date(vardtfrom);
-		Date endDate = new Date(vardtto);
-
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		
+		Date startDate=null, endDate=null;
+		try {
+			startDate = formatter.parse(vardtfrom);
+			
+			 endDate = formatter.parse(vardtto);
+		} catch (ParseException e1) {
+			
+			e1.printStackTrace();
+		}
+		
 		List<String> prolist = new ArrayList<String>();
 		prolist = getprolistQuery(dashboardName, userId);
 
@@ -1598,14 +1633,8 @@ public class JiraMongoOperations extends BaseMongoOperation {
 		try {
 			verlist = getMongoOperation().getCollection("operationalDashboards").distinct("versions.versionName",
 					filterQuery.getQueryObject());
-		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (BaseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
+		} catch (NumberFormatException |BaseException |BadLocationException e1) {
+			
 			e1.printStackTrace();
 		}
 
@@ -1613,14 +1642,8 @@ public class JiraMongoOperations extends BaseMongoOperation {
 		try {
 			cyclelist = getMongoOperation().getCollection("operationalDashboards").distinct("cycles.cycleName",
 					filterQuery.getQueryObject());
-		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (BaseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
+		} catch (NumberFormatException |BaseException |BadLocationException e1) {
+			
 			e1.printStackTrace();
 		}
 
@@ -1803,7 +1826,6 @@ public class JiraMongoOperations extends BaseMongoOperation {
 
 	public static String getRollingPeriod(List<String> levelIdList, String dashboardName, String owner) {
 
-		List<Date> finalDateList = new ArrayList<Date>();
 		List<OperationalDashboardVO> finalOperationalList = new ArrayList<OperationalDashboardVO>();
 		List<CustomTemplateVO> finalTemplateList = new ArrayList<CustomTemplateVO>();
 
@@ -1828,7 +1850,7 @@ public class JiraMongoOperations extends BaseMongoOperation {
 
 		Query templateQuery = new Query();
 		templateQuery.addCriteria(Criteria.where("templateName").is(templateName));
-		templateQuery.addCriteria(Criteria.where("userId").is(owner));
+		//templateQuery.addCriteria(Criteria.where("userId").is(owner));
 
 		try {
 			finalTemplateList = getMongoOperation().find(templateQuery, CustomTemplateVO.class);

@@ -15,7 +15,7 @@
 	  
 	  $scope.keyword=$stateParams.homeSearchTxt;
 	  $scope.keyword=atob($scope.keyword);
-	  //console.log( $scope.keyword);
+	  console.log( $scope.keyword);
 	  $scope.refine=function(index){
 		  
 		  var keyword1 =$scope.didYouMeanKeys1[index].tite;
@@ -33,7 +33,7 @@
 		  if($scope.keyword.length>0)
 		  {
 			
-		  //console.log("in search main keyword" + $scope.keyword);
+		  console.log("in search main keyword" + $scope.keyword);
 		 
 		  $scope.showSummary=false;
 		  $scope.showTable=false;

@@ -1,8 +1,12 @@
-
+/**
+ * @author v.lugovksy created on 16.12.2015 NOTE: use encodeURIComponent() to
+ *         include special characters '&' while sending query parameters
+ *         **653731**
+ */
 (function() {
 	'use strict';
 
-	angular.module('MetricsPortal.pages.login').service('FileUploadService',
+	angular.module('MetricsPortal.pages.admin').service('FileUploadService',
 			[ '$https', function($https) {
 				this.uploadFileToUrl = function(file, uploadUrl) {
 					var fd = new FormData();
@@ -62,17 +66,11 @@
 		};
 	});
 	/** @ngInject */
-	function AdminCtrl($filter, $sessionStorage, $scope, $http, $sce,
+	function AdminCtrl($filter, AES, $sessionStorage, $scope, $http, $sce,
 			localStorageService, $state, $window, $timeout, $location,
 			$rootScope, $uibModal, $base64, toastr, $uibModalStack) {
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-			return tokeen;
-		}
-		$scope.currentPage = 0;
 
+		$scope.currentPage = 0;
 		$scope.pageSize = 5;
 		$rootScope.menubar = false;
 		$scope.numberOfPages = function() {
@@ -89,7 +87,6 @@
 		$rootScope.var4 = true;
 		$rootScope.var5 = false;
 		$rootScope.var6 = false;
-		$rootScope.var7 = false;
 
 		$scope.selection = [];
 		$scope.allowDrop = function(ev) {
@@ -111,7 +108,7 @@
 
 			$scope.selectedTool = JSON.stringify($scope.toolsSelected);
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -147,7 +144,7 @@
 		$rootScope.var4 = true;
 
 		$rootScope.isToolSelectedAlready = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -174,7 +171,8 @@
 			$scope.toolListSel = localStorageService.get('toolList');
 			if ($rootScope.toolListLen > 0) {
 				$scope.toolList = [ "User Story", "Build", "SCM", "Deployment",
-						"Code Quality", "Test Management" ];
+						"Code Quality", "Test Management", "Fortify",
+						"ALM-Octane" ];
 				$scope.models = {
 					selected : $scope.toolListSel,
 					lists : {
@@ -209,7 +207,8 @@
 
 			} else {
 				$scope.toolList = [ "User Story", "Build", "SCM", "Deployment",
-						"Code Quality", "Test Management" ];
+						"Code Quality", "Test Management", "Fortify",
+						"ALM-Octane" ];
 				$scope.models = {
 					selected : null,
 					lists : {
@@ -255,6 +254,12 @@
 									} else if (model.lists.selected[i].label == "Build") {
 										$scope.imgPath = "app\\pages\\admin\\icon-jenkins.png";
 										$scope.key = "build";
+									} else if (model.lists.selected[i].label == "Fortify") {
+										$scope.imgPath = "app\\pages\\admin\\icon-fortify.png";
+										$scope.key = "fortify";
+									} else if (model.lists.selected[i].label == "ALM-Octane") {
+										$scope.imgPath = "app\\pages\\admin\\icon-octane.png";
+										$scope.key = "octane";
 									}
 
 									$scope.toolsSelected
@@ -294,18 +299,18 @@
 		}
 
 		$scope.deleteTemplate = function(templateName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
 			$scope.data = templateName;
-			//console.log(" $scope.templatename", $scope.data);
+
 			$http
 					.get(
 							"./rest/jsonServices/templateNameInOperational?templateName="
-									+ $scope.data, config)
+									+ encodeURIComponent($scope.data), config)
 					.success(
 							function(response) {
 								if (response > 0) {
@@ -324,7 +329,7 @@
 													}
 												}
 											});
-							
+
 								} else if (response == 0) {
 									$scope.data = templateName;
 									$uibModal
@@ -346,11 +351,7 @@
 									 * 'sm')
 									 */
 								}
-
-								/*
-								 * setTimeout(function() {
-								 * $scope.redirecttodashboard(); }, 2000)
-								 */;
+								;
 
 							});
 
@@ -364,21 +365,26 @@
 		// used template
 
 		$scope.deleteTemplateRow = function(data) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
 			$scope.templatename = data;
-				$http.get("./rest/jsonServices/deleteTemplateName?templateName="+ $scope.templatename, config)
+			$http
+					.get(
+							"./rest/jsonServices/deleteTemplateName?templateName="
+									+ encodeURIComponent($scope.templatename),
+							config)
 					.success(
 							function(response) {
 								if (response == 0) {
 
 									$scope.$dismiss();
 									$scope
-											.open('app/pages/admin/deletedTemplateMsg.html',
+											.open(
+													'app/pages/admin/deletedTemplateMsg.html',
 													'sm')
 								}
 
@@ -393,21 +399,23 @@
 				$state.reload();
 			}
 
-		
 		}
 		// unused template
 		$scope.deleteUnusedTemplateRow = function(data) {
-			var token = getEncryptedValue();
-			var config = {
+			var token = AES.getEncryptedValue();
+			var paramdata = {
+				templateName : data
+			}
+
+			$http({
+				url : "./rest/jsonServices/deleteUnusedTemplateName",
+				method : "GET",
+				params : paramdata,
 				headers : {
 					'Authorization' : token
 				}
-			};
-			$scope.templatename = data;
-			$http
-					.get(
-							"./rest/jsonServices/deleteUnusedTemplateName?templateName="
-									+ $scope.templatename, config)
+
+			})
 					.success(
 							function(response) {
 								if (response == 0) {
@@ -444,10 +452,8 @@
 
 			$rootScope.metricSelected = localStorageService
 					.get('metricSelected');
-			if($rootScope.metricSelected ==null){
-				$scope.open(
-						'app/pages/admin/selectMetric.html',
-						'sm');
+			if ($rootScope.metricSelected == null) {
+				$scope.open('app/pages/admin/selectMetric.html', 'sm');
 			}
 			$rootScope.isAlmTool = localStorageService.get('almMetric');
 			$rootScope.isJiratool = localStorageService.get('jiraMetric');
@@ -457,14 +463,14 @@
 			$rootScope.selectedMetrics = selectedItems;
 			localStorageService.set('selectedMetrics',
 					$rootScope.selectedMetrics);
-			
+			console.log("225", $rootScope.selectedMetrics);
 
 			var rollingPeriod;
 			$rootScope.selectedRollingPeriod = localStorageService
 					.get('selectedRollingPeriod');
 			var selectMetrics;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var Viewdata = {
 				selectedTemplate : $scope.selectTemplate,
 				selectMetrics : JSON.stringify($rootScope.selectedMetrics),
@@ -508,14 +514,12 @@
 		// save and update
 		$scope.updateSelectedTemplateDetails = function() {
 
-			
 			localStorageService.set('metricSelected', $scope.metricSelected);
 
 			$scope.metricSelected = localStorageService.get('metricSelected');
 			$rootScope.templateToolIsAlm = localStorageService.get('almMetric');
 			$rootScope.templateToolIsJira = localStorageService
 					.get('jiraMetric');
-			
 			$rootScope.selectedcustomtemplate = localStorageService
 					.get('selectedcustomtemplate');
 			var selectedItems = $scope
@@ -523,14 +527,15 @@
 			$rootScope.selectedMetrics = selectedItems;
 			localStorageService.set('selectedMetrics',
 					$rootScope.selectedMetrics);
-			//console.log("225", $rootScope.selectedMetrics);
+			console.log("225", $rootScope.selectedMetrics);
 
 			var rollingPeriod;
 			$rootScope.selectedRollingPeriod = localStorageService
 					.get('selectedRollingPeriod');
 			var selectMetrics;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
+
 			var Viewdata = {
 				selectedTemplate : $scope.selectedcustomtemplate,
 				selectMetrics : JSON.stringify($rootScope.selectedMetrics),
@@ -578,7 +583,7 @@
 			$rootScope.metricSelected = localStorageService
 					.get('metricSelected');
 			$scope.metricLength = $rootScope.metricSelected.length;
-			//console.log($rootScope.metricLength)
+			console.log($rootScope.metricLength)
 		}
 
 		$scope.getSelectedMetricData = function(data) {
@@ -601,7 +606,7 @@
 				modelNames1.push(obj);
 			}
 
-			//console.log("item", modelNames1);
+			console.log("item", modelNames1);
 			return modelNames1;
 		}
 
@@ -612,7 +617,7 @@
 		$scope.getvalues = function(organisation, template) {
 
 			$scope.selectTemplate = template;
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var templateData = {
 				selectTemplate : $scope.selectTemplate
 			}
@@ -647,7 +652,7 @@
 			$rootScope.jiraMetric = localStorageService.get('jiraMetric');
 			localStorageService.set('jiraMetric', $rootScope.jiraMetric);
 			localStorageService.set('almMetric', $rootScope.almMetric);
-			//console.log("364", $rootScope.jiraMetric)
+			console.log("364", $rootScope.jiraMetric)
 			$scope.metricAvailableLists();
 
 		}
@@ -657,7 +662,7 @@
 			localStorageService.set('jiraMetric', jiraMetric);
 			$rootScope.jiraMetric = localStorageService.get('jiraMetric');
 
-			//console.log(jiraMetric);
+			console.log(jiraMetric);
 			$scope.metricAvailableLists();
 
 		}
@@ -666,7 +671,7 @@
 			localStorageService.set('almMetric', almMetric);
 			$rootScope.almMetric = localStorageService.get('almMetric');
 
-			//console.log("123", almMetric);
+			console.log("123", almMetric);
 			$scope.metricAvailableLists();
 
 		}
@@ -676,12 +681,12 @@
 			$rootScope.selectedRollingPeriod = selectedRollingPeriod;
 			localStorageService.set('selectedRollingPeriod',
 					$rootScope.selectedRollingPeriod);
-			//console.log($rootScope.selectedRollingPeriod);
+			console.log($rootScope.selectedRollingPeriod);
 		}
 
 		// function to get rolling period
 		$scope.getRollingPeriodData = function() {
-			$scope.rollingperioddrops = [ "Last 7 days","Last 15 days","Last 30 days", "Last 60 days",
+			$scope.rollingperioddrops = [ "Last 30 days", "Last 60 days",
 					"Last 90 days", "Last 180 days", "Last 365 days" ];
 			$rootScope.selectedRollingPeriod = $scope.rollingperioddrops[0];
 			localStorageService.set('selectedRollingPeriod',
@@ -695,8 +700,8 @@
 
 			$scope.almMetric = localStorageService.get('almMetric');
 			$scope.jiraMetric = localStorageService.get('jiraMetric');
-			//console.log($scope.jiraMetric);
-			//console.log($scope.almMetric);
+			console.log($scope.jiraMetric);
+			console.log($scope.almMetric);
 			if ($scope.almMetric == true && $scope.jiraMetric == false
 					|| $scope.jiraMetric == null) {
 				$scope.valueOfTool = "ALM ";
@@ -707,7 +712,7 @@
 			} else if ($scope.jiraMetric == true && $scope.almMetric == true) {
 				$scope.valueOfTool = "ALM and JIRA ";
 			}
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			$scope.almtoolvalue = $scope.almMetric;
 			$scope.jiratoolvalue = $scope.jiraMetric;
@@ -729,7 +734,7 @@
 								$scope.AvailbleList = response;
 								/* alert("response.length " + response.length) */
 								$scope.rowCollection = response;
-								//console.log($scope.AvailbleList);
+								console.log($scope.AvailbleList);
 								if ($scope.templatemodels[1].Selected.length == 0
 										&& $scope.templatemodels[0].Available.length == 0) {
 									angular
@@ -835,9 +840,7 @@
 						Available).concat(list.Available.slice(index));
 				$scope.metricSelected = localStorageService
 						.get('metricSelected');
-				//console.log("avaialbleDropvvc", $scope.metricSelected)
-				
-				
+				console.log("avaialbleDropvvc", $scope.metricSelected)
 
 				for (var i = 0; i < $scope.metricSelected.length; i++) {
 
@@ -885,10 +888,6 @@
 				}
 
 			};
-			
-			
-			
-			
 			$scope.onDrop1 = function(list, Selected, index) {
 				$scope.metricSelected = [];
 
@@ -899,17 +898,15 @@
 				});
 				$scope.variable = true;
 				$scope.metricSelected = angular.copy(list.Selected);
-				
-				localStorageService.set('metricSelected', $scope.metricSelected);
+				localStorageService
+						.set('metricSelected', $scope.metricSelected);
+
 				return true;
 
 			}
-			
-			
-			
-			
 
 			$scope.onMoved1 = function(list) {
+
 				list.Selected = list.Selected.filter(function(item) {
 					return !item.selected;
 				});
@@ -935,12 +932,12 @@
 
 			$rootScope.metricSelected = localStorageService
 					.get('metricSelected');
-			//console.log("metricSelected", $rootScope.metricSelected);
+			console.log("metricSelected", $rootScope.metricSelected);
 			if ($rootScope.metricSelected) {
 				$rootScope.metricSelected = "";
 			}
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -956,7 +953,7 @@
 								console
 										.log("response",
 												$scope.numberOfTemplate)
-								//console.log("response", $scope.templateLength)
+								console.log("response", $scope.templateLength)
 								if ($scope.numberOfTemplate <= $scope.templateLength) {
 									$scope
 											.open(
@@ -979,7 +976,7 @@
 		$scope.templateDetails = function() {
 			/* alert("i ,m dfsdf"); */
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1007,22 +1004,25 @@
 					.get('selectedcustomtemplate');
 
 		}
-		// get the selected template data from db to ui function
 
+		// get the selected template data from db to ui function
+		// NOTE: use encodeURIComponent() in template name to include special
+		// characters '&' while sending query parameters **653731**
 		$scope.getSelectedTemplateDetails = function() {
 			$scope.selectedcustomtemplate = localStorageService
 					.get('selectedcustomtemplate');
 			var listedItems = [];
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
-			$http.get(
-					"rest/operationalServices/customTemplateView?selectedcustomtemplate="
-							+ $scope.selectedcustomtemplate, config).success(
-					function(response) {
+			$http
+					.get(
+							"rest/operationalServices/customTemplateView?selectedcustomtemplate="
+									+ encodeURIComponent($scope.selectedcustomtemplate),
+							config).success(function(response) {
 						if (response != 0)
 
 							$scope.loadCustomTemplateDetails(response);
@@ -1043,8 +1043,8 @@
 			localStorageService.set('selectedcustomtemplate',
 					$rootScope.selectedcustomtemplate);
 			$rootScope.templateSelectedMetrics = response[0].selectedMetrics;
-			//console.log("$rootScope.templateSelectedMetrics",
-					//$rootScope.templateSelectedMetrics)
+			console.log("$rootScope.templateSelectedMetrics",
+					$rootScope.templateSelectedMetrics)
 			if ($rootScope.templateToolIsJira != null
 					&& $rootScope.templateToolIsAlm != null) {
 				$scope.metricAvailableLists();
@@ -1052,7 +1052,7 @@
 						.get('AvailableMetricList');
 			}
 			$rootScope.templateSelectedMetricName = [];
-			//console.log($scope.templatemodels.length);
+			console.log($scope.templatemodels.length);
 			for (var i = 0; i < $scope.templatemodels.length; i++) {
 
 				for (var j = 0; j < $scope.templateSelectedMetrics.length; j++) {
@@ -1067,8 +1067,6 @@
 			$scope.metricSelected = angular
 					.copy($scope.templatemodels[1].Selected);
 
-			
-			
 			localStorageService.set('metricSelected', $scope.metricSelected);
 
 		}
@@ -1088,7 +1086,7 @@
 
 			$scope.myselectedTemplate = localStorageService
 					.get('myselectedTemplate');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1096,12 +1094,12 @@
 			};
 			$http.get(
 					"rest/operationalServices/customTemplateView?selectedcustomtemplate="
-							+ $scope.myselectedTemplate, config).success(
-					function(response) {
-						if (response != 0)
-							$scope.loadCustomTemplate(response);
+							+ encodeURIComponent($scope.myselectedTemplate),
+					config).success(function(response) {
+				if (response != 0)
+					$scope.loadCustomTemplate(response);
 
-					});
+			});
 		}
 
 		$scope.loadCustomTemplate = function(response) {
@@ -1185,8 +1183,8 @@
 			 * console.log($scope.instanceName); console.log($scope.password);
 			 * console.log($scope.userId);
 			 */
-			//console.log($scope.serverUrl);
-			var token = getEncryptedValue();
+			console.log($scope.serverUrl);
+			var token = AES.getEncryptedValue();
 
 			var HPALMdata = {
 				instanceName : $scope.instanceName,
@@ -1231,7 +1229,7 @@
 		// DISPLAYING IN THE TABLE INSTANCE AND SERVER URL
 		$scope.instanceDetailsfn = function() {
 			/* console.log("instanceDetailsfn"); */
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1241,7 +1239,7 @@
 					function(response) {
 						$scope.instanceDetails = response;
 
-						//console.log("response2", response);
+						console.log("response2", response);
 
 					})
 		}
@@ -1251,12 +1249,12 @@
 		$scope.createDomainAndpoject = function(item) {
 			/* console.log("inside"); */
 			/* $scope.visible=true; */
-			//console.log(item);
+			console.log(item);
 			$scope.instanceName = item.instanceName;
 			$scope.serverUrl = item.serverUrl;
 			$scope.password = item.password;
 			$scope.userId = item.userId;
-			//console.log($scope.password);
+			console.log($scope.password);
 			/*
 			 * console.log($scope.userId);
 			 * 
@@ -1277,10 +1275,10 @@
 			/* console.log( $scope.selectedFields); */
 			$scope.domain = form.domain;
 			$scope.project = form.project;
-			/*console.log($scope.project);
+			console.log($scope.project);
 			console.log($scope.domain);
-			console.log($scope.password);*/
-			var token = getEncryptedValue();
+			console.log($scope.password);
+			var token = AES.getEncryptedValue();
 
 			var HPALMdata = {
 
@@ -1318,7 +1316,7 @@
 													'app/pages/admin/exitDashboard.html',
 													'sm');
 								}
-								//console.log("response1223", response);
+								console.log("response1223", response);
 							});
 			/*
 			 * setTimeout(function() { $scope.redirect(); }, 2000);
@@ -1330,7 +1328,7 @@
 
 		$scope.domainAndProjectDetailsfn = function() {
 			/* console.log("domainnproject inside"); */
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1362,7 +1360,7 @@
 						 * $scope.domainAndProjectDetails.splice(index, 1); } }
 						 */
 
-						//console.log("response1", response);
+						console.log("response1", response);
 						/* console.log("values", response.length); */
 					});
 		};
@@ -1370,7 +1368,7 @@
 		// delete instance in a particular row
 		$scope.deleteHPALMInstance = function(item) {
 			$scope.data = item;
-			//console.log(" $scope.data", $scope.data);
+			console.log(" $scope.data", $scope.data);
 			$uibModal.open({
 				animation : true,
 				templateUrl : 'app/pages/admin/deleteInstanceDetails.html',
@@ -1389,7 +1387,7 @@
 		$scope.deleteInstanceRow = function(data) {
 
 			/* console.log("in"); */
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1397,7 +1395,7 @@
 			};
 			$scope.instanceName = data.instanceName;
 
-			//console.log(" $scope.instanceName", $scope.instanceName);
+			console.log(" $scope.instanceName", $scope.instanceName);
 			$http.get(
 					"./rest/jsonServices/deleteALMInstance?instanceName="
 							+ $scope.instanceName, config).success(
@@ -1428,7 +1426,7 @@
 		$scope.deleteHPALMRow = function(item) {
 			$scope.data = item;
 
-			//console.log(" $scope.data", $scope.data);
+			console.log(" $scope.data", $scope.data);
 			$uibModal.open({
 				animation : true,
 				templateUrl : 'app/pages/admin/deleteHPALMdetails.html',
@@ -1446,7 +1444,7 @@
 		$scope.deleteHPALMRoww = function(data) {
 
 			/* console.log("in"); */
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1486,7 +1484,7 @@
 
 		// Displays the user table details in Admin home screen
 		$scope.getAdminTableDetails = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1495,7 +1493,6 @@
 			$http.get("./rest/jsonServices/adminDetails", config).success(
 					function(response) {
 						$rootScope.userDetails = response;
-						console.log($rootScope.userDetails);
 						$rootScope.totalcnt = response.length;
 						$rootScope.rowCollection = response;
 
@@ -1539,7 +1536,7 @@
 		};
 
 		$scope.getRoleChange = function(details) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1639,22 +1636,20 @@
 			saveAs(blob, "userDetails.xls");
 
 		}
-		//export as csv 
-		 $scope.exportDataInCSV=function(){
-		   	   var table = TableExport(document.getElementById("exportableBizAdminDetails"));
-		   	   	   var exportData = table.getExportData();
-		   	   //console.log("exportData",exportData);
-		   	   var samplecsvData = exportData.exportableBizAdminDetails.csv.data;
-		   	   var blob = new Blob(
-		   			   [samplecsvData],
-		   			   {
-		   				   type : "application/vnd.ms-excel",
-		   				   type :"text/csv;charset=utf-8" 
-		   			   });
-		   			   saveAs(blob, "userDetails.csv");
-		   	   
-		   	   
-		      };
+		// export as csv
+		$scope.exportDataInCSV = function() {
+			var table = TableExport(document
+					.getElementById("exportableBizAdminDetails"));
+			var exportData = table.getExportData();
+			console.log("exportData", exportData);
+			var samplecsvData = exportData.exportableBizAdminDetails.csv.data;
+			var blob = new Blob([ samplecsvData ], {
+				type : "application/vnd.ms-excel",
+				type : "text/csv;charset=utf-8"
+			});
+			saveAs(blob, "userDetails.csv");
+
+		};
 
 		// csv table function
 		/*
@@ -1677,17 +1672,16 @@
 		 * 
 		 * for (var j = 0; j < cols.length; j++) row.push(cols[j].innerText);
 		 * 
-		 * csv.push(row.join(",")); }
-		 *  // Download CSV file downloadCSV(csv.join("\n"), filename); }
-		 * function downloadCSV(csv, filename) { var csvFile; var downloadLink;
-		 *  // CSV file csvFile = new Blob([csv], {type: "text/csv"});
-		 *  // Download link downloadLink = document.createElement("a");
-		 *  // File name downloadLink.download = filename;
-		 *  // Create a link to the file downloadLink.href =
-		 * window.URL.createObjectURL(csvFile);
-		 *  // Hide download link downloadLink.style.display = "none";
-		 *  // Add the link to DOM document.body.appendChild(downloadLink);
-		 *  // Click download link downloadLink.click(); }
+		 * csv.push(row.join(",")); } // Download CSV file
+		 * downloadCSV(csv.join("\n"), filename); } function downloadCSV(csv,
+		 * filename) { var csvFile; var downloadLink; // CSV file csvFile = new
+		 * Blob([csv], {type: "text/csv"}); // Download link downloadLink =
+		 * document.createElement("a"); // File name downloadLink.download =
+		 * filename; // Create a link to the file downloadLink.href =
+		 * window.URL.createObjectURL(csvFile); // Hide download link
+		 * downloadLink.style.display = "none"; // Add the link to DOM
+		 * document.body.appendChild(downloadLink); // Click download link
+		 * downloadLink.click(); }
 		 */
 		// Editing User Method
 		$scope.editUser = function(userDetails) {
@@ -1727,7 +1721,6 @@
 
 		$scope.projectAccess = function(userDetails) {
 			$scope.data = userDetails;
-			console.log($scope.data);
 			$uibModal.open({
 				animation : true,
 				templateUrl : 'app/pages/admin/projectAccess.html',
@@ -1743,14 +1736,14 @@
 		};
 		// Updates Edited User Information
 		$scope.updateUserInfo = function(data) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
 			var data = angular.toJson(data);
-			//console.log(data);
+			console.log(data);
 			$http({
 				url : "./rest/jsonServices/updateUserInfo",
 				method : "POST",
@@ -1769,7 +1762,7 @@
 
 		// Creating User Information
 		$scope.createUserInfo = function(data) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1808,22 +1801,21 @@
 		};
 
 		// Removes User information completely
-		
-		  $scope.deleteUserInfo = function(userId) { var token =
-		  getEncryptedValue(); var config = { headers : { 'Authorization' :
-		  token } };
-		  
-		  $http({ url : "./rest/jsonServices/deleteUserInfo", method : "POST",
-		  data : userId, headers : { 'Authorization' : token } }).success(
-		  function(response) { if (response == 1) { $scope.$dismiss();
-		  $scope.open( 'app/pages/admin/deletedSuccessMsg.html', 'sm');
-		  setTimeout(function() { $scope.reload(); }, 500); } });
-		   }
-		 
+		/*
+		 * $scope.deleteUserInfo = function(userId) { var token =
+		 * getEncryptedValue(); var config = { headers : { 'Authorization' :
+		 * token } };
+		 * 
+		 * $http({ url : "./rest/jsonServices/deleteUserInfo", method : "POST",
+		 * data : userId, headers : { 'Authorization' : token } }).success(
+		 * function(response) { if (response == 1) { $scope.$dismiss();
+		 * $scope.open( 'app/pages/admin/deletedSuccessMsg.html', 'sm');
+		 * setTimeout(function() { $scope.reload(); }, 500); } }); }
+		 */
 		// delete multiple users from the db on click of delete button
-		/*$scope.deleteUserInfo = function(loginRequests) {
+		$scope.deleteUserInfo = function(loginRequests) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1841,11 +1833,11 @@
 				$scope.getAdminTableDetails();
 				$scope.getUserCount();
 			});
-		}*/
+		}
 
 		// To fetch pending login requests
 		$scope.getLoginRequests = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1855,7 +1847,7 @@
 					function(response) {
 
 						$scope.loginRequests = response;
-						//console.log("dataa", $scope.loginRequests)
+						console.log("dataa", $scope.loginRequests)
 						$scope.rowCollection = response;
 					})
 		}
@@ -1877,7 +1869,7 @@
 		 */
 
 		$scope.updateDashboards = function(userid) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1906,7 +1898,7 @@
 
 		// To fetch active users
 		$scope.getActiveUsers = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1921,7 +1913,7 @@
 		}
 		// To fetch Inactive users
 		$scope.getInactiveUsers = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1937,25 +1929,27 @@
 
 		// To fetch user counts and display in home screen of admin
 		$scope.getUserCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/adminUserCount", config).success(
-					function(response) {
-						$rootScope.inactiveUsersCount = response[0].inactiveUsers;
-						$rootScope.activeUsersCount = response[0].activeUsers;
-						$rootScope.pendingRequestsCount = response[0].pendingRequests;
-					})
+			$http
+					.get("./rest/jsonServices/adminUserCount", config)
+					.success(
+							function(response) {
+								$rootScope.inactiveUsersCount = response[0].inactiveUsers;
+								$rootScope.activeUsersCount = response[0].activeUsers;
+								$rootScope.pendingRequestsCount = response[0].pendingRequests;
+							})
 		}
 
 		// Accounts Lock resolve from Admin
 
 		// To fetch user counts and display in home screen of admin
 		$scope.lockedAccountCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1971,7 +1965,7 @@
 
 		// Updates the Active Users to Inactive Users
 		$scope.inactivateUsers = function(activeUsers) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1996,7 +1990,7 @@
 		 */
 		// Updates the InActive Users to active Users
 		$scope.activateUsers = function(inactiveUsers) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2019,14 +2013,14 @@
 
 		// Updates the processed login requests
 		$scope.processLogins = function(loginRequests) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
 			var data = angular.toJson(loginRequests);
-			//console.log("dataa", data)
+			console.log("dataa", data)
 			$http({
 				url : "./rest/jsonServices/loginRequests",
 				method : "POST",
@@ -2042,7 +2036,7 @@
 
 		// Updates the processed lock requests
 		$scope.processLocks = function(lockedAccountDetails) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2111,7 +2105,7 @@
 
 		$scope.saveNewLicenseKey = function(key) {
 			var key = key.replace(/[+]/g, "%2B");
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2152,8 +2146,8 @@
 		// Save User details created by Admin
 
 		$scope.saveAdminUser = function(form) {
-
-			var token = getEncryptedValue();
+			debugger;
+			var token = AES.getEncryptedValue();
 
 			if ($("#rdnormal").is(":checked")) {
 				$scope.usertype = "normal";
@@ -2181,16 +2175,14 @@
 				$scope.isActive = true;
 				$scope.isldap = false;
 
-				$scope.password = btoa($scope.password);
-
-				var signUpData = {
-					userId : $scope.userid,
-					password : $scope.password,
-					userName : $scope.username,
-					email : $scope.email,
-					mobileNum : $scope.mobile,
-					ldap : $scope.isldap
-				}
+				var signUpData = new FormData();
+				signUpData.append('userId', $scope.userid);
+				signUpData.append('password', $scope.password ? AES
+						.encode($scope.password) : '');
+				signUpData.append('userName', $scope.username);
+				signUpData.append('email', $scope.email);
+				signUpData.append('mobileNum', $scope.mobile);
+				signUpData.append('ldap', $scope.isldap);
 
 				var signUpDataDefault = {
 					userId : $scope.userid,
@@ -2224,14 +2216,14 @@
 
 				$scope.password = null;
 
-				var signUpData = {
-					userId : $scope.userid,
-					password : $scope.password,
-					userName : $scope.username,
-					email : $scope.email,
-					mobileNum : $scope.mobile,
-					ldap : $scope.isldap
-				}
+				var signUpData = new FormData();
+				signUpData.append('userId', $scope.userid);
+				signUpData.append('password', $scope.password ? AES
+						.encode($scope.password) : '');
+				signUpData.append('userName', $scope.username);
+				signUpData.append('email', $scope.email);
+				signUpData.append('mobileNum', $scope.mobile);
+				signUpData.append('ldap', $scope.isldap);
 
 				var signUpDataDefault = {
 					userId : $scope.userid,
@@ -2248,10 +2240,12 @@
 			$http({
 				url : "rest/jsonServices/createAdminUser",
 				method : "POST",
-				params : signUpData,
+				data : signUpData,
 				headers : {
-					'Authorization' : token
-				}
+					'Authorization' : token,
+					'Content-Type' : undefined
+				},
+				transformRequest : angular.identity
 			}).success(function(response) {
 
 				if (response == 0) {
@@ -2271,32 +2265,32 @@
 
 		$scope.updateAdminUser = function(form) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			$scope.userId = form.userId;
 			$scope.username = form.userName;
 			$scope.email = form.email;
 			$scope.mobile = form.mobile;
 
-			var updateData = {
-				userId : $scope.userId,
-				userName : $scope.username,
-				email : $scope.email,
-				mobileNum : $scope.mobile
-			}
+			var updateData = new FormData();
+			updateData.append('userId', $scope.userId);
+			updateData.append('userName', $scope.username);
+			updateData.append('email', $scope.email);
+			updateData.append('mobileNum', $scope.mobile);
 
 			$http({
 				url : "rest/jsonServices/adminupdate",
 				method : "POST",
-				params : updateData,
+				data : updateData,
 				headers : {
-					'Authorization' : token
-				}
+					'Authorization' : token,
+					'Content-Type' : undefined
+				},
+				transformRequest : angular.identity
 			}).success(function(response) {
+
 				if (response == 0) {
-					$scope.getAdminTableDetails();
-					$scope.getUserCount();
-					$uibModalStack.dismissAll();
+					$scope.creatingUser(signUpDataDefault);
 				} else if (response == 1) {
 					$scope.showWarningMsg("UserId");
 				} else if (response == 2) {
@@ -2319,10 +2313,6 @@
 
 		$scope.showCreateSuccessMsg = function() {
 			$scope.open('app/pages/admin/createdSuccessfully.html', 'sm');
-		};
-		
-		$scope.showupdateSuccessMsg = function() {
-			$scope.open('app/pages/admin/updateSuccessfully.html', 'sm');
 		};
 
 		$scope.showWarningMsg = function(value) {
@@ -2354,7 +2344,7 @@
 		};
 
 		$scope.loadItems = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2363,13 +2353,13 @@
 			$http.get("./rest/jsonServices/getprojectsforadminaccess", config)
 					.success(function(response) {
 						$scope.rel_items = response;
-						//console.log("2result::");
+						console.log("2result::");
 						$scope.rel_items = updateViewData();
 					});
 		};
 
 		$scope.loadJiraItems = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -2900,7 +2890,7 @@
 		// saving user selection
 
 		$scope.getSelection = function(userId) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			/*
 			 * $scope.dashName = form.dashname; $scope.description =
@@ -2955,7 +2945,7 @@
 
 		$scope.hovered = function(hovering) {
 			$timeout(function() {
-				//console.log('update with timeout fired');
+				console.log('update with timeout fired');
 				if (hovering.objHovered == true) {
 					hovering.popoverOpened2 = true;
 				}
@@ -2963,54 +2953,51 @@
 		}
 
 		// upload organisation image
-		$scope.UploadResourceFile = function(files) {
+		$scope.UploadLogoResourceFile = function(files) {
+
+			// alert("ResourceFile");
+
+			/*
+			 * $scope.SelectedFileForUpload = files[0]; $scope.selectedFileName =
+			 * $scope.SelectedFileForUpload.name; $scope.extension =
+			 * $scope.selectedFileName.split('.').pop() .toLowerCase();
+			 */
+
 			$scope.SelectedFileForUpload = files[0];
 			$scope.selectedFileName = $scope.SelectedFileForUpload.name;
-			$scope.extension = $scope.selectedFileName.split('.').pop()
-					.toLowerCase();
-		};
+			var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
-		// UserList
-		/*
-		 * $scope.getusers = function() { var token = getEncryptedValue(); var
-		 * config = { headers : { 'Authorization' : token } };
-		 * 
-		 * $http.get("./rest/jsonServices/adminDetails", config).success(
-		 * function(response) { $scope.userDrops = response; }); }
-		 */
+			if (!allowedExtensions.exec($scope.selectedFileName)) {
 
-		$scope.showDeletedMsg = function() {
+				angular.element(document.getElementById("file")).val(null);
 
-			toastr.success('User has been deleted Successfully ');
-		};
-
-		$scope.loadItems = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
+				if (flagVal == 'upload') {
+					$scope.SelectedFileForUpload = undefined;
+					$scope.selectedFileName = "InvalidFile";
+				} else {
+					$scope.selectedFileName = 'unchanged';
+					$scope.editUserModel.profilePhoto = $scope.temppic;
 				}
-			};
-			$http.get("./rest/jsonServices/getprojectsforadminaccess", config)
-					.success(function(response) {
-						$scope.rel_items = response;
-						//console.log("2result::");
-						$scope.rel_items = updateViewData();
-					});
-		};
+				return $scope.showWarnError("Profile Photo");
 
-		$scope.loadJiraItems = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			$http.get("./rest/jsonServices/getjiraprojectsforadminaccess",
-					config).success(function(response) {
-				$scope.rel_jira_items = response;
-				$scope.rel_jira_items = updateJiraViewData();
-			});
+				// $scope.extFlag = true;
+				// $scope.fileExtError = 'Please upload file having extensions
+				// .jpeg/.jpg/ .gif only.';
+				// $scope.open('app/pages/login/fileFormatMsg.html', 'sm');
+				// return false;
+			} else {
+				$scope.extension = $scope.selectedFileName.split('.').pop()
+						.toLowerCase();
+			}
+
+			$scope.progress = 0;
+			fileReader.readAsDataUrl($scope.SelectedFileForUpload, $scope)
+					.then(
+							function(result) {
+								$scope.profilePhoto = result.substr(result
+										.indexOf(',') + 1);
+							});
+
 		};
 
 		/*
@@ -3525,7 +3512,7 @@
 		// saving user selection
 
 		$scope.getSelection = function(userId) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			/*
 			 * $scope.dashName = form.dashname; $scope.description =
@@ -3582,7 +3569,7 @@
 
 		$scope.hovered = function(hovering) {
 			$timeout(function() {
-				//console.log('update with timeout fired');
+				console.log('update with timeout fired');
 				if (hovering.objHovered == true) {
 					hovering.popoverOpened2 = true;
 				}
@@ -3590,26 +3577,48 @@
 		}
 
 		// upload organisation image
-		$scope.UploadResourceFile = function(files) {
+		$scope.UploadResourceFile = function(files, flagVal) {
+
 			$scope.SelectedFileForUpload = files[0];
 			$scope.selectedFileName = $scope.SelectedFileForUpload.name;
 			var allowedExtensions = /(\.jpg|\.jpeg|\.gif|\.png)$/i;
-			if(!allowedExtensions.exec($scope.selectedFileName)){
-				
-				$scope.extFlag = true;
-				$scope.fileExtError = 'Please upload file having extensions .jpeg/.jpg/ .gif only.';
-				//$scope.open('app/pages/login/fileFormatMsg.html', 'sm');
-				return false;
-			}else{
+
+			if (!allowedExtensions.exec($scope.selectedFileName)) {
+
+				angular.element(document.getElementById("file")).val(null);
+
+				if (flagVal == 'upload') {
+					$scope.SelectedFileForUpload = undefined;
+					$scope.selectedFileName = "InvalidFile";
+				} else {
+					$scope.selectedFileName = 'unchanged';
+					$scope.editUserModel.profilePhoto = $scope.temppic;
+				}
+				return $scope.showWarnError("Profile Photo");
+
+				// $scope.extFlag = true;
+				// $scope.fileExtError = 'Please upload file having extensions
+				// .jpeg/.jpg/ .gif only.';
+				// $scope.open('app/pages/login/fileFormatMsg.html', 'sm');
+				// return false;
+			} else {
 				$scope.extension = $scope.selectedFileName.split('.').pop()
-				.toLowerCase();
-			} 
-			
+						.toLowerCase();
+			}
+
+			$scope.progress = 0;
+			fileReader.readAsDataUrl($scope.SelectedFileForUpload, $scope)
+					.then(
+							function(result) {
+								$scope.profilePhoto = result.substr(result
+										.indexOf(',') + 1);
+							});
+
 		};
-		
+
 		// UserList
 		$scope.getusers = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -3640,7 +3649,7 @@
 		};
 
 		function onSelectionChangeduser() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -3653,7 +3662,42 @@
 
 		}
 
+		/*
+		 * $scope.uploadImage = function(usersel) { if (usersel != undefined) {
+		 * $scope.usersel = usersel; }
+		 * 
+		 * var userDetails = new FormData(); userDetails.append('orgName',
+		 * $scope.org); userDetails.append('orgLogo',
+		 * $scope.SelectedFileForUpload); userDetails.append('usersel',
+		 * $scope.usersel); userDetails.append('filename',
+		 * $scope.selectedFileName);
+		 * 
+		 * var token = AES.getEncryptedValue(); var config = { headers : {
+		 * 'Authorization' : token } };
+		 * 
+		 * $http({ url : "./rest/jsonServices/uploadOrgLogo", method : "POST",
+		 * data : userDetails, headers : { 'Authorization' : token,
+		 * 'Content-Type' : undefined }, transformRequest : angular.identity
+		 * }).success( function(response) { if (response == 1) { $scope.open(
+		 * 'app/pages/admin/orgLogoUpdatedMsg.html', 'sm');
+		 * setTimeout(function() { $state.reload(); }, 2000);
+		 * 
+		 * $scope.$dismiss();
+		 *  } else { $scope.open( 'app/pages/admin/orgLogoFailedMsg.html',
+		 * 'sm'); }
+		 * 
+		 * });
+		 *  }
+		 */
+
+		/***********************************************************************
+		 * Function : Upload Organization Image Description : To Upload
+		 * Organization image to check the header information Date of Change : 4 /
+		 * 8 / 2020 Changed By : Subbu (138497)
+		 */
+
 		$scope.uploadImage = function(usersel) {
+
 			if (usersel != undefined) {
 				$scope.usersel = usersel;
 			}
@@ -3662,44 +3706,103 @@
 			userDetails.append('orgName', $scope.org);
 			userDetails.append('orgLogo', $scope.SelectedFileForUpload);
 			userDetails.append('usersel', $scope.usersel);
+			userDetails.append('filename', $scope.selectedFileName);
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
 				}
 			};
 
-			$http({
-				url : "./rest/jsonServices/uploadOrgLogo",
-				method : "POST",
-				data : userDetails,
-				headers : {
-					'Authorization' : token,
-					'Content-Type' : undefined
-				},
-				transformRequest : angular.identity
-			}).success(
-					function(response) {
-						if (response == 1) {
-							$scope.open(
-									'app/pages/admin/orgLogoUpdatedMsg.html',
-									'sm');
-							setTimeout(function() {
-								$state.reload();
-							}, 2000);
+			// File Reader to verify file type before uploading...
 
-							/* $scope.$dismiss(); */
+			var reader = new FileReader();
+			reader.readAsArrayBuffer($scope.SelectedFileForUpload);
+			var filetype = "";
+			var filetypeValid = "";
+			reader.onloadend = function(evt) {
 
-						}
+				var arr = (new Uint8Array(evt.target.result)).subarray(0, 4);
+				var MIMEheader = "";
+				for (var i = 0; i < arr.length; i++) {
+					MIMEheader += arr[i].toString(16);
+				}
+				switch (MIMEheader) {
+				case "89504e47":
+					filetype = "image/png";
+					filetypeValid = "Yes";
+					break;
+				case "47494638":
+					filetype = "image/gif";
+					filetypeValid = "Yes";
+					break;
+				case "ffd8ffe0":
+				case "ffd8ffe1":
+				case "ffd8ffe2":
+					filetype = "image/jpeg";
+					filetypeValid = "Yes";
+					break;
+				default:
+					filetype = "unknown";
+					break;
+				}
 
-					});
+				if (filetypeValid == "Yes") {
+					// REST CALL
+					$http({
+						url : "./rest/jsonServices/uploadOrgLogo",
+						method : "POST",
+						data : userDetails,
+						headers : {
+							'Authorization' : token,
+							'Content-Type' : undefined
+						},
+						transformRequest : angular.identity
+					})
+							.success(
+									function(response) {
+										if (response == 1) {
+											$scope
+													.open(
+															'app/pages/admin/orgLogoUpdatedMsg.html',
+															'sm');
+											setTimeout(function() {
+												$state.reload();
+											}, 2000);
+
+											/* $scope.$dismiss(); */
+
+										} else {
+											$scope
+													.open(
+															'app/pages/admin/orgLogoFailedMsg.html',
+															'sm');
+										}
+
+									});
+
+					// REST CALL
+				} else {
+					$scope.open('app/pages/admin/orgLogoFailedMsg.html', 'sm');
+				}
+
+			}
+			// File Reader to verify file type before uploading....
 
 		}
 
+		/** ****************************************************************** */
+
+		/***********************************************************************
+		 * Function : Upload User Image Description : To Upload User Image image
+		 * to check the header information Date of Change : 4 / 8 / 2020 Changed
+		 * By : Subbu (138497)
+		 */
+
 		$scope.uploadUserImage = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -3707,39 +3810,120 @@
 			};
 
 			var userImgDetails = new FormData();
+
+			userImgDetails.append('filename', $scope.selectedFileName);
 			userImgDetails.append('userImg', $scope.SelectedFileForUpload);
 
-			$http({
-				url : "./rest/jsonServices/uploadUserImg",
-				method : "POST",
-				data : userImgDetails,
-				headers : {
-					'Authorization' : token,
-					'Content-Type' : undefined
-				},
-				transformRequest : angular.identity
-			})
-					.success(
-							function(response) {
-								if (response == 1) {
-									$scope
-											.open(
-													'app/pages/login/userImageUpdatedSuccess.html',
-													'sm');
-									setTimeout(function() {
-										$state.reload();
-									}, 2000);
+			// File Reader to verify file type before uploading...
 
-									$scope.$dismiss();
+			var reader = new FileReader();
+			reader.readAsArrayBuffer($scope.SelectedFileForUpload);
+			var filetype = "";
+			var filetypeValid = "";
+			reader.onloadend = function(evt) {
 
-								}
+				var arr = (new Uint8Array(evt.target.result)).subarray(0, 4);
+				var MIMEheader = "";
+				for (var i = 0; i < arr.length; i++) {
+					MIMEheader += arr[i].toString(16);
+				}
+				switch (MIMEheader) {
+				case "89504e47":
+					filetype = "image/png";
+					filetypeValid = "Yes";
+					break;
+				case "47494638":
+					filetype = "image/gif";
+					filetypeValid = "Yes";
+					break;
+				case "ffd8ffe0":
+				case "ffd8ffe1":
+				case "ffd8ffe2":
+					filetype = "image/jpeg";
+					filetypeValid = "Yes";
+					break;
+				default:
+					filetype = "unknown";
+					break;
+				}
 
-							});
+				if (filetypeValid == "Yes") {
+					// REST CALL
+					$http({
+						url : "./rest/jsonServices/uploadUserImg",
+						method : "POST",
+						data : userImgDetails,
+						headers : {
+							'Authorization' : token,
+							'Content-Type' : undefined
+						},
+						transformRequest : angular.identity
+					})
+							.success(
+									function(response) {
+
+										if (response == 1) {
+											$scope
+													.open(
+															'app/pages/login/userImageUpdatedSuccess.html',
+															'sm');
+											setTimeout(function() {
+												$state.reload();
+											}, 2000);
+
+											$scope.$dismiss();
+
+										} else {
+											$scope
+													.open(
+															'app/pages/login/userImageUpdatedFail.html',
+															'sm');
+										}
+
+									});
+
+					// REST CALL
+				} else {
+					$scope.open('app/pages/login/userImageUpdatedFail.html',
+							'sm');
+				}
+
+			}
+			// File Reader to verify file type before uploading....
 
 		}
 
+		/** ****************************************************************** */
+
+		/*
+		 * $scope.uploadUserImage = function() {
+		 * 
+		 * var token = AES.getEncryptedValue(); var config = { headers : {
+		 * 'Authorization' : token } };
+		 * 
+		 * var userImgDetails = new FormData();
+		 * 
+		 * userImgDetails.append('filename', $scope.selectedFileName);
+		 * userImgDetails.append('userImg', $scope.SelectedFileForUpload);
+		 * 
+		 * $http({ url : "./rest/jsonServices/uploadUserImg", method : "POST",
+		 * data : userImgDetails, headers : { 'Authorization' : token,
+		 * 'Content-Type' : undefined }, transformRequest : angular.identity })
+		 * .success( function(response) {
+		 * 
+		 * if (response == 1) { $scope .open(
+		 * 'app/pages/login/userImageUpdatedSuccess.html', 'sm');
+		 * setTimeout(function() { $state.reload(); }, 2000);
+		 * 
+		 * $scope.$dismiss();
+		 *  } else { $scope .open( 'app/pages/login/userImageUpdatedFail.html',
+		 * 'sm'); }
+		 * 
+		 * });
+		 *  }
+		 */
 		$scope.removeImg = function(userId) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token

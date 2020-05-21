@@ -54,7 +54,7 @@ public class CayleyConnection
 		logger.error(resp.getStatusLine().getStatusCode());
 		if(resp.getStatusLine().getStatusCode()==200)
 		{
-			BufferedReader br = new BufferedReader(null);
+			BufferedReader br = null;
 			try {
 				br = new BufferedReader(new InputStreamReader((resp.getEntity().getContent())));
 			} catch (IllegalStateException e) {

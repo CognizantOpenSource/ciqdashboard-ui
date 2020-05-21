@@ -132,12 +132,7 @@
 										<a
 											ng-click="projectAccess(details);changeRouteOperational(details);changeJiraRouteOperational(details);">Project
 											Access</a><br />
-									</div>
-									<div ng-if="details.admin != true">
-										<a ng-click="deleteUser(details)">Delete</a>
-									</div> 
-									
-									</td>
+									</div></td>
 
 							</tr>
 						</tbody>
@@ -161,7 +156,7 @@
 				class="licensepopubgimg"
 				panel-class="panel-primary bootstrap-panel accordion-panel">
 			<table class="table" st-table="licenseDetails"
-				st-safe-src="safeLicenseDetails" style="color: white">
+				st-safe-src="safeLicenseDetails" style="color: #4c4c4c">
 				<tr ng-repeat="details in licenseDetails">
 					<th>Version : {{details.version}}</th>
 				</tr>

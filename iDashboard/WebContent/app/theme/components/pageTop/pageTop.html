@@ -1,7 +1,6 @@
 
 <div class="page-top clearfix" scroll-position="scrolled"
-	max-height="50" ng-class="{'scrolled': scrolled}" ng-init="loginvar()"
-	ng-hide="hidepagetop">
+	max-height="50" ng-class="{'scrolled': scrolled}" ng-init="">
 
 	<a class="al-logo clearfix" Style="padding-left: 0px"> <img
 		ng-src="{{::( 'Logo' | profilePicture )}}">
@@ -13,55 +12,39 @@
 
 		<div class="menuBar clearfix">
 
-			<!-- <a href="{{CCC}}" ng-if="operational" ng-model="role" id="op"
+			<a href="#/operationalDashBoard" ng-if="operational" ng-model="role"
 				ng-class="{'on':var1}" class="menuBar-item"
-				ng-click="SessionData(role,'operational')" Style="padding-left: 0px">Testing
-			</a>  -->
-
-			<!-- href="#/operationalDashBoard" -->
-			<!-- 	<a  href="#/operationalDashBoard" ng-if="operational" ng-model="role"    -->
-			<!-- 				ng-class="{'on':var1}" class="menuBar-item" -->
-			<!-- 				ng-click="SessionData(role,'operational')" Style="padding-left: 0px"><b>Operational</b> -->
-			<!-- 			</a> -->
-			<a ng-if="operational" ng-model="role" Style="padding-left: 0px"><b>Operational</b>
+				ng-click="SessionData(role,'operational')" Style="padding-left: 0px">Operational
 			</a> <a href="#/lifecycledashboard" ng-if="lifeCycle" ng-model="role"
 				ng-class="{'on':var2}" class="menuBar-item"
 				ng-click="SessionData(role,'lifecycle')" Style="padding-left: 0px">LifeCycle
 			</a> <a href="#/dashbot" ng-if="qbot" ng-model="role"
 				ng-class="{'on':var3}" class="menuBar-item"
 				ng-click="SessionData(role,'dashbot')" Style="padding-left: 0px">Intelligent
-			</a>
-
+			</a> 
+			
 			<!-- <a href='#/internalreport' ng-if="coEDashboard"
 				ng-click="SessionData(role,'internalreport')" ng-class="{'on':var5}"
 				class="menuBar-item " style="padding-left: 0px">CoE Dashboard</a>
 				
 				 -->
-			<a href="#/admin" ng-if="isAdmin" ng-model="admin"
-				class="menuBar-item" ng-class="{'on':var4}"
-				Style="padding-left: 0px">Admin </a> <span uib-dropdown=""
-				class="dropdown open" style=""> <a id="exportThis"
-				uib-dropdown-toggle="" ng-class="{'on':var7}"
-				ng-show="coEDashboard || riskCompliance" class="dropdown-toggle on"
-				aria-haspopup="true" aria-expanded="true" style="cursor: pointer;">
-					Custom Metrics </a>
-				<ul class="top-dropdown-menu profile-dropdown dropdown-menu"
-					uib-dropdown-menu="" style="left: -52px; top: 22px;">
-					<li><i class="dropdown-arr"></i></li>
-					<li><a href="#/internalreport"
-						ng-click="SessionData(role,'internalreport')"
-						ng-class="{'on':var5}" ng-show="coEDashboard"
-						style="color: rgb(29, 25, 25);" class="on"><i
-							class="fa fa-pie-chart" aria-hidden="true"></i>CoE Dashboard</a></li>
-					<li><a href="#/riskCompliance"
-						ng-click="SessionData(role,'riskCompliance');"
-						ng-class="{'on':var6}" ng-show="riskCompliance"
-						style="color: #1d1919;"><i class="fa fa-area-chart"
-							aria-hidden="true"></i>Risk And Compliance</a></li>
-				</ul>
-			</span>
-
-			<!-- <div uib-dropdown="" style="float: right;" class="dropdown open">
+				 <a
+				href="#/admin" ng-if="isAdmin" ng-model="admin" class="menuBar-item"
+				ng-class="{'on':var4}" Style="padding-left: 0px">Admin </a>
+					
+					
+				
+			<span uib-dropdown="" class="dropdown open" style="">
+						<a id="exportThis" uib-dropdown-toggle="" ng-click="SessionData(role,'custmetric')" ng-class="{'on':var6}"  class="menuBar-item" ng-show="coEDashboard || riskCompliance" class="dropdown-toggle on" aria-haspopup="true" aria-expanded="true" style="cursor:pointer;"> Custom Metrics
+						</a>
+						<ul class="top-dropdown-menu profile-dropdown dropdown-menu" uib-dropdown-menu="" style="left: -52px;top: 22px;">
+							<li><i class="dropdown-arr"></i></li>
+							<li><a href="#/internalreport" ng-click="SessionData(role,'internalreport')" ng-class="{'on':var7}" ng-if="coEDashboard" style="color: rgb(29, 25, 25);" class="on"><i class="fa fa-pie-chart" aria-hidden="true"></i>CoE Dashboard</a></li>
+							<li><a href="#/riskCompliance" ng-click="SessionData(role,'riskCompliance');" ng-class="{'on':var8}" ng-if="riskCompliance" style="color: #1d1919;"><i class="fa fa-area-chart" aria-hidden="true"></i>Risk And Compliance</a></li>
+						</ul>
+					</span>
+					
+					<!-- <div uib-dropdown="" style="float: right;" class="dropdown open">
 							<a id="exportThis" uib-dropdown-toggle ng-class="{'on':var7}" ng-show="coEDashboard || riskCompliance"> Custom Metrics
 						</a>
 							<ul class="top-dropdown-menu profile-dropdown dropdown-menu" uib-dropdown-menu="">
@@ -70,8 +53,8 @@
 								<li><a href="" ng-click="SessionData(role,'riskCompliance');"><i class="fa fa fa-area-chart"></i>Risk And Compliance</a></li>
 							</ul>
 						</div> -->
-
-		</div>
+					
+		</div>		
 
 	</div>
 
@@ -101,14 +84,12 @@
 
 
 		<div class="reset">
-			<div class="welcomeText">
-				Welcome
-				<div>{{userNamee}}</div>
-				{{role}}
+			<div class="welcomeText">Welcome
+			   <div>{{userNamee}}</div>{{role}}
 			</div>
 		</div>
 
-		<div></div>
+        <div></div>
 	</div>
 	<div>
 		<a style="margin-left: 2%" class="al-logo clearfix"

@@ -6,12 +6,14 @@
 
 	/** @ngInject */
 
-	function SummaryslideShowCtrl($scope, $state, buildData, baConfig,
+	function SummaryslideShowCtrl($scope,AES, $state, buildData, baConfig,
 			localStorageService, $filter, $element, $rootScope, $window,
 			$sessionStorage, layoutPaths, $base64, $http, $timeout, $uibModal,
 			Idle, Keepalive, $interval) {
 
 		var prjcnt = localStorageService.get('projectcnt');
+		
+		$rootScope.Mslide = false;
 
 		// Not to watch the Ideal state.
 		Idle.unwatch();
@@ -85,7 +87,9 @@
 		}
 
 		$rootScope.SlideReqcount = function(prjName) {
-			var token = getEncryptedValue();
+			
+						
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -114,7 +118,7 @@
 		}
 
 		$rootScope.Slidetestcount = function(prjName) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -144,7 +148,7 @@
 
 			$scope.idx = idx;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -175,7 +179,7 @@
 		}
 
 		$rootScope.SlideregressionautomationFilter = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -208,7 +212,7 @@
 		}
 
 		$rootScope.Slideinitialtccount = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -237,7 +241,7 @@
 
 		$rootScope.Slidefirstpassrate = function(prjName, idx) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -270,7 +274,7 @@
 
 		// 
 		$rootScope.SlideFuncationalAutomation = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -302,7 +306,7 @@
 		}
 
 		$rootScope.SlideRegressionAutomation = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -332,7 +336,7 @@
 		}
 
 		$rootScope.SlideUATAutomation = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -364,7 +368,7 @@
 		}
 
 		$rootScope.Slidedefectcount = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -391,7 +395,7 @@
 		};
 
 		$rootScope.Slidedefectrejratefilter = function(prjName, idx) {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -425,7 +429,7 @@
 
 		$rootScope.Slidedefectdensityfilter = function(prjName, idx) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -569,7 +573,7 @@
 		$scope.onExit = function() {
 
 			$rootScope.hidepagetop = false;
-			window.top.location.href = "/intelligentdashboard/#/globalview"; // works
+			window.top.location.href = "/idashboard/#/globalview"; // works
 																				// OK
 			window.top.close();
 			window.opener.location.reload();
@@ -585,7 +589,8 @@
 					clearInterval(timer);
 					Idle.watch();
 					// $state.go('dashboard'); // Refresh the parent page
-					window.location = "/intelligentdashboard/#/globalview";
+					//window.location = "/intelligentdashboard/#/globalview";
+					window.location = "/idashboard/#/globalview";
 					// window.location.reload();
 				}
 			}
@@ -596,7 +601,7 @@
 			$rootScope.hidepagetop = true;
 			$rootScope.menubarPopup = false;
 			$scope.win = window.open(
-					"/intelligentdashboard/#/Summaryslideshowpopup", "popup",
+					"/idashboard/#/Summaryslideshowpopup", "popup",
 					"width=1850,height=900,left=30,top=50");
 
 		}

@@ -38,88 +38,75 @@ import com.cts.metricsportal.vo.UserStoriesVO;
 import com.mongodb.BasicDBObject;
 
 public class ODALMMongoOperations extends BaseMongoOperation {
-
+	
 	public static String isDashboardsetpublic(String dashboardName) {
-		String owner = "";
-		boolean ispublic = false;
+		String  owner = "";
+		boolean ispublic =false;
 		try {
-
+			
 			Query query1 = new Query();
 			query1.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 			List<OperationalDashboardVO> dashboardinfo = getMongoOperation().find(query1, OperationalDashboardVO.class);
 			ispublic = dashboardinfo.get(0).isIspublic();
-			if (ispublic) {
+			if(ispublic) {
 				owner = dashboardinfo.get(0).getOwner();
 			}
-
+			
+				
 		} catch (Exception Ex) {
-
+			
 		}
 		return owner;
 	}
-
-	public static long getReqCountQuery(String dashboardName, String userId, String domainName, String projectName,
-			Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		
-	/*	List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName,
-				projectName);*/
-		
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
-		
-		
-		long totalreq = 0;
-		String query = "{},{_id:0,levelId:1}";
-		Query query1 = new BasicQuery(query);
-		query1.addCriteria(Criteria.where("levelId").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("creationTime").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
-		}
-
-		query1.addCriteria(Criteria.where("reqType").ne("Folder"));
-
-		totalreq = getMongoOperation().count(query1, RequirmentVO.class);
-		return totalreq;
-
+	
+	public static long getReqCountQuery(String dashboardName, String userId, String domainName, String projectName,Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+			List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName, projectName);
+			long totalreq = 0;
+			String query = "{},{_id:0,levelId:1}";
+			Query query1 = new BasicQuery(query);
+			query1.addCriteria(Criteria.where("_id").in(levelIdList));
+			if(startDate != null || endDate != null)
+			{	query1.addCriteria(Criteria.where("creationTime").gte(startDate).lte(endDate));
+			}
+			else if(dateBefore7Days != null && dates != null){
+				query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
+			}
+			query1.addCriteria(Criteria.where("reqType").ne("Folder"));
+			totalreq = getMongoOperation().count(query1, RequirmentVO.class);
+			return totalreq;
+			
 	}
-
+	
 	public static long getReqVolatilityFilterQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		
 		long reqresult = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName,
-				projectName);
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName, projectName);
 		String query = "{},{_id:0,levelId:1,reqID:1,creationTime:1,lastModified:1}";
 		BasicQuery query1 = new BasicQuery(query);
 		query1 = new BasicQuery(
-				new BasicDBObject("$where", "this.creationTime.getTime() != this.lastModified.getTime()"));
+				new BasicDBObject("$where",
+						"this.creationTime.getTime() != this.lastModified.getTime()"));
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
+		if(startDate != null || endDate != null)
+		{
 			query1.addCriteria(Criteria.where("creationTime").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
 		}
-
-		query1.addCriteria(Criteria.where("reqType").ne("Folder"));
-
-		long reqmodified = getMongoOperation().count(query1, RequirmentVO.class);
+		long reqmodified = getMongoOperation().count(query1,
+				RequirmentVO.class);
 		BasicQuery query2 = new BasicQuery(query);
 		query2.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null && endDate != null) {
+		if(startDate != null && endDate != null)
+		{
 			query2.addCriteria(Criteria.where("creationTime").gte(startDate).lte(endDate));
 		}
-
-		query2.addCriteria(Criteria.where("reqType").ne("Folder"));
-
-		long totalreq = getMongoOperation().count(query2, RequirmentVO.class);
+		long totalreq = getMongoOperation().count(query2,
+				RequirmentVO.class);
 		if (reqmodified != 0 && totalreq != 0) {
-			// reqresult = reqmodified * 100 / totalreq;
-			// reqresult = Math.round(((totalreq - reqmodified) * 100) /
-			// totalreq);
-			reqresult = Math.round(((double) (totalreq - reqmodified) * 100) / ((double) totalreq));
+			reqresult = reqmodified * 100 / totalreq;
 
 		} else {
 			reqresult = 0;
@@ -128,249 +115,201 @@ public class ODALMMongoOperations extends BaseMongoOperation {
 	}
 
 	public static long getTotalTestCountQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
 		long testCount = 0;
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
-
-		String query = "{},{_id:0,levelId:1}";
-		Query query1 = new BasicQuery(query);
-		
-		query1.addCriteria(Criteria.where("levelId").in(levelIdList));
-		
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));			
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("testCreationDate").gte(dateBefore7Days).lte(dates));			
-		}		
-		testCount = getMongoOperation().count(query1, TestCaseVO.class);
-
-		return testCount;
+		 List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName, projectName);
+			 
+		 String query = "{},{_id:0,levelId:1}";
+	     Query query1 = new BasicQuery(query); 
+	     query1.addCriteria(Criteria.where("_id").in(levelIdList));
+	     if(startDate != null || endDate != null)
+			{	query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
+			}
+			else if(dateBefore7Days != null && dates != null){
+				query1.addCriteria(Criteria.where("testCreationDate").gte(dateBefore7Days).lte(dates));
+			}
+	      testCount =  getMongoOperation().count(query1, TestCaseVO.class);
+	      
+	      //System.out.println("Test Count : " + TestCount);
+	      
+	     return testCount;	
 	}
 
 	public static long getDesignCoverageFilterQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-
-		long designcovg = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
-				projectName);
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		
+		long designcovg=0;
+		List<String> levelIdList =AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName, projectName);
 		String TotalQuery = "{},{_id:0,levelId:1,testType:1}";
 		Query query = new Query();
-		query.addCriteria(
-				Criteria.where("reqID").ne("").orOperator(Criteria.where("reqID").ne(IdashboardConstantsUtil.NULL)));
+		query.addCriteria(Criteria.where("reqID").ne("").orOperator(Criteria.where("reqID").ne(IdashboardConstantsUtil.NULL)));
 		query.addCriteria(Criteria.where("_id").in(levelIdList));
-
-		if (startDate != null || endDate != null) {
-			query.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		
+		if(startDate != null || endDate != null)
+		{	query.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query.addCriteria(Criteria.where("testCreationDate").gte(dateBefore7Days).lte(dates));
 		}
-		long designedTcs = getMongoOperation().count(query, TestCaseVO.class);
-
+		long designedTcs = getMongoOperation().count(query,TestCaseVO.class);
+		
 		BasicQuery query1 = new BasicQuery(TotalQuery);
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-
-		if (startDate != null && endDate != null) {
+		
+		if(startDate != null && endDate != null)
+		 {
 			query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("testCreationDate").gte(dateBefore7Days).lte(dates));
-		}
-		long totaltccount = getMongoOperation().count(query1, TestCaseVO.class);
-		// System.out.println(totaltccount);
-
-		if (totaltccount > 0) {
-			// designcovg = Math.round((designedTcs * 100) / totaltccount);
-			designcovg = Math.round(((double) designedTcs * 100) / ((double) totaltccount));
-			// System.out.println("cov:::"+designcovg);
-		} else {
-			designcovg = 0;
+		 }else if(dateBefore7Days != null && dates != null){
+				query1.addCriteria(Criteria.where("testCreationDate").gte(dateBefore7Days).lte(dates));
+			}
+		long totaltccount = getMongoOperation().count(query1,TestCaseVO.class);
+		//System.out.println(totaltccount);
+	 
+		if(totaltccount>0){
+			  designcovg	 = designedTcs * 100 / totaltccount;
+			//System.out.println("cov:::"+designcovg);
+			}
+		else{
+			 designcovg=0;
 		}
 		return designcovg;
-
+		
 	}
 
+	
 	public static long getExecutionCountQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-
-		// List<String> levelIdList =
-		// AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId,
-		// domainName, projectName);
-
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
 		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
-		long totaltexecount = 0;
-		String query = "{},{_id:0,levelId:1}";
-		Query query1 = new BasicQuery(query);
-		// query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		query1.addCriteria(Criteria.where("levelId").in(levelIdList));
-
-		List<String> statuslist = new ArrayList<String>();
-		statuslist.add("Passed");
-		statuslist.add("Failed");
-
-		query1.addCriteria(Criteria.where("testExecutionStatus").in(statuslist));
-
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-		}
-
-		totaltexecount = getMongoOperation().count(query1, TestExecutionVO.class);
-		return totaltexecount;
+		
+	long totaltexecount=0;
+	String query = "{},{_id:0,levelId:1}";
+ 	Query query1 = new BasicQuery(query);	
+ 	query1.addCriteria(Criteria.where("levelId").in(levelIdList));
+ 	if(startDate != null || endDate != null)
+	{	query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
 	}
-
-	public static long getuniqueExecutionCountQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-
-		// List<String> levelIdList =
-		// AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId,
-		// domainName, projectName);
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
-		long totaltexecount = 0;
-		String query = "{},{_id:0,levelId:1}";
-		Query query1 = new BasicQuery(query);
-		// query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		query1.addCriteria(Criteria.where("levelId").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-		}
-
-		List<Integer> listFuncTestExecuted = getMongoOperation().getCollection("ALMTestExecution").distinct("testID",
-				query1.getQueryObject());
-
-		// totaltexecount =
-		// getMongoOperation().count(query1,TestExecutionVO.class);
-		totaltexecount = listFuncTestExecuted.size();
-
-		return totaltexecount;
+	else if(dateBefore7Days != null && dates != null){
+		query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+	}
+ 	query1.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
+ 	 totaltexecount = getMongoOperation().count(query1,TestExecutionVO.class);
+ 	 return totaltexecount;
 	}
 
 	public static long getTcCoverageQuery(String dashboardName, String userId, String domainName, String projectName,
-			Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
+			Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+	 
+	 long reqresult =0;	
+	 List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(
+				dashboardName, userId, domainName, projectName);
+	 Query query1 = new Query();
+	 Query query2 = new Query();
+		 
+	 query1.addCriteria(Criteria.where("_id").in(levelIdList));
+	 query2.addCriteria(Criteria.where("_id").in(levelIdList));
+	 
+	 List<String> statuslist = new ArrayList<String>();
+	 statuslist.add("Passed"); statuslist.add("Failed");
+	 
+	 query1.addCriteria(Criteria.where("testExecutionStatus").in(statuslist));
 
-		long reqresult = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domainName,
-				projectName);
-		Query query1 = new Query();
-		Query query2 = new Query();
-
-		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		query2.addCriteria(Criteria.where("_id").in(levelIdList));
-
-		List<String> statuslist = new ArrayList<String>();
-		statuslist.add("Passed");
-		statuslist.add("Failed");
-
-		query1.addCriteria(Criteria.where("testExecutionStatus").in(statuslist));
-
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+	 if(startDate != null || endDate != null)
+		{	query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
 			query2.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
 			query2.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
 		}
-
-		long tcsexecuted = getMongoOperation().count(query1, TestExecutionVO.class);
-		long tcsplannedtoexecute = getMongoOperation().count(query2, TestExecutionVO.class);
-
-		if (tcsexecuted > 0 && tcsplannedtoexecute > 0) {
-			// reqresult = Math.round((tcsexecuted * 100) /
-			// tcsplannedtoexecute);
-			reqresult = Math.round(((double) tcsexecuted * 100) / ((double) tcsplannedtoexecute));
-		} else {
-			reqresult = 0;
-		}
-		return reqresult;
+	 
+	 long tcsexecuted = getMongoOperation().count(query1,TestExecutionVO.class);
+	 long tcsplannedtoexecute = getMongoOperation().count(query2,TestExecutionVO.class);
+	 
+	 if(tcsexecuted>0 && tcsplannedtoexecute>0){
+	  reqresult = tcsexecuted * 100 / tcsplannedtoexecute;}
+	 else{ 
+		 reqresult = 0;
+	 }
+	  return reqresult;
 	}
 
 	public static long getTotalDefectCountinitialQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-
-		long defCount = 0;
-
-//		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName,
-//				projectName);
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
 		
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
-
+		long defCount =0;
+		
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName, projectName);
+			
 		String query = "{},{_id:0,levelId:1}";
 		Query query1 = new BasicQuery(query);
-		//query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		query1.addCriteria(Criteria.where("levelId").in(levelIdList));
-		
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		query1.addCriteria(Criteria.where("_id").in(levelIdList));
+		if(startDate != null || endDate != null)
+		{	query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query1.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
 		}
 		defCount = getMongoOperation().count(query1, DefectVO.class);
 		return defCount;
 	}
 
-	public static long defectRejectionRateFilterrQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		long defRejRate = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName,
-				projectName);
+	public static int defectRejectionRateFilterrQuery(String dashboardName, String userId, String domainName,
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		int defRejRate = 0;
+		List<String> levelIdList =  AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName, projectName);
 		long DefecListCount = 0;
 		long rejectedCount = 0;
 
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
+		if(startDate != null || endDate != null)
+		{
 			query.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		}				
+		else if(dateBefore7Days != null && dates != null){
 			query.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
 		}
-
+		
 		query.addCriteria(Criteria.where("status").is("Rejected"));
 		rejectedCount = getMongoOperation().count(query, DefectVO.class);
 
 		String queryy = "{},{_id: 1}";
 		Query query1 = new BasicQuery(queryy);
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null && endDate != null) {
+		if(startDate != null && endDate != null)
+		{
 			query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
 		}
-
+		
 		DefecListCount = getMongoOperation().count(query1, DefectVO.class);
-		if (rejectedCount > 0 && DefecListCount > 0) {
-			// defRejRate = (int) Math.round((rejectedCount * 100 /
-			// DefecListCount));
-			defRejRate = Math.round(((double) rejectedCount * 100) / ((double) DefecListCount));
-		} else {
-			defRejRate = 0;
+		if(rejectedCount>0 && DefecListCount>0)
+		{
+			defRejRate = (int) (rejectedCount * 100 / DefecListCount);
 		}
-
-		// System.out.println("Reject Rate : " + defRejRate);
-
-		return defRejRate;
+		else
+		{
+			defRejRate=0;
+		}
+		
+		//System.out.println("Reject Rate : " + defRejRate);
+		
+	return defRejRate;
 	}
 
 	public static long getReqPassCountQuery(String dashboardName, String userId, String domainName, String projectName,
-			Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
+			Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
 		long totalpassreq = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName,
-				projectName);
-
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(
+			dashboardName, userId, domainName, projectName);
+	
 		String query = "{},{_id:0,levelId:1}";
 		Query query1 = new BasicQuery(query);
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
 		query1.addCriteria(Criteria.where("status").is("Passed"));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("creationTime").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		if(startDate != null || endDate != null)
+		{	query1.addCriteria(Criteria.where("creationTime").gte(startDate).lte(endDate));
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query1.addCriteria(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates));
 		}
 		totalpassreq = getMongoOperation().count(query1, RequirmentVO.class);
@@ -378,108 +317,107 @@ public class ODALMMongoOperations extends BaseMongoOperation {
 	}
 
 	public static long getDesignAutoCoverageQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
 		long acresult = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
-				projectName);
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(
+				dashboardName, userId, domainName, projectName);
 		String query = "{},{_id:0,levelId:1,testType:1}";
-
-		BasicQuery query1 = new BasicQuery(new BasicDBObject("$where", "this.testType != 'MANUAL'"));
-		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
-		}
-		long autotc = getMongoOperation().count(query1, TestCaseVO.class);
-
-		BasicQuery query2 = new BasicQuery(query);
-		query2.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query2.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query2.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
-		}
-		long totaltc = getMongoOperation().count(query2, TestCaseVO.class);
-
-		if (autotc > 0 && totaltc > 0) {
-			// acresult = Math.round((autotc * 100) / totaltc);
-			acresult = Math.round(((double) autotc * 100) / ((double) totaltc));
-		} else {
-			acresult = 0;
-		}
-		return acresult;
+ 
+		 BasicQuery query1 = new BasicQuery(new BasicDBObject("$where", "this.testType != 'MANUAL'"));
+		 query1.addCriteria(Criteria.where("_id").in(levelIdList));
+		 if(startDate != null || endDate != null)
+			{	query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
+			}
+			else if(dateBefore7Days != null && dates != null){
+				query1.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
+			}
+		 long autotc = getMongoOperation().count(query1,TestCaseVO.class);
+				 
+		 BasicQuery query2 = new BasicQuery(query);
+		 query2.addCriteria(Criteria.where("_id").in(levelIdList));
+		 if(startDate != null || endDate != null)
+			{	query2.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
+			}
+			else if(dateBefore7Days != null && dates != null){
+				query2.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
+			}
+		 long totaltc = getMongoOperation().count(query2,TestCaseVO.class);
+		 
+		 if(autotc>0 && totaltc>0){
+		  acresult = autotc * 100 / totaltc;
+		  }
+		 else{acresult = 0;
+		 }
+		 return acresult;
 	}
 
 	public static long getManualCountQuery(String dashboardName, String userId, String domainName, String projectName,
-			Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		long totalmanualcount = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domainName,
-				projectName);
-
-		String query = "{},{_id:0,testType:1}";
-		Query query1 = new BasicQuery(query);
-		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+			Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		long totalmanualcount=0; 
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(
+				dashboardName, userId, domainName, projectName);
+			
+	 	 String query = "{},{_id:0,testType:1}";
+	 	 Query query1 = new BasicQuery(query);
+	 	query1.addCriteria(Criteria.where("_id").in(levelIdList));
+	 	if(startDate != null || endDate != null)
+		{	query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
 		}
-		query1.addCriteria(Criteria.where("testType").is("MANUAL"));
-		totalmanualcount = getMongoOperation().count(query1, TestExecutionVO.class);
-		return totalmanualcount;
+	 	 query1.addCriteria(Criteria.where("testType").is("MANUAL"));
+	 	 totalmanualcount = getMongoOperation().count(query1,TestExecutionVO.class);
+	 	 return totalmanualcount;
 	}
 
 	public static long getAutoCountQuery(String dashboardName, String userId, String domainName, String projectName,
-			Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		long totalautocount = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domainName,
-				projectName);
+			Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		long totalautocount=0;	
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(
+				dashboardName, userId, domainName, projectName);
 
-		String query = "{},{_id:0,testType:1}";
-		Query query1 = new BasicQuery(query);
-		query1.addCriteria(Criteria.where("_id").in(levelIdList));
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
-			query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
-		}
-		query1.addCriteria(Criteria.where("testType").ne("MANUAL"));
-		totalautocount = getMongoOperation().count(query1, TestExecutionVO.class);
-		return totalautocount;
+	 	String query = "{},{_id:0,testType:1}";
+	 	Query query1 = new BasicQuery(query);
+	 	query1.addCriteria(Criteria.where("_id").in(levelIdList));
+		 if(startDate != null || endDate != null)
+			{	query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
+			}
+			else if(dateBefore7Days != null && dates != null){
+				query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
+			}
+	 	 query1.addCriteria(Criteria.where("testType").ne("MANUAL"));
+	 	 totalautocount = getMongoOperation().count(query1,TestExecutionVO.class);
+	 	 return totalautocount;
 	}
 
 	public static long getClosedDefectCountQuery(String dashboardName, String userId, String domainName,
-			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		long defCloseCount = 0;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName,
-				projectName);
-
+			String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		long defCloseCount =0;	
+		List<String> levelIdList =  AlmMongoOperations.getGlobalLevelIdDefect(
+					dashboardName, userId,domainName,projectName);
+			
 		String query = "{},{_id:0,levelId:1}";
 		Query query1 = new BasicQuery(query);
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
 		query1.addCriteria(Criteria.where("status").is("Closed"));
-
-		if (startDate != null || endDate != null) {
-			query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
-		} else if (dateBefore7Days != null && dates != null) {
+		
+		if(startDate != null || endDate != null)
+		{	query1.addCriteria(Criteria.where("opendate").gte(startDate).lte(endDate));
+		}
+		else if(dateBefore7Days != null && dates != null){
 			query1.addCriteria(Criteria.where("opendate").gte(dateBefore7Days).lte(dates));
 		}
 		defCloseCount = getMongoOperation().count(query1, DefectVO.class);
-
-		// System.out.println("Def Closed Count : " + defCloseCount);
-		return defCloseCount;
+		
+		//System.out.println("Def Closed Count : " + defCloseCount);
+		 return defCloseCount;
 	}
 
 	public static List<ArtifactsCountVO> getArtifactsCountQuery(String dashboardName, String userId, String domainName,
 			String projectName) throws NumberFormatException, BaseException, BadLocationException {
 		List<ArtifactsCountVO> finalresult = null;
-		List<String> levelIdListdefect = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName,
-				projectName);
+		List<String> levelIdListdefect = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName, projectName);
 		List<String> levelIdListreq = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName,
 				projectName);
 		ArtifactsCountVO artifactvoreq = new ArtifactsCountVO();
@@ -581,103 +519,114 @@ public class ODALMMongoOperations extends BaseMongoOperation {
 	}
 
 	public static List<RequirementStatusVO> getRequirementPiechartFilterQuery(String dashboardName, String userId,
-			String domainName, String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days)
-			throws NumberFormatException, BaseException, BadLocationException {
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(dashboardName, userId, domainName,
-				projectName);
+			String domainName, String projectName, Date startDate, Date endDate, Date dates, Date dateBefore7Days) throws NumberFormatException, BaseException, BadLocationException {
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdRequirement(
+				dashboardName, userId, domainName, projectName);
 		List<RequirementStatusVO> priorityresult = null;
-
-		if (startDate != null || endDate != null) {
-			Aggregation agg = newAggregation(match(Criteria.where("_id").in(levelIdList)),
-					match(Criteria.where("creationTime").gte(startDate).lte(endDate)),
-					group("priority").count().as("priorityCnt"),
-					project("priorityCnt").and("priority").previousOperation(), sort(Direction.ASC, "priority"));
-			AggregationResults<RequirementStatusVO> groupResults = getMongoOperation().aggregate(agg,
-					RequirmentVO.class, RequirementStatusVO.class);
-			priorityresult = groupResults.getMappedResults();
-		} else if (dateBefore7Days != null && dates != null) {
+		
+		if(startDate != null || endDate != null)
+		{
+		Aggregation agg = newAggregation(match(Criteria.where("_id").in(levelIdList)),
+				match(Criteria.where("creationTime").gte(startDate).lte(endDate)),
+				group("priority").count().as("priorityCnt"),
+				project("priorityCnt").and("priority").previousOperation(),
+				sort(Direction.ASC, "priority"));
+		AggregationResults<RequirementStatusVO> groupResults = getMongoOperation()
+				.aggregate(agg, RequirmentVO.class,
+						RequirementStatusVO.class);
+		priorityresult = groupResults.getMappedResults();
+		}
+		else if(dateBefore7Days != null && dates != null){
 			Aggregation agg = newAggregation(match(Criteria.where("_id").in(levelIdList)),
 					match(Criteria.where("creationTime").gte(dateBefore7Days).lte(dates)),
 					group("priority").count().as("priorityCnt"),
-					project("priorityCnt").and("priority").previousOperation(), sort(Direction.ASC, "priority"));
-			AggregationResults<RequirementStatusVO> groupResults = getMongoOperation().aggregate(agg,
-					RequirmentVO.class, RequirementStatusVO.class);
-			priorityresult = groupResults.getMappedResults();
-		} else {
-			Aggregation agg = newAggregation(match(Criteria.where("_id").in(levelIdList)),
+					project("priorityCnt").and("priority").previousOperation(),
+					sort(Direction.ASC, "priority"));
+			AggregationResults<RequirementStatusVO> groupResults = getMongoOperation()
+					.aggregate(agg, RequirmentVO.class,
+							RequirementStatusVO.class);
+			priorityresult = groupResults.getMappedResults();			}
+		else
+		{
+			Aggregation agg = newAggregation(match(Criteria.where("_id")
+					.in(levelIdList)),
 					group("priority").count().as("priorityCnt"),
-					project("priorityCnt").and("priority").previousOperation(), sort(Direction.ASC, "priority"));
-			AggregationResults<RequirementStatusVO> groupResults = getMongoOperation().aggregate(agg,
-					RequirmentVO.class, RequirementStatusVO.class);
+					project("priorityCnt").and("priority").previousOperation(),
+					sort(Direction.ASC, "priority"));
+			AggregationResults<RequirementStatusVO> groupResults = getMongoOperation()
+					.aggregate(agg, RequirmentVO.class,
+							RequirementStatusVO.class);
 			priorityresult = groupResults.getMappedResults();
 		}
 		return priorityresult;
-
+		
 	}
 
 	public static List<DefectResolutionVO> getDefectResolutionTimeQuery(String dashboardName, String userId,
 			String domainName, String projectName) throws NumberFormatException, BaseException, BadLocationException {
-		List<DefectResolutionVO> defResolTime = null;
-		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDefect(dashboardName, userId, domainName,
-				projectName);
-
-		defResolTime = new ArrayList<DefectResolutionVO>();
+		List<DefectResolutionVO> defResolTime=null;
+		List<String> levelIdList =  AlmMongoOperations.getGlobalLevelIdDefect(
+					dashboardName, userId,domainName,projectName);
+			
+		defResolTime= new ArrayList<DefectResolutionVO>();
 		String query = "{},{_id:0}";
 		Query query1 = new BasicQuery(query);
 		query1.addCriteria(Criteria.where("_id").in(levelIdList));
 		query1.addCriteria(Criteria.where("status").is("Closed"));
 		long dateDiff;
-
-		Aggregation agg = newAggregation(match(Criteria.where("_id").in(levelIdList)),
-				match(Criteria.where("status").is("Closed")), group("severity").count().as("totSeverityTypecount"),
+		
+		Aggregation agg = newAggregation(
+				match(Criteria.where("_id").in(levelIdList)),
+				match(Criteria.where("status").is("Closed")),
+				group("severity").count().as("totSeverityTypecount"),
 				project("totSeverityTypecount").and("severity").previousOperation());
-		AggregationResults<DefectResolutionVO> groupResults = getMongoOperation().aggregate(agg, DefectVO.class,
-				DefectResolutionVO.class);
+		AggregationResults<DefectResolutionVO> groupResults = getMongoOperation()
+		.aggregate(agg, DefectVO.class, DefectResolutionVO.class);
 		List<DefectResolutionVO> sevlist = groupResults.getMappedResults();
-
-		defResolTime = getMongoOperation().find(query1, DefectResolutionVO.class);
-		Map<String, Integer> countmap = new HashMap<String, Integer>();
-		Map<String, Long> dateDiffMap = new HashMap<String, Long>();
-		long temp = 0;
-		try {
-			for (DefectResolutionVO vo : sevlist) {
-				countmap.put(vo.getSeverity(), vo.getTotSeverityTypecount());
+		 
+	    defResolTime= getMongoOperation().find(query1,DefectResolutionVO.class);
+	    Map<String,Integer> countmap = new HashMap<String,Integer>();
+	    Map<String,Long> dateDiffMap = new HashMap<String,Long>();
+	    long temp=0;
+	    try{
+	    for (DefectResolutionVO vo :sevlist){	  	
+	    	countmap.put(vo.getSeverity(),vo.getTotSeverityTypecount()); 
+	    }
+	     
+	    for (DefectResolutionVO vo :defResolTime){	
+	    	temp=0;
+	    	dateDiff=vo.getCloseddate().getTime()-vo.getOpendate().getTime();
+	    	
+	    //	long diffSeconds = dateDiff / 1000 % 60;
+			/*long diffMinutes = dateDiff / (60 * 1000) % 60;
+			long diffHours = dateDiff / (60 * 60 * 1000) % 24;*/
+			long diffDays = dateDiff / (24 * 60 * 60 * 1000);
+			
+			if(dateDiffMap.get(vo.getSeverity())!=null){
+				
+			temp=dateDiffMap.get(vo.getSeverity())+diffDays;
+			dateDiffMap.put(vo.getSeverity(),temp);
+			}else{
+				dateDiffMap.put(vo.getSeverity(),diffDays);
 			}
-
-			for (DefectResolutionVO vo : defResolTime) {
-				temp = 0;
-				dateDiff = vo.getCloseddate().getTime() - vo.getOpendate().getTime();
-
-				// long diffSeconds = dateDiff / 1000 % 60;
-				/*
-				 * long diffMinutes = dateDiff / (60 * 1000) % 60; long
-				 * diffHours = dateDiff / (60 * 60 * 1000) % 24;
-				 */
-				long diffDays = dateDiff / (24 * 60 * 60 * 1000);
-
-				if (dateDiffMap.get(vo.getSeverity()) != null) {
-
-					temp = dateDiffMap.get(vo.getSeverity()) + diffDays;
-					dateDiffMap.put(vo.getSeverity(), temp);
-				} else {
-					dateDiffMap.put(vo.getSeverity(), diffDays);
-				}
-			}
-
-			defResolTime.clear();
-			for (String str : dateDiffMap.keySet()) {
-
-				DefectResolutionVO vo = new DefectResolutionVO();
-				vo.setSeverity(str);
-				vo.setDefrestime(dateDiffMap.get(str) / countmap.get(str) + "");
-
-				defResolTime.add(vo);
-			}
-		} catch (Exception e) {
-			System.out.println("Exception caught");
-		}
-
-		return defResolTime;
+	    }
+	    
+	    defResolTime.clear();
+	    for(String str:dateDiffMap.keySet()){
+	    	
+	    	
+	    	DefectResolutionVO vo = new DefectResolutionVO();
+	    	vo.setSeverity(str);
+	    	vo.setDefrestime(dateDiffMap.get(str)/countmap.get(str)+"");
+	    	 
+	    	defResolTime.add(vo);
+	    }}
+	    catch(Exception e)
+	    {
+	    	System.out.println("Exception caught");
+	    }
+	   
+	    return defResolTime;	
 	}
 
 }

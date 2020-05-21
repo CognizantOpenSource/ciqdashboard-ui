@@ -1,4 +1,6 @@
-
+/**
+ * @author v.lugovksy created on 16.12.2015
+ */
 (function() {
 	'use strict';
 
@@ -6,49 +8,34 @@
 			'DashboardPieChartCtrl', DashboardPieChartCtrl);
 
 	/** @ngInject */
-	function DashboardPieChartCtrl($sessionStorage, paginationService,
+	function DashboardPieChartCtrl($sessionStorage, AES, paginationService,
 			baSidebarService, localStorageService, $element, $scope, $base64,
-			$http, $timeout, $uibModal, $rootScope, baConfig, layoutPaths, $filter) {
-		
-		
-		
+			$http, $timeout, $uibModal, $rootScope, baConfig, layoutPaths,
+			$filter) {
 
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
-		
-		$rootScope.MetricsName = "Dashboard";
 		var dashboardName = localStorageService.get('dashboardName');
 		var owner = localStorageService.get('owner');
 		var domainName = localStorageService.get('domainName');
 		var projectName = localStorageService.get('projectName');
 		$rootScope.rollingPeriod = localStorageService.get('rollingPeriod');
+		localStorageService.set('timeperiod', $rootScope.rollingPeriod);
 
 		$scope.currenttimeperiod = localStorageService.get('timeperiod');
 
-		/*$scope.dtfrom = new Date(localStorageService.get('dtfrom'));
-		$scope.dtto = new Date(localStorageService.get('dtto'));*/
-		
+
 		$scope.dtfrom = localStorageService.get('dtfrom');
 		$scope.dtto = localStorageService.get('dtto');
-		
-		
-		
+
 		if ($scope.dtto != null) {
-			
-			var dtToDate = new Date($scope.dtto);			
+
+			var dtToDate = new Date($scope.dtto);
 			dtToDate.setDate(dtToDate.getDate() + 1);
-			
-			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');
-			
-			localStorageService.set('dttoPlus', dtToDateStr);			
+
+			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)),
+					'MM/dd/yyyy');
+
+			localStorageService.set('dttoPlus', dtToDateStr);
 		}
-		
-		
 
 		$scope.init = function() {
 			$rootScope.dataloader = true;
@@ -180,56 +167,52 @@
 
 		// Get start date
 		$scope.getfromdate = function(dtfrom) {
-
-			$rootScope.dataloader = true;
 			$rootScope.dfromvalDash = dtfrom;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtfrom', dtfrom);
 			localStorageService.set('timeperiod', null);
 			$rootScope.timeperiodDash = localStorageService.get('timeperiod');
-			
+
 			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
+
+				var dtToDate = new Date($scope.dtto);
+				dtToDate.setDate(dtToDate.getDate() + 1);
+
+				var dtToDateStr = $filter('date')(
+						new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');
+
+				localStorageService.set('dttoPlus', dtToDateStr);
 			}
-			
-			
+
 			$rootScope.dashboardfilterfunction();
 		}
 		// Get end date
 		$scope.gettodate = function(dtto) {
-			
-			$rootScope.dataloader = true;
 			$rootScope.dtovalDash = dtto;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtto', dtto);
 			localStorageService.set('timeperiod', null);
 			$rootScope.timeperiodDash = localStorageService.get('timeperiod');
-			
+
 			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
+
+				var dtToDate = new Date($scope.dtto);
+				dtToDate.setDate(dtToDate.getDate() + 1);
+
+				var dtToDateStr = $filter('date')(
+						new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');
+
+				localStorageService.set('dttoPlus', dtToDateStr);
 			}
-			
+
 			$rootScope.dashboardfilterfunction();
 		}
 
 		$scope.gettimeperiod = function() {
 
-			$rootScope.timeperiodDashdrops = [ "Last 7 days", "Last 15 days",
-					"Last 30 days", "Last 60 days", "Last 90 days",
-					"Last 180 days", "Last 365 days" ];
-			$rootScope.noofdays = [ "7", "15", "30", "60", "90", "180", "365" ];
+			$rootScope.timeperiodDashdrops = [ "Last 30 days", "Last 60 days",
+					"Last 90 days", "Last 180 days", "Last 365 days" ];
+			$rootScope.noofdays = [ "30", "60", "90", "180", "365" ];
 
 			if (localStorageService.get('dtfrom') != null
 					&& localStorageService.get('dtto') == null) {
@@ -255,7 +238,6 @@
 				$scope.selectedtimeperioddrop = localStorageService
 						.get('timeperiod');
 				$scope.gettimeperiodselection($scope.selectedtimeperioddrop);
-
 			}
 
 			var timep = $scope.selectedtimeperioddrop;
@@ -264,14 +246,11 @@
 		}
 
 		$scope.gettimeperiodselection = function(timeperiod) {
-
-			$rootScope.dataloader = true;
 			localStorageService.set('timeperiod', timeperiod);
 			$rootScope.timeperiodDash = localStorageService.get('timeperiod');
 
 			var index = $rootScope.timeperiodDashdrops.indexOf(timeperiod);
 			var selectednoofdays = $rootScope.noofdays[index];
-
 			var to = new Date();
 			var from = new Date();
 
@@ -281,22 +260,11 @@
 
 			$scope.convertDateToString($scope.dtfrom, $scope.dtto);
 			
-			if ($scope.dtto != null) {
-				
-				var dtToDate = new Date($scope.dtto);			
-				dtToDate.setDate(dtToDate.getDate() + 1);			
-				
-				var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)), 'MM/dd/yyyy');			
-				
-				localStorageService.set('dttoPlus', dtToDateStr);			
-			}			
-			
 			$rootScope.dashboardfilterfunction();
 		}
 
-		/*$scope.convertDateToString = function(fromDate, toDate) {
-			
-			alert("fromDate :" + fromDate + ":" + "toDate : " + toDate);
+		//ALM
+		$scope.convertDateToString = function(fromDate, toDate) {
 
 			var dfrom = fromDate;
 			var month = dfrom.getMonth() + 1;
@@ -330,25 +298,24 @@
 			$rootScope.dfromvalDash = $scope.dtfromfinal; // storage date
 			// reset
 			$rootScope.dtovalDash = $scope.dttofinal; // storage date reset
-			 //$rootScope.dashboardfilterfunction();
+			// $rootScope.dashboardfilterfunction();
 
-		}*/
+		}
 
 		$scope.fromoptions = {
 			// set this to whatever date you want to set
-			maxDate : new Date(), // set this to whatever date you want to set
+			maxDate : new Date(), 
 		}
 
 		$scope.tooptions = {
 			minDate : new Date(), // set this to whatever date you want to set
-		// set this to whatever date you want to set
+		
 		}
 
 		// Function call for each dropdown change
 
 		$rootScope.dashboardfilterfunction = function() {
 
-			/*
 			$scope.dashboardDefCount();
 			$scope.dashboardTestCount();
 			$scope.dashboardExeCount();
@@ -363,37 +330,307 @@
 			$scope.dashboardAutoCount();
 			$scope.dashboardDefClosedCount();
 			$scope.reqPrioirtyFunnel();
-			$scope.defectdensityfilter();
-			$scope.firstpassrate();
+
 			$scope.regressionautomationFilter();
+			$scope.firstpassrate();
+
+			$scope.FuncationalAutomation();
+
 			$scope.RegressionAutomation();
 			$scope.UATAutomation();
-			$scope.FuncationalAutomation();
-			*/
-						
-			
-			
-			$scope.dashboardReqCount();
-			
-			$scope.dashboardTestCount();
-			$scope.regressionautomationFilter();
-			
-			$scope.dashboardExeCount();
-			$scope.firstpassrate();
-			$scope.FuncationalAutomation();			
-			$scope.RegressionAutomation();
-			$scope.UATAutomation();			
-			
-			$scope.dashboardDefCount();
-			$scope.dashboardDefectRejrate();
-			$scope.defectdensityfilter();			
+			$scope.defectdensityfilter();
 
 		}
+
+		//First Time Pass Rate percentage
+		$rootScope.firstpassrate = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"./rest/almMetricsServices/firstTimePass?dashboardName="
+							+ dashboardName + "&owner=" + owner
+							+ "&domainName=" + domainName + "&projectName="
+							+ projectName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&timeperiod="
+							+ $rootScope.timeperiodDash, config).success(
+					function(response) {
+						$rootScope.passratedata = response;
+
+						$scope.loadPieCharts('#passrate',
+								$rootScope.passratedata);
+					});
+
+		}
+
+		$rootScope.FuncationalAutomation = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"./rest/almMetricsServices/FuncationalAutomation?dashboardName="
+							+ dashboardName + "&owner=" + owner
+							+ "&domainName=" + domainName + "&projectName="
+							+ projectName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&timeperiod="
+							+ $rootScope.timeperiodDash, config).success(
+					function(response) {
+						$rootScope.funcauto = response;
+						$scope.loadPieCharts('#funcatuo', $rootScope.funcauto);
+
+					});
+
+		}
+
+		// Regression Automation
+		$rootScope.RegressionAutomation = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"./rest/almMetricsServices/RegressionAutomation?dashboardName="
+							+ dashboardName + "&owner=" + owner
+							+ "&domainName=" + domainName + "&projectName="
+							+ projectName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&timeperiod="
+							+ $rootScope.timeperiodDash, config).success(
+					function(response) {
+						$rootScope.regatuo = response;
+
+						$scope.loadPieCharts('#regatuo', $rootScope.regatuo);
+					});
+
+		}
+
+		$rootScope.UATAutomation = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalTe == null
+					|| $rootScope.dfromvalTe == undefined
+					|| $rootScope.dfromvalTe == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTe;
+			}
+
+			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
+					|| $rootScope.dtovalTe == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTe;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"./rest/almMetricsServices/UATAutomation?dashboardName="
+							+ dashboardName + "&owner=" + owner
+							+ "&domainName=" + domainName + "&projectName="
+							+ projectName + "&vardtfrom=" + vardtfrom
+							+ "&vardtto=" + vardtto + "&timeperiod="
+							+ $rootScope.timeperiodDash, config).success(
+					function(response) {
+						$rootScope.uatauto = response;
+
+						$scope.loadPieCharts('#uatatuo', $rootScope.uatauto);
+					});
+
+		}
+
+		$rootScope.defectdensityfilter = function() {
+
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalDef == null
+					|| $rootScope.dfromvalDef == undefined
+					|| $rootScope.dfromvalDef == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalDef;
+			}
+
+			if ($rootScope.dtovalDef == null
+					|| $rootScope.dtovalDef == undefined
+					|| $rootScope.dtovalDef == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalDef;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"./rest/almMetricsServices/defectdensityFilter?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodDash,
+					config).success(
+					function(response) {
+						$scope.defectdensity = response;
+						/*$scope.loadPieCharts('#defdensityfilter',
+								$scope.defectdensity);*/
+						$scope.loadDefectDensityPieCharts('#defdensityfilter',
+								$scope.defectdensity);
+						$rootScope.dataloader = false;
+
+					});
+
+			//$('#cover-spin').hide(0);
+
+		}
+
+		$rootScope.regressionautomationFilter = function() {
+
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			var vardtfrom = "";
+			var vardtto = "";
+			//var vartime = "";
+
+			/*if ($rootScope.timeperiodTc == null || $rootScope.timeperiodTc == undefined
+					|| $rootScope.timeperiodTc == "") {
+				vartime = "-";
+			} else {
+				vartime = $rootScope.timeperiodTc;
+			}*/
+
+			if ($rootScope.dfromvalTc == null
+					|| $rootScope.dfromvalTc == undefined
+					|| $rootScope.dfromvalTc == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalTc;
+			}
+
+			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
+					|| $rootScope.dtovalTc == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalTc;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"rest/almMetricsServices/regressionautoFilter?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodDash,
+					config).success(function(response) {
+				$scope.regautofilter = response;
+				$scope.loadPieCharts('#regautofilter', $scope.regautofilter);
+			});
+
+		}
+
+		// End of Regression automation
 
 		// Defect Count on Page Load
 		$rootScope.dashboardDefCount = function() {
 			// alert("Def Count");
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -420,8 +657,8 @@
 
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');			
-			
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/operationalDashboardALMServices/totalDefCount?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -436,7 +673,7 @@
 
 		// Total Test Count(BA Panel)
 		$rootScope.dashboardTestCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -463,7 +700,7 @@
 
 			vardtfrom = localStorageService.get('dtfrom');
 			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');	
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/operationalDashboardALMServices/totalTestCount?dashboardName="
@@ -481,7 +718,7 @@
 		// Total Execution Count
 
 		$rootScope.dashboardExeCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -522,54 +759,9 @@
 			});
 		}
 
-		// Total unique Execution Count
-
-		$rootScope.dashboarduniqueExeCount = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalDash == null
-					|| $rootScope.dfromvalDash == undefined
-					|| $rootScope.dfromvalDash == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalDash;
-			}
-
-			if ($rootScope.dtovalDash == null
-					|| $rootScope.dtovalDash == undefined
-					|| $rootScope.dtovalDash == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalDash;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http.get(
-					"rest/operationalDashboardALMServices/totaluniqueExeCount?dashboardName="
-							+ dashboardName + "&domainName=" + domainName
-							+ "&projectName=" + projectName + "&vardtfrom="
-							+ vardtfrom + "&vardtto=" + vardtto
-							+ "&timeperiod=" + $rootScope.timeperiodDash,
-					config).success(function(response) {
-				$rootScope.tcuniqueexecnt = response;
-
-			});
-		}
-
 		// Total Requirement Count
 		$rootScope.dashboardReqCount = function() {
-
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -609,13 +801,12 @@
 				// alert("Req Count : " + $rootScope.totalreqdata);
 
 			});
-
 		}
 
 		// Requirement Volatility
 		$rootScope.dashboardReqVolatility = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -652,7 +843,7 @@
 							+ "&timeperiod=" + $rootScope.timeperiodDash,
 					config).success(function(response) {
 				$scope.volatilitydata = response;
-
+				// alert("Req VolatilityData : " + $rootScope.volatilitydata);
 				$scope.loadPieCharts('#dashreqvola', $scope.volatilitydata);
 			});
 
@@ -661,7 +852,7 @@
 		// Design Coverage
 		$rootScope.dashboardDesignCoverage = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -713,7 +904,7 @@
 		// Execution Coverage
 		$rootScope.dashboardExeCoverage = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -763,7 +954,7 @@
 		// Defect Rejection Rate
 		$rootScope.dashboardDefectRejrate = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -793,30 +984,32 @@
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
-					"./rest/almMetricsServices/defectRejRateFilter?dashboardName="
+					/*"rest/operationalDashboardALMServices/defRejectRate?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
 							+ "&projectName=" + projectName + "&vardtfrom="
 							+ vardtfrom + "&vardtto=" + vardtto
 							+ "&timeperiod=" + $rootScope.timeperiodDash,
-					config).success(
+					config)*/
+					
+					"./rest/almMetricsServices/defectRejRateFilter?dashboardName="
+					+ dashboardName + "&domainName="
+					+ domainName + "&projectName="
+					+ projectName + "&vardtfrom=" + vardtfrom
+					+ "&vardtto=" + vardtto + "&timeperiod="
+					+ $rootScope.timeperiodDash, config).success(
 					function(response) {
 						$scope.defectRejection = response;
 
 						// alert("Def Reject : " + $rootScope.defectRejection);
 
-						$scope.loadDefectRejectionPieCharts('#dashdefrejrate',
+						$scope.loadPieChartsNeg('#dashdefrejrate',
 								$scope.defectRejection);
 					});
-
-			/*$timeout(function(){
-				$rootScope.dataloader=false;	
-			},10000);*/
 
 		}
 
 		// Pie Chart with Small ba-panel
 		$scope.loadPieCharts = function(id, chartcount) {
-
 			$scope.chartcount = chartcount;
 			$scope.id = id;
 			$($scope.id).each(
@@ -829,7 +1022,7 @@
 										Math.round(percent));
 							},
 							barColor : function(chartcount) {
-								return (chartcount <= 30 ? 'red'
+								return (chartcount < 30 ? 'red'
 										: (chartcount <= 60 ? 'orange'
 												: 'green'));
 							},
@@ -841,6 +1034,40 @@
 							lineCap : 'round',
 							scaleColor : 'white'
 						});
+						updatePieCharts($scope.id, $scope.chartcount)
+					});
+			$('.refresh-data').on('click', function() {
+				updatePieCharts();
+			});
+		}
+
+		// Neg Pie Chart with Small ba-panel
+		$scope.loadPieChartsNeg = function(id, chartcount) {
+			$scope.chartcount = chartcount;
+			$scope.id = id;
+			$($scope.id).each(
+					function() {
+						var chart = $(this);
+						chart
+								.easyPieChart({
+									easing : 'easeOutBounce',
+									onStep : function(from, to, percent) {
+										$(this.el).find('.percent').text(
+												Math.round(percent));
+									},
+									barColor : function(chartcount) {
+										return (chartcount < 30 ? 'green'
+												: (chartcount <= 60 ? 'orange'
+														: 'red'));
+									},
+									trackColor : 'lightgray',
+									size : 85,
+									scaleLength : 0,
+									animation : 2000,
+									lineWidth : 10,
+									lineCap : 'round',
+									scaleColor : 'white'
+								});
 						updatePieCharts($scope.id, $scope.chartcount)
 					});
 			$('.refresh-data').on('click', function() {
@@ -861,7 +1088,6 @@
 
 		// Pie Chart with Small ba-panel
 		$scope.loadPieChartsDashboard = function(id, chartcount) {
-
 			$scope.chartcount = chartcount;
 			$scope.id = id;
 			$($scope.id).each(
@@ -905,7 +1131,7 @@
 
 		// Requirement Pass Count
 		$rootScope.dashboardReqPassCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -930,6 +1156,10 @@
 			} else {
 				vardtto = $rootScope.dtovalDash;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
 					"rest/operationalDashboardALMServices/reqPassCount?dashboardName="
@@ -947,7 +1177,7 @@
 
 		// Automation Coverage
 		$rootScope.dashboardAutoCoverage = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -971,6 +1201,11 @@
 			} else {
 				vardtto = $rootScope.dtovalDash;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/operationalDashboardALMServices/designAutoCoverage?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -988,7 +1223,7 @@
 		// Manual Execution Count
 
 		$rootScope.dashboardManualCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1012,6 +1247,11 @@
 			} else {
 				vardtto = $rootScope.dtovalDash;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/operationalDashboardALMServices/exeManualCount?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1026,7 +1266,7 @@
 		// Automated Execution Count
 
 		$rootScope.dashboardAutoCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1050,6 +1290,11 @@
 			} else {
 				vardtto = $rootScope.dtovalDash;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/operationalDashboardALMServices/exeAutoCount?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1064,7 +1309,7 @@
 		// Closed Defect Count on Page Load - Dashboard
 		$rootScope.dashboardDefClosedCount = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1088,6 +1333,11 @@
 			} else {
 				vardtto = $rootScope.dtovalDash;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
 			$http.get(
 					"rest/operationalDashboardALMServices/defClosedCount?dashboardName="
 							+ dashboardName + "&domainName=" + domainName
@@ -1103,7 +1353,7 @@
 		// Requirement Priority Funnel Chart - Dashboard
 
 		$rootScope.reqPrioirtyFunnel = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1127,6 +1377,10 @@
 			} else {
 				vardtto = $rootScope.dtovalDash;
 			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
 
 			$http
 					.get(
@@ -1205,7 +1459,7 @@
 							"rgba(75, 192, 192, 0.8)",
 							"rgba(153, 102, 255, 0.8)",
 							"rgba(255, 159, 64, 0.8)" ],
-					labelFontColor : "rgba(255, 255, 255, 0.8)"
+					labelFontColor : "rgba(112, 112, 112, 0.8)"
 				});
 			}
 		}
@@ -1225,7 +1479,7 @@
 
 		// Total Req. Count - Landing Page
 		$scope.totReqcount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1242,7 +1496,7 @@
 
 		// Total Story Point - Landing Page
 		$rootScope.totStoryPoint = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1280,7 +1534,7 @@
 
 		// Total Defect Count - Landing Page
 		$rootScope.totDefCount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1318,7 +1572,7 @@
 
 		// Defect Open Rate - Landing Page
 		$rootScope.defectopenrate = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1356,55 +1610,12 @@
 										$scope.defOpenRate);
 					});
 		}
-		// Pie Chart with Small ba-panel
-		/*$scope.loadPieCharts = function(id, chartcount) {
-			
-		
-			
-			$scope.chartcount = chartcount;
-			$scope.id = id;
-			$($scope.id).each(
-					function() {
-						var chart = $(this);
-						chart.easyPieChart({
-							easing : 'easeOutBounce',
-							onStep : function(from, to, percent) {
-								$(this.el).find('.percent').text(
-										Math.round(percent));
-							},
-							barColor : function(chartcount) {
-								return (chartcount <=30 ? 'red'
-										: chartcount <=60 ? 'organge'
-												: 'green');
-							},
-							trackColor : 'lightgray',
-							size : 85,
-							scaleLength : 0,
-							animation : 2000,
-							lineWidth : 10,
-							lineCap : 'round',
-							scaleColor : 'white'
-
-						});
-						updatePieCharts($scope.id, $scope.chartcount)
-					});
-			$('.refresh-data').on('click', function() {
-				updatePieCharts();
-			});
-		}
-		function updatePieCharts(id, count) {
-			$scope.id = id;
-			$scope.count = count;
-			$($scope.id).each(function(index, chart) {
-				$(chart).data('easyPieChart').update($scope.count);
-			});
-		}*/
 
 		/* Landing Page Code Ends Here */
 
 		$rootScope.initialtestcountdash = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1450,7 +1661,7 @@
 
 		$scope.getRollingPeriod = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1467,14 +1678,12 @@
 						localStorageService.set('rollingPeriod',
 								$scope.rollingPeriodTime);
 						$scope.selectedrollingPeriod();
-
 					});
-
 		}
 
 		$scope.selectedrollingPeriod = function() {
 			$scope.rollingPeriod = localStorageService.get('rollingPeriod');
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1493,7 +1702,7 @@
 							$scope.dtfrom = new Date(from.setDate(to.getDate()
 									- response + 1));
 
-							$scope.convertDateToString($scope.dtfrom,
+							$scope.jiraconvertDateToString($scope.dtfrom,
 									$scope.dtto);
 						}
 
@@ -1501,8 +1710,7 @@
 
 		}
 
-		$scope.convertDateToString = function(fromDate, toDate) {
-
+		$scope.jiraconvertDateToString = function(fromDate, toDate) {
 			var dfrom = fromDate;
 			var month = dfrom.getMonth() + 1;
 			if (month < 10) {
@@ -1534,264 +1742,15 @@
 			$rootScope.dfromDash = $scope.dtfromfinal; // storage date reset
 			$rootScope.dtoDash = $scope.dttofinal; // storage date reset
 
-			/*$rootScope.initUserStorySprintCount();
+			$rootScope.initUserStorySprintCount();
 			$rootScope.initialUserStorycount();
 			$rootScope.totStoryPoint();
 			$rootScope.initialtestcountdash();
 			$rootScope.totDefCount();
 			$rootScope.defectopenrate();
 			$rootScope.totExeCount();
-			$rootScope.bugsdetectedcount();*/
+			$rootScope.bugsdetectedcount();
 		}
-
-		// Regression Automation
-
-		$rootScope.regressionautomationFilter = function() {
-
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-
-			var vardtfrom = "";
-			var vardtto = "";
-			//var vartime = "";
-
-			/*if ($rootScope.timeperiodTc == null || $rootScope.timeperiodTc == undefined
-					|| $rootScope.timeperiodTc == "") {
-				vartime = "-";
-			} else {
-				vartime = $rootScope.timeperiodTc;
-			}*/
-
-			if ($rootScope.dfromvalTc == null
-					|| $rootScope.dfromvalTc == undefined
-					|| $rootScope.dfromvalTc == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTc;
-			}
-
-			if ($rootScope.dtovalTc == null || $rootScope.dtovalTc == undefined
-					|| $rootScope.dtovalTc == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTc;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http.get(
-					"rest/almMetricsServices/regressionautoFilter?dashboardName="
-							+ dashboardName + "&domainName=" + domainName
-							+ "&projectName=" + projectName + "&vardtfrom="
-							+ vardtfrom + "&vardtto=" + vardtto
-							+ "&timeperiod=" + $rootScope.timeperiodDash,
-					config).success(function(response) {
-				$scope.regautofilter = response;
-				$scope.loadPieCharts('#regautofilter', $scope.regautofilter);
-			});
-
-		}
-
-		// End of Regression automation
-
-		//UAT Automation
-		$rootScope.UATAutomation = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http.get(
-					"./rest/almMetricsServices/UATAutomation?dashboardName="
-							+ dashboardName + "&owner=" + owner
-							+ "&domainName=" + domainName + "&projectName="
-							+ projectName + "&vardtfrom=" + vardtfrom
-							+ "&vardtto=" + vardtto + "&timeperiod="
-							+ $rootScope.timeperiodDash, config).success(
-					function(response) {
-						$rootScope.uatauto = response;
-
-						$scope.loadPieCharts('#uatatuo', $rootScope.uatauto);
-					});
-
-		}
-
-		// Functional Automation
-
-		$rootScope.FuncationalAutomation = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-			
-			$http.get(
-					"./rest/almMetricsServices/FuncationalAutomation?dashboardName="
-							+ dashboardName + "&owner=" + owner
-							+ "&domainName=" + domainName + "&projectName="
-							+ projectName + "&vardtfrom=" + vardtfrom
-							+ "&vardtto=" + vardtto + "&timeperiod="
-							+ $rootScope.timeperiodDash, config).success(
-					function(response) {
-						$rootScope.funcauto = response;
-						$scope.loadPieCharts('#funcatuo', $rootScope.funcauto);
-
-					});
-
-		}
-
-		// Regression Automation
-		$rootScope.RegressionAutomation = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http.get(
-					"./rest/almMetricsServices/RegressionAutomation?dashboardName="
-							+ dashboardName + "&owner=" + owner
-							+ "&domainName=" + domainName + "&projectName="
-							+ projectName + "&vardtfrom=" + vardtfrom
-							+ "&vardtto=" + vardtto + "&timeperiod="
-							+ $rootScope.timeperiodDash, config).success(
-					function(response) {
-						$rootScope.regatuo = response;
-
-						$scope.loadPieCharts('#regatuo', $rootScope.regatuo);
-					});
-
-		}
-
-		// Defect Density
-		$rootScope.defectdensityfilter = function() {
-
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalDef == null
-					|| $rootScope.dfromvalDef == undefined
-					|| $rootScope.dfromvalDef == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalDef;
-			}
-
-			if ($rootScope.dtovalDef == null
-					|| $rootScope.dtovalDef == undefined
-					|| $rootScope.dtovalDef == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalDef;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http.get(
-					"./rest/almMetricsServices/defectdensityFilter?dashboardName="
-							+ dashboardName + "&domainName=" + domainName
-							+ "&projectName=" + projectName + "&vardtfrom="
-							+ vardtfrom + "&vardtto=" + vardtto
-							+ "&timeperiod=" + $rootScope.timeperiodDash,
-					config).success(
-					function(response) {
-						$scope.defectdensity = response;
-						/*$scope.loadPieCharts('#defdensityfilter',
-								$scope.defectdensity);*/
-						$scope.loadDefectDensityPieCharts('#defdensityfilter',
-								$scope.defectdensity);
-						$rootScope.dataloader = false;
-
-					});
-
-			//$('#cover-spin').hide(0);
-
-		}
-
-		// End of Defect Density
-
-		// Start Defect Density Chart
 
 		$scope.loadDefectDensityPieCharts = function(id, chartcount) {
 
@@ -1834,88 +1793,45 @@
 		$scope.loadDefectRejectionPieCharts = function(id, chartcount) {
 			$scope.chartcount = chartcount;
 			$scope.id = id;
-			$($scope.id).each(
-					function() {
-						var chart = $(this);
-						chart
-								.easyPieChart({
-									easing : 'easeOutBounce',
-									onStep : function(from, to, percent) {
-										$(this.el).find('.percent').text(
-												Math.round(percent));
-									},
-									barColor : function(chartcount) {
-										var color1='red';
-										var color2='green';
-										var color3='orange'
-									    var color="";
-										if(chartcount <= 8){color=color2}
-										if(chartcount >= 9 && chartcount <= 20){color=color3}
-										if(chartcount > 20){color=color1}
-									  return color;
-									},
-									trackColor : 'lightgray',
-									size : 85,
-									scaleLength : 0,
-									animation : 2000,
-									lineWidth : 10,
-									lineCap : 'round',
-									scaleColor : 'white'
-								});
-						updatePieCharts($scope.id, $scope.chartcount)
-					});
+			$($scope.id).each(function() {
+				var chart = $(this);
+				chart.easyPieChart({
+					easing : 'easeOutBounce',
+					onStep : function(from, to, percent) {
+						$(this.el).find('.percent').text(Math.round(percent));
+					},
+					barColor : function(chartcount) {
+						var color1 = 'red';
+						var color2 = 'green';
+						var color3 = 'orange'
+						var color = "";
+						if (chartcount <= 8) {
+							color = color2
+						}
+						if (chartcount >= 9 && chartcount <= 20) {
+							color = color3
+						}
+						if (chartcount > 20) {
+							color = color1
+						}
+						return color;
+					},
+					trackColor : 'lightgray',
+					size : 85,
+					scaleLength : 0,
+					animation : 2000,
+					lineWidth : 10,
+					lineCap : 'round',
+					scaleColor : 'white'
+				});
+				updatePieCharts($scope.id, $scope.chartcount)
+			});
 			$('.refresh-data').on('click', function() {
 				updatePieCharts();
 			});
 		}
 
 		// End of Defect Rejection Rate
-
-		//First Time Pass Rate percentage
-		$rootScope.firstpassrate = function() {
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalTe == null
-					|| $rootScope.dfromvalTe == undefined
-					|| $rootScope.dfromvalTe == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalTe;
-			}
-
-			if ($rootScope.dtovalTe == null || $rootScope.dtovalTe == undefined
-					|| $rootScope.dtovalTe == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalTe;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http.get(
-					"./rest/almMetricsServices/firstTimePass?dashboardName="
-							+ dashboardName + "&owner=" + owner
-							+ "&domainName=" + domainName + "&projectName="
-							+ projectName + "&vardtfrom=" + vardtfrom
-							+ "&vardtto=" + vardtto + "&timeperiod="
-							+ $rootScope.timeperiodDash, config).success(
-					function(response) {
-						$rootScope.passratedata = response;
-
-						$scope.loadPieCharts('#passrate',
-								$rootScope.passratedata);
-					});
-
-		}
 
 	}
 })();

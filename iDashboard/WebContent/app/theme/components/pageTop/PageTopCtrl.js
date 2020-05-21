@@ -11,7 +11,7 @@
   /** @ngInject */
   function PageTopCtrl($http, $scope, $filter, $uibModal, editableOptions, editableThemes,$rootScope) {
    
-             
+
 		  $rootScope.loggedInuserId = localStorageService.get('loggedInuserId');
 		  	 
 		

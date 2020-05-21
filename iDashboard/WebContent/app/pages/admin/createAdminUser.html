@@ -1,11 +1,15 @@
 <div class="popupbgimg modal-content" style="margin-top: 150%"
 	ng-controller="AdminCtrl">
 	<div class="modal-header">
-		<span style="font-size: 16px"> Create New User</span>
-		
-		<button type="button" class="close" ng-click="cancel();$dismiss()" aria-label="closeed">
+	
+	 <button type="button" class="close" ng-click="cancel();$dismiss()" aria-label="closeed">
 			<span aria-hidden="true"> x</span>
 		</button> 
+<div  style="height: 10px;">
+ <label  class="custom-checkbox" style="font-weight:normal;margin-top: 12px;
+    margin-left: 9px;font-size: 16px">Create New User</label>
+</div> 
+		
 		<!-- <a
 			ng-click="cancel();$dismiss();"> <img src="./assets/img/close.png"
 			style="float: right; width: 10%">
@@ -23,10 +27,10 @@
 			<div class="form-group">
 				<label class="radio-inline custom-radio nowrap"><input 
 					type="radio" name="inlineRadioOptions" id="rdldap" value="option3">
-					<span style="color: #4c4c4c">LDAP User</span></label> <label
+					<span style="color: #000">LDAP User</span></label> <label
 					class="radio-inline custom-radio nowrap"><input
 					type="radio" name="inlineRadioOptions" id="rdnormal"
-					value="option3" checked> <span style="color: #4c4c4c">Normal
+					value="option3" checked> <span style="color: #000">Normal
 						User</span></label>
 			</div>
 			

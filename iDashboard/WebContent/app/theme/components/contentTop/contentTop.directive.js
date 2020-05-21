@@ -29,7 +29,7 @@
        		$scope.value=true;
    		}
        	 else if($state.current.title=='Dashboard'||
-       			$state.current.title=='SlideShow' || $state.current.title=='Summary SlideShow PopUp')
+       			$state.current.title=='SlideShow')
        		 {
        		$scope.activePageTitle = $state.current.title;
        		$scope.activeDashboardName = localStorageService.get('projectName');

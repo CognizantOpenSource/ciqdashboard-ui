@@ -18,7 +18,28 @@ public class LCDashboardComponentsVO {
 	private String rallyProject;
 	private String jiraProject;
 	private String cookbookName;
+	private String fortifyProject;
+	private String fortifyVersion;
+	private String octaneProject;
 	
+	
+	
+	public String getFortifyProject() {
+		return fortifyProject;
+	}
+
+	public void setFortifyProject(String fortifyProject) {
+		this.fortifyProject = fortifyProject;
+	}
+
+	public String getFortifyVersion() {
+		return fortifyVersion;
+	}
+
+	public void setFortifyVersion(String fortifyVersion) {
+		this.fortifyVersion = fortifyVersion;
+	}
+
 	public String getBuildJobName() {
 		return buildJobName;
 	}
@@ -113,6 +134,14 @@ public class LCDashboardComponentsVO {
 
 	public void setJiraProject(String jiraProject) {
 		this.jiraProject = jiraProject;
+	}
+
+	public String getOctaneProject() {
+		return octaneProject;
+	}
+
+	public void setOctaneProject(String octaneProject) {
+		this.octaneProject = octaneProject;
 	}
 
 	

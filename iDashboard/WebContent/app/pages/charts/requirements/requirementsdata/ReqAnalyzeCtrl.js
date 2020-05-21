@@ -8,7 +8,7 @@
 			'ReqAnalyzeCtrl', ReqAnalyzeCtrl);
 
 	/** @ngInject */
-	function ReqAnalyzeCtrl($sessionStorage, $scope, UserService,
+	function ReqAnalyzeCtrl($sessionStorage,AES,$scope, UserService,
 			localStorageService, baConfig, $rootScope, $element, layoutPaths,
 			$http, $base64) {
 
@@ -27,7 +27,7 @@
 		$scope.cancel = function() {
 			$rootScope.requirementsanalyse.close();
 		};
-		var token = getEncryptedValue();
+		var token = AES.getEncryptedValue();
 		var config = {
 			headers : {
 				'Authorization' : token

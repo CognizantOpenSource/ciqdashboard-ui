@@ -6,6 +6,7 @@
 package com.cts.metricsportal.controllers;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.PropertyManager;
 import com.cts.metricsportal.vo.ArcherHighCriticalVO;
@@ -72,7 +73,7 @@ public class RiskComplianceServices
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 		List<EthicalHacksVO> tdminfoo = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
 			tdminfoo = new ArrayList<EthicalHacksVO>();
 			String sizequery = "{},{_id:0,userId:1}";
@@ -98,7 +99,6 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
 
 		ethicaldata = new ArrayList<EthicalHacksVO>();
 	
@@ -126,7 +126,6 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> networkdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
 
 		networkdata = new ArrayList<NetworkPenetrationVO>();
 	
@@ -153,7 +152,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<ArcherDataVO>();
 	
@@ -180,7 +179,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		Date startDate = new Date(vardtfrom);
 	      DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
 	      String strDate = dateFormat.format(startDate); 
@@ -211,7 +210,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		Date startDate = new Date(vardtfrom);
 	      DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
 	      String strDate = dateFormat.format(startDate); 
@@ -242,7 +241,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<ArcherDataVO>();
 	
@@ -269,7 +268,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<QualysVulnerabiltyVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<QualysVulnerabiltyVO>();
 	
@@ -294,7 +293,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		
 	      
 		ethicaldata = new ArrayList<EthicalHacksVO>();
@@ -321,7 +320,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		
 		ethicaldata = new ArrayList<NetworkPenetrationVO>();
 	
@@ -344,7 +343,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		Date startDate = new Date(vardtfrom);
 	      DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
 	      String strDate = dateFormat.format(startDate); 
@@ -374,7 +373,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<QualysVulnerabiltyVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		Date startDate = new Date(vardtfrom);
 	      DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
 	      String strDate = dateFormat.format(startDate); 
@@ -403,7 +402,6 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<QualysVulnerabiltyVO> qualysdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
 
 		qualysdata = new ArrayList<QualysVulnerabiltyVO>();
 	
@@ -436,7 +434,7 @@ public class RiskComplianceServices
  			BadLocationException {
  		List<EthicalHacksVO> ethicaldata = null;
  		AuthenticationService AuthServ = new AuthenticationService();
- 		boolean adminstatus = AuthServ.checkAdminUser(authString);
+ 		
  		 Date startDate = new Date(vardtfrom);
  	     LocalDateTime localDateTime = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
  	     localDateTime = localDateTime.plusYears(0L).plusMonths(0L).plusDays(60L);
@@ -469,7 +467,7 @@ public class RiskComplianceServices
  			BadLocationException {
  		List<NetworkPenetrationVO> ethicaldata = null;
  		AuthenticationService AuthServ = new AuthenticationService();
- 		boolean adminstatus = AuthServ.checkAdminUser(authString);
+ 		
  		 Date startDate = new Date(vardtfrom);
  	     LocalDateTime localDateTime = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
  	     localDateTime = localDateTime.plusYears(0L).plusMonths(0L).plusDays(60L);
@@ -501,7 +499,7 @@ public class RiskComplianceServices
  			BadLocationException {
  		List<ArcherDataVO> ethicaldata = null;
  		AuthenticationService AuthServ = new AuthenticationService();
- 		boolean adminstatus = AuthServ.checkAdminUser(authString);
+ 		
  		 Date startDate = new Date(vardtfrom);
  	     LocalDateTime localDateTime = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
  	     localDateTime = localDateTime.plusYears(0L).plusMonths(0L).plusDays(60L);
@@ -533,7 +531,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<QualysVulnerabiltyVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 		Date startDate = new Date(vardtfrom);
 	     LocalDateTime localDateTime = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	     localDateTime = localDateTime.plusYears(0L).plusMonths(0L).plusDays(60L);
@@ -567,7 +565,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		ethicaldata = new ArrayList<EthicalHacksVO>();
 	
@@ -591,7 +589,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		ethicaldata = new ArrayList<EthicalHacksVO>();
 	
@@ -615,7 +613,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		ethicaldata = new ArrayList<EthicalHacksVO>();
 	
@@ -639,7 +637,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<ArcherDataVO>();
 	
@@ -663,7 +661,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<ArcherDataVO>();
 	
@@ -687,7 +685,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<ArcherDataVO>();
 	
@@ -711,7 +709,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> archerdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		archerdata = new ArrayList<ArcherDataVO>();
 	
@@ -736,7 +734,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> networkdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		networkdata = new ArrayList<NetworkPenetrationVO>();
 	
@@ -762,7 +760,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> networkdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		networkdata = new ArrayList<NetworkPenetrationVO>();
 	
@@ -787,7 +785,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> networkdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		networkdata = new ArrayList<NetworkPenetrationVO>();
 	
@@ -811,7 +809,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<NetworkPenetrationVO> networkdata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		networkdata = new ArrayList<NetworkPenetrationVO>();
 	
@@ -867,7 +865,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<EthicalHacksVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		ethicaldata = new ArrayList<EthicalHacksVO>();
 	
@@ -892,7 +890,7 @@ public class RiskComplianceServices
 			BadLocationException {
 		List<ArcherDataVO> ethicaldata = null;
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = AuthServ.checkAdminUser(authString);
+		
 
 		ethicaldata = new ArrayList<ArcherDataVO>();
 	

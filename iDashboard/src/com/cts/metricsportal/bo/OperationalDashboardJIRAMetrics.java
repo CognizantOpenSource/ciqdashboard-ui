@@ -187,8 +187,7 @@ public class OperationalDashboardJIRAMetrics {
 			defecTotCount = ODJiraMongoOperations.getTotalDefectCount(levelIdList, startDate, endDate);
 
 			if (openedCount > 0 && defecTotCount > 0) {
-//				defOpenRate = Math.round((openedCount * 100 )/ defecTotCount);
-				defOpenRate =Math.round(((double)openedCount * 100)/ ((double)defecTotCount));
+				defOpenRate = (openedCount * 100 / defecTotCount);
 			} else {
 				defOpenRate = 0;
 			}
@@ -292,11 +291,7 @@ public class OperationalDashboardJIRAMetrics {
 		
 		try {
 			 startDate = dateTimeCalc.getStartDate(vardtfrom);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
+			 
 			 endDate = dateTimeCalc.getEndDate(vardtto);
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block

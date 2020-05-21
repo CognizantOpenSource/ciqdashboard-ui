@@ -1,3 +1,6 @@
+/**
+ * @author v.lugovksy created on 16.12.2015
+ */
 (function() {
 	'use strict';
 
@@ -18,18 +21,11 @@
 	});
 
 	/** @ngInject */
-	function defectsCtrl($sessionStorage, paginationService,
+	function defectsCtrl($sessionStorage, paginationService, AES,
 			localStorageService, $element, $scope, $base64, $http, $timeout,
-			$uibModal, $rootScope, baConfig, layoutPaths, $filter) {
-
-		function getEncryptedValue() {
-			var username = localStorageService.get('userIdA');
-			var password = localStorageService.get('passwordA');
-			var tokeen = $base64.encode(username + ":" + password);
-
-			return tokeen;
-		}
-
+			$uibModal, $rootScope, baConfig, layoutPaths,$filter) {
+		
+		
 		$rootScope.MetricsName = "Test Defects";
 		$scope.init = function() {
 			$rootScope.dataloader = true;
@@ -40,7 +36,11 @@
 		var domainName = localStorageService.get('domainName');
 		var projectName = localStorageService.get('projectName');
 		$rootScope.timeperiodDef = localStorageService.get('timeperiod');
-
+		$rootScope.sortkey = false;
+		$rootScope.searchkey = false;
+		$rootScope.menubar = true;
+		$rootScope.tool = localStorageService.get('tool');
+		
 		$scope.dtfrom = localStorageService.get('dtfrom');
 		$scope.dtto = localStorageService.get('dtto');
 
@@ -55,14 +55,10 @@
 			localStorageService.set('dttoPlus', dtToDateStr);
 		}
 
-		$rootScope.sortkey = false;
-		$rootScope.searchkey = false;
-		/*$rootScope.menubar = true;*/
-		$rootScope.tool = localStorageService.get('tool');
 
 		// Closed Defect Count on Page Load - Dashboard
 		$rootScope.defclosedcount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -79,7 +75,7 @@
 
 		// Defect Count on Page Load
 		$rootScope.initialcount = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -118,7 +114,7 @@
 
 		// Defect Rejection Rate on Page Load
 		$rootScope.defectrejrate = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -160,7 +156,7 @@
 
 		$rootScope.defectResolutionChart = function() {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -234,23 +230,18 @@
 						scales : {
 							yAxes : [ {
 								ticks : {
-									beginAtZero : true,
-									fontColor : '#4c4c4c'
+									beginAtZero : true
 								},
 								gridLines : {
-									color : "#d8d3d3"
+									color : "rgba(255,255,255,0.2)"
 								}
 							} ],
 							xAxes : [ {
 								barThickness : 40,
 								gridLines : {
-									color : "#d8d3d3"
-								},
-								ticks : {
-									fontColor : '#4c4c4c'
-								},
+									color : "rgba(255,255,255,0.2)"
+								}
 							} ]
-
 						}
 					}
 				});
@@ -261,7 +252,7 @@
 		// Defect trend chart
 
 		$scope.defectTrendChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -284,11 +275,10 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalDef;
-
 			}
-
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http
@@ -304,14 +294,12 @@
 								$scope.data = response;
 								if ($scope.data.length != 0) {
 									$scope.defectlinechart($scope.data);
-									$rootScope.dataloader = false;
 								} else {
 									$('#defectline').remove(); // this is my <canvas>
 									// element
 									$('#defectdiv')
 											.append(
 													'<canvas id="defectline"> </canvas>');
-									$rootScope.dataloader = false;
 								}
 							});
 
@@ -321,64 +309,35 @@
 				$scope.data = [];
 				$scope.series = [];
 
-				/*$scope.newDefects=[];
-				$scope.readyforQA=[];
-				$scope.nostatus=[];
-				$scope.openDefects=[];
-				$scope.closedDefects=[];
-				$scope.fixedDefects=[];
-				$scope.rejectedDefects=[];
-				$scope.reopenDefects=[];*/
-
 				$scope.newDefects = [];
+				$scope.readyforQA = [];
+				$scope.nostatus = [];
 				$scope.openDefects = [];
-
-				$scope.completed = [];
-				$scope.dropped = [];
-				//$scope.linnew=[];
-				$scope.readyfortest = [];
-				$scope.inprogress = [];
-				//$scope.linopen=[];
-				$scope.assigned = [];
-				$scope.deferred = [];
-				$scope.analyzing = [];
-
+				$scope.closedDefects = [];
+				$scope.fixedDefects = [];
+				$scope.rejectedDefects = [];
+				$scope.reopenDefects = [];
 				var text;
 				for (var i = 0; i < $scope.lineresult.length; i++) {
 
 					$scope.labels.push($scope.lineresult[i].isodate);
 
-					/*$scope.newDefects.push($scope.lineresult[i].newDefects);
+					$scope.newDefects.push($scope.lineresult[i].newDefects);
 					$scope.readyforQA.push($scope.lineresult[i].readyQA);
 					$scope.nostatus.push($scope.lineresult[i].nostatus);
 					$scope.openDefects.push($scope.lineresult[i].openDefects);
-					$scope.closedDefects.push($scope.lineresult[i].closedDefects);
+					$scope.closedDefects
+							.push($scope.lineresult[i].closedDefects);
 					$scope.fixedDefects.push($scope.lineresult[i].fixedDefects);
-					$scope.rejectedDefects.push($scope.lineresult[i].rejectedDefects);
-					$scope.reopenDefects.push($scope.lineresult[i].reopenDefects);*/
-
-					$scope.newDefects.push($scope.lineresult[i].newDefects);
-					$scope.openDefects.push($scope.lineresult[i].openDefects);
-
-					$scope.completed.push($scope.lineresult[i].completed);
-					$scope.dropped.push($scope.lineresult[i].dropped);
-					//$scope.linnew.push($scope.lineresult[i].linnew);
-					$scope.readyfortest.push($scope.lineresult[i].readyfortest);
-					$scope.inprogress.push($scope.lineresult[i].inprogress);
-					//$scope.linopen.push($scope.lineresult[i].linopen);
-					$scope.assigned.push($scope.lineresult[i].assigned);
-					$scope.deferred.push($scope.lineresult[i].deferred);
-					$scope.analyzing.push($scope.lineresult[i].analyzing);
-
+					$scope.rejectedDefects
+							.push($scope.lineresult[i].rejectedDefects);
+					$scope.reopenDefects
+							.push($scope.lineresult[i].reopenDefects);
 				}
-				/*$scope.data=[$scope.newDefects, $scope.readyforQA, $scope.nostatus,
-				             $scope.openDefects, $scope.closedDefects, $scope.fixedDefects, $scope.rejectedDefects,
-				             $scope.reopenDefects];*/
-
-				$scope.data = [ $scope.newDefects, $scope.dropped,
-						$scope.completed, $scope.readyfortest,
-						$scope.inprogress, $scope.openDefects, $scope.assigned,
-						$scope.deferred, $scope.analyzing ];
+				$scope.data = [ $scope.newDefects, $scope.readyforQA,
+						$scope.nostatus, $scope.openDefects,
+						$scope.closedDefects, $scope.fixedDefects,
+						$scope.rejectedDefects, $scope.reopenDefects ];
 				var config = {
 					type : 'line',
 
@@ -386,60 +345,53 @@
 						labels : $scope.labels,
 						datasets : [ {
 							data : $scope.newDefects,
-							label : "New",
+							label : "New Defects",
 							pointStyle : "line",
 							borderColor : "rgba(199, 99, 5, 0.9)",
 							pointBackgroundColor : "rgba(199, 99, 5, 0.9)"
 						}, {
-							data : $scope.openDefects,
-							label : "Open",
+							data : $scope.readyforQA,
+							label : "Ready for QA",
 							pointStyle : "line",
 							borderColor : "rgba(253, 151, 104, 0.9)",
 							pointBackgroundColor : "rgba(253, 151, 104, 0.9)"
 						}, {
-							data : $scope.completed,
-							label : "Completed",
+							data : $scope.nostatus,
+							label : "No Status",
 							pointStyle : "line",
 							borderColor : "rgba(67, 154, 213, 0.9)",
 							pointBackgroundColor : "rgba(67, 154, 213, 0.9)"
 						}, {
-							data : $scope.dropped,
-							label : "Dropped",
+							data : $scope.openDefects,
+							label : "Open Defects",
 							pointStyle : "line",
 							borderColor : "rgba(255, 31, 0, 0.9)",
 							pointBackgroundColor : "rgba(255, 31, 0, 0.9)"
 
 						}, {
-							data : $scope.readyfortest,
-							label : "Ready for Test",
+							data : $scope.closedDefects,
+							label : "Closed Defects",
 							pointStyle : "line",
 							borderColor : "rgba(9, 191, 22, 0.9)",
 							pointBackgroundColor : "rgba(9, 191, 22, 0.9)"
 
 						}, {
-							data : $scope.inprogress,
-							label : "In Progress",
+							data : $scope.fixedDefects,
+							label : "Fixed Defects",
 							pointStyle : "line",
 							borderColor : "rgba(236, 255, 0, 0.9)",
 							pointBackgroundColor : "rgba(236, 255, 0, 0.9)"
 
 						}, {
-							data : $scope.assigned,
-							label : "Assigned",
+							data : $scope.rejectedDefects,
+							label : "Rejected Defects",
 							pointStyle : "line",
 							borderColor : "rgba(153, 102, 255, 0.9)",
 							pointBackgroundColor : "rgba(153, 102, 255, 0.9)"
 
 						}, {
-							data : $scope.deferred,
-							label : "Deferred",
-							pointStyle : "line",
-							borderColor : "rgba(255, 99, 132, 0.9)",
-							pointBackgroundColor : "rgba(255, 99, 132, 0.9)"
-
-						}, {
-							data : $scope.analyzing,
-							label : "Analyzing",
+							data : $scope.reopenDefects,
+							label : "Reopen Defects",
 							pointStyle : "line",
 							borderColor : "rgba(255, 99, 132, 0.9)",
 							pointBackgroundColor : "rgba(255, 99, 132, 0.9)"
@@ -471,7 +423,7 @@
 									color : "#d8d3d3",
 								},
 								ticks : {
-									beginAtZero : true,
+
 									fontColor : '#4c4c4c'
 								},
 								scaleLabel : {
@@ -539,7 +491,7 @@
 
 		// Defect By Priority Chart
 		$scope.newPriorityChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -562,10 +514,10 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalDef;
-
 			}
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http
@@ -612,7 +564,7 @@
 
 				var ctx = document.getElementById("defectpriority");
 				var defectpriority = new Chart(ctx, {
-					type : 'bar',
+					type : 'pie',
 					data : {
 						labels : $scope.labelspie,
 						datasets : [ {
@@ -640,47 +592,15 @@
 							fontColor : '#4c4c4c'
 						},
 
-						/*legend : {
+						legend : {
 							display : true,
-							position : 'right',
+							position : 'bottom',
 							labels : {
 								fontColor : '#4c4c4c',
 								boxWidth : 20,
 								fontSize : 10
 							}
-						},*/
-
-						tooltips : {
-							enabled : true,
-							callbacks : {
-								label : function(tooltipItem) {
-									return "" + Number(tooltipItem.yLabel)
-											+ " days";
-								}
-							}
-						},
-						scales : {
-							yAxes : [ {
-								ticks : {
-									fontColor : '#4c4c4c',
-									beginAtZero : true
-								},
-								gridLines : {
-									color : "#d8d3d3"
-								}
-							} ],
-							xAxes : [ {
-								barThickness : 40,
-								ticks : {
-									fontColor : '#4c4c4c'
-								},
-								gridLines : {
-									color : "#d8d3d3"
-								}
-							} ]
-
 						}
-
 					}
 
 				});
@@ -689,7 +609,7 @@
 
 		// Defect By Severity Chart
 		$scope.newSeverityChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -712,11 +632,10 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalDef;
-
 			}
-
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http
@@ -727,6 +646,7 @@
 									+ projectName + "&vardtfrom=" + vardtfrom
 									+ "&vardtto=" + vardtto + "&timeperiod="
 									+ $rootScope.timeperiodDef, config)
+
 					.success(
 							function(response) {
 								$scope.data = response;
@@ -791,7 +711,7 @@
 
 						legend : {
 							display : true,
-							position : 'right',
+							position : 'bottom',
 							labels : {
 								fontColor : '#4c4c4c',
 								boxWidth : 20,
@@ -807,7 +727,7 @@
 
 		// Defect By Owner Chart
 		$scope.newOwnerChart = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -830,11 +750,10 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalDef;
-
 			}
-
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http
@@ -867,11 +786,10 @@
 					var b = Math.floor(Math.random() * 255);
 					return "rgb(" + r + "," + g + "," + b + ")";
 				};
-
 				$scope.result = result;
 				$scope.labels1 = [];
 				$scope.data1 = [];
-				var colors = [];
+				var color = [];
 
 				for (var i = 0; i < $scope.result.length; i++) {
 					if ($scope.result[i].assignedto == "") {
@@ -879,7 +797,7 @@
 					}
 					$scope.labels1.push($scope.result[i].assignedto);
 					$scope.data1.push($scope.result[i].usercount);
-					colors.push(dynamicColors());
+					color.push(dynamicColors());
 				}
 				$scope.labelspie = $scope.labels1;
 				$scope.datapie = $scope.data1;
@@ -897,8 +815,8 @@
 								labels : $scope.labelspie,
 								datasets : [ {
 									data : $scope.datapie,
-									backgroundColor : colors,
-									borderColor : colors,
+									backgroundColor : color,
+									borderColor : color,
 									borderWidth : 1,
 
 								} ]
@@ -982,12 +900,11 @@
 											labelString : 'Owner',
 											fontColor : '#4c4c4c'
 										},
-										ticks : {
-											beginAtZero : true,
-											fontColor : '#4c4c4c'
-										},
 										gridLines : {
-											color : "rgba(255,255,255,0.2)"
+											color : "#d8d3d3"
+										},
+										ticks : {
+											fontColor : '#4c4c4c'
 										}
 									} ]
 
@@ -1001,7 +918,7 @@
 		// Teble details
 		$scope.defectTableData = function(start_index) {
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1025,10 +942,6 @@
 			} else {
 				vardtto = $rootScope.dtovalDef;
 			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
 
 			$scope.start_index = start_index;
 			$http
@@ -1053,7 +966,7 @@
 
 		// pagination count details
 		$scope.initialcountpaginate = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1078,9 +991,9 @@
 				vardtto = $rootScope.dtovalDef;
 
 			}
-
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http
@@ -1133,7 +1046,7 @@
 			$scope.index = start_index;
 			$scope.order = reverse;
 
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1157,9 +1070,9 @@
 			} else {
 				vardtto = $rootScope.dtovalDef;
 			}
-
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http.get(
@@ -1222,7 +1135,7 @@
 		}
 
 		$scope.searchable = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1251,17 +1164,13 @@
 				vardtto = $rootScope.dtovalDef;
 			}
 
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			/*$scope.defectTableData(1);*/
+			/* $scope.defectTableData(1); */
 
 			$http
 					.get(
 							"./rest/defectServices/searchpagecount?"
-							+ "defectId="
-							+ $rootScope.defectId
+									+ "defectId="
+									+ $rootScope.defectId
 									+ "&summary="
 									+ $rootScope.summary
 									+ "&priority="
@@ -1297,22 +1206,37 @@
 			$http
 					.get(
 							"./rest/defectServices/searchDefects?"
-							+ "defectId="
-							+ $rootScope.defectId
+									+ "defectId="
+									+ $rootScope.defectId
 									+ "&summary="
-									+ $rootScope.summary + "&priority="
-									+ $rootScope.priority + "&status="
-									+ $rootScope.status + "&severity="
-									+ $rootScope.severity + "&assignedto="
-									+ $rootScope.assignedto + "&releaseName="
-									+ $rootScope.releaseName + "&environment="
-									+ $rootScope.env + "&itemsPerPage="
-									+ $scope.itemsPerPage + "&start_index="
-									+ $scope.start_index + "&dashboardName="
-									+ dashboardName + "&domainName="
-									+ domainName + "&projectName="
-									+ projectName + "&vardtfrom=" + vardtfrom
-									+ "&vardtto=" + vardtto + "&timeperiod="
+									+ $rootScope.summary
+									+ "&priority="
+									+ $rootScope.priority
+									+ "&status="
+									+ $rootScope.status
+									+ "&severity="
+									+ $rootScope.severity
+									+ "&assignedto="
+									+ $rootScope.assignedto
+									+ "&releaseName="
+									+ $rootScope.releaseName
+									+ "&environment="
+									+ $rootScope.env
+									+ "&itemsPerPage="
+									+ $scope.itemsPerPage
+									+ "&start_index="
+									+ $scope.start_index
+									+ "&dashboardName="
+									+ dashboardName
+									+ "&domainName="
+									+ domainName
+									+ "&projectName="
+									+ projectName
+									+ "&vardtfrom="
+									+ vardtfrom
+									+ "&vardtto="
+									+ vardtto
+									+ "&timeperiod="
 									+ $rootScope.timeperiodDef, config)
 					.success(
 							function(response) {
@@ -1355,25 +1279,26 @@
 			$($scope.id).each(
 					function() {
 						var chart = $(this);
-						chart.easyPieChart({
-							easing : 'easeOutBounce',
-							onStep : function(from, to, percent) {
-								$(this.el).find('.percent').text(
-										Math.round(percent));
-							},
-							barColor : function(chartcount) {
-								return (chartcount < 30 ? 'red'
-										: (chartcount <= 60 ? 'orange'
-												: 'green'));
-							},
-							trackColor : 'lightgray',
-							size : 85,
-							scaleLength : 0,
-							animation : 2000,
-							lineWidth : 10,
-							lineCap : 'round',
-							scaleColor : 'white'
-						});
+						chart
+								.easyPieChart({
+									easing : 'easeOutBounce',
+									onStep : function(from, to, percent) {
+										$(this.el).find('.percent').text(
+												Math.round(percent));
+									},
+									barColor : function(chartcount) {
+										return (chartcount < 30 ? 'green'
+												: (chartcount <= 60 ? 'orange'
+														: 'red'));
+									},
+									trackColor : 'lightgray',
+									size : 85,
+									scaleLength : 0,
+									animation : 2000,
+									lineWidth : 10,
+									lineCap : 'round',
+									scaleColor : 'white'
+								});
 						updatePieCharts($scope.id, $scope.chartcount)
 					});
 			$('.refresh-data').on('click', function() {
@@ -1393,16 +1318,16 @@
 
 		/* Date Filter Code Starts Here */
 		// CALENDER DEFAULT VALUE
+
 		// GET SELECTED FROM DATE CALENDAR
 		// Get start date
 		$scope.getfromdate = function(dtfrom) {
-			$rootScope.dataloader = true;
 			$rootScope.dfromvalDef = dtfrom;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('timeperiod', null);
 			localStorageService.set('dtfrom', dtfrom);
 			$rootScope.timeperiodDef = localStorageService.get('timeperiod');
-
+			
 			if ($scope.dtto != null) {
 
 				var dtToDate = new Date($scope.dtto);
@@ -1413,28 +1338,18 @@
 
 				localStorageService.set('dttoPlus', dtToDateStr);
 			}
-
+			
 			$rootScope.defectfilterfunction();
-			$scope.defectTableData(1);
-			$scope.downloadDefectTableData(1);
 		}
 		// Get end date
 		$scope.gettodate = function(dtto) {
-			$rootScope.dataloader = true;
-			//$rootScope.dtovalDef = dtto;
-
-			var dtToDate = new Date(dtto);
-			dtToDate.setDate(dtToDate.getDate() + 1);
-
-			var dtToDateStr = $filter('date')(new Date(Date.parse(dtToDate)),
-					'MM/dd/yyyy');
-			$rootScope.dtovalDef = dtToDateStr;
-
+			$rootScope.dtovalDef = dtto;
 			$scope.selectedtimeperioddrop = "";
 			localStorageService.set('dtto', dtto);
 			localStorageService.set('timeperiod', null);
+			console.log(timeperiod);
 			$rootScope.timeperiodDef = localStorageService.get('timeperiod');
-
+			
 			if ($scope.dtto != null) {
 
 				var dtToDate = new Date($scope.dtto);
@@ -1445,18 +1360,14 @@
 
 				localStorageService.set('dttoPlus', dtToDateStr);
 			}
-
+			
 			$rootScope.defectfilterfunction();
-			$scope.defectTableData(1);
-			$scope.downloadDefectTableData(1);
-
 		}
 
 		$scope.gettimeperiod = function() {
-			$rootScope.timeperiodDefdrops = [ "Last 7 days", "Last 15 days",
-					"Last 30 days", "Last 60 days", "Last 90 days",
-					"Last 180 days", "Last 365 days" ];
-			$rootScope.noofdays = [ "7", "15", "30", "60", "90", "180", "365" ];
+			$rootScope.timeperiodDefdrops = [ "Last 30 days", "Last 60 days",
+					"Last 90 days", "Last 180 days", "Last 365 days" ];
+			$rootScope.noofdays = [ "30", "60", "90", "180", "365" ];
 
 			if (localStorageService.get('dtfrom') != null
 					&& localStorageService.get('dtto') == null) {
@@ -1490,12 +1401,10 @@
 		}
 
 		$scope.gettimeperiodselection = function(timeperiod) {
-			$rootScope.dataloader = true;
 			localStorageService.set('timeperiod', timeperiod);
 			$rootScope.timeperiodDef = localStorageService.get('timeperiod');
 			var index = $rootScope.timeperiodDashdrops.indexOf(timeperiod);
 			var selectednoofdays = $rootScope.noofdays[index];
-
 			var to = new Date();
 			var from = new Date();
 
@@ -1504,7 +1413,7 @@
 					- selectednoofdays));
 
 			$scope.convertDateToString($scope.dtfrom, $scope.dtto);
-
+			
 			if ($scope.dtto != null) {
 
 				var dtToDate = new Date($scope.dtto);
@@ -1519,6 +1428,7 @@
 			$rootScope.defectfilterfunction();
 			$scope.defectTableData(1);
 			$scope.downloadDefectTableData(1);
+
 		}
 
 		$scope.convertDateToString = function(dtfrom, dtto) {
@@ -1570,14 +1480,13 @@
 			$scope.newOwnerChart();
 			$scope.initialcountpaginate();
 			$scope.defectTableData(1);
-			$scope.defectdensityfilter();
 
 		}
 
 		// Total Defect Count - Date Filter
 		$rootScope.totdefcountfilter = function() {
-			//alert("Time Period Def : " + $rootScope.timeperiodDef);
-			var token = getEncryptedValue();
+			// alert("Time Period Def : " + $rootScope.timeperiodDef);
+			var token = AES.getEncryptedValue();
 
 			var config = {
 				headers : {
@@ -1602,11 +1511,10 @@
 				vardtto = "-";
 			} else {
 				vardtto = $rootScope.dtovalDef;
-
 			}
-
+			
 			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
+			// vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
 			$http
@@ -1624,7 +1532,58 @@
 
 		// Defect Rejection Rate - Date Filter
 		$rootScope.defectrejratefilter = function() {
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalDef == null
+					|| $rootScope.dfromvalDef == undefined
+					|| $rootScope.dfromvalDef == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalDef;
+			}
+
+			if ($rootScope.dtovalDef == null
+					|| $rootScope.dtovalDef == undefined
+					|| $rootScope.dtovalDef == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalDef;
+			}
+			
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http
+					.get(
+							"./rest/almMetricsServices/defectRejRateFilter?dashboardName="
+									+ dashboardName + "&domainName="
+									+ domainName + "&projectName="
+									+ projectName + "&vardtfrom=" + vardtfrom
+									+ "&vardtto=" + vardtto + "&timeperiod="
+									+ $rootScope.timeperiodDef, config)
+					.success(
+							function(response) {
+								$scope.defectRejection = response;
+								$scope.loadPieCharts('#defrejratefilter',
+										$scope.defectRejection);
+							});
+		}
+
+		/* Date Filter Code Ends Here */
+		
+		/*Defect Density Filter */
+		
+		$rootScope.defectdensityfilter = function() {
+
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1653,26 +1612,33 @@
 			//vardtto = localStorageService.get('dtto');
 			vardtto = localStorageService.get('dttoPlus');
 
-			$http
-					.get(
-							"./rest/almMetricsServices/defectRejRateFilter?dashboardName="
-									+ dashboardName + "&domainName="
-									+ domainName + "&projectName="
-									+ projectName + "&vardtfrom=" + vardtfrom
-									+ "&vardtto=" + vardtto + "&timeperiod="
-									+ $rootScope.timeperiodDef, config)
-					.success(
-							function(response) {
-								$scope.defectRejection = response;
-								$scope.loadDefectRejectionPieCharts(
-										'#defrejratefilter',
-										$scope.defectRejection);
-							});
+			$http.get(
+					"./rest/almMetricsServices/defectdensityFilter?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodDash,
+					config).success(
+					function(response) {
+						$scope.defectdensity = response;
+						/*$scope.loadPieCharts('#defdensityfilter',
+								$scope.defectdensity);*/
+						$scope.loadDefectDensityPieCharts('#defdensityfilter',
+								$scope.defectdensity);
+						$rootScope.dataloader = false;
+
+					});
+
+			//$('#cover-spin').hide(0);
+
 		}
+		
+		/* End of Defect Density Filter*/
+		
+		/* Defect Density Pie Chart */
+		
+		$scope.loadDefectDensityPieCharts = function(id, chartcount) {
 
-		//Start Defect Density charts
-
-		$scope.loadPieDefectDensityCharts = function(id, chartcount) {
 			$scope.chartcount = chartcount;
 			$scope.id = id;
 			$($scope.id).each(
@@ -1686,9 +1652,9 @@
 												Math.round(percent));
 									},
 									barColor : function(chartcount) {
-										return (chartcount < 30 ? 'green'
-												: (chartcount <= 60 ? 'orange'
-														: 'red'));
+										return (chartcount <= 30 ? 'green'
+												: (chartcount <= 60 ? 'red'
+														: 'orange'));
 									},
 									trackColor : 'lightgray',
 									size : 85,
@@ -1704,108 +1670,8 @@
 				updatePieCharts();
 			});
 		}
-
-		// End of Defect Density charts
-
-		//Start of Defect Rejection Rate
-
-		$scope.loadDefectRejectionPieCharts = function(id, chartcount) {
-
-			$scope.chartcount = chartcount;
-			$scope.id = id;
-			$($scope.id).each(function() {
-				var chart = $(this);
-				chart.easyPieChart({
-					easing : 'easeOutBounce',
-					onStep : function(from, to, percent) {
-						$(this.el).find('.percent').text(Math.round(percent));
-					},
-					barColor : function(chartcount) {
-						var color1 = 'red';
-						var color2 = 'green';
-						var color3 = 'orange'
-						var color = "";
-						if (chartcount <= 8) {
-							color = color2
-						}
-						if (chartcount >= 9 && chartcount <= 20) {
-							color = color3
-						}
-						if (chartcount > 20) {
-							color = color1
-						}
-						return color;
-					},
-					trackColor : 'lightgray',
-					size : 85,
-					scaleLength : 0,
-					animation : 2000,
-					lineWidth : 10,
-					lineCap : 'round',
-					scaleColor : 'white'
-				});
-				updatePieCharts($scope.id, $scope.chartcount)
-			});
-			$('.refresh-data').on('click', function() {
-				updatePieCharts();
-			});
-		}
-
-		//End of Defect Rejection Rate
-
-		// Defect Density
-		$rootScope.defectdensityfilter = function() {
-
-			var token = getEncryptedValue();
-			var config = {
-				headers : {
-					'Authorization' : token
-				}
-			};
-			var vardtfrom = "";
-			var vardtto = "";
-
-			if ($rootScope.dfromvalDef == null
-					|| $rootScope.dfromvalDef == undefined
-					|| $rootScope.dfromvalDef == "") {
-				vardtfrom = "-";
-			} else {
-				vardtfrom = $rootScope.dfromvalDef;
-			}
-
-			if ($rootScope.dtovalDef == null
-					|| $rootScope.dtovalDef == undefined
-					|| $rootScope.dtovalDef == "") {
-				vardtto = "-";
-			} else {
-				vardtto = $rootScope.dtovalDef;
-			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
-			$http
-					.get(
-							"./rest/almMetricsServices/defectdensityFilter?dashboardName="
-									+ dashboardName + "&domainName="
-									+ domainName + "&projectName="
-									+ projectName + "&vardtfrom=" + vardtfrom
-									+ "&vardtto=" + vardtto + "&timeperiod="
-									+ $rootScope.timeperiodDef, config)
-					.success(
-							function(response) {
-								$scope.defectdensity = response;
-								$scope.loadPieDefectDensityCharts(
-										'#defdensityfilter',
-										$scope.defectdensity);
-							});
-
-		}
-
-		// End of Defect Density
-
-		/* Date Filter Code Ends Here */
+		
+		/* End of Defect Dnesity Filter */
 
 		/* Export Graphs and tables */
 		function saveCanvasAs(canvas, fileName) {
@@ -1845,7 +1711,7 @@
 			destinationCanvas.height = canvas.height;
 			var destCtx = destinationCanvas.getContext('2d');
 			destCtx.drawImage(canvas, 0, 0);
-			fillCanvasBackgroundWithColor(destinationCanvas, '#fcfcfc');
+			fillCanvasBackgroundWithColor(destinationCanvas, '#4F5D77');
 			if (format === 'jpeg') {
 				saveCanvasAs(destinationCanvas, filename + ".jpg");
 			}
@@ -1854,10 +1720,8 @@
 			}
 
 		}
-
 		$scope.downloadDefectTableData = function(start_index) {
-
-			var token = getEncryptedValue();
+			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
 					'Authorization' : token
@@ -1881,11 +1745,6 @@
 			} else {
 				vardtto = $rootScope.dtovalDef;
 			}
-
-			vardtfrom = localStorageService.get('dtfrom');
-			//vardtto = localStorageService.get('dtto');
-			vardtto = localStorageService.get('dttoPlus');
-
 			var start_index = 1;
 			var itemsPerPage = 0;
 			$http.get(
@@ -1897,12 +1756,11 @@
 							+ "&vardtto=" + vardtto + "&timeperiod="
 							+ $rootScope.timeperiodDef, config).success(
 					function(response) {
-						$scope.downloaddefectTableDetails = response;
+						$scope.defectTableDetails = response;
 					});
 		};
 
 		$scope.downloadTable = function(format, elementId, filename) {
-
 			if (format === 'csv') {
 				var table = document.getElementById(elementId);
 				var csvString = '';
@@ -1915,7 +1773,7 @@
 					csvString = csvString + "\n";
 				}
 				csvString = csvString.substring(0, csvString.length - 1);
-				//console.log(csvString);
+				console.log(csvString);
 				var blob = new Blob([ csvString ], {
 					type : "text/csv;charset=utf-8;"
 				});

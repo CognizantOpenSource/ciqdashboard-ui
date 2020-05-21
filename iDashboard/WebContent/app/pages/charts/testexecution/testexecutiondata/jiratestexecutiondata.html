@@ -1,4 +1,3 @@
-<info-Dialog></info-Dialog>
 <style>
 .circle {
 	width: 60px;
@@ -15,15 +14,13 @@
 }
 </style>
 
-
+<info-Dialog></info-Dialog>
 <div ng-controller="JiraTestExecutionCtrl">
 
 	<!-- Filter Starts Here  -->
 
-	<div class="row">
-
-			<div class="form-group" ng-init="getversionName()">
-			<div class="form-group col-md-2">
+	<div class="row pie-charts">
+			<div class="form-group col-md-2" ng-init="getversionName()">
 				<label>Version Name</label>
 				<div id="ver" style="width: 100%" ng-dropdown-multiselect=""
 					options="multiversions" selected-model="selversion"
@@ -54,123 +51,123 @@
 					close-text="Close" alt-input-formats="altInputFormats"
 					show-button-bar="false" />
 			</div>
-		</div>
+		
 	</div>
 
 	<!-- Filter Ends Here  -->
 
 	<!-- Row - 1 Starts Here -->
 
-	<div class="row pie-charts" style="display: flex">
-		<div class="col-lg-12 col-md-12 col-sm-12"
-			style="margin-left: 1%; text-align: center">
-			<!-- Tests Created Vs. Executed -->
-			
-			<div class="pie-chart-item-container"
-			style="margin-left: auto;">
+	<div class="row pie-charts">
+		<!-- Tests Created Vs. Executed -->
+
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
 			<div ba-panel style="background-color: #486d90">
 				<div class="pie-chart-item" id="storiescount">
 
 					<div style="font-size: 15px; text-align: center"
-						ng-init="testscreatedvsexecuted()">Total Test Case Created </div>
+						ng-init="">Total Test Case Created</div>
 
 					<div style="font-size: 15px; text-align: center"></div>
 					<div class="description-stats"
 						style="font-size: 40px; margin-top: 12%; text-align: center">{{uitestscreated}}
 					</div>
-			<!-- 	<div>
-						<a
+					<!-- 	<div>
+							<a
 							ng-click="open('app/pages/dashboard/infoDialog/tot_stories.html','sm')">
 							<img src="app/pages/dashboard/infoDialog/info.png" width="20"
 							height="20" style="float: right;">
 						</a>
-					</div> -->  
-			</div></div>
-		</div>
-			
-			
-
-			<!-- Tests Created Vs. Executed  -->
-			<!-- # of Bugs Detected Starts Here  -->
-			<div class="pie-chart-item-container">
-				<div ba-panel style="background-color: #486d90">
-					<div class="pie-chart-item" ng-init="bugsdetectedcount()">
-
-						<div class="">
-
-							<div style="font-size: 15px; text-align: center"
-								class="description-stats"># of Bugs Detected</div>
-							<div class="description-stats"></div>
-
-						</div>
-						<div style="font-size: 15px; text-align: center">
-							<div class="description-stats"
-								style="font-size: 40px; margin-top: 8%; text-align: center">{{uibugsdetectedcount}}
-							</div>
-							
-						</div>
-					</div>
-				
+					</div> -->
 				</div>
 			</div>
+		</div>
 
-			<!-- # of Bugs Detected Ends Here  -->
-			<!-- Test Execution Count Starts Here  -->
 
-			<div class="pie-chart-item-container" style="margin-right: auto">
-				<div ba-panel>
-					<div class="pie-chart-item" id="testexecutioncount">
+
+		<!-- Tests Created Vs. Executed  -->
+		<!-- # of Bugs Detected Starts Here  -->
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel style="background-color: #486d90">
+				<div class="pie-chart-item" ng-init="">
+
+					<div class="">
+
 						<div style="font-size: 15px; text-align: center"
-							ng-init="testexecutioncount()">Total Execution Count</div>
-						<div style="font-size: 15px; text-align: center"></div>
+							class="description-stats"># of Bugs Detected</div>
+						<div class="description-stats"></div>
+
+					</div>
+					<div style="font-size: 15px; text-align: center">
 						<div class="description-stats"
-							style="font-size: 40px; margin-top: 10%; text-align: center">
-							{{uitestexecutioncount}}</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Test Execution Count Ends Here -->
-
-			<!-- Ratio of Test Case Fails Here  -->
-			<div class="pie-chart-item-container">
-				<div ba-panel>
-					<div class="pie-chart-item" ng-init="ratiooftestcasefails()">
-
-						<div class="">
-
-							<div style="font-size: 15px; text-align: center"
-								class="description-stats">
-								Ratio of Tests Failed to <B>OPENED</B> Bugs
-							</div>
-							<div class="description-stats"></div>
-
+							style="font-size: 40px; margin-top: 8%; text-align: center">{{uibugsdetectedcount}}
 						</div>
-						<div style="font-size: 15px; text-align: center">
-							<div class="description-stats"
-								style="font-size: 30px; margin-top: 6%; text-align: center">{{uitestcasefailsopen}}
-							</div>
-							<div style="font-size: 13px; margin-top: 4%; text-align: center">
-								Closed Bugs: {{uitestcasefailsclosed}}</div>
-						</div>
+
 					</div>
-				
 				</div>
 
 			</div>
 		</div>
+
+		<!-- # of Bugs Detected Ends Here  -->
+		<!-- Test Execution Count Starts Here  -->
+
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel>
+				<div class="pie-chart-item" id="testexecutioncount">
+					<div style="font-size: 15px; text-align: center"
+						ng-init="">Total Execution Count</div>
+					<div style="font-size: 15px; text-align: center"></div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 10%; text-align: center">
+						{{uitestexecutioncount}}</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Test Execution Count Ends Here -->
+
 		<!-- Ratio of Test Case Fails Here  -->
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel>
+				<div class="pie-chart-item" ng-init="">
 
+					<div class="">
 
+						<div style="font-size: 15px; text-align: center"
+							class="description-stats">
+							Ratio of Tests Failed to <B>OPENED</B> Bugs
+						</div>
+						<div class="description-stats"></div>
+
+					</div>
+					<div style="font-size: 15px; text-align: center">
+						<div class="description-stats"
+							style="font-size: 30px; margin-top: 6%; text-align: center">{{uitestcasefailsopen}}
+						</div>
+						<div style="font-size: 13px; margin-top: 4%; text-align: center">
+							Closed Bugs: {{uitestcasefailsclosed}}</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
 	</div>
+	<!-- Ratio of Test Case Fails Here  -->
 	<!-- Row - 1 Ends Here -->
+
 
 
 	<!-- PASS FAIL TREND -->
 	<div class="row">
-
 		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
-			ba-panel-title="TESTS PASSED vs FAILED (Runwise)" ba-panel-class="with-scroll">
+			ba-panel-title="TESTS PASSED vs FAILED (Runwise)"
+			ba-panel-class="with-scroll">
 
 			<div
 				ng-include="'app/pages/charts/testexecution/testexecutiondata/exepassfailtrend.html'"></div>
@@ -189,7 +186,7 @@
 
 	</div> -->
 	<!-- Zephyr - Test Cycles Open stacked bar chart -->
-	
+
 	<!-- Zephyr - TC's Planned VS Executed bar chart -->
 	<!-- <div ng-show="uiTCPlannedVsExecuted>0"  class="col-lg-12 col-md-12 col-sm-12" ba-panel
 		ba-panel-title="<B>Zephyr</B> - PLANNED VS EXECUTED - No. Of cycles: <B>{{uiTCPlannedVsExecuted}}</B>"
@@ -200,7 +197,7 @@
 
 	</div> -->
 	<!-- Zephyr - TC's Planned VS Executed bar chart -->
-	
+
 	<!-- qMetry - Test Runs Open stacked bar chart -->
 	<!-- <div ng-show="uiTROpenRun>0" class="col-lg-12 col-md-12 col-sm-12" ba-panel
 		ba-panel-title="<B>QMetry</B> - No. Of Test Runs Open <div class='circle ng-binding'>{{uiTROpenRun}}</div>"
@@ -210,7 +207,7 @@
 
 	</div> -->
 	<!-- qMetry - Test Runs Open stacked bar chart -->
-	
+
 	<!-- qMetry - TR's Planned VS Executed bar chart -->
 	<!-- <div ng-show="uiTRPlannedVsExecuted>0" class="col-lg-12 col-md-12 col-sm-12" ba-panel
 		ba-panel-title="<B>QMetry</B> - PLANNED VS EXECUTED - No. Of Runs: <B>{{uiTRPlannedVsExecuted}}</B>"
@@ -220,10 +217,10 @@
 
 	</div> -->
 	<!-- qMetry - TR's Planned VS Executed bar chart -->
-	
+
 	<!-- Cycle - DATA TABLE STARTS HERE -->
 
-<!-- 	<div class="row" ng-show="mmexecutioncycleTableExists==true">
+	<!-- 	<div class="row" ng-show="mmexecutioncycleTableExists==true">
 		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
 			ba-panel-title="Execution Details - Zephyr" ba-panel-class="with-scroll">
 
@@ -316,9 +313,9 @@
 	</div> -->
 
 	<!-- Cycle - DATA TABLE ENDS HERE -->
-	
+
 	<!-- Runs - DATA TABLE STARTS HERE -->
-<!-- 
+	<!-- 
 	<div class="row" ng-show="mmexecutionrunTableExists==true">
 		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
 			ba-panel-title="Execution Details - QMetry" ba-panel-class="with-scroll">

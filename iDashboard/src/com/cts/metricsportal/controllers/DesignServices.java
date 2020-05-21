@@ -29,8 +29,9 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.JiraMetrics;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.dao.AlmMongoOperations;
-import com.cts.metricsportal.dao.OperationalDAO;
+import com.cts.metricsportal.dao.JiraMongoOperations;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.DefectChartVO;
 import com.cts.metricsportal.vo.JiraTestCaseVO;
@@ -72,7 +73,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		if (!vardtfrom.equalsIgnoreCase("-")) {
 			startDate = new Date(vardtfrom);
@@ -83,13 +84,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		if (!timeperiod.equalsIgnoreCase("undefined") && !timeperiod.equalsIgnoreCase("null")) {
 			int noofdays = 0;
-			
-			
-			if (timeperiod.equalsIgnoreCase("Last 7 days")) {
-				noofdays = 7;
-			} else if (timeperiod.equalsIgnoreCase("Last 15 days")) {
-				noofdays = 15;
-			} else if (timeperiod.equalsIgnoreCase("Last 60 days")) {
+			if (timeperiod.equalsIgnoreCase("Last 60 days")) {
 				noofdays = 60;
 			} else if (timeperiod.equalsIgnoreCase("Last 30 days")) {
 				noofdays = 30;
@@ -106,12 +101,11 @@ public class DesignServices extends BaseMongoOperation {
 			cal.add(Calendar.DATE, -(noofdays));
 			dateBefore7Days = cal.getTime();
 		}
-		/*List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
-				projectName);*/
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
+				projectName);
 		if (operationalAccess) {
 			Query query1 = new Query();
-			query1.addCriteria(Criteria.where("levelId").in(levelIdList));
+			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 			if (startDate != null || endDate != null) {
 				query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
 			} else if (dateBefore7Days != null && dates != null) {
@@ -140,18 +134,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		
-		String owner = "";
-
-		// Check the Dashboard is set as public
-		owner = AlmMongoOperations.isDashboardsetpublic(dashboardName);
-		if (owner != "") {
-			userId = owner;
-		}
-		// End of the check value
-		
-		
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		Date startDate =  new Date();
 		Date endDate = new Date();
@@ -184,11 +167,8 @@ public class DesignServices extends BaseMongoOperation {
 			cal.add(Calendar.DATE, -(noofdays));
 			dateBefore7Days = cal.getTime();
 		}
-		
-//		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
-//				projectName);
-		
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
+				projectName);
 
 		Map<String, String> searchvalues = new HashMap<String, String>();
 		if (operationalAccess) {
@@ -199,13 +179,13 @@ public class DesignServices extends BaseMongoOperation {
 			searchvalues.put("testDesigner", testDesigner);
 			searchvalues.put("testDesignStatus", testDesignStatus);
 
-			String query = "{},{_id: 0, testID: 1, testName: 1, releaseName: 1, testDesigner: 1, automationType: 1, testDesignStatus: 1, testCreationDate: 1,automationStatus:1}";
+			String query = "{},{_id: 0, testID: 1, testName: 1, testDescription: 1, testDesigner: 1, testType: 1, testDesignStatus: 1, testCreationDate: 1,reqId:1}";
 			Query query1 = new BasicQuery(query);
-			query1.addCriteria(Criteria.where("levelId").in(levelIdList));
+			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 
-//			if (testID != 0) {
-//				query1.addCriteria(Criteria.where("testID").is(testID));
-//			}
+			if (testID != 0) {
+				query1.addCriteria(Criteria.where("testID").is(testID));
+			}
 			if (startDate != null || endDate != null) {
 				query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
 			} else if (dateBefore7Days != null && dates != null) {
@@ -251,17 +231,7 @@ public class DesignServices extends BaseMongoOperation {
 		
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		
-		String owner = "";
-
-		// Check the Dashboard is set as public
-		owner = AlmMongoOperations.isDashboardsetpublic(dashboardName);
-		if (owner != "") {
-			userId = owner;
-		}
-		// End of the check value
-		
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		if (!vardtfrom.equalsIgnoreCase("-")) {
 			startDate = new Date(vardtfrom);
@@ -289,12 +259,10 @@ public class DesignServices extends BaseMongoOperation {
 			cal.add(Calendar.DATE, -(noofdays));
 			dateBefore7Days = cal.getTime();
 		}
-//		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
-//				projectName);
-		List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domainName, projectName);
+		List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdDesign(dashboardName, userId, domainName,
+				projectName);
 		Map<String, String> searchvalues = new HashMap<String, String>();
 		if (operationalAccess) {
-			
 			searchvalues.put("testName", testName);
 			searchvalues.put("releaseName", releaseName);
 			searchvalues.put("automationType", automationType);
@@ -303,10 +271,8 @@ public class DesignServices extends BaseMongoOperation {
 			searchvalues.put("testDesignStatus", testDesignStatus);
 
 			String query = "{},{_id: 0, testID: 1, testName: 1, releaseName: 1, testDesigner: 1, automationType: 1, testDesignStatus: 1, testCreationDate: 1,automationStatus:1}";
-			
-			
 			Query query1 = new BasicQuery(query);
-			query1.addCriteria(Criteria.where("levelId").in(levelIdList));
+			query1.addCriteria(Criteria.where("_id").in(levelIdList));
 			if (startDate != null || endDate != null) {
 				query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
 			} else if (dateBefore7Days != null && dates != null) {
@@ -361,7 +327,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		if (!vardtfrom.equalsIgnoreCase("-")) {
 			startDate = new Date(vardtfrom);
@@ -463,9 +429,18 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		List<JiraTestCaseVO> idlist = new ArrayList<JiraTestCaseVO>();
+		
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
+		// End of the check value
 
 		List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
 				projectName);
@@ -504,7 +479,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		
 		//Date dfromdate = new Date (dfromval);
 		//Date dtoddate = new Date (dtoval);
@@ -518,6 +493,16 @@ public class DesignServices extends BaseMongoOperation {
 			List<String> prolist = new ArrayList<String>();
 			Query projectquery = new Query();
 			projectquery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
 			projectquery.addCriteria(Criteria.where("owner").is(userId));
 			prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
 					projectquery.getQueryObject());
@@ -614,7 +599,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		Date dfromdate = new Date(dfromval);
 		Date dtoddate = new Date(dtoval);
@@ -628,6 +613,16 @@ public class DesignServices extends BaseMongoOperation {
 			List<String> prolist = new ArrayList<String>();
 			Query projectquery = new Query();
 			projectquery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			
+			String owner = "";
+
+			// Check the Dashboard is set as public
+			owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (owner != "") {
+				userId = owner;
+			}
+			// End of the check value
+			
 			projectquery.addCriteria(Criteria.where("owner").is(userId));
 			prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
 					projectquery.getQueryObject());
@@ -659,7 +654,8 @@ public class DesignServices extends BaseMongoOperation {
 			BadLocationException {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+		
 		Query epicquery = new Query();
 		List<String> epiclist = new ArrayList<String>();
 
@@ -700,7 +696,8 @@ public class DesignServices extends BaseMongoOperation {
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+		
 		List<String> epiclist = new ArrayList<String>();
 
 		if (operationalAccess) {
@@ -813,21 +810,17 @@ public class DesignServices extends BaseMongoOperation {
 		String ownerid = "";
 		boolean ispublic = false;
 
+		
+
 		// Check the Dashboard is set as public
-
-		Query query2 = new Query();
-		query2.addCriteria(Criteria.where("dashboardName").is(dashboardName));
-		List<OperationalDashboardVO> dashboardinfo = getMongoOperation().find(query2, OperationalDashboardVO.class);
-		ispublic = dashboardinfo.get(0).isIspublic();
-		if (ispublic) {
-			ownerid = dashboardinfo.get(0).getOwner();
+		ownerid = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
 			userId = ownerid;
-			owner = ownerid;
+			owner= ownerid;
 		}
-
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		long TestCount = 0;
 		if (operationalAccess) {
 
@@ -883,15 +876,12 @@ public class DesignServices extends BaseMongoOperation {
 	@Path("/designpriorchartdata")
 	@Produces(MediaType.APPLICATION_JSON)
 
-	public List<DefectChartVO> getjiradesignowner(@HeaderParam("Authorization") String authString,
+	public List<DefectChartVO> getjiraPriority(@HeaderParam("Authorization") String authString,
 			@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
 			@QueryParam("vardtfrom") String vardtfrom, @QueryParam("vardtto") String vardtto,
 			@QueryParam("domainName") String domainName, @QueryParam("projectName") String projectName)
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
-
-		long diff = 0;
-		long noOfDays = 0;
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
@@ -899,21 +889,16 @@ public class DesignServices extends BaseMongoOperation {
 
 		boolean ispublic = false;
 
+		
+
 		// Check the Dashboard is set as public
-
-		Query query2 = new Query();
-		query2.addCriteria(Criteria.where("dashboardName").is(dashboardName));
-		List<OperationalDashboardVO> dashboardinfo = getMongoOperation().find(query2, OperationalDashboardVO.class);
-		ispublic = dashboardinfo.get(0).isIspublic();
-		if (ispublic) {
-			ownerid = dashboardinfo.get(0).getOwner();
+		ownerid = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (ownerid != "") {
 			userId = ownerid;
-			owner = ownerid;
 		}
-
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		Date startDate = new Date(vardtfrom);
 		Date endDate = new Date(vardtto);
@@ -1020,9 +1005,6 @@ public class DesignServices extends BaseMongoOperation {
 			throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
 			BadLocationException {
 
-		long diff = 0;
-		long noOfDays = 0;
-
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 		String ownerid = "";
@@ -1042,7 +1024,7 @@ public class DesignServices extends BaseMongoOperation {
 
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		Date startDate = new Date(vardtfrom);
 		Date endDate = new Date(vardtto);
@@ -1151,9 +1133,16 @@ public class DesignServices extends BaseMongoOperation {
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
 
+		String owner = "";
+
+		// Check the Dashboard is set as public
+		owner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+		if (owner != "") {
+			userId = owner;
+		}
 		// End of the check value
 
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 		List<Date> finalDateList = new ArrayList<Date>();
 
@@ -1249,7 +1238,7 @@ public class DesignServices extends BaseMongoOperation {
 
 			// End of the check value
 
-			boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+			boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 
 			List<Date> finalDateList = new ArrayList<Date>();
 
@@ -1328,5 +1317,411 @@ public class DesignServices extends BaseMongoOperation {
 			return finalDateList;
 
 		}
+		
+		@GET
+		@Path("/designownerchartdata")
+		@Produces(MediaType.APPLICATION_JSON)
+		public List<DefectChartVO> getJiraDesignOwner(@HeaderParam("Authorization") String authString,
+				@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
+				@QueryParam("vardtfrom") String vardtfrom, @QueryParam("vardtto") String vardtto,
+				@QueryParam("domainName") String domainName, @QueryParam("projectName") String projectName)
+				throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+				BadLocationException {
+
+
+			AuthenticationService UserEncrypt = new AuthenticationService();
+			String userId = UserEncrypt.getUser(authString);
+			String ownerid = "";
+
+			// Check the Dashboard is set as public
+			ownerid = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (ownerid != "") {
+				userId = ownerid;
+			}
+			// End of the check value
+
+			boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+
+			Date startDate = new Date(vardtfrom);
+			Date endDate = new Date(vardtto);
+
+			List<JiraTestCaseVO> reqlist = new ArrayList<JiraTestCaseVO>();
+
+			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
+					projectName);
+
+			Query query = new Query();
+			query.addCriteria(Criteria.where("_id").in(levelIdList));
+			reqlist = getMongoOperation().find(query, JiraTestCaseVO.class);
+
+			List<String> ownerlist = new ArrayList<String>();
+			List<String> prioritylist = new ArrayList<String>();
+
+			for (int i = 0; i < reqlist.size(); i++) {
+				for (int j = 0; j < levelIdList.size(); j++) {
+					if (reqlist.get(i).get_id().equalsIgnoreCase(levelIdList.get(j))) {
+						prioritylist.add(reqlist.get(i).getIssueAssignee());
+					}
+				}
+			}
+			Set<String> hSet = new HashSet<String>(prioritylist);
+			ownerlist = new ArrayList<String>(hSet);
+
+			/*
+			 * diff =endDate.getTime()- startDate.getTime(); noOfDays =
+			 * TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+			 */
+
+			List<DefectChartVO> finalresult = new ArrayList<DefectChartVO>();
+
+			Query filterQuery = new Query();
+			filterQuery.addCriteria(Criteria.where("dashboardName").is(dashboardName));
+			filterQuery.addCriteria(Criteria.where("owner").is(userId));
+
+			List<String> prolist = new ArrayList<String>();
+			prolist = getMongoOperation().getCollection("operationalDashboards").distinct("projects.prjName",
+					filterQuery.getQueryObject());
+
+			List<String> sprintlist = new ArrayList<String>();
+			sprintlist = getMongoOperation().getCollection("operationalDashboards").distinct("sprints.sprintName",
+					filterQuery.getQueryObject());
+
+			List<String> epiclist = new ArrayList<String>();
+			epiclist = getMongoOperation().getCollection("operationalDashboards").distinct("epics.epicName",
+					filterQuery.getQueryObject());
+
+			if (operationalAccess) {
+
+				Query query1 = new Query();
+
+				query1.addCriteria(Criteria.where("_id").in(levelIdList));
+
+				query1.addCriteria(Criteria.where("issueCreated").gte(startDate).lte(endDate));
+				/*query1.addCriteria(Criteria.where("issueCreated").lte(endDate));*/
+
+				if (prolist.size() > 0) {
+					query1.addCriteria(Criteria.where("prjName").in(prolist));
+				}
+				if (sprintlist.size() > 0) {
+					query1.addCriteria(Criteria.where("issueSprint").in(sprintlist));
+				}
+				if (epiclist.size() > 0) {
+					query1.addCriteria(Criteria.where("issueEpic").in(epiclist));
+				}
+
+				List<JiraTestCaseVO> TCList = new ArrayList<JiraTestCaseVO>();
+				TCList = getMongoOperation().find(query1, JiraTestCaseVO.class);
+
+				for (int i = 0; i < ownerlist.size(); i++) {
+
+					DefectChartVO vo = new DefectChartVO();
+					int Count = 0;
+					String ownerdesign = ownerlist.get(i);
+
+					for (int j = 0; j < TCList.size(); j++) {
+						if (TCList.get(j).getIssueAssignee().equalsIgnoreCase(ownerdesign)) {
+							Count++;
+						}
+					}
+					vo.setValue(ownerdesign);
+					vo.setCount(Count);
+
+					finalresult.add(vo);
+				}
+			} else {
+				return finalresult;
+			}
+			return finalresult;
+
+		}
+		
+		@GET
+		@Path("/jiradesigntable")
+		@Produces(MediaType.APPLICATION_JSON)
+		public static List<JiraTestCaseVO> getRecordstcQuery(@HeaderParam("Authorization") String authString,
+				@QueryParam("itemsPerPage") int itemsPerPage, @QueryParam("start_index") int start_index,
+				@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
+				@QueryParam("vardtfrom") String vardtfrom, @QueryParam("vardtto") String vardtto,
+				@QueryParam("domainName") String domainName, @QueryParam("projectName") String projectName) throws NumberFormatException, BaseException, BadLocationException {
+			
+			AuthenticationService UserEncrypt = new AuthenticationService();
+			String userId = UserEncrypt.getUser(authString);
+			String ownerid = "";
+
+			// Check the Dashboard is set as public
+			ownerid = JiraMongoOperations.isDashboardsetpublic(dashboardName);
+			if (ownerid != "") {
+				userId = ownerid;
+			}
+			// End of the check value
+
+			boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+
+			Date startDate = new Date(vardtfrom);
+			Date endDate = new Date(vardtto);
+
+			List<JiraTestCaseVO> reqlist = new ArrayList<JiraTestCaseVO>();
+
+			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
+					projectName);
+
+			List<JiraTestCaseVO> reqAnalysisList=null;
+		
+	    		String query = "{},{_id:0,reqID:1,reqType:1,status:1,priority:1,creationTime:1,lastModified:1}";
+		 	
+		 	 Query query1 = new BasicQuery(query);	
+		 	query1.addCriteria(Criteria.where("_id").in(levelIdList));
+		 	if(startDate != null || endDate != null)
+			{	query1.addCriteria(Criteria.where("issueCreated").gte(startDate).lte(endDate));
+			}
+			
+		 	if(itemsPerPage!=0){
+		 	 query1.skip(itemsPerPage * (start_index- 1));
+		 	 query1.limit(itemsPerPage);
+		 	}
+		 	 reqAnalysisList =  getMongoOperation().find(query1, JiraTestCaseVO.class);	 
+		 	 return reqAnalysisList;
+		}
+		
+		@GET
+		@Path("/tcJiraRecordsCount")
+		@Produces(MediaType.APPLICATION_JSON)
+		public long jiraTableRecordsCount(@HeaderParam("Authorization") String authString,
+				@QueryParam("dashboardName") String dashboardName, @QueryParam("domainName") String domainName,
+				@QueryParam("projectName") String projectName, @QueryParam("vardtfrom") String vardtfrom,
+				@QueryParam("vardtto") String vardtto, @QueryParam("timeperiod") String timeperiod)
+				throws JsonParseException, JsonMappingException, IOException, BadLocationException {
+			long count = 0;
+			Date startDate =  new Date();
+			Date endDate = new Date();
+			Date dates = new Date();
+			Date dateBefore7Days = new Date();
+
+			AuthenticationService UserEncrypt = new AuthenticationService();
+			String userId = UserEncrypt.getUser(authString);
+			boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+
+			if (!vardtfrom.equalsIgnoreCase("-")) {
+				startDate = new Date(vardtfrom);
+			}
+			if (!vardtto.equalsIgnoreCase("-")) {
+				endDate = new Date(vardtto);
+			}
+
+			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
+					projectName);
+			if (operationalAccess) {
+				Query query1 = new Query();
+				query1.addCriteria(Criteria.where("_id").in(levelIdList));
+				if (startDate != null || endDate != null) {
+					query1.addCriteria(Criteria.where("issueCreated").gte(startDate).lte(endDate));
+				}
+				count = getMongoOperation().count(query1, JiraTestCaseVO.class);
+				return count;
+			} else {
+				return count;
+			}
+
+		}
+
+		@GET
+		@Path("/jirasearchpagecount")
+		@Produces(MediaType.APPLICATION_JSON)
+		public long getjirasearchpagecount(@HeaderParam("Authorization") String authString, @QueryParam("testID") int testID,
+				@QueryParam("summary") String summary, @QueryParam("testDescription") String testDescription,
+				@QueryParam("issuePriority") String issuePriority, @QueryParam("testDesigner") String testDesigner,
+				@QueryParam("testDesignStatus") String testDesignStatus, @QueryParam("dashboardName") String dashboardName,
+				@QueryParam("domainName") String domainName, @QueryParam("projectName") String projectName,
+				@QueryParam("vardtfrom") String vardtfrom, @QueryParam("vardtto") String vardtto) throws JsonParseException, JsonMappingException, IOException,
+				NumberFormatException, BaseException, BadLocationException {
+			long pagecount = 0;
+
+			AuthenticationService UserEncrypt = new AuthenticationService();
+			String userId = UserEncrypt.getUser(authString);
+			boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+
+			Date startDate =  new Date();
+			Date endDate = new Date();
+			Date dates = new Date();
+			Date dateBefore7Days = new Date();
+
+			if (!vardtfrom.equalsIgnoreCase("-")) {
+				startDate = new Date(vardtfrom);
+			}
+			if (!vardtto.equalsIgnoreCase("-")) {
+				endDate = new Date(vardtto);
+			}
+
+			List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
+					projectName);
+
+			Map<String, String> searchvalues = new HashMap<String, String>();
+			if (operationalAccess) {
+				searchvalues.put("summary", summary);
+				searchvalues.put("issueDescription", testDescription);
+				searchvalues.put("issuePriority", issuePriority);
+				searchvalues.put("issueAssignee", testDesigner);
+				searchvalues.put("issueStatus", testDesignStatus);
+
+				String query = "{},{_id: 0, issueID: 1, summary: 1, issueDescription: 1, issueAssignee: 1, issuePriority: 1, issueStatus: 1, issueCreated: 1}";
+				Query query1 = new BasicQuery(query);
+				query1.addCriteria(Criteria.where("_id").in(levelIdList));
+
+				if (testID != 0) {
+					query1.addCriteria(Criteria.where("issueID").is(testID));
+				}
+				if (startDate != null || endDate != null) {
+					query1.addCriteria(Criteria.where("issueCreated").gte(startDate).lte(endDate));
+				}
+
+				for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
+
+					if (!entry.getValue().equals("undefined")) {
+						if (!entry.getValue().equals("null")) {
+							query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
+						}
+					}
+				}
+				pagecount = getMongoOperation().count(query1, JiraTestCaseVO.class);
+				return pagecount;
+			} else {
+				return pagecount;
+			}
+
+		}
+		
+		// Design Table Details - On-load with Sort
+			/*
+			 * Metric : Operational/Design/Design Details Rest URL :
+			 * rest/testCaseServices/testcaseData JS File :
+			 * WebContent\app\pages\charts\testcases\testcasesdata\TestCasesCtrl.js JS
+			 * Function: $scope.sortedtable =
+			 * function(sortvalue,itemsPerPage,start_index,reverse)
+			 */
+			@GET
+			@Path("/jiratestcaseData")
+			@Produces(MediaType.APPLICATION_JSON)
+			public List<JiraTestCaseVO> getJiraRecords(@HeaderParam("Authorization") String authString,
+					@QueryParam("sortvalue") String sortvalue, @QueryParam("itemsPerPage") int itemsPerPage,
+					@QueryParam("start_index") int start_index, @QueryParam("reverse") boolean reverse,
+					@QueryParam("dashboardName") String dashboardName, @QueryParam("domainName") String domainName,
+					@QueryParam("projectName") String projectName, @QueryParam("vardtfrom") String vardtfrom,
+					@QueryParam("vardtto") String vardtto)
+					throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+					BadLocationException {
+				List<JiraTestCaseVO> tcAnalyzedata = null;
+				Date startDate =  new Date();
+				Date endDate = new Date();
+				Date dates = new Date();
+				Date dateBefore7Days = new Date();
+				
+
+				AuthenticationService UserEncrypt = new AuthenticationService();
+				String userId = UserEncrypt.getUser(authString);
+				boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+
+				if (!vardtfrom.equalsIgnoreCase("-")) {
+					startDate = new Date(vardtfrom);
+				}
+				if (!vardtto.equalsIgnoreCase("-")) {
+					endDate = new Date(vardtto);
+				}
+
+				Query query1 = new Query();
+				List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
+						projectName);
+				if (startDate != null || endDate != null) {
+					query1.addCriteria(Criteria.where("issueCreated").gte(startDate).lte(endDate));
+				}
+				
+				if (reverse == false) {
+					query1.addCriteria(Criteria.where("_id").in(levelIdList));
+					query1.with(new Sort(Sort.Direction.ASC, sortvalue));
+				} else {
+					query1.addCriteria(Criteria.where("_id").in(levelIdList));
+					query1.with(new Sort(Sort.Direction.DESC, sortvalue));
+				}
+				query1.skip(itemsPerPage * (start_index - 1));
+				query1.limit(itemsPerPage);
+				if (operationalAccess) {
+					tcAnalyzedata = getMongoOperation().find(query1, JiraTestCaseVO.class);
+					return tcAnalyzedata;
+				} else {
+					return tcAnalyzedata;
+				}
+
+			}
+			
+			// Search TC
+			@GET
+			@Path("/jirasearchTest")
+			@Produces(MediaType.APPLICATION_JSON)
+			public List<JiraTestCaseVO> getSearchTcJira(@HeaderParam("Authorization") String authString,
+					@QueryParam("testID") int testID, @QueryParam("summary") String summary,
+					@QueryParam("testDescription") String testDescription, @QueryParam("issuePriority") String issuePriority,
+					@QueryParam("testDesigner") String testDesigner, @QueryParam("testDesignStatus") String testDesignStatus,
+					@QueryParam("itemsPerPage") int itemsPerPage, @QueryParam("start_index") int start_index,
+					@QueryParam("dashboardName") String dashboardName, @QueryParam("domainName") String domainName,
+					@QueryParam("projectName") String projectName, @QueryParam("vardtfrom") String vardtfrom,
+					@QueryParam("vardtto") String vardtto, @QueryParam("timeperiod") String timeperiod)
+					throws JsonParseException, JsonMappingException, IOException, NumberFormatException, BaseException,
+					BadLocationException, ParseException {
+				List<JiraTestCaseVO> searchresult = null;
+				Date startDate =  new Date();
+				Date endDate = new Date();
+				Date dates = new Date();
+				Date dateBefore7Days = new Date();
+				
+				AuthenticationService UserEncrypt = new AuthenticationService();
+				String userId = UserEncrypt.getUser(authString);
+				boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
+
+				if (!vardtfrom.equalsIgnoreCase("-")) {
+					startDate = new Date(vardtfrom);
+				}
+				if (!vardtto.equalsIgnoreCase("-")) {
+					endDate = new Date(vardtto);
+				}
+
+				List<String> levelIdList = JiraMetrics.getJiraGlobalLevelIdDesign(dashboardName, userId, domainName,
+						projectName);
+				
+				Map<String, String> searchvalues = new HashMap<String, String>();
+				if (operationalAccess) {
+					searchvalues.put("summary", summary);
+					searchvalues.put("issueDescription", testDescription);
+					searchvalues.put("issuePriority", issuePriority);
+					searchvalues.put("issueAssignee", testDesigner);
+					searchvalues.put("issueStatus", testDesignStatus);
+
+					String query = "{},{_id: 0, testID: 1, testName: 1, testDescription: 1, testDesigner: 1, testType: 1, testDesignStatus: 1, testCreationDate: 1,reqId:1}";
+					Query query1 = new BasicQuery(query);
+					query1.addCriteria(Criteria.where("_id").in(levelIdList));
+					if (startDate != null || endDate != null) {
+						query1.addCriteria(Criteria.where("testCreationDate").gte(startDate).lte(endDate));
+					} else if (dateBefore7Days != null && dates != null) {
+						query1.addCriteria(Criteria.where("testCreationDate").gte(dateBefore7Days).lte(dates));
+					}
+					if (testID != 0) {
+						query1.addCriteria(Criteria.where("testID").is(testID));
+					}
+
+					for (Map.Entry<String, String> entry : searchvalues.entrySet()) {
+
+						if (!entry.getValue().equals("undefined")) {
+							if (!entry.getValue().equals("null")) {
+								query1.addCriteria(Criteria.where(entry.getKey()).regex(entry.getValue(), "i"));
+							}
+						}
+					}
+					query1.skip(itemsPerPage * (start_index - 1));
+					query1.limit(itemsPerPage);
+					searchresult = getMongoOperation().find(query1, JiraTestCaseVO.class);
+					return searchresult;
+				} else {
+					return searchresult;
+				}
+			}
+
 
 }

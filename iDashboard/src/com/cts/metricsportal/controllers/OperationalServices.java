@@ -1,6 +1,5 @@
 package com.cts.metricsportal.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -21,8 +19,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.BasicQuery;
@@ -34,6 +30,7 @@ import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.AlmMetrics;
 import com.cts.metricsportal.bo.DateTimeCalc;
 import com.cts.metricsportal.bo.JiraMetrics;
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.bo.OperationalBO;
 import com.cts.metricsportal.bo.OperationalDashboardJIRAMetrics;
 import com.cts.metricsportal.bo.SummaryValueMetrics;
@@ -68,16 +65,14 @@ public class OperationalServices extends BaseMongoOperation {
 			@QueryParam("dashboardName") String dashboardName, @QueryParam("description") String description,
 			@QueryParam("ispublic") boolean ispublic, @QueryParam("templateName") String templateName,
 			@QueryParam("components") List<String> releases) throws Exception {
-		int count = 0;
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		if (operationalAccess) {
-			OperationalBO operationalBO = new OperationalBO();
-			return operationalBO.saveDashboard(userId, dashboardName, description, templateName, ispublic, releases);
-		}
-		return count;
+		// boolean operationalAccess =
+		// UserEncrypt.checkOperationalLayerAccess(authString);
+		// if(operationalAccess){
+		OperationalBO operationalBO = new OperationalBO();
+		return operationalBO.saveDashboard(userId, dashboardName, description, templateName, ispublic, releases);
 
 	}
 
@@ -95,7 +90,8 @@ public class OperationalServices extends BaseMongoOperation {
 		ObjectMapper mapper = new ObjectMapper();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		// boolean operationalAccess =
+		// UserEncrypt.checkOperationalLayerAccess(authString);
 
 		JsonFactory jf = new MappingJsonFactory();
 
@@ -119,8 +115,9 @@ public class OperationalServices extends BaseMongoOperation {
 		listLevelID = mapper.readValue(jsonParser, tRef);
 
 		OperationalDashboardVO dashvo1 = new OperationalDashboardVO();
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
 
-		if (operationalAccess) {
+		if (authToken) {
 
 			dashvo1.setDashboardName(dashboardName);
 			dashvo1.setDescription(description);
@@ -158,11 +155,9 @@ public class OperationalServices extends BaseMongoOperation {
 			if (count == 0) {
 				getMongoOperation().updateFirst(query, update, OperationalDashboardVO.class);
 			}
-
-			return count;
-		} else {
-			return count;
 		}
+
+		return count;
 
 	}
 
@@ -174,16 +169,14 @@ public class OperationalServices extends BaseMongoOperation {
 	public int deleteDashboardInfo(@HeaderParam("Authorization") String authString, @QueryParam("id") String id,
 			@QueryParam("owner") String owner) throws Exception {
 		int count = 0;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		if (operationalAccess) {
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authToken) {
 			Query query = new Query();
 			query.addCriteria(Criteria.where("_id").is(id));
 			getMongoOperation().remove(query, OperationalDashboardVO.class);
-			return count;
-		} else {
-			return count;
 		}
+		return count;
+
 	}
 
 	/* Lifecycle Dashboard Table Details */
@@ -199,22 +192,48 @@ public class OperationalServices extends BaseMongoOperation {
 		String query = "{},{_id:0}";
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		// boolean authToken = UserEncrypt.checkOperationalLayerAccess(authString);
 
 		List<OperationalDashboardVO> OperationaldDetails = new ArrayList<OperationalDashboardVO>();
-		if (operationalAccess) {
-			Query query1 = new BasicQuery(query);
-			query1.addCriteria(Criteria.where("owner").is(userId));
-			query1.with(new Sort(Sort.Direction.DESC, "createddate"));
-			query1.skip(itemsPerPage * (start_index - 1));
-			query1.limit(itemsPerPage);
+		// if(authToken){
+		Query query1 = new BasicQuery(query);
+		query1.addCriteria(Criteria.where("owner").is(userId));
+		query1.with(new Sort(Sort.Direction.DESC, "createddate"));
+		query1.skip(itemsPerPage * (start_index - 1));
+		query1.limit(itemsPerPage);
 
-			OperationaldDetails = getMongoOperation().find(query1, OperationalDashboardVO.class);
+		OperationaldDetails = getMongoOperation().find(query1, OperationalDashboardVO.class);
 
-			return OperationaldDetails;
-		} else {
-			return OperationaldDetails;
-		}
+		return OperationaldDetails;
+
+	}
+
+	@GET
+	@Path("/OperationalToolinfo")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Boolean> gettoolinfo(@HeaderParam("Authorization") String authString,
+			@QueryParam("templatename") String templatename) throws JsonParseException, JsonMappingException,
+			IOException, NumberFormatException, BaseException, BadLocationException {
+
+		String query = "{},{_id:0}";
+		AuthenticationService UserEncrypt = new AuthenticationService();
+		String userId = UserEncrypt.getUser(authString);
+		// boolean authToken = UserEncrypt.checkOperationalLayerAccess(authString);
+
+		List<CustomTemplateVO> CustomTemplateDetails = new ArrayList<CustomTemplateVO>();
+		// if(authToken){
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("templateName").is(templatename));
+
+		CustomTemplateDetails = getMongoOperation().find(query1, CustomTemplateVO.class);
+		System.out.println(CustomTemplateDetails.get(0).isAlmtool());
+		System.out.println(CustomTemplateDetails.get(0).isJiratool());
+		List<Boolean> Template = new ArrayList<Boolean>();
+		
+		Template.add(CustomTemplateDetails.get(0).isAlmtool());
+		Template.add(CustomTemplateDetails.get(0).isJiratool());
+		
+		return Template;
 
 	}
 
@@ -227,12 +246,11 @@ public class OperationalServices extends BaseMongoOperation {
 			BadLocationException {
 
 		String query = "{},{_id:0}";
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
 
 		List<OperationalDashboardVO> OperationaldDetails = new ArrayList<OperationalDashboardVO>();
-		if (operationalAccess) {
+		if (authToken) {
 			Query query1 = new BasicQuery(query);
 			query1.addCriteria(Criteria.where("ispublic").is(true));
 			query1.with(new Sort(Sort.Direction.DESC, "createddate"));
@@ -240,12 +258,9 @@ public class OperationalServices extends BaseMongoOperation {
 			query1.limit(itemsPerPage);
 
 			OperationaldDetails = getMongoOperation().find(query1, OperationalDashboardVO.class);
-
-			return OperationaldDetails;
-		} else {
-			return OperationaldDetails;
 		}
 
+		return OperationaldDetails;
 	}
 
 	@GET
@@ -256,12 +271,12 @@ public class OperationalServices extends BaseMongoOperation {
 		Query query1 = new Query();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		// boolean authToken = UserEncrypt.checkOperationalLayerAccess(authString);
 		long count = 0;
-		if (operationalAccess) {
-			query1.addCriteria(Criteria.where("owner").is(userId));
-			count = getMongoOperation().count(query1, OperationalDashboardVO.class);
-		}
+		// if(authToken){
+		query1.addCriteria(Criteria.where("owner").is(userId));
+		count = getMongoOperation().count(query1, OperationalDashboardVO.class);
+
 		return count;
 	}
 
@@ -271,15 +286,13 @@ public class OperationalServices extends BaseMongoOperation {
 	public long dashboardTablepulicRecordsCount(@HeaderParam("Authorization") String authString)
 			throws JsonParseException, JsonMappingException, IOException, BadLocationException {
 		Query query1 = new Query();
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
 		long count = 0;
-		if (operationalAccess) {
+		if (authToken) {
 			query1.addCriteria(Criteria.where("ispublic").is(true));
 			count = getMongoOperation().count(query1, OperationalDashboardVO.class);
-
 		}
+
 		return count;
 	}
 
@@ -292,51 +305,47 @@ public class OperationalServices extends BaseMongoOperation {
 		Query query1 = new Query();
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
 		List<OperationalDashboardVO> dashboardinfo = new ArrayList<OperationalDashboardVO>();
 
-		if (operationalAccess) {
+		if (authToken) {
 			query1.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 			query1.addCriteria(Criteria.where("owner").is(userId));
 			dashboardinfo = getMongoOperation().find(query1, OperationalDashboardVO.class);
-
-			return dashboardinfo;
-		} else {
-			return dashboardinfo;
 		}
 
+		return dashboardinfo;
 	}
 
 	@GET
 	@Path("/globalView")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SummaryMetricVO> getGlobalViewDetails(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
-			@QueryParam("templateName") String templateName, @QueryParam("vardtfrom") String vardtfrom,
-			@QueryParam("vardtto") String vardtto)
+			@QueryParam("dashboardName") String dashboardName, @QueryParam("templateName") String templateName,
+			@QueryParam("vardtfrom") String vardtfrom, @QueryParam("vardtto") String vardtto)
 			throws JsonParseException, JsonMappingException, IOException, BadLocationException, ParseException {
 
-		String dashboardowner = "";
 		List<SummaryMetricVO> finalResult = new ArrayList<SummaryMetricVO>();
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
+		String dashboardowner = "";
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
 		Query query = new Query();
 		query.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 
 		// Check the Dashboard is set as public
 		dashboardowner = JiraMongoOperations.isDashboardsetpublic(dashboardName);
 		if (dashboardowner != "") {
-			owner = dashboardowner;
+
 			userId = dashboardowner;
 		}
 		// End of the check value
 
-		query.addCriteria(Criteria.where("owner").is(owner));
+		query.addCriteria(Criteria.where("owner").is(userId));
 		List<OperationalDashboardVO> dashboardinfo = getMongoOperation().find(query, OperationalDashboardVO.class);
 
-		if (operationalAccess) {
+		if (authToken) {
 
 			List<SelectedMetricVO> customTemplateMetricList = new ArrayList<SelectedMetricVO>();
 			int[] customTemplateMetricId = new int[8];
@@ -348,20 +357,20 @@ public class OperationalServices extends BaseMongoOperation {
 				customTemplateList = getMongoOperation().find(query1, CustomTemplateVO.class);
 
 			} catch (NumberFormatException | BaseException | BadLocationException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
-			String rollingPeriod = customTemplateList.get(0).getRollingPeriod();
-			if (customTemplateList != null) {
+
+			if (!customTemplateList.isEmpty()) {
+				String rollingPeriod = customTemplateList.get(0).getRollingPeriod();
 				customTemplateMetricList = customTemplateList.get(0).getSelectedMetrics();
 				for (int j = 0; j < customTemplateMetricList.size(); j++) {
 					int metricId = customTemplateMetricList.get(j).getMetricId();
 					customTemplateMetricId[j] = metricId;
 
 				}
-				List<String> projectLevel = OperationalMongoOperations.getGlobalLevelProjects(dashboardName, owner);
-				
-				
+				List<String> projectLevel = OperationalMongoOperations.getGlobalLevelProjects(dashboardName, userId);
+
 				for (int m = 0; m < projectLevel.size(); m++) {
 					for (int i = 0; i < dashboardinfo.get(0).getReleaseSet().size(); i++) {
 						if (projectLevel.get(m)
@@ -412,14 +421,155 @@ public class OperationalServices extends BaseMongoOperation {
 				}
 
 			}
-
 		}
+
 		return finalResult;
 
 	}
-	
-	//Rollup Sheet
-	
+
+	@GET
+	@Path("/templateList")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> gettemplateList(@HeaderParam("Authorization") String authString) {
+
+		List<CustomTemplateVO> templateList = new ArrayList<CustomTemplateVO>();
+		;
+		List<String> templateNameList = new ArrayList<String>();
+
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authToken) {
+			Query query = new Query();
+			try {
+				templateList = getMongoOperation().find(query, CustomTemplateVO.class);
+
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+
+				e.printStackTrace();
+			}
+			for (int i = 0; i < templateList.size(); i++) {
+				templateNameList.add(templateList.get(i).getTemplateName());
+			}
+		}
+
+		return templateNameList;
+
+	}
+
+	@GET
+	@Path("/customTemplateView")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<CustomTemplateVO> getCustomTemplateView(@HeaderParam("Authorization") String authString,
+			@QueryParam("selectedcustomtemplate") String selectedcustomtemplate) {
+
+		List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
+		;
+
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authToken) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("templateName").is(selectedcustomtemplate));
+			try {
+				customTemplateList = getMongoOperation().find(query, CustomTemplateVO.class);
+
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+
+				e.printStackTrace();
+			}
+		}
+
+		return customTemplateList;
+
+	}
+
+	@GET
+	@Path("/summaryTableMetricTitle")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getSummaryTableMetricTitle(@HeaderParam("Authorization") String authString,
+			@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
+			@QueryParam("templateName") String templateName) {
+
+		List<SelectedMetricVO> customTemplateMetricList = new ArrayList<SelectedMetricVO>();
+		List<String> customTemplateMetricName = new ArrayList<String>();
+		List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authToken) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("templateName").is(templateName));
+
+			try {
+				customTemplateList = getMongoOperation().find(query, CustomTemplateVO.class);
+
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+
+				e.printStackTrace();
+			}
+			if (customTemplateList != null) {
+				customTemplateMetricList = customTemplateList.get(0).getSelectedMetrics();
+				customTemplateMetricName.add(IdashboardConstantsUtil.PROJECT);
+				for (int i = 0; i < customTemplateMetricList.size(); i++) {
+					String metricName = customTemplateMetricList.get(i).getMetricName();
+					customTemplateMetricName.add(metricName);
+
+				}
+			}
+		}
+
+		return customTemplateMetricName;
+
+	}
+
+	@GET
+	@Path("/getRollingPeriod")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getRollingPeriod(@HeaderParam("Authorization") String authString,
+			@QueryParam("templateName") String templateName) {
+		List<String> rollingPeriodTem = new ArrayList<String>();
+		List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
+		boolean authToken = LayerAccess.getOperationalLayerAccess(authString);
+		if (authToken) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("templateName").is(templateName));
+			try {
+				customTemplateList = getMongoOperation().find(query, CustomTemplateVO.class);
+
+			} catch (NumberFormatException | BaseException | BadLocationException e) {
+
+				e.printStackTrace();
+			}
+
+			for (int i = 0; i < customTemplateList.size(); i++) {
+				rollingPeriodTem.add(customTemplateList.get(i).getRollingPeriod());
+			}
+		}
+
+		return rollingPeriodTem;
+
+	}
+
+	@GET
+	@Path("/selectednoofdays")
+	@Produces(MediaType.APPLICATION_JSON)
+	public int getselectednoofdays(@QueryParam("rollingPeriod") String rollingPeriod) {
+
+		int noofdays = 0;
+		if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_30_DAYS)) {
+			noofdays = 30;
+		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_60_DAYS)) {
+			noofdays = 60;
+		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_90_DAYS)) {
+			noofdays = 90;
+		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_180_DAYS)) {
+			noofdays = 180;
+		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_365_DAYS)) {
+			noofdays = 365;
+		}
+
+		return noofdays;
+
+	}
+
+	// Rollup Sheet
+
 	@GET
 	@Path("/rollupsheet")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -428,16 +578,18 @@ public class OperationalServices extends BaseMongoOperation {
 			@QueryParam("templateName") String templateName, @QueryParam("vardtfrom") String vardtfrom,
 			@QueryParam("vardtto") String vardtto)
 			throws JsonParseException, JsonMappingException, IOException, BadLocationException, ParseException {
-		
-		List<String> sumdata=null;
-		List<RollupsheetVO> rollupsheetlist =null;
+
+		List<String> sumdata = null;
+		List<RollupsheetVO> rollupsheetlist = null;
 		String dashboardowner = "";
 		int isSheetprepared = 0;
 		List<SummaryMetricVO> finalResult = new ArrayList<SummaryMetricVO>();
 
 		AuthenticationService UserEncrypt = new AuthenticationService();
 		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
+		// boolean operationalAccess =
+		// UserEncrypt.checkOperationalLayerAccess(authString);
+		boolean operationalAccess = LayerAccess.getOperationalLayerAccess(authString);
 		Query query = new Query();
 		query.addCriteria(Criteria.where("dashboardName").is(dashboardName));
 
@@ -455,8 +607,7 @@ public class OperationalServices extends BaseMongoOperation {
 		if (operationalAccess) {
 
 			List<String> projectLevel = OperationalMongoOperations.getGlobalLevelProjects(dashboardName, owner);
-			
-						
+
 			List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
 			Query query1 = new Query();
 			query1.addCriteria(Criteria.where("templateName").is(templateName));
@@ -469,173 +620,17 @@ public class OperationalServices extends BaseMongoOperation {
 				e.printStackTrace();
 			}
 			String rollingPeriod = customTemplateList.get(0).getRollingPeriod();
-			
-			String domainname= dashboardinfo.get(0).getReleaseSet().get(0).getLevel1();
+
+			String domainname = dashboardinfo.get(0).getReleaseSet().get(0).getLevel1();
 			SummaryValueMetrics summaryValueMetrics1 = new SummaryValueMetrics();
-			rollupsheetlist=summaryValueMetrics1.getrollupsheetdetails(userId,  dashboardName,  domainname,vardtfrom,  vardtto,  rollingPeriod, projectLevel);
-			
-	
+			rollupsheetlist = summaryValueMetrics1.getrollupsheetdetails(userId, dashboardName, domainname, vardtfrom,
+					vardtto, rollingPeriod, projectLevel);
+
 		}
 		return rollupsheetlist;
 
 	}
-	
-	//End of Rollup Sheet
-	
-	
 
-	@GET
-	@Path("/templateList")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> gettemplateList(@HeaderParam("Authorization") String authString) {
-
-		List<CustomTemplateVO> templateList = new ArrayList<CustomTemplateVO>();
-		;
-		List<String> templateNameList = new ArrayList<String>();
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		if (operationalAccess) {
-			Query query = new Query();
-			try {
-				templateList = getMongoOperation().find(query, CustomTemplateVO.class);
-
-			} catch (NumberFormatException | BaseException | BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for (int i = 0; i < templateList.size(); i++) {
-				templateNameList.add(templateList.get(i).getTemplateName());
-			}
-
-		}
-		return templateNameList;
-
-	}
-
-	@GET
-	@Path("/customTemplateView")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<CustomTemplateVO> getCustomTemplateView(@HeaderParam("Authorization") String authString,
-			@QueryParam("selectedcustomtemplate") String selectedcustomtemplate) {
-
-		List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
-		;
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		if (operationalAccess) {
-			Query query = new Query();
-			query.addCriteria(Criteria.where("templateName").is(selectedcustomtemplate));
-			try {
-				customTemplateList = getMongoOperation().find(query, CustomTemplateVO.class);
-
-			} catch (NumberFormatException | BaseException | BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		return customTemplateList;
-
-	}
-
-	@GET
-	@Path("/summaryTableMetricTitle")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getSummaryTableMetricTitle(@HeaderParam("Authorization") String authString,
-			@QueryParam("dashboardName") String dashboardName, @QueryParam("owner") String owner,
-			@QueryParam("templateName") String templateName) {
-
-		List<SelectedMetricVO> customTemplateMetricList = new ArrayList<SelectedMetricVO>();
-		List<String> customTemplateMetricName = new ArrayList<String>();
-		List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		if (operationalAccess) {
-			Query query = new Query();
-			query.addCriteria(Criteria.where("templateName").is(templateName));
-
-			try {
-				customTemplateList = getMongoOperation().find(query, CustomTemplateVO.class);
-
-			} catch (NumberFormatException | BaseException | BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (customTemplateList != null) {
-				customTemplateMetricList = customTemplateList.get(0).getSelectedMetrics();
-				customTemplateMetricName.add(IdashboardConstantsUtil.PROJECT);
-				for (int i = 0; i < customTemplateMetricList.size(); i++) {
-					String metricName = customTemplateMetricList.get(i).getMetricName();
-					customTemplateMetricName.add(metricName);
-
-				}
-			}
-		}
-		return customTemplateMetricName;
-
-	}
-
-	@GET
-	@Path("/getRollingPeriod")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getRollingPeriod(@HeaderParam("Authorization") String authString,
-			@QueryParam("templateName") String templateName) {
-		List<String> rollingPeriodTem = new ArrayList<String>();
-		List<CustomTemplateVO> customTemplateList = new ArrayList<CustomTemplateVO>();
-		AuthenticationService UserEncrypt = new AuthenticationService();
-		String userId = UserEncrypt.getUser(authString);
-		boolean operationalAccess = UserEncrypt.checkOperationalLayerAccess(authString);
-		if (operationalAccess) {
-			Query query = new Query();
-			query.addCriteria(Criteria.where("templateName").is(templateName));
-			try {
-				customTemplateList = getMongoOperation().find(query, CustomTemplateVO.class);
-
-			} catch (NumberFormatException | BaseException | BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		for (int i = 0; i < customTemplateList.size(); i++) {
-			rollingPeriodTem.add(customTemplateList.get(i).getRollingPeriod());
-		}
-
-		return rollingPeriodTem;
-
-	}
-
-	@GET
-	@Path("/selectednoofdays")
-	@Produces(MediaType.APPLICATION_JSON)
-	public int getselectednoofdays(@QueryParam("rollingPeriod") String rollingPeriod) {
-
-		int noofdays = 0;
-		if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_7_DAYS)) {
-			noofdays = 7;
-		}
-		if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_15_DAYS)) {
-			noofdays = 15;
-		}
-		if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_30_DAYS)) {
-			noofdays = 30;
-		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_60_DAYS)) {
-			noofdays = 60;
-		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_90_DAYS)) {
-			noofdays = 90;
-		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_180_DAYS)) {
-			noofdays = 180;
-		} else if (rollingPeriod.equalsIgnoreCase(IdashboardConstantsUtil.LAST_365_DAYS)) {
-			noofdays = 365;
-		}
-
-		return noofdays;
-
-	}
-	
-	
+	// End of Rollup Sheet
 
 }

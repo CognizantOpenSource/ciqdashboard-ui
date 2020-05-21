@@ -13,13 +13,17 @@
   
 <div class="modal-body">
       
-  <form name="form" ng-submit="uploadUserImage()">
-
+  <form name="form" ng-submit="uploadUserImage()" novalidate>
+	<div>
+		<img ng-src="assets/img/app/profile/users.png" style ="width:30px; height :30px"
+                            src="assets/img/app/profile/users.png" />
+	</div>
    	<label for="org" style="color:#fff;">Profile Pic</label>
-   	<input class="form-control" type="file" ng-model="picFile" name="file" id="file" onchange="angular.element(this).scope().UploadResourceFile(this.files)" accept="image/x-png,image/gif,image/jpeg"> 
+   	<input class="form-control" type="file" ng-model="picFile" name="file" id="file" 
+   	onchange="angular.element(this).scope().UploadResourceFile(this.files,'upload')" accept="image/jpg,image/jpeg,image/png"> 
 
   <button type="submit" style="margin-left:20%; margin-top:10px;" class="btn btn-success">Upload</button>
-  <button type="button" style="margin-left:5%; margin-bottom:-11px;" class="btn btn-danger" ng-click="cancel()">Cancel</button>
+  <button type="button" style="margin-left:5%; margin-bottom:-11px;" class="btn btn-danger" ng-click="cancel();$dismiss()">Cancel</button>
 </form>
  
      </div>
