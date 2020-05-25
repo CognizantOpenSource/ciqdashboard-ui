@@ -1,0 +1,59 @@
+<div ng-controller="GitChartCtrl" ng-init="getvalues()">
+
+	<div class="row">
+		<div class="col-md-12" style="margin-left: -4%">
+			<div class="form-group" ng-init="settype()">		
+				<div class="form-group col-md-4">
+					<select ng-disabled="!formelem" style="outline: 0; width: 100%; height: 10%; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
+						name='type' id="type" class="form-control"
+						ng-model="selectedtype"
+						ng-options="type for type in types"
+						ng-change="getusertype(selectedtype)" required>
+						<option value="" disabled>Type</option>	
+					</select> 			
+				</div>	
+			
+				<div class="form-group col-md-4" ng-init="getusertype(selectedtype)">
+					<select ng-disabled="!formelem" style="outline: 0; width: 100%; height: 10%; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
+						name='gitname' id="gitname" class="form-control"
+						ng-model="UserName"
+						ng-options="gitname for gitname in gitnames"
+						ng-change="getRepoList(UserName)" required>
+						<option value="" disabled>GitName</option>	
+					</select> 				
+				</div>	
+			
+			<div class="form-group col-md-4" ng-init="getRepoList(UserName)">
+							
+		<select ng-disabled="!formelem" style="outline: 0; width: 100%; height: 10%; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
+					name='repo' id="repo" class="form-control"
+					ng-model="selectedRepo"
+					ng-options="repo for repo in repos"
+					ng-change="getSelectedRepo(selectedRepo);weeklyCommitTrend()"required>
+					<option value="" disabled>Repository</option>	
+				</select> 			
+			</div>	
+
+		</div>		
+			</div>
+		</div>
+	
+
+
+	<div class="row">
+		<div class=" col-md-12 " ba-panel ba-panel-title="Weekly Commits" ng-init="weeklyCommitTrend ()";
+			style="text-align: Left">
+		<div >
+			<a ng-click="open()" >View more metrics </a> 
+		</div>
+		<div>
+			<div id="weekcommitdiv" class="admin-chart" ng-init="" style="height:139px">
+
+			<canvas id="weekcommitsubdiv"> </canvas>
+                
+			</div>
+	 	</div>
+	 </div>
+	</div>
+	</div>
+

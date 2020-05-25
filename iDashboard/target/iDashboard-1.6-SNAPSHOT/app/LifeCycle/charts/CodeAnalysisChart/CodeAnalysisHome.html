@@ -1,0 +1,47 @@
+<div class="widgets gridster" ng-controller="CodeAnalysisChartCtrl">
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group" ng-init="">
+				<!--   <label for="domain" class="control-label">Domain</label> -->
+				<select ng-disabled="!formelem"
+					style="outline: 0; width: 180px; height: 25px; font-size: xx-small; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='Ca Projects' id="caProjects" class="form-control"
+					ng-model="selectedProj"
+					ng-options="proj.prjName for proj in projectList"
+					ng-change="selectedProject(selectedProj)" required>
+					<option value="" disabled>Projects</option>
+				</select>
+
+			</div>
+		</div>
+	</div>
+
+
+
+		<div class=" col-md-12 " ba-panel ba-panel-title="Code Coverage"
+			style="text-align: Left">
+				<div >
+				<a ng-click="open()" >View more metrics </a>
+			</div>
+			<div class="row pie-charts" style="text-align: center; height: 140px">
+
+				<div class="row">
+					<div class="pie-chart-item" ng-init="codeCoverage()"
+						style="text-align: center">						
+							<div class="chart" id="codeCoverageChart"
+								style="margin-top: 20px !important; margin-left: 40%" rel="rgba(255,255,255,0.4)">
+								<span class="percent" style="margin-top: 20px !important;margin-left: 20px !important;"> </span>
+							</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12" style="margin-top: -27px>
+						<div style="font-size: 12px; margin-left: 20%; margin-top: 40px">&nbsp;&nbsp;&nbsp;{{linesofCode}}
+							lines of code</div>
+					</div>
+				</div>
+			</div>
+		</div>
+

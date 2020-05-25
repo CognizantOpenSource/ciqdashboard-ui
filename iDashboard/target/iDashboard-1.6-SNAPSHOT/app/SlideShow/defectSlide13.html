@@ -1,0 +1,21 @@
+<div class="row" ng-controller="defectsCtrl" ng-init="gettimeperiod();">
+
+		<div class="col-md-6"
+	         ba-panel  
+	         ba-panel-title="Defects by Priority"
+	         ba-panel-class="with-scroll">
+	 	  
+	 	   <div ng-include="'app/pages/charts/defects/defectsdata/defectPriorityChart.html'"></div> 
+	 
+	  </div>
+	  
+	  <div class="col-md-6"
+	         ba-panel  
+	         ba-panel-title="Defects by Severity"
+	         ba-panel-class="with-scroll">
+	 	  
+	 	   <div ng-include="'app/pages/charts/defects/defectsdata/defectsSeverityChart.html'"></div> 
+	 
+	  </div>
+
+	</div>

@@ -1,0 +1,414 @@
+<style>
+.circle {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #2dacd1;
+	border-color: #022200;
+	font-weight: bold;
+}
+</style>
+
+<info-Dialog></info-Dialog>
+<div ng-controller="JiraTestExecutionCtrl">
+
+	<!-- Filter Starts Here  -->
+
+	<div class="row pie-charts">
+			<div class="form-group col-md-2" ng-init="getversionName()">
+				<label>Version Name</label>
+				<div id="ver" style="width: 100%" ng-dropdown-multiselect=""
+					options="multiversions" selected-model="selversion"
+					events="myEventListenersversion" extra-settings="extraSettings"></div>
+			</div>
+
+			<div class="form-group col-md-2">
+				<label>Cycle Name</label>
+				<div id="cyc" style="width: 100%" ng-dropdown-multiselect=""
+					options="multicycles" selected-model="selcycle"
+					events="myEventListenerscycle" extra-settings="extraSettings"></div>
+			</div>
+			<div class="form-group col-md-2" ng-init="">
+				<label>From:</label> <input style="width: 100%" type="date"
+					ng-change="getfromdate(dtfrom | date:'MM/dd/yyyy')"
+					class="form-control" uib-datepicker-popup="MM/dd/yyyy"
+					datepicker-options="options" ng-model="dtfrom" is-open="opened1"
+					ng-required="true" close-text="Close"
+					alt-input-formats="altInputFormats" show-button-bar="false" />
+			</div>
+
+			<div class="form-group col-md-2" ng-init="">
+				<label>To:</label> <input style="width: 100%" type="date"
+					class="form-control"
+					ng-change="gettodate(dtto | date:'MM/dd/yyyy');getcontributor()"
+					uib-datepicker-popup="MM/dd/yyyy" datepicker-options="options"
+					ng-model="dtto" is-open="opened2" ng-required="true"
+					close-text="Close" alt-input-formats="altInputFormats"
+					show-button-bar="false" />
+			</div>
+		
+	</div>
+
+	<!-- Filter Ends Here  -->
+
+	<!-- Row - 1 Starts Here -->
+
+	<div class="row pie-charts">
+		<!-- Tests Created Vs. Executed -->
+
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel style="background-color: #486d90">
+				<div class="pie-chart-item" id="storiescount">
+
+					<div style="font-size: 15px; text-align: center"
+						ng-init="">Total Test Case Created</div>
+
+					<div style="font-size: 15px; text-align: center"></div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 12%; text-align: center">{{uitestscreated}}
+					</div>
+					<!-- 	<div>
+							<a
+							ng-click="open('app/pages/dashboard/infoDialog/tot_stories.html','sm')">
+							<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+							height="20" style="float: right;">
+						</a>
+					</div> -->
+				</div>
+			</div>
+		</div>
+
+
+
+		<!-- Tests Created Vs. Executed  -->
+		<!-- # of Bugs Detected Starts Here  -->
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel style="background-color: #486d90">
+				<div class="pie-chart-item" ng-init="">
+
+					<div class="">
+
+						<div style="font-size: 15px; text-align: center"
+							class="description-stats"># of Bugs Detected</div>
+						<div class="description-stats"></div>
+
+					</div>
+					<div style="font-size: 15px; text-align: center">
+						<div class="description-stats"
+							style="font-size: 40px; margin-top: 8%; text-align: center">{{uibugsdetectedcount}}
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- # of Bugs Detected Ends Here  -->
+		<!-- Test Execution Count Starts Here  -->
+
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel>
+				<div class="pie-chart-item" id="testexecutioncount">
+					<div style="font-size: 15px; text-align: center"
+						ng-init="">Total Execution Count</div>
+					<div style="font-size: 15px; text-align: center"></div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 10%; text-align: center">
+						{{uitestexecutioncount}}</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Test Execution Count Ends Here -->
+
+		<!-- Ratio of Test Case Fails Here  -->
+		<div class="pie-chart-item-container"
+			style="margin-left: auto; margin-top: 2%;">
+			<div ba-panel>
+				<div class="pie-chart-item" ng-init="">
+
+					<div class="">
+
+						<div style="font-size: 15px; text-align: center"
+							class="description-stats">
+							Ratio of Tests Failed to <B>OPENED</B> Bugs
+						</div>
+						<div class="description-stats"></div>
+
+					</div>
+					<div style="font-size: 15px; text-align: center">
+						<div class="description-stats"
+							style="font-size: 30px; margin-top: 6%; text-align: center">{{uitestcasefailsopen}}
+						</div>
+						<div style="font-size: 13px; margin-top: 4%; text-align: center">
+							Closed Bugs: {{uitestcasefailsclosed}}</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+	<!-- Ratio of Test Case Fails Here  -->
+	<!-- Row - 1 Ends Here -->
+
+
+
+	<!-- PASS FAIL TREND -->
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
+			ba-panel-title="TESTS PASSED vs FAILED (Runwise)"
+			ba-panel-class="with-scroll">
+
+			<div
+				ng-include="'app/pages/charts/testexecution/testexecutiondata/exepassfailtrend.html'"></div>
+
+		</div>
+
+	</div>
+
+	<!-- Zephyr - Test Cycles Open stacked bar chart -->
+	<!-- <div ng-show="uiTCOpenCycle>0" class="col-lg-12 col-md-12 col-sm-12" ba-panel
+		ba-panel-title="<B>Zephyr</B> - No. Of Test Cycles Open <div class='circle ng-binding'>{{uiTCOpenCycle}}</div>"
+		ba-panel-class="with-scroll">
+				<div class="circle ng-binding">{{uiTCOpenCycle}}</div>
+		<div id="tcOpenCycleManage"
+			ng-include="'app/pages/charts/testexecution/testexecutiondata/tcExeOpenCycle.html'"></div>
+
+	</div> -->
+	<!-- Zephyr - Test Cycles Open stacked bar chart -->
+
+	<!-- Zephyr - TC's Planned VS Executed bar chart -->
+	<!-- <div ng-show="uiTCPlannedVsExecuted>0"  class="col-lg-12 col-md-12 col-sm-12" ba-panel
+		ba-panel-title="<B>Zephyr</B> - PLANNED VS EXECUTED - No. Of cycles: <B>{{uiTCPlannedVsExecuted}}</B>"
+		ba-panel-class="with-scroll">
+				<div class="circle ng-binding">{{uiTCPlannedVsExecuted}}</div>
+		<div
+			ng-include="'app/pages/charts/testexecution/testexecutiondata/tcPlannedvsExecuted.html'"></div>
+
+	</div> -->
+	<!-- Zephyr - TC's Planned VS Executed bar chart -->
+
+	<!-- qMetry - Test Runs Open stacked bar chart -->
+	<!-- <div ng-show="uiTROpenRun>0" class="col-lg-12 col-md-12 col-sm-12" ba-panel
+		ba-panel-title="<B>QMetry</B> - No. Of Test Runs Open <div class='circle ng-binding'>{{uiTROpenRun}}</div>"
+		ba-panel-class="with-scroll">		
+		<div id="trOpenRunManage"
+			ng-include="'app/pages/charts/testexecution/testexecutiondata/trExeOpenRun.html'"></div>
+
+	</div> -->
+	<!-- qMetry - Test Runs Open stacked bar chart -->
+
+	<!-- qMetry - TR's Planned VS Executed bar chart -->
+	<!-- <div ng-show="uiTRPlannedVsExecuted>0" class="col-lg-12 col-md-12 col-sm-12" ba-panel
+		ba-panel-title="<B>QMetry</B> - PLANNED VS EXECUTED - No. Of Runs: <B>{{uiTRPlannedVsExecuted}}</B>"
+		ba-panel-class="with-scroll">		
+		<div
+			ng-include="'app/pages/charts/testexecution/testexecutiondata/trPlannedvsExecuted.html'"></div>
+
+	</div> -->
+	<!-- qMetry - TR's Planned VS Executed bar chart -->
+
+	<!-- Cycle - DATA TABLE STARTS HERE -->
+
+	<!-- 	<div class="row" ng-show="mmexecutioncycleTableExists==true">
+		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
+			ba-panel-title="Execution Details - Zephyr" ba-panel-class="with-scroll">
+
+			<div class="horizontal-scroll">
+				<table ng-table="executioncycletable" class="table"
+					ng-init="executioncycleTableData(1);executioncycleTableDataCount()">
+					<thead>
+						<tr class="sortable">
+
+							<th style="width: 10%" ng-click="cyclesort('issueKey',1)">Key <span
+								class="glyphicon sort-icon" ng-show="cyclesortBy=='issueKey'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span></th>
+							<th style="width: 20%" ng-click="cyclesort('issueSummary',1)">Summary
+								<span class="glyphicon sort-icon"
+								ng-show="cyclesortBy=='issueSummary'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+							<th style="width: 25%" ng-click="cyclesort('cycleName',1)">Cycle Name
+								<span class="glyphicon sort-icon"
+								ng-show="cyclesortBy=='cycleName'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+							<th style="width: 15%" ng-click="cyclesort('executedOn',1)">Executed Date
+								<span class="glyphicon sort-icon"
+								ng-show="cyclesortBy=='executedOn'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+							<th style="width: 15%" ng-click="cyclesort('executedBy',1)">Executed 
+								By <span class="glyphicon sort-icon"
+								ng-show="cyclesortBy=='executedBy'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>							
+							<th style="width: 15%" ng-click="cyclesort('issueStatus',1)">Status
+								<span class="glyphicon sort-icon"
+								ng-show="cyclesortBy=='issueStatus'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+
+						</tr>
+						<tr>
+							<th style="width: 10%"><input class="form-control"
+								ng-model="cycleexecutionKeysearch" placeholder="Search" type="search"
+								ng-change="cyclesearch(1,'issueKey',cycleexecutionKeysearch)" /></th>
+							<th style="width: 20%"><input class="form-control"
+								ng-model="cyclesummarysearch" placeholder="Search" type="search"
+								ng-change="cyclesearch(1,'issueSummary',cyclesummarysearch)" /></th>
+							<th style="width: 25%"><input class="form-control"
+								ng-model="cyclenamesearch" placeholder="Search" type="search"
+								ng-change="cyclesearch(1,'cycleName',cyclenamesearch)" /></th>	
+							<th style="width: 15%"><input ng-disabled="true" class="form-control"
+								ng-model="cycleexecutedonsearch" placeholder="-" type="search"
+								ng-change="cyclesearch(1,'executedOn',cycleexecutedonsearch)" /></th>
+							<th style="width: 15%"><input class="form-control"
+								ng-model="cycleexecutedbysearch" placeholder="Search" type="search"
+								ng-change="cyclesearch(1,'executedBy',cycleexecutedbysearch)" /></th>
+							<th style="width: 15%"><input class="form-control"
+								ng-model="cyclestatussearch" placeholder="Search" type="search"
+								ng-change="cyclesearch(1,'issueStatus',cyclestatussearch)" /></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr dir-paginate="item in mmexecutioncycleTableDetails | itemsPerPage: 5"
+							total-items="execycledatapaginatecount" current-page="cyclepageno"
+							pagination-id="execyclepaginate">
+							<td style="width: 10%">{{item.issueKey}}</td>
+							<td style="width: 20%" class="trim-info"
+								title="{{item.issueSummary}}">{{item.issueSummary|limitTo:15}}{{item.issueSummary.length>15
+								? '...' : ''}}</td>
+							<td style="width: 25%" title="{{item.cycleName}}">{{item.cycleName}}</td>							
+							<td style="width: 15%">{{item.executedOn | date:'dd-MMM-yyyy'}}</td>
+							<td style="width: 15%">{{item.executedBy}}</td>
+							<td style="width: 15%">{{item.issueStatus}}</td>
+
+
+						</tr>
+					</tbody>
+				</table>
+				<dir-pagination-controls directions-links="true"
+					boundary-links="true" pagination-id="execyclepaginate"
+					on-page-change="pagecycleChangedLevel(newPageNumber)"></dir-pagination-controls>
+			</div>
+		</div>
+	</div> -->
+
+	<!-- Cycle - DATA TABLE ENDS HERE -->
+
+	<!-- Runs - DATA TABLE STARTS HERE -->
+	<!-- 
+	<div class="row" ng-show="mmexecutionrunTableExists==true">
+		<div class="col-lg-12 col-md-12 col-sm-12" ba-panel
+			ba-panel-title="Execution Details - QMetry" ba-panel-class="with-scroll">
+
+			<div class="horizontal-scroll">
+				<table ng-table="executionruntable" class="table"
+					ng-init="executionrunTableData(1);executionrunTableDataCount()">
+					<thead>
+						<tr class="sortable">
+
+							<th style="width: 10%" ng-click="runsort('issueKey',1)">Key <span
+								class="glyphicon sort-icon" ng-show="runsortBy=='issueKey'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span></th>
+							<th style="width: 20%" ng-click="runsort('issueSummary',1)">Summary
+								<span class="glyphicon sort-icon"
+								ng-show="runsortBy=='issueSummary'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+							<th style="width: 25%" ng-click="runsort('testRunName',1)">Run Name
+								<span class="glyphicon sort-icon"
+								ng-show="runsortBy=='testRunName'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+							<th style="width: 15%" ng-click="runsort('executedOn',1)">Executed Date
+								<span class="glyphicon sort-icon"
+								ng-show="runsortBy=='executedOn'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+							<th style="width: 15%" ng-click="runsort('executedBy',1)">Executed 
+								By <span class="glyphicon sort-icon"
+								ng-show="runsortBy=='executedBy'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>							
+							<th style="width: 15%" ng-click="runsort('issueStatus',1)">Status
+								<span class="glyphicon sort-icon"
+								ng-show="runsortBy=='issueStatus'"
+								ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+							</span>
+							</th>
+
+						</tr>
+						<tr>
+							<th style="width: 10%"><input class="form-control"
+								ng-model="runexecutionKeysearch" placeholder="Search" type="search"
+								ng-change="runsearch(1,'issueKey',runexecutionKeysearch)" /></th>
+							<th style="width: 20%"><input class="form-control"
+								ng-model="runsummarysearch" placeholder="Search" type="search"
+								ng-change="runsearch(1,'issueSummary',runsummarysearch)" /></th>
+							<th style="width: 25%"><input class="form-control"
+								ng-model="runnamesearch" placeholder="Search" type="search"
+								ng-change="runsearch(1,'testRunName',runnamesearch)" /></th>	
+							<th style="width: 15%"><input ng-disabled="true" class="form-control"
+								ng-model="runexecutedonsearch" placeholder="-" type="search"
+								ng-change="runsearch(1,'executedOn',runexecutedonsearch)" /></th>
+							<th style="width: 15%"><input class="form-control"
+								ng-model="runexecutedbysearch" placeholder="Search" type="search"
+								ng-change="runsearch(1,'executedBy',runexecutedbysearch)" /></th>
+							<th style="width: 15%"><input class="form-control"
+								ng-model="runstatussearch" placeholder="Search" type="search"
+								ng-change="runsearch(1,'issueStatus',runstatussearch)" /></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr dir-paginate="item in mmexecutionrunTableDetails | itemsPerPage: 5"
+							total-items="exerundatapaginatecount" current-page="runpageno"
+							pagination-id="exerunpaginate">
+							<td style="width: 10%">{{item.issueKey}}</td>
+							<td style="width: 20%" class="trim-info"
+								title="{{item.issueSummary}}">{{item.issueSummary|limitTo:15}}{{item.issueSummary.length>15
+								? '...' : ''}}</td>
+							<td style="width: 25%" title="{{item.testRunName}}">{{item.testRunName}}</td>							
+							<td style="width: 15%">{{item.executedOn | date:'dd-MMM-yyyy'}}</td>
+							<td style="width: 15%">{{item.executedBy}}</td>
+							<td style="width: 15%">{{item.issueStatus}}</td>
+
+
+						</tr>
+					</tbody>
+				</table>
+				<dir-pagination-controls directions-links="true"
+					boundary-links="true" pagination-id="exerunpaginate"
+					on-page-change="pagerunChangedLevel(newPageNumber)"></dir-pagination-controls>
+			</div>
+		</div>
+	</div> -->
+
+	<!-- Runs - DATA TABLE ENDS HERE -->
+
+
+</div>

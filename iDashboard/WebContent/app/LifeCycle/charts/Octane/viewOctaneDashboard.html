@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<info-Dialog></info-Dialog>
+<div class="widgets gridster" ng-controller="OctaneLifeCtrl" id ="usrStrLifeDiv">
+
+	<div class=" pie-charts">
+		<div class="row">
+			<div class="form-group col-md-2" ng-init="initialOctaneProjects();">
+				<label>Project</label>
+				<select
+							style="outline: 0; background-color: rgba(87, 95, 118, 1)"
+							name='projectName' id="projectNameOctane" class="form-control"
+							ng-model="selectedOctaneProject"
+							ng-options="prjName for prjName in octaneprojects"
+							ng-change="" disabled>
+							<option value="" disabled>Projects</option>
+				</select>
+			</div>
+			<div class="form-group col-md-2" ng-init="getOctaneSprintPeriod();">
+				<label>Select Sprint</label>
+				<select
+					style="outline: 0; background-color: rgba(87, 95, 118, 1)"
+					name='sprintperioddrop' id="sprintperioddrop" class="form-control"
+					ng-model="selectedsprintperioddrop"
+					ng-options="octanesprintperiod for octanesprintperiod in octanesprintperioddrops"
+					ng-change="getSprintPeriodSelection(selectedsprintperioddrop);getOctaneSprintChangeData();" required>
+					<option value="" disabled>Select Sprint</option>
+				</select>
+			</div>
+		</div>
+		<br>
+	</div>
+	 <div class="row pie-charts">
+	 	<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						User Story by Status
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','octanestatuschart','storystatus')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','octanestatuschart','storystatus')"><i
+										class="fa fa fa-area-chart" download="storystatus.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div> 
+					</h3>
+				</div> 
+				<div class="panel-body" style="padding-right: 0px;">
+					<div
+						ng-include="'app/LifeCycle/charts/Octane/OctaneStoryStatusChart.html'"></div>
+				</div>
+
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Velocity Chart
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','simpleVelchart','Velocity Chart')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','simpleVelchart','Velocity Chart')"><i
+										class="fa fa fa-area-chart" download="Velocity Chart.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div> 
+					</h3>
+				</div> 
+				<div class="panel-body" style="padding-right: 0px;">
+					<div
+						ng-include="'app/LifeCycle/charts/Octane/OctaneVelocityBarChart.html'"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<div class="row pie-charts">
+		<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Total Hours Invested
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','octanhourchart','Hours_Invested')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','octanhourchart','Hours_Invested')"><i
+										class="fa fa fa-area-chart" download="Hours_Invested.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div> 
+					</h3>
+				</div> 
+				<div class="panel-body" style="padding-right: 0px;">
+					<div
+						ng-include="'app/LifeCycle/charts/Octane/OctaneHoursChart.html'"></div>
+				</div>
+
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Defects by Severity
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','octanedefseveritychart','Defects_By_Severity')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','octanedefseveritychart','Defects_By_Severity')"><i
+										class="fa fa fa-area-chart" download="Defects_By_Severity.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div> 
+					</h3>
+				</div> 
+				<div class="panel-body" style="padding-right: 0px;">
+					<div
+						ng-include="'app/LifeCycle/charts/Octane/OctaneDefectSeveritybarchart.html'"></div>
+				</div>
+
+			</div>
+		</div>
+	
+	</div>
+	<div class="row pie-charts">
+		<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Defect Status
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','statuspie','Defect_Status_Report')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','statuspie','Defect_Status_Report')"><i
+										class="fa fa fa-area-chart" download="Defect_Status_Report.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div> 
+					</h3>
+				</div> 
+				<div class="panel-body" style="padding-right: 0px;">
+					<div
+						ng-include="'app/LifeCycle/charts/Octane/OctaneDefectStatuspiechart.html'"></div>
+				</div>
+
+			</div>
+		</div>
+		 <div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Defects By Priority
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','octanedefprioritychart','Defect_priority')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','octanedefprioritychart','Defect_priority')"><i
+										class="fa fa fa-area-chart" download="Defect_priority.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div> 
+					</h3>
+				</div> 
+				<div class="panel-body" style="padding-right: 0px;">
+					<div
+						ng-include="'app/LifeCycle/charts/Octane/OctaneDefectPriority.html'"></div>
+				</div>
+
+			</div>
+		</div>
+	
+	</div> 
+</div>
+</html>

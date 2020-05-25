@@ -1,0 +1,22 @@
+
+    <div>
+        <div ng-if="errormsg" id="close" class="alert bg-danger closeable" role="alert"><button type="button" class="close" onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); return false;' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4>Warning!</h4>  <h5>Your License is expiring in {{daysRemaining}} day(s).
+          Contact Support Team :<u><a href="mailto:iDashboardSupport@cognizant.com" style="color:white">iDashboardSupport@cognizant.com</a></u></h5>
+        </div>
+     </div>  
+
+<div class="content-top clearfix">
+  <h1 class="al-title">{{ activeDashboardName }}</h1>
+
+  <ul class="breadcrumb al-breadcrumb">
+    <li>
+      <a href="" class="homelink" ng-model="role" ng-class="{'on':var1}" ng-click=" home()" >Home</a></li>
+      <li ng-show="value">
+  
+		<a  href="" class="homelink"   ng-class="{'on':var2}" ng-click=" back()">Dashboard</a></li>
+      
+    <li>{{ activePageTitle }}</li>
+  </ul>
+
+</div>

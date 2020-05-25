@@ -1,0 +1,113 @@
+
+<div ng-controller="riskComplianceCtrl">
+
+	<div class="row"style="margin-top: 48px;">
+		<div class="col-lg-12 col-md-12 col-sm-12"
+			ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix" >
+					<h3 class="panel-title"style="font-weight:bold">AST-Ethical Hack-Critical, High & Medium by Division
+					<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href="" ng-click="exportTableToCSV('EthicalHack.csv')"><i
+										class="ion-document"></i>Export in CSV</a></li>
+								<li><a href="" id="exportThis"ng-click="exportTableToExcel('tblData', 'EthicalHack-data')"><i
+										class="ion-document-text"></i>Export in XLS</a></li>
+							</ul>
+						</div></h3>
+				</div>
+				<div class="panel-body">
+
+					<div class="horizontal-scroll">
+						<table class="table"   style="margin-top: -10px;">
+							<thead>
+
+
+
+								<tr>
+
+										<th style="width: 5%;font-weight:bold">Division</th>
+										
+									<th style="width: 5%;font-weight:bold">Critical</th>
+									<th style="width: 5%;font-weight:bold">High</th>
+									<th style="width: 5%;font-weight:bold">Medium</th>
+									
+								
+								</tr>
+
+							</thead>
+
+							<tbody ng-init="ethicalHackCriticalHighByDivision();ethicalHackCriticalHighByDivisionSubAccounting();ethicalHackCriticalHighByDivisionOncore();ethicalHackCriticalHighByDivisionAlternative();ethicalHackCriticalHighByDivisionGIARS();ethicalHackCriticalHighByDivisionEMEA();ethicalHackCriticalHighByDivisionglobal();">
+								<tr>
+									<td style="width: 10%">{{divisinList[0]}}</td>
+									<td class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[0])"style="text-decoration-color:#58d68d;">{{criticalUs}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[0])"style="text-decoration-color:#58d68d;">{{HighUs}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[0])"style="text-decoration-color:#58d68d;">{{mediumUs}}</a></td>
+								</tr>
+								<tr>
+									<td style="width: 10%">{{divisinList[1]}}</td>
+									
+									<td class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[1])"style="text-decoration-color:#58d68d;">{{criticalSubAccounting}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[1])"style="text-decoration-color:#58d68d;">{{HighSubAccounting}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[1])"style="text-decoration-color:#58d68d;">{{mediumSubAccounting}}</a></td>
+								</tr>
+								<tr>
+									<td style="width: 10%">{{divisinList[2]}}</td>
+									<td class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[2])"style="text-decoration-color:#58d68d;">{{criticaoncore}}</a></td>
+								<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[2])"style="text-decoration-color:#58d68d;">{{Highoncore}}</a></td>
+								<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[2])"style="text-decoration-color:#58d68d;">{{mediumoncore}}</a></td>
+								</tr>
+
+								<tr>
+									<td style="width: 10%">{{divisinList[3]}}</td>
+									<td class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[3])"style="text-decoration-color:#58d68d;">{{criticalalternative}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[3])"style="text-decoration-color:#58d68d;">{{Highalternative}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[3])"style="text-decoration-color:#58d68d;">{{mediumalternative}}</a></td>
+								</tr>
+								
+								<tr>
+									<td style="width: 10%">{{divisinList[4]}}</td>
+									<td class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[4])"style="text-decoration-color:#58d68d;">{{criticalgiars}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[4])"style="text-decoration-color:#58d68d;">{{Highgiars}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[4])"style="text-decoration-color:#58d68d;">{{mediumgiars}}</a></td>
+								</tr>
+								
+								<tr>
+									<td style="width: 10%">{{divisinList[5]}}</td>
+									<td  class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[5])"style="text-decoration-color:#58d68d;">{{criticalemea}}</a></td>
+										<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[5])"style="text-decoration-color:#58d68d;">{{Highemea}}</a></td>
+											<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[5])"style="text-decoration-color:#58d68d;">{{mediumemea}}</a></td>
+								</tr>
+								<tr>
+									<td style="width: 10%">{{divisinList[6]}}</td>
+									<td class="underlineText"><a ng-click="getEthicalCriticalData(divisinList[6])"style="text-decoration-color:#58d68d;">{{criticalglobal}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalhighData(divisinList[6])"style="text-decoration-color:#58d68d;">{{Highglobal}}</a></td>
+									<td class="underlineText"><a ng-click="getEthicalmediumData(divisinList[6])"style="text-decoration-color:#58d68d;">{{mediumglobal}}</a></td>
+								</tr>
+							</tbody>
+
+
+
+
+
+						</table>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+<div class="form-group pagetopSelectdiv" ng-controller="LevelSelectionCtrl" ng-init="initial(DomainVal,EnvVal,RelVal)">
+    <form class="form-inline" name="form">
+        <div class="form-group" ng-init="projectlevel()"> 
+          <!--   <label for="domain" class="control-label">Domain</label> -->
+            <select style="outline:0;width:180px;height:30px;margin-right:20px;background-color:rgba(87, 95, 118, 1)" name='domain' id="domain" class="form-control" ng-model="selectedValueInProject" ng-options="domain as domain for domain in domains" ng-init="selectedValue(selectedValueInProject);dropdowndomain(selectedValueInProject)"  ng-change="selectedValue(selectedValueInProject);dropdowndomain(selectedValueInProject)" required>
+                <option value="" >All Domains</option>
+            </select>
+        </div>
+        <div class="form-group" >
+           <!--  <label for="project" class="control-label">Project</label> -->
+            <select style="outline:0;width:180px;height:30px;margin-right:20px;background-color:rgba(87, 95, 118, 1)" name='project' required id="project" class="form-control"   ng-model="selectedValueInEnvironment" ng-init="envlevel(selectedValueInEnvironment);dropdownproject(selectedValueInEnvironment)" ng-change="envlevel(selectedValueInEnvironment);dropdownproject(selectedValueInEnvironment)"  ng-options="project as project for project in projects" >
+                <option value="" >All Projects</option>
+            </select>
+        </div>
+        <div class="form-group" >
+           <!--  <label for="release" class="control-label">Release</label> -->
+            <select style="outline:0;width:180px;height:30px;margin-right:20px;background-color:rgba(87, 95, 118, 1)" name='release' required id="release" class="form-control"  ng-model="selectedValueInRelease" ng-options="release as release for release in releases" ng-init="dropdownrelease(selectedValueInRelease);releaselevel(selectedValueInRelease)" ng-change="releaselevel(selectedValueInRelease);dropdownrelease(selectedValueInRelease)">
+                <option value="" >All Releases</option>
+            </select>
+        </div>
+    </form>
+</div> 
