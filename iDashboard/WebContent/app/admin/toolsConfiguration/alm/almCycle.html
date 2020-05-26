@@ -1,0 +1,98 @@
+<head>
+<meta name="viewport"
+	content="width=device-width,height=device-height,initial-scale=1.0" />
+</head>
+<div class="popupbgimg modal-content" style="margin-top: 50%"
+	ng-controller="almToolConfigurationCtrl">
+
+	<div class="modal-header" style="padding: 0px">
+		<div> 
+			<label style="font-size: 16px; padding: 14px">Add ALM
+				Cycles</label>
+			<button style="float: right" "type="button" class="close"
+				ng-click="closeAlmProjects()">
+				<span> x</span>
+			</button>
+		</div>
+	</div>
+	<div class="modal-body" >
+		<div style="padding-bottom: 1%;padding-top: 1%; border: 1px solid grey;">
+			<div class="row" style="margin-top: 1%">
+				<div class="col-md-5">
+					<label style="font-size: 16px;color:black; float:left"><b>Domain : Project : Rel.Name/Rel.Id</b></label>
+				</div>
+				<div class="col-md-7" style="margin-left: -1%">
+
+					<table id="jiraProjects">
+						<tr>
+							<th width=15%><input id="almCycle"
+								style="height: 30px; background-color: transparent;  border: 1px solid #cbcbcb"
+								ng-model="almCycle" type="text" name="almCycle"></th>
+							<th width=10%><button type="submit" class="btn btn-success"
+									style="margin-left: 8%;"
+									ng-click="addAlmCycleData(selectedProject,almCycle,almId)">Add
+									Cycle</button></th>
+							<th width=15%><input id="almCycleId"
+								style="width:90%;height: 30px; background-color: transparent; margin-left: 8%; margin-right: 8%;border: 1px solid #cbcbcb"
+								ng-model="almCycleId" type="text" name="almCycleId"></th>
+							<th width=10%><button type="submit"
+									class="btn btn-success "
+									style="margin-left: 8%"
+									ng-click="addAlmCycleIdData(selectedProject,almCycleId,almId)">Add
+									Cycle ID</button></th>
+							<!-- <th width=10%><button type="submit"
+									class="btn btn-danger"
+									style="margin-left: 8%;"
+									ng-click="closeAlmProjects()">Close</button></th> -->
+						</tr>
+					</table>
+
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5" >
+					<select multiple style="height: 95%;color:black" name='selectedProject'
+						id="selectedProject" ng-model="selectedProject"
+						ng-options="projectListItem for projectListItem in projectList"
+						ng-click="loadCycleData(selectedProject)">
+
+					</select>
+				</div>
+				<div class="col-md-7">
+					<table style="margin-left: 0.5%;" id="jstalmreleases"
+						st-table="stalmCyclesTable" st-safe-src="stalmCycles">
+						<thead>
+							<tr>
+							<th height=40px width=35%><B>Cycle Id</B></th>
+								<th height=40px width=40%><B>Cycle Name</B></th>
+								<th width=15%><B>Option</B></th>
+								<th width=10%><B>Status</B></th>
+							</tr>
+						</thead>
+
+						<tr style="margin-top: -1%;" ng-repeat="x in stalmCyclesTable">
+						<td height=20px>{{x.cycleId}}</td>
+							<td height=20px>{{x.cycle}}</td>
+							<td><a
+								ng-click=deleteAlmCycle(selectedProject,x.cycleId,x.cycle,almId)
+								id={{x.cycleId}}>Delete</a></td>
+								<td height=20px>{{x.status}}</td>
+						</tr>
+
+						<tfoot>
+							<tr>
+								<td colspan="6" class="text-center" style="float: left;">
+									<div st-pagination="popuppagProject" st-items-by-page="5">pagination</div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+					<BR>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

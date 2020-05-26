@@ -1,0 +1,11 @@
+<div class="modal-content" style="margin-top:0px;" ng-controller="LoginCtrl">
+  <div class="modal-header bg-danger">
+    <i class="ion-flame modal-icon"></i><span>Session Expired</span>
+  </div>
+   <div class="modal-body text-center" style="color:red">
+    	<span>{{sessionMgs}}</span> 
+    </div>
+  <div class="modal-footer">
+     <button type="button" class="btn btn-danger" ng-click="logout();">Ok</button>
+  </div>
+</div>

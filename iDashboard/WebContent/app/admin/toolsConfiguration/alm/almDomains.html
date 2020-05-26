@@ -1,0 +1,79 @@
+<head>
+<meta name="viewport"
+	content="width=device-width,height=device-height,initial-scale=1.0" />
+</head>
+<div class="popupbgimg modal-content" style="margin-top: 80%"
+	ng-controller="almToolConfigurationCtrl">
+
+	<div class="modal-header" style="padding: 0px">
+		<div>
+			<label style="font-size: 16px; padding: 14px">Add ALM Domain</label>
+			<button style="float: right" "type="button" class="close"
+				ng-click="closeAlmDomains()">
+				<span> x</span>
+			</button>
+		</div>
+	</div>
+
+	<div>
+		<div class="modal-body" style="margin: 2%;">
+			<div style="padding-bottom: 1%; border: 1px solid grey;">
+				<div class="row"  style="margin-top: 1%;width:80%">
+					<div style="margin-left: 3%;">
+ 
+						<table id="jiraProjects">
+							<tr>
+								<th width=20%><input id="almDomain"
+									style="height: 30px;width:90%; background-color: transparent; margin-left: 10px; border: 1px solid #cbcbcb"
+									ng-model="almDomain" type="text" name="almDomain"></th>
+								<th width=20% style="margin-left: -3%;"><button type="submit"
+										class="btn btn-success col-md-1 "
+										style="width: 150px; margin-left: 30px;"
+										ng-click="addAlmDomainData(almDomain,almId)">Add
+										Domain</button></th>
+								
+							</tr>
+						</table>
+
+
+
+					</div>
+				</div>
+				<div class="row" style="width:80%">
+					
+					<div style="margin-left: 3%;">
+						<table style="margin-left: 10px;margin-right: 2%;" id="jstalmdomains"
+							st-table="stalmdomainsTable" st-safe-src="stalmdomains">
+							<thead>
+								<tr>
+									<th  height=40px width=85%><B>Domains</B></th>
+									<th style="margin-left: 20%;padding-left: 8%;" width=20%><B>Option</B></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="x in stalmdomainsTable">
+									<td height=20px>{{x.domain}}</td>
+									<td style="margin-left: 20%;padding-left: 8%;"><a ng-click=deleteAlmDomain(x.domain,almId)
+										id={{x.domain}}>Delete</a></td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="6" class="text-center" style="float: left;">
+										<div st-pagination="" st-items-by-page="5"
+											st-displayed-pages="5"></div>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+						<BR>
+
+					</div>
+				</div>
+
+
+
+			</div>
+		</div>
+	</div>
+</div>

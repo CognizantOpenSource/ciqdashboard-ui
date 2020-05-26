@@ -1,0 +1,84 @@
+<div ng-controller="chefMetricsCtrl">
+	<div class="row" ng-init="refreshNodeDetailsPage()" >
+		<div class=" pie-charts" >
+			<div class="pie-chart-item-container" style="margin-left:122px;">
+			   <div ba-panel style="margin-top:20px;">
+					<div class="pie-chart-item" id="totalnodescount" ng-init="totalCookbooksCountForNode()" >
+						<div style="font-size: 15px; text-align:center" >Total Applications deployed on this node</div>
+						<div class="description-stats" style="font-size: 40px;margin-top:20px;text-align:center">{{chefcookbooksrunfornode.length}}</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="pie-chart-item-container">
+			   <div ba-panel style="margin-top:20px">
+					<div class="pie-chart-item" id="totalrunscount"  ng-init="initialcountpaginate()">
+						<div style="font-size: 15px;text-align:center" >Total Deployments</div>
+						<div class="description-stats" style="font-size: 40px;margin-top:20px;text-align:center">{{totalcookbookrunscountfornode}}</div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="pie-chart-item-container">
+			   <div ba-panel style="margin-top:20px">
+					<div class="pie-chart-item" id="totalrunssuccesscount" ng-init="totalSuccessCount()" >
+						<div style="font-size: 15px;text-align:center" >Total Successful Deployments</div>
+						<div class="description-stats" style="font-size: 40px;margin-top:20px;text-align:center">{{totalrunssuccesscountfornode}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6" ba-panel ba-panel-title="Last 5 Deployments">
+				<div id="latestRun" class="admin-chart" style="width: 600px; height: 300px; text-align: left"
+					ng-controller="chefMetricsCtrl" ng-init="">
+					<table id="lruns" class="table">
+				   		<tr>
+							<td style="width:30%; font-size: 15px; text-align:left">Node Name</td>
+				   			<td style="width:25%; font-size: 15px; text-align:left">Cookbook Name</td>
+							<td style="width:35%; font-size: 15px; text-align:left">Deployment Date</td>
+							<td style="width:10%; font-size: 15px; text-align:left">Indicator</td>
+						</tr>
+						<tr ng-repeat="lastrundetailfornode in chefLastRunOnNodesForNode">
+							<td style="width:30%; font-size: 15px; text-align:left">{{lastrundetailfornode.nodename}}</td>
+							<td style="width:25%; font-size: 15px; text-align:left">{{lastrundetailfornode.cookbookname}}</td>
+							<td style="width:35%; font-size: 15px; text-align:left">{{lastrundetailfornode.starttime}}</td>
+							<td style="width:10%; font-size: 15px; text-align:left"><font ng-style="{{lastrundetailfornode.iconcolor}}"><span class="{{lastrundetailfornode.icon}}"></span></font></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="col-md-6" ba-panel ba-panel-title="Selected Node Details">
+				<div id="selectedNodeDetailsDiv" class="admin-chart" style="width: 600px; height: 300px; text-align: left"
+					ng-controller="chefMetricsCtrl" ng-init="getSelectedNodeDetails();">
+				  	<table id="nddetails" class="table">
+					    <tr>
+				          <td style="width:40%; font-size: 20px; text-align:left">Node Attributes</td>
+				          <td style="width:60%; font-size: 20px; text-align:left">Node Values</td>
+				        </tr>
+				   		<tr>
+				   			<td style="width:40%; font-size: 15px; text-align:left">Environment Name</td>
+							<td style="width:60%; font-size: 15px; text-align:left">{{envname}}</td>
+						</tr>
+				   		<tr>
+				   			<td style="width:40%; font-size: 15px; text-align:left">Node Name</td>
+							<td style="width:60%; font-size: 15px; text-align:left">{{nodename}}</td>
+						</tr>
+						<tr>
+				   			<td style="width:40%; font-size: 15px; text-align:left">Node Platform</td>
+							<td style="width:60%; font-size: 15px; text-align:left">{{nodeplatform}}</td>
+						</tr>
+				   		<tr>
+				   			<td style="width:40%; font-size: 15px; text-align:left">Hostname</td>
+							<td style="width:60%; font-size: 15px; text-align:left">{{hostname}}</td>
+						</tr>
+				   		<tr>
+				   			<td style="width:40%; font-size: 15px; text-align:left">System Uptime</td>
+							<td style="width:60%; font-size: 15px; text-align:left">{{uptime}}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>

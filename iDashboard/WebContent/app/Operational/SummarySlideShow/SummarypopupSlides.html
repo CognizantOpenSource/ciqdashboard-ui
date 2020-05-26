@@ -1,0 +1,312 @@
+<div class="row pie-charts" ng-controller="SummaryslideShowCtrl"
+	style="display: flex; margin-top: 1%;" ng-int="init();">
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 10%; width: 19%; ">
+		<div class="panel-slideshow" style="margin-top: 20px">
+
+			<div class="row">
+				<div class="col-sm">
+					<div class="panel-slideshow-content">TOTAL REQUIREMENTS COUNT</div>
+				</div>
+			</div>
+			<div class="row" style="height: 110px;">
+			
+				<div class="col-sm">
+					<div style="margin-top: 5%;">
+						<div class="description-stats"
+							style="font-family: Montserrat; font-weight: 400; font-size: 60px; margin-top: 10%; text-align: center;">{{SlideReqCount}}</div>
+					</div>
+				</div>
+			</div>
+			
+
+		</div>
+	</div>
+	
+	
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 1%; width: 19%;">
+		<div class="panel-slideshow" style="margin-top: 20px">
+			<div class="row">
+				<div class="col-sm">
+					<div class="panel-slideshow-content">TOTAL TEST COUNT</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<div class="description-stats"
+							style="font-family: Montserrat; font-size: 60px; margin-top: 10%; text-align: center">{{SlidetestCount}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 1%; width: 19%; ">
+		<div class="panel-slideshow" style="margin-top: 20px">
+			<div class="row">
+				<div class="col-sm">
+					<div class="panel-slideshow-content">TOTAL EXECUTION COUNT</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<div class="description-stats"
+							style="font-family: Montserrat; font-size: 60px; margin-top: 10%; text-align: center">{{Slidetcexecnt}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 1%; width: 19%; ">
+		<div class="panel-slideshow" style="margin-top: 20px">
+
+			<div class="row">
+				<div class="col-sm">
+					<div class="panel-slideshow-content" >TOTAL
+						DEFECTS COUNT</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+						<div class="description-stats"
+							style="font-family: Montserrat; font-size: 60px; margin-top: 10%; text-align: center">{{SlidedefectCount}}</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+</div>
+
+<div class="row pie-charts" style="display: flex; margin-top: 0%;">
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 10%; width: 19%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">REGRESSION AUTOMATION
+						COVERAGE</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="regautofilter"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 1%; width: 19%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">FIRST TIME PASS RATE</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="passrate"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 1%; width: 19%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">DEFECT DENSITY</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div ng-init="defectdensityfilter()" style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="defdensityfilter"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 1%; width: 19%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">DEFECT REJECTION
+						RATE(QA)</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="defrejratefilter"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+</div>
+
+<div class="row pie-charts" ng-init="gettimeperiod();"
+	style="display: flex; margin-top: 0%">
+
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 10%; width: 25%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">FUNCTIONAL AUTOMATION
+						UTILIZATION</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="funcatuo"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 2%; width: 25%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">REGRESSION AUTOMATION
+						UTILIZATION</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="regatuo"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<div class="pie-chart-item-container-popup"
+		style="margin-left: 2%; width: 25%; height: 55%;">
+		<div class="panel-slideshow" style="margin-top: 20px;">
+			<div class="row">
+				<div class="col-sm">
+
+					<div class="panel-slideshow-content">UAT AUTOMATION
+						UTILIZATION</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div style="margin-top: 4%; margin-bottom: 4%">
+						<div class="panel-slideshow-chart" id="uatatuo"
+							rel="rgba(255,255,255,0.4)">
+							<span class="percent"
+								style="font-family: Montserrat; font-size: 25px; font-weight: bold; margin-top: 2px; margin-left: 24px; position: absolute;">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+</div>
+
+<div class="row pie-charts" style="display: flex; margin-top: 0%;height:100px;">
+
+</div>
+
+
+
+
+

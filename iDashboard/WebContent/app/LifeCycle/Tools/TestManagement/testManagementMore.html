@@ -1,0 +1,184 @@
+<div class="widgets gridster" ng-controller="testManagementCtrl">
+
+<div class="row">
+		<div class="col-md-12">
+		<!-- <a data-toggle="modal"  class="ion-android-arrow-back" ng-class="{'on':var2}"style="float:right; margin-top: 0%;margin-right: 2%;margin-bottom:1%;text-decoration: underline;font-size: 17px;color: #fff;" ng-click="back()"> Back</a> -->
+			<div class="form-group" ng-init="setdomain()">
+			
+					<div class="form-group col-md-2">
+		  <label>Domain</label>
+		<select style="outline: 0; width: 180px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='domain' id="domain" class="form-control"
+					ng-model="selecteddomain"
+					ng-options="domain for domain in domains"
+					ng-change="getproject(selecteddomain)" required disabled>
+					<option value="" disabled>Select Domain</option>	
+				</select> 			
+			</div>	
+			
+ 				<div class="form-group col-md-2" ng-init="getproject(selecteddomain)">
+				<label>Project</label>
+		<select style="outline: 0; width: 180px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='project' id="project" class="form-control"
+					ng-model="selectedproject"
+					ng-options="project for project in projects"
+					 ng-change="getrelease(selectedproject)"required disabled>
+					<option value="" disabled>Select Project</option>	
+				</select> 			
+			</div>	
+			
+		<div class="form-group col-md-2" ng-init="getrelease(selectedproject)">
+			<label>Release</label>
+		<select style="outline: 0; width: 180px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='repo' id="repo" class="form-control"
+					ng-model="selectedrelease"
+					ng-options="release for release in releases"
+					ng-change="getSelectedRelease(selectedrelease);selectedDetails()" required disabled>
+					<option value="" disabled>Select Release</option>	
+				</select> 			
+			</div>
+				
+
+			</div>
+		</div>
+	</div>
+
+<div class="row pie-charts">
+<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Test Execution Status
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','tmstatuschart','Test Execution Status')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','tmstatuschart','Test Execution Status')"><i
+										class="fa fa fa-area-chart" download="Test Execution Status.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" style="padding-right: 0px;">
+					<div id="statuspiedivs" class="admin-chart" ng-init="testExeStatusPie()" style="height:280px">
+			
+			<canvas id="tmstatuschart"></canvas>
+                
+		  </div>
+
+			</div>
+		</div></div>
+	<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Defects by Severity
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','tmdefectseverity','Defects by Severity')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','tmdefectseverity','Defects by Severity')"><i
+										class="fa fa fa-area-chart" download="Test Execution Status.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" style="padding-right: 0px;">
+					<div id="tmseveritydiv" class="admin-chart" ng-init="newSeverityChart()" style="height:280px">
+			
+			<canvas id="tmdefectseverity"></canvas>
+                
+		  </div>
+
+			</div>
+		</div></div>
+    
+</div>
+      
+<div class="row pie-charts">
+<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Requirements By Priority
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','my-funnel','Requirements By Priority')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','my-funnel','Requirements By Priority')"><i
+										class="fa fa fa-area-chart" download="Requirements By Priority.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" style="padding-right: 0px;">
+					<div id="funneldiv" class="admin-chart" ng-init="reqPrioirtyFunnelChart()" style="height:350px">
+			
+			<canvas id="my-funnel" width="220" height="250" style="margin-top:10%;margin-left:20%"></canvas>
+                
+		  </div>
+
+			</div>
+		</div></div>
+	
+<div class="col-lg-6 col-md-12 col-sm-12" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Design By Test Type
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','designerbarchart','Design By Test Type')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','designerbarchart','Design By Test Type')"><i
+										class="fa fa fa-area-chart" download="Design By Test Type.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" style="padding-right: 0px;">
+					<div id="exediv" class="admin-chart" ng-init="designTypeChart()" style="height:350px">
+		<canvas id="designerbarchart"> </canvas>
+                
+		  </div>
+
+			</div>
+		</div></div>
+		
+		
+	
+    
+  </div>
+  
+  
+  </div>
+
+</div>

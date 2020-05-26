@@ -1,0 +1,66 @@
+<head>
+<meta name="viewport"
+	content="width=device-width,height=device-height,initial-scale=1.0" />
+</head>
+<div class="popupbgimg modal-content "
+	ng-controller="jiraToolConfigurationCtrl" ng-init="loadDefaultTemplateJira()">
+
+	<div class="modal-header" style="padding: 0px">
+		<div>
+			<label style="font-size: 16px; padding: 14px">Upload JIRA
+				Instance Details</label>
+			<button style="float: right" "type="button" class="close"
+				ng-click="cancel();$dismiss()">
+				<span> x</span>
+			</button>
+		</div>
+	</div>
+
+	<div>
+<form name="uploadForm" ng-submit="uploadTemplateFileJira()" enctype="multipart/form-data">
+		<div class="modal-body">
+			<div class="row" ><div style="float: right">
+				<button type="button" style="margin-top: 3%; margin-bottom: 3%"
+					class="btn btn-primary btn-with-icon"
+					ng-click="downloadDefaultTemplateJira()">Download
+					Template</button>
+
+				</div>
+			</div>
+			<div style="margin-left: 20px">
+			<label ng-show="jirafileuploadederror" style="color:red">
+					Please choose a file to be uploaded</label>
+				<label ng-show="jiraInvalidJson" class="license-error" style="color:red">
+					Error: Please upload the template in a valid json format 
+				</label>
+				<label ng-show="jirafieldError" class="license-error" style="color:red">
+					Error: Please provide project keys
+				</label>
+				<label ng-show="jiraInvalidInstance" class="license-error" style="color:red">
+					Error: Please check the Instance name  
+				</label>
+				<label ng-show="jiraextnFlag" style="color:red">Please choose a file having extensions .json only</label></div>
+			
+			<div class="row" style="margin-left: 5px">
+			<div class=" col-md-6">
+			<label style="color: #4c4c4c;font-size: 16px;  margin-top: 3px;">Select the file to be uploaded</label></div>
+				<div class=" col-md-3">
+				<input type="file" ng-model="uploadFile" name="file" id="file" accept=".json"></div>
+				
+			</div>
+		</div>
+
+		<div class="row">
+			<button type="submit" class="btn btn-success col-md-1 "
+				style="width: 10%; margin-left: 20%; margin-right: 2%; margin-bottom: 5%"
+				ng-click="">Upload</button>
+
+			<button type="button" class="btn btn-danger col-md-1 "
+				style="width: 10%; margin-left: 2%; margin-right: 10%; margin-bottom: 5%"
+				ng-click="cancel();$dismiss()">Cancel</button>
+
+		</div></form>
+
+
+	</div>
+</div>

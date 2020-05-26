@@ -1,0 +1,26 @@
+{
+	"name": "Sample_InstanceName",
+	"domains": [
+		{
+			"domain": "Sample_Domain",
+			"projects": [
+				{
+					"project": "Sample_Project",
+					"releases": [
+						{
+							"release": "Sample_Release",
+							"releaseId": "Sample_ReleaseId",
+							"cycles": [
+								{
+									"cycle": "Sample_Cycle",
+									"cycleId": "Sample_CycleId"
+									
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

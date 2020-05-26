@@ -1,0 +1,57 @@
+<div class="popupbgimg modal-content " style="margin-top: 50" ng-controller="OperationalDashboardCtrl" >
+
+ <div class="modal-header">
+ 	<span style="font-size: 18px">Custom Templates</span>
+ 	<!-- <a
+			ng-click="cancel();"> <img src="./assets/img/close.png"
+			style="float: right; width: 3%;height:1%;margin-top: 0px"">
+		</a> -->
+		<button type="button" class="close" ng-click="cancel();$dismiss()" aria-label="closeed">
+			<span aria-hidden="true"> x</span>
+		</button> 
+ </div>
+ 
+ 
+ <form name="customTemplate">
+ <div class= "modal-body">
+  <div class="row" style="margin-left: 5px" >
+ 	<div class=" form-group col-md-3">
+ 	<label for="templatelist"  style="font-size: 15px">Custom Templates </label> </div>
+ 	
+ 	<div class=" form-group col-md-6" ng-init="getTemplatesList()">
+ 	<select style="outline: 0; background-color: rgba(87, 95, 118, 1)" 
+					name='templatelist' id="templatelist" class="form-control"
+					ng-model="selectedcustomtemplate"
+					ng-options="templatelist for templatelist in templatelists"
+					ng-change="getcustomtemplatelistview(selectedcustomtemplate)"  required>
+					<option value="" disabled>Select Template</option>	
+				</select>
+ 	</div>
+ 	</div>
+ 	<div ng-show="selectedcustomtemplate">
+ 	<div class="row" style="margin-left: 5px" >
+ 	<div class=" form-group col-md-3">
+ 	<label for="rollingperiod"  style="font-size: 15px;">Rolling Period </label> </div>
+ 	<div class=" form-group col-md-6"><input type="text" class="form-control" id="rollingperiod" ng-model="templateRollingPeriod" 
+ 													required>
+ 	</div></div>
+ 	<div class="row" style="margin-left: 5px" >
+ 	<div class=" form-group col-md-3">
+ 	<label for="rollingperiod"  style="font-size: 15px">Tools Selected </label> </div>
+ 	<div class=" form-group col-md-6">
+ 	<input type="checkbox"  ng-model="templateToolIsAlm"><label style="padding-left: 5px"> ALM </label>
+ 	<input type="checkbox" style="margin-left: 30px" ng-model="templateToolIsJira"><label style="padding-left: 5px"> JIRA </label>
+ 	</div></div>
+ 	
+ 	<div class="row" style="margin-left: 5px" >
+ 	<div class=" form-group col-md-3">
+ 	<label for="rollingperiod"  style="font-size: 15px">List of Selected Metrics </label> </div>
+ 	<div class=" form-group col-md-6 " ba-panel ba-panel-class="with-scroll"><table class="table" style="color:#4c4c4c;" id="templateSelectedMetricName"><tr ng-repeat="item in templateSelectedMetricName track by $index"><td>{{item}}</td></tr></table>
+ 	</div></div>
+ 	
+ 	</div>
+	<div class="modal-footer ">
+    <button type="button" style="margin-left: 48%;float: left" class="btn btn-success" ng-click="$dismiss()">OK</button>
+  </div>
+</form>
+</div>

@@ -1,0 +1,219 @@
+<head>
+<meta name="viewport"
+	content="width=device-width,height=device-height,initial-scale=1.0" />
+</head>
+<div class="row pie-charts " ng-controller="almToolConfigurationCtrl">
+	<div ba-panel-class="with-scroll" class="col-lg-9 col-xs-12 col-md-9">
+		<div class="panel panel-blur with-scroll animated zoomIn" zoom-in=""
+			ba-panel-blur="">
+			<div class="panel-heading clearfix"
+				ng-init="loadAlmInstanceInfo();loadJiraInstanceInfo()">
+				<h3 class="panel-title">ALM Configurations</h3>
+			</div>
+
+			<div class="panel-body">
+				<div style="float: right">
+					<button type="button" style="margin-left: 1%; margin-bottom: 1%"
+						class="btn btn-primary btn-with-icon"
+						ng-click="open('app/admin/toolsConfiguration/alm/addAlmInstances.html','lg')">
+
+						Add ALM Instances</button>
+				</div>
+				<div class="row">
+					<table class="table" ng-init="">
+
+						<tbody>
+
+							<tr ng-repeat="item in instanceList">
+								<td style="width: 15%; font-weight: bold">{{item.name}}</td>
+								<td style="width: 10%; font-weight: bold"><a
+									ng-click="addALMDomains(item, item.instanceId)">Domains</a></td>
+								<td style="width: 10%; font-weight: bold"><a
+									ng-click="addALMProjects(item, item.instanceId)">Projects</a></td>
+								<td style="width: 10%; font-weight: bold"><a
+									ng-click="addALMReleases(item, item.instanceId)">Releases</a></td>
+								<td style="width: 10%; font-weight: bold"><a
+									ng-click="addALMCycles(item, item.instanceId)">Cycles</a></td>
+								<td style="width: 10%; height: 5%; font-weight: bold"><button
+										type="button"
+										style="margin-left: 1%; margin-top: 3%; margin-bottom: 3%"
+										class="btn btn-primary btn-with-icon"
+										ng-click="viewInstanceDetails(item)">View</button></td>
+								<td style="width: 10%; height: 5%; font-weight: bold"><button
+										type="button"
+										style="margin-left: 1%; margin-top: 3%; margin-bottom: 3%"
+										class="btn btn-primary btn-with-icon"
+										ng-click="uploadInstanceDetails(item)">Upload</button></td>
+								<td style="width: 10%; height: 5%; font-weight: bold"><button
+										type="button"
+										style="margin-left: 1%; margin-top: 3%; margin-bottom: 3%"
+										class="btn btn-primary btn-with-icon"
+										ng-click="downloadInstanceDetails(item)">Download</button></td>
+								<td style="width: 10%;"><a
+									style="color: #ffffff; margin-left: 2%; width: 10%;"
+									ng-click="updateInstanceDetails(item.instanceId)"
+									class="ion-edit"></a> &nbsp; <astyle ="color:
+										#ffffff; margin-left: 3%"
+									ng-click="deleteInstancePopup(item.instanceId)"
+										class="ion-trash-b"> </a></td>
+
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-xs-12 col-md-3">
+		<div ba-panel ba-panel-title="ALM Scheduler"
+			ba-panel-class="with-scroll">
+			<table>
+				<tr>
+					<td><label>Scheduler runs</label></td>
+					<td><label style="color: #FFE082; padding-left: 10px">
+							every <B>{{scheduler}} hour(s)</B>
+					</label></td>
+					<td style="padding-left: 35%"><a
+						ng-click="updateAlmScheduler(almInstanceDetails)"><b>Edit</b></a></td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td width=55%><label
+						style="color: black; padding-top: 10px; font-weight: normal">Retrieval
+							Status: </label></td>
+					<td><label style="margin-bottom: 0.5px"
+						ng-class="{colorGreen: runStatus === 'Completed', colorBlue: runStatus === 'In Progress'}"><B>{{runStatus}}</B></label></td>
+				</tr>
+				<tr>
+					<td><label style="color: black; font-weight: normal">Last
+							Run Duration: </label></td>
+					<td><label style="color: #FFE082; padding-left: 5px"><B>{{runDuration}}</B>
+							Minutes</label></td>
+				</tr>
+				<tr ng-if="runStatus === 'Completed' ">
+					<td><label style="color: black; font-weight: normal">Next
+							Run Scheduled @ </label></td>
+					<!-- 					<td><label style="color: #00fdff;padding-left: 5px">{{runStartTime | date:'medium'}}</label></td>					 -->
+					<td><label style="color: #00fdff; padding-left: 5px">{{nextRunTime
+							| date:'medium'}}</label></td>
+				</tr>
+				<tr ng-if="runStatus === 'In Progress' ">
+					<td><label style="color: black; font-weight: normal">Expected
+							End Time @ </label></td>
+					<td><label style="color: #00fdff; padding-left: 5px">{{expectedEndTime
+							| date:'medium'}}</label></td>
+				</tr>
+
+			</table>
+
+
+		</div>
+	</div>
+</div>
+<div class="row pie-charts " ng-controller="jiraToolConfigurationCtrl">
+	<div ba-panel-class="with-scroll" class="col-lg-9 col-xs-12 col-md-9">
+		<div class="panel panel-blur with-scroll animated zoomIn" zoom-in=""
+			ba-panel-blur="" ng-init="loadJiraInstanceInfo()">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title">JIRA Configurations</h3>
+			</div>
+
+			<div class="panel-body">
+				<div style="float: right">
+					<button type="button" style="margin-left: 1%; margin-bottom: 1%"
+						class="btn btn-primary btn-with-icon"
+						ng-click="open('app/admin/toolsConfiguration/jira/addJiraInstances.html','lg')">
+
+						Add JIRA Instances</button>
+				</div>
+				<div class="row">
+					<table class="table" ng-init="">
+
+						<tbody>
+
+							<tr ng-repeat="itemJira in instanceListJira">
+								<td style="width: 20%; font-weight: bold">{{itemJira.name}}</td>
+								<td style="width: 15%; font-weight: bold"><a
+									ng-click="updateJiraProjects(itemJira,itemJira.instanceId)">Projects</a></td>
+								<td style="width: 10%; height: 5%; font-weight: bold"><button
+										type="button"
+										style="margin-left: 1%; margin-top: 3%; margin-bottom: 3%"
+										class="btn btn-primary btn-with-icon"
+										ng-click="viewJiraInstanceDetails(itemJira)">View</button></td>
+								<td style="width: 10%; height: 5%; font-weight: bold"><button
+										type="button"
+										style="margin-left: 1%; margin-top: 3%; margin-bottom: 3%"
+										class="btn btn-primary btn-with-icon"
+										ng-click="uploadJiraInstanceDetails(itemJira)">Upload</button></td>
+								<td style="width: 10%; height: 5%; font-weight: bold"><button
+                                                            type="button"
+                                                            style="margin-left: 1%; margin-top: 3%; margin-bottom: 3%"
+                                                            class="btn btn-primary btn-with-icon"
+                                                            ng-click="downloadJiraInstanceDetails(itemJira)">Download</button></td>
+								
+								<td style="width: 10%;"><a
+									style="color: #ffffff; margin-left: 2%; width: 10%;"
+									ng-click="updateJiraInstanceDetails(itemJira.instanceId)"
+									class="ion-edit"></a> &nbsp; <astyle ="color:
+										#ffffff; margin-left: 3%"
+									ng-click="deleteJiraInstancePopup(itemJira.instanceId)"
+										class="ion-trash-b"> </a></td>
+
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-xs-12 col-md-3">
+		<div ba-panel ba-panel-title="JIRA Scheduler"
+			ba-panel-class="with-scroll">
+			<table>
+				<tr>
+					<td><label>Scheduler runs</label></td>
+					<td><label style="color: #FFE082; padding-left: 10px">
+							every <B>{{scheduler}} hour(s)</B>
+					</label></td>
+					<td style="padding-left: 35%"><a
+						ng-click="updateJiraScheduler(jiraInstanceDetails)"><b>Edit</b></a></td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td width=55%><label
+						style="color: black; padding-top: 10px; font-weight: normal">Retrieval
+							Status: </label></td>
+					<td><label style="margin-bottom: 0.5px"
+						ng-class="{colorGreen: runStatus === 'Completed', colorBlue: runStatus === 'In Progress'}"><B>{{runStatus}}</B></label></td>
+				</tr>
+				<tr>
+					<td><label style="color: black; font-weight: normal">Last
+							Run Duration: </label></td>
+					<td><label style="color: #FFE082; padding-left: 5px"><B>{{runDuration}}</B>
+							Minutes</label></td>
+				</tr>
+				<tr ng-if="runStatus === 'Completed' ">
+					<td align=right><label
+						style="color: black; font-weight: normal">Next Run
+							Scheduled @ </label></td>
+					<!-- 					<td><label style="color: #00fdff;padding-left: 5px">{{runStartTime | date:'medium'}}</label></td>					 -->
+					<td><label style="color: #00fdff; padding-left: 5px">{{nextRunTime
+							| date:'medium'}}</label></td>
+				</tr>
+				<tr ng-if="runStatus === 'In Progress' ">
+					<td><label style="color: black; font-weight: normal">Expected
+							End Time @ </label></td>
+					<td><label style="color: #00fdff; padding-left: 5px">{{expectedEndTime
+							| date:'medium'}}</label></td>
+				</tr>
+
+			</table>
+
+
+		</div>
+	</div>
+</div>

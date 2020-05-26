@@ -1,0 +1,9 @@
+ <!-- this is a big blunder. div class="row" should not be used here -->
+ <div class="widgets">
+  
+	<div class="row">
+       <div ng-if="tool == 'ALM'" ng-include="'app/Operational/Execution/testexecutiondata.html'"></div>
+	</div>
+	
+	<div ng-if="tool == 'JIRA'" ng-include="'app/Operational/Execution/jiratestexecutiondata.html'"></div>
+</div>

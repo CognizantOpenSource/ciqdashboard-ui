@@ -1,0 +1,12 @@
+<div class="modal-content" style="margin-top:450px;" ng-controller="jiraToolConfigurationCtrl">
+  <div class="modal-header bg-danger">
+    <i class="ion-flame modal-icon"></i><span>Delete</span>
+  </div>
+ 
+  <div class="modal-body text-center">Are you sure to delete the JIRA instance?</div>
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-danger" ng-click="deleteJiraInstance(jiraId);">Yes</button>
+     <button type="button" class="btn btn-danger" ng-click="$dismiss()">No</button>
+  </div>
+</div> 

@@ -1,0 +1,654 @@
+<style>
+.circle {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #2dacd1;
+	border-color: #022200;
+	font-weight: bold;
+}
+
+.circlegreen {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #06702f;
+	font-weight: bold;
+}
+
+.circlelightgreen {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #719b1d;
+	font-weight: bold;
+}
+
+.circleOrange {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #eab63c;
+	font-weight: bold;
+}
+
+.circleOrangeRed {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #ea6d3b;
+	font-weight: bold;
+}
+
+.circleRed {
+	width: 60px;
+	height: 30px;
+	border-radius: 50%;
+	font-size: 13px;
+	color: #fff;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #b50514;
+	font-weight: bold;
+}
+
+hr {
+	margin: 5px 0 0px 0;
+}
+
+hr.style-seven:before {
+	display: block;
+	content: "";
+	height: 10px;
+	margin-top: -11px;
+	border-style: solid;
+	border-color: white;
+	border-width: 0 0 1px 0;
+	border-radius: 30px;
+}
+
+hr.style-seven {
+	height: 7px;
+	border-style: solid;
+	border-color: white;
+	border-width: 1px 0 0 0;
+	border-radius: 30px;
+}
+
+hr.style-nine:before {
+	height: 30px;
+	margin-top: -31px;
+	border-style: none;
+	border-width: 0 0 0 0;
+}
+
+hr.style-nine {
+	height: 25px;
+	border-style: solid;
+	border-color: white;
+	border-width: 1px 0 0 0;
+	border-radius: 30px;
+}
+
+hr.style-four {
+	height: 20px;
+	border: 0;
+	box-shadow: inset 0 20px 20px -20px rgba(0, 0, 0, 0.5);
+}
+</style>
+
+<div ng-controller="codeQualityCtrl">
+
+	<div class="row">
+		<div class="col-md-12">
+			<!-- <a data-toggle="modal"  class="ion-android-arrow-back" ng-class="{'on':var2}"style="float:right; margin-top: 0%;margin-right: 2%;margin-bottom:1%;text-decoration: underline;font-size: 17px;color: #fff;" ng-click="back()"> Back</a> -->
+			<div class="form-group" ng-init="">
+				<!--   <label for="domain" class="control-label">Domain</label> -->
+				<select
+					style="outline: 0; width: 180px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='Ca Projects' id="caProjects" class="form-control"
+					ng-model="selectedProj"
+					ng-options="proj.prjName for proj in projectList"
+					ng-change="selectedProject(selectedProj)" required disabled>
+					<option value="" disabled>Projects</option>
+				</select>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<!-- Coverage -->
+		
+		<div class="col-md-4" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Coverage
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','linecoverage','Coverage')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','linecoverage','Coverage')"><i
+										class="fa fa fa-area-chart" download="Coverage.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+				<div style="height: 414px;" class="horizontal-scroll">
+
+				<div style="height: 45px; text-align: right;">
+					<B>Code Coverage Trend</B>
+
+
+				</div>
+
+				<div id="coverage" style="height: 230px; vertical-align: middle;">
+					<!-- 					<div style="text-align: center;">Code coverage Trend</div> -->
+					<!-- 					<hr class="style-nine"> -->
+					<canvas id="linecoverage"></canvas>
+					<!-- 					<div style="text-align: center;">Code coverage Trend</div> -->
+					<!-- 				<hr class="style-nine"> -->
+				</div>
+
+				<div style="height: 60px; vertical-align: right;">
+					<B>Uncovered Lines:</B>
+				</div>
+				<div style="height: 79px; vertical-align: middle;">
+					<table style="width: 100%">
+						<tr>
+							<td style="width: 50%" align="center">
+								<div>
+									<div class="circle">{{lines_to_cover}}</div>
+									<hr class="style-seven">
+									<div style="text-align: center;">Lines to Cover</div>
+								</div>
+							</td>
+							<td style="width: 50%" align="center">
+								<div>
+									<div class="circle">{{new_lines_to_cover}}</div>
+									<hr class="style-seven">
+									<div style="text-align: center;">
+										<B><U>NEW</U></B> Lines to Cover
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div></div></div>
+		
+		<!-- Unit Test -->
+		<div class="col-md-4" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Unit Test
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','lineunitTest','Unit Test')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','lineunitTest','Unit Test')"><i
+										class="fa fa fa-area-chart" download="Unit Test.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+			<div style="height: 414px;" class="horizontal-scroll">
+				<div style="height: 45px; text-align: right;">
+					<B>Unit Tests Trend</B>
+				</div>
+				<div id="unitTest" style="height: 230px; vertical-align: middle;">
+					<br>
+					<canvas id="lineunitTest"></canvas>
+				</div>
+				<div style="height: 60px; vertical-align: right;">
+					<B>Unit Tests:</B>
+				</div>
+				<div style="height: 79px; vertical-align: middle;">
+					<table style="width: 100%">
+						<tr>
+							<td style="width: 50%" align="center">
+								<div>
+									<div class="circle">{{test_success_density}}</div>
+									<hr class="style-seven">
+									<div style="text-align: center;">Success %</div>
+								</div>
+							</td>
+							<td style="width: 50%" align="center">
+								<div>
+									<div class="circle">{{testExecutionDuration}}</div>
+									<hr class="style-seven">
+									<div style="text-align: center;">Test Duration</div>
+								</div>
+							</td>
+						</tr>
+
+					</table>
+				</div>
+
+
+
+			</div>
+		</div></div></div>
+		
+
+
+		<div class=" col-md-4 ">
+
+			<div class="row">
+				<!-- Size  -->
+				<div class="col-md-12" ba-panel ba-panel-title="Size"
+					ba-panel-class="with-scroll">
+					<div class="horizontal-scroll">
+						<table style="width: 100%">
+
+							<tr>
+								<td align="center">
+									<div>
+										<div style="text-align: center;">Classes</div>
+										<hr class="style-seven">
+										<div class="circle">{{classes}}</div>
+									</div>
+								</td>
+								<td align="center">
+									<div>
+										<div style="text-align: center;">Functions</div>
+										<hr class="style-seven">
+										<div class="circle">{{functions}}</div>
+									</div>
+								</td>
+								<td align="center">
+									<div>
+										<div style="text-align: center;">Lines</div>
+										<hr class="style-seven">
+										<div class="circle">{{lines}}</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<!-- Complexity  -->
+				<div class=" col-md-12 " ba-panel ba-panel-title="Complexity"
+					ba-panel-class="with-scroll">
+
+					<table style="width: 100%">
+						<tr>
+
+							<td style="width: 33%" align="center">
+								<div>
+									<div style="text-align: center;">Complexity</div>
+									<hr class="style-seven">
+									<div class="circle">{{complexity}}</div>
+								</div>
+							</td>
+
+							<td style="width: 33%" align="center">
+								<div>
+									<div style="text-align: center;">Class Complexity</div>
+									<hr class="style-seven">
+									<div class="circle">{{class_complexity}}</div>
+								</div>
+							</td>
+							<td style="width: 34%" align="center">
+								<div>
+									<div style="text-align: center;">Func. Complexity</div>
+									<hr class="style-seven">
+									<div class="circle">{{function_complexity}}</div>
+								</div>
+							</td>
+
+
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div class="row">
+				<!-- Issues -->
+				<div class=" col-md-12 " ba-panel ba-panel-title="issues"
+					ba-panel-class="with-scroll">
+
+					<div class="horizontal-scroll">
+						<table style="width: 100%">
+							<tr>
+								<td style="width: 33%" align="center">
+									<div>
+										<div style="text-align: center;">Issues</div>
+										<hr class="style-seven">
+										<div class="circle">{{violations}}</div>
+									</div>
+								</td>
+								<td style="width: 33%" align="center">
+									<div>
+										<div style="text-align: center;">Open Issues</div>
+										<hr class="style-seven">
+										<div class="circle">{{open_issues}}</div>
+									</div>
+								</td>
+								<td style="width: 34%" align="center">
+									<div>
+										<div style="text-align: center;">Re-Opened Issues</div>
+										<hr class="style-seven">
+										<div class="circle">{{reopened_issues}}</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+
+		<!-- Reliability-->
+		<!--  
+		<div class="col-md-6" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Reliability
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','line','Reliability')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','line','Reliability')"><i
+										class="fa fa fa-area-chart" download="Reliability.jpg"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<div class="row">
+				<div class=" col-md-8 ">
+
+					<div id="reliability"
+						style="height: 200px; vertical-align: middle;" ng-init="">
+						<br>
+						<canvas id="line"></canvas>
+					</div>
+				</div>
+
+				<div class=" col-md-4">
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">New Bugs</div>
+							<hr class="style-seven">
+							<div class="circle">{{newBugs}}</div>
+						</div>
+					</div>
+					</br>
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">Rating</div>
+							<hr class="style-seven">
+							<div class={{reliability_Rating_color}}>{{reliability_Rating}}</div>
+						</div>
+					</div>
+					</br>
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">New Rating</div>
+							<hr class="style-seven">
+							<div class={{new_reliability_Rating_color}}>{{new_reliability_Rating}}</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div></div></div>-->
+				
+		
+		<div class=" col-md-6 " ba-panel ba-panel-title="Reliability"
+			ba-panel-class="with-scroll">
+			<div class="row">
+				<div class=" col-md-8 ">
+
+					<div id="reliability"
+						style="height: 200px; vertical-align: middle;" ng-init="">
+						<br>
+						<canvas id="line"></canvas>
+					</div>
+				</div>
+
+				<div class=" col-md-4">
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">New Bugs</div>
+							<hr class="style-seven">
+							<div class="circle">{{newBugs}}</div>
+						</div>
+					</div>
+					</br>
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">Rating</div>
+							<hr class="style-seven">
+							<div class={{reliability_Rating_color}}>{{reliability_Rating}}</div>
+						</div>
+					</div>
+					</br>
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">New Rating</div>
+							<hr class="style-seven">
+							<div class={{new_reliability_Rating_color}}>{{new_reliability_Rating}}</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- SEcurity Analysis  -->
+		<div class="col-md-6 " ba-panel ba-panel-title="Security Analysis"
+			ba-panel-class="with-scroll">
+			<div class="horizontal-scroll">
+				<div class="row">
+					<div class=" col-md-8 ">
+						<div id="security" style="height: 205px; vertical-align: middle;"
+							ng-init="">
+							<br>
+							<canvas id="linesecurity"></canvas>
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="row">
+							<div align="center">
+								<div style="text-align: center;">New Vulnerabilities</div>
+								<hr class="style-seven">
+								<div class="circle">{{newvulnerabilities}}</div>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div align="center">
+								<div style="text-align: center;">Rating</div>
+								<hr class="style-seven">
+								<div class={{security_rating_color}}>{{security_rating}}</div>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div align="center">
+								<div style="text-align: center;">New Rating</div>
+								<hr class="style-seven">
+								<div class={{new_security_rating_color}}>{{new_security_rating}}</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+
+		<!-- Duplications -->
+
+		<div class=" col-md-6" ba-panel ba-panel-title="Duplications"
+			ba-panel-class="with-scroll">
+			<div class="horizontal-scroll">
+
+				<div class=" col-md-8">
+					<div id="duplication"
+						style="height: 215px; vertical-align: middle;">
+						<br>
+						<canvas id="lineduplication"></canvas>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">Duplicated Files</div>
+							<hr class="style-seven">
+							<div class="circle">{{duplicated_files}}</div>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">Duplicated Lines</div>
+							<hr class="style-seven">
+							<div class="circle">{{duplicated_lines}}</div>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div align="center">
+							<div style="text-align: center;">New Duplicated Lines</div>
+							<hr class="style-seven">
+							<div class="circle">{{new_duplicated_lines}}</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+
+		<div class=" col-md-6" ba-panel ba-panel-title="Maintainability"
+			ba-panel-class="with-scroll">
+			<div class="horizontal-scroll">
+				<br>
+				<table style="width: 100%">
+					<tr>
+						<td style="width: 33%" align="center">
+							<div>
+								<div style="text-align: center;">Code Smells</div>
+								<hr class="style-seven">
+								<div class="circle">{{code_smells}}</div>
+							</div>
+						</td>
+						<td style="width: 33%" align="center">
+							<div>
+								<div style="text-align: center;">Technical Debt</div>
+								<hr class="style-seven">
+								<div class="circle">{{technical_debt}}</div>
+							</div>
+						</td>
+						<td style="width: 34%" align="center">
+							<div>
+								<div style="text-align: center;">Rating</div>
+								<hr class="style-seven">
+								<div class={{maintainability_rating_color}}>{{maintainability_rating}}</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td height="5px"><br> <br></td>
+					</tr>
+					<tr>
+						<td style="width: 33%" align="center">
+							<div>
+								<div style="text-align: center;">New Code Smells</div>
+								<hr class="style-seven">
+								<div class="circle">{{new_code_smells}}</div>
+							</div>
+						</td>
+						<td style="width: 33%" align="center">
+							<div>
+								<div style="text-align: center;">New Technical Debt</div>
+								<hr class="style-seven">
+								<div class="circle">{{new_technical_debt}}</div>
+							</div>
+						</td>
+						<td style="width: 34%" align="center">
+							<div>
+								<div style="text-align: center;">New Rating</div>
+								<hr class="style-seven">
+								<div class={{new_maintainability_rating_color}}>{{new_maintainability_rating}}</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td height="5px"><br> <br></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
