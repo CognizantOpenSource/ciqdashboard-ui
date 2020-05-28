@@ -93,7 +93,7 @@
 			};
 
 			$http.get(
-					"rest/codequality/getcoverage?projectname="
+					"rest/codequalitycontroller/getcoverage?projectname="
 							+ projectName, config).success(function(response) {
 				gethomepagecoverage(response);
 			});
