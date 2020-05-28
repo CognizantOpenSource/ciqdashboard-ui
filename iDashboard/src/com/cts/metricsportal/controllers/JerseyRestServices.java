@@ -478,54 +478,67 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Path("/licenseDetails")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<LicenseVO> getlicenseDetails() throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			NumberFormatException, BaseException, BadLocationException, ParseException {
 		LicenseReader lr = new LicenseReader();
 		List<LicenseVO> readerValues = new ArrayList<LicenseVO>();
 
 		try {
 			readerValues = lr.getReaderValues();
+			if (readerValues.size() > 0) {
+				
+				if (readerValues.get(0).getisMacIdVerify()) {
+					readerValues = readerValues;
+				} else {
+					readerValues = null;
+				}
+				
+				String user = null;
+
+				if (!(readerValues == null)) {
+
+					user = readerValues.get(0).getUser();
+
+					Date expiryDate = readerValues.get(0).getEndDate();
+					int daysRemaining = (int) readerValues.get(0).getDaysRemaining();
+
+					if (readerValues.get(0).getDaysRemaining() < 5 && !(readerValues.get(0).getDaysRemaining() <= 0)) {
+						MailScheduler mailschedule = new MailScheduler();
+						mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, false);
+					}
+
+					if (readerValues.get(0).getDaysRemaining() <= 0) {
+						MailScheduler mailschedule = new MailScheduler();
+						mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, true);
+					}
+
+					String version = readerValues.get(0).getVersion();
+
+					if (version != null) {
+						if (version.equalsIgnoreCase(" Lite Version")) {
+							Update update = new Update();
+							update.set("isQbot", false);
+							Query query1 = new Query();
+							getMongoOperation().updateMulti(query1, update, UserVO.class);
+						}
+					}
+				}
+				
+			}else {
+				readerValues = null;
+			}
+			
+			
+
+			
+			
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
-		}
-
-		if (readerValues.get(0).getisMacIdVerify()) {
-			readerValues = readerValues;
-		} else {
 			readerValues = null;
+			return readerValues;
+					
 		}
-
-		String user = null;
-
-		if (!(readerValues == null)) {
-
-			user = readerValues.get(0).getUser();
-
-			Date expiryDate = readerValues.get(0).getEndDate();
-			int daysRemaining = (int) readerValues.get(0).getDaysRemaining();
-
-			if (readerValues.get(0).getDaysRemaining() < 5 && !(readerValues.get(0).getDaysRemaining() <= 0)) {
-				MailScheduler mailschedule = new MailScheduler();
-				mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, false);
-			}
-
-			if (readerValues.get(0).getDaysRemaining() <= 0) {
-				MailScheduler mailschedule = new MailScheduler();
-				mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, true);
-			}
-
-			String version = readerValues.get(0).getVersion();
-
-			if (version != null) {
-				if (version.equalsIgnoreCase(" Lite Version")) {
-					Update update = new Update();
-					update.set("isQbot", false);
-					Query query1 = new Query();
-					getMongoOperation().updateMulti(query1, update, UserVO.class);
-				}
-			}
-		}
-
 		return readerValues;
 	}
 
@@ -791,13 +804,12 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 	/*
 	 * public String getLdapProfilePicture(String username, String password) {
-	 * String photoString = null; Properties ldapSettings = new Properties();
-	 * try { ldapSettings =
-	 * PropertyManager.getProperties("ldapSettings.properties"); } catch
-	 * (Exception e) { // TODO Auto-generated catch block e.printStackTrace(); }
-	 * LdapAuthentication authenticator = new LdapAuthentication(ldapSettings);
-	 * try { if (authenticator.getPhoto(username, password) != null) { byte[]
-	 * photo = authenticator.getPhoto(username, password); //photoString = new
+	 * String photoString = null; Properties ldapSettings = new Properties(); try {
+	 * ldapSettings = PropertyManager.getProperties("ldapSettings.properties"); }
+	 * catch (Exception e) { // TODO Auto-generated catch block e.printStackTrace();
+	 * } LdapAuthentication authenticator = new LdapAuthentication(ldapSettings);
+	 * try { if (authenticator.getPhoto(username, password) != null) { byte[] photo
+	 * = authenticator.getPhoto(username, password); //photoString = new
 	 * sun.misc.BASE64Encoder().encode(photo); photoString = ""; } else {
 	 * photoString = ""; } } catch (NamingException e) { // TODO Auto-generated
 	 * catch block e.printStackTrace(); throw new
@@ -843,9 +855,8 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		/*
 		 * Query domainquery = new Query();
-		 * domainquery.addCriteria(Criteria.where("userId").is(userId));
-		 * List<String> domain =
-		 * getMongoOperation().getCollection("userInfo").distinct(
+		 * domainquery.addCriteria(Criteria.where("userId").is(userId)); List<String>
+		 * domain = getMongoOperation().getCollection("userInfo").distinct(
 		 * "selectedProjects.level1", domainquery.getQueryObject());
 		 */
 		// end of domain
@@ -1267,12 +1278,11 @@ public class JerseyRestServices extends BaseMongoOperation {
 	 * 
 	 * @Path("/projectaccess")
 	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public List<String>
-	 * getprojectaccess() throws JsonParseException, JsonMappingException,
-	 * IOException, NumberFormatException, BaseException, BadLocationException {
-	 * { List<String> coll =
-	 * getMongoOperation().getCollection("levelId").distinct("level2"); return
-	 * coll; }
+	 * @Produces(MediaType.APPLICATION_JSON) public List<String> getprojectaccess()
+	 * throws JsonParseException, JsonMappingException, IOException,
+	 * NumberFormatException, BaseException, BadLocationException { { List<String>
+	 * coll = getMongoOperation().getCollection("levelId").distinct("level2");
+	 * return coll; }
 	 * 
 	 * }
 	 */
@@ -1568,17 +1578,13 @@ public class JerseyRestServices extends BaseMongoOperation {
 			query.addCriteria(Criteria.where("userId").is(userId));
 
 			/*
-			 * for (UserVO vo : userInfo) { if
-			 * (vo.getUserId().equalsIgnoreCase(userId)) {
+			 * for (UserVO vo : userInfo) { if (vo.getUserId().equalsIgnoreCase(userId)) {
 			 * 
-			 * count = 1; break; } else if
-			 * (vo.getUserName().equalsIgnoreCase(userName)) {
+			 * count = 1; break; } else if (vo.getUserName().equalsIgnoreCase(userName)) {
 			 * 
-			 * count = 2; break; } else if
-			 * (vo.getEmail().equalsIgnoreCase(email)) {
+			 * count = 2; break; } else if (vo.getEmail().equalsIgnoreCase(email)) {
 			 * 
-			 * count = 3; break; } else if
-			 * (vo.getMobileNum().equalsIgnoreCase(mobileNum)) {
+			 * count = 3; break; } else if (vo.getMobileNum().equalsIgnoreCase(mobileNum)) {
 			 * 
 			 * count = 4; break; } }
 			 */
@@ -1851,8 +1857,8 @@ public class JerseyRestServices extends BaseMongoOperation {
 		update.set("ispassReset", false);
 		/*
 		 * Query query2 = new Query();
-		 * query2.addCriteria(Criteria.where("userId").is(userId)); Update
-		 * update1 = new Update(); update1.unset("ispassReset");
+		 * query2.addCriteria(Criteria.where("userId").is(userId)); Update update1 = new
+		 * Update(); update1.unset("ispassReset");
 		 */
 		getMongoOperation().updateFirst(query1, update, UserVO.class);
 		/* getMongoOperation().updateFirst(query2, update1, UserVO.class); */
@@ -2184,12 +2190,11 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 			for (int i = 0; i < testedUserInfo.size(); i++) {
 				/*
-				 * boolean value= testedUserInfo.get(i).unavailable();
-				 * if(value==true){ Query query = new Query();
+				 * boolean value= testedUserInfo.get(i).unavailable(); if(value==true){ Query
+				 * query = new Query();
 				 * query.addCriteria(Criteria.where("userId").is(testedUserInfo.
-				 * get(i).getUserId())); getMongoOperation().remove(query,
-				 * UserVO.class); count = 1; } } return count; } else { return
-				 * count; }
+				 * get(i).getUserId())); getMongoOperation().remove(query, UserVO.class); count
+				 * = 1; } } return count; } else { return count; }
 				 * 
 				 * }
 				 */
@@ -2271,8 +2276,8 @@ public class JerseyRestServices extends BaseMongoOperation {
 		AuthenticationService AuthServ = new AuthenticationService();
 		boolean adminstatus = AuthServ.checkAdminUser(authString);
 		/*
-		 * String decoded = new String(Base64.getDecoder().decode(password));
-		 * String encryptedPassword=iAuthentication.write(decoded);
+		 * String decoded = new String(Base64.getDecoder().decode(password)); String
+		 * encryptedPassword=iAuthentication.write(decoded);
 		 */ Query query1 = new Query();
 		query1.addCriteria(Criteria.where("instanceName").is(instanceName));
 		query1.addCriteria(Criteria.where("userId").is(userId));

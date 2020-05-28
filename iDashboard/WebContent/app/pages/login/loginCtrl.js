@@ -23,7 +23,6 @@
 			$base64, $window, $location, $http, $state, localStorageService,
 			$cookies, $sessionStorage, $route, toastr, $timeout) {
 
-		
 		// $rootScope.loggedIn = false;
 		$rootScope.registration = false;
 		$rootScope.registereduser = false;
@@ -81,6 +80,7 @@
 					.get("rest/jsonServices/licenseDetails")
 					.success(
 							function(response) {
+								$rootScope.noLicenseMsg = true;
 								$rootScope.licenseDetails = response;
 								localStorageService.set('licenseDetails',
 										$rootScope.licenseDetails);
@@ -93,6 +93,17 @@
 								if ($rootScope.licenseDetails == "") {
 									$rootScope.noLicenseMsg = true;
 									$rootScope.licenseExpiry = false;
+									$rootScope.admin = localStorageService
+											.get('admin');
+
+									if ($rootScope.admin) {
+										$rootScope.licenseExpiry = false;
+										$rootScope.noLicenseMsg = false;
+									} else {
+										$rootScope.licenseExpiry = true;
+										$rootScope.noLicenseMsg = true;
+									}
+
 								} else if ($rootScope.licenseDetails[0].macId == null) {
 									$rootScope.licenseExpiry = true;
 									$rootScope.noLicenseMsg = false;
@@ -289,9 +300,7 @@
 		}
 
 		$rootScope.logout = function() {
-			
-			
-			
+
 			location.reload();
 			localStorage.clear();
 
@@ -454,7 +463,7 @@
 		}
 
 		$scope.SessionData = function(role, menuType) {
-			
+
 			if (menuType == "dashbot") {
 				$rootScope.menubar = false;
 				$scope.operationaldrops = false;
@@ -613,7 +622,7 @@
 													+ ":"
 													+ localStorageService
 															.get('passwordA'))
-															
+
 								}
 							})
 					.success(
@@ -623,13 +632,12 @@
 									$scope.inValidCredentials = false;
 									$rootScope.role = data.role;
 									$rootScope.loggedInuserId = userName;
-									
+
 									if (data != null && data.accessible == true) {
-										
-									    
-									    
-									    localStorageService.set('isEnablepublicopt',
-									    		data.enbPublicOpt);
+
+										localStorageService.set(
+												'isEnablepublicopt',
+												data.enbPublicOpt);
 
 										localStorageService.set('loggedIn',
 												true);
@@ -792,6 +800,9 @@
 												.get('active');
 										$rootScope.admin = localStorageService
 												.get('admin');
+
+										$scope.licenseCheck();
+
 										if ($rootScope.admin == true) {
 											$rootScope.topmenu = true;
 										} else if ($rootScope.operational == false
@@ -944,9 +955,6 @@
 				 * Valid Credentials", 'Error');
 				 */
 			};
-			
-			
-			
 
 		}
 

@@ -15,6 +15,9 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +39,7 @@ public class LicenseReader extends HttpServlet {
 	// into fn
 	static final Logger logger = Logger.getLogger(LicenseReader.class);
 
-	public List<LicenseVO> getReaderValues() throws ServletException {
+	public List<LicenseVO> getReaderValues() throws ServletException, ParseException {
 		// Get License file location
 		// URL url = getClass().getResource("iDashboardLicense.elf");
 		String filePath = null;
@@ -48,7 +51,7 @@ public class LicenseReader extends HttpServlet {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		
+
 		File file = new File(securedFilePath);
 
 		boolean macIdVerify = false;
@@ -86,26 +89,35 @@ public class LicenseReader extends HttpServlet {
 				String[] details = decyptedString.split("\n");
 
 				// Get version and toollist from decrypt
-				startDate = new Date(details[0]);
-				endDate = new Date(details[1]);
+				/*
+				 * startDate = new Date(details[0]); endDate = new Date(details[1]);
+				 */
+
+				DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+				startDate = (Date) formatter.parse(details[0].toString());
+				endDate = (Date) formatter.parse(details[1].toString());
+
 				user = details[2];
 				macId = details[3];
 				layerAccess = details[4];
 
-				layerAccess = layerAccess.replaceAll("\\[", "").replaceAll("\\]", "");
+				if (layerAccess.isEmpty()) {
 
-				String[] layers = layerAccess.split(",");
+					layerAccess = layerAccess.replaceAll("\\[", "").replaceAll("\\]", "");
 
-				int index = 0;
+					String[] layers = layerAccess.split(",");
 
-				version = layers[1];
+					int index = 0;
 
-				for (int i = 1; i <= (layers.length / 3); i++) {
-					toollist.add(layers[(i * 3) - 1]);
+					version = layers[1];
+
+					for (int i = 1; i <= (layers.length / 3); i++) {
+						toollist.add(layers[(i * 3) - 1]);
+					}
 				}
 
 				String macAddress = getSystemMac();
-				
+
 				// MAC ID Verify
 				if (macAddress.equalsIgnoreCase(macId)) {
 					// System.out.println("MAC ID Verified");
@@ -140,81 +152,80 @@ public class LicenseReader extends HttpServlet {
 		return licenseDetails;
 
 	}
-	
-	/** 
-     * Method for get System Mac Address
-     * @return  MAC Address
-     */
-	public static String getSystemMac(){
-        try{
-            String OSName=  System.getProperty("os.name");
-            if(OSName.contains("Windows")){
-                return (getMAC4Windows());
-            }
-            else{
-                String mac=getMAC4Linux("eth0");
-                if(mac==null){
-                    mac=getMAC4Linux("eth1");
-                    if(mac==null){
-                        mac=getMAC4Linux("eth2");
-                        if(mac==null){
-                            mac=getMAC4Linux("usb0");
-                        }
-                    }
-                }	
-                return mac;
-            }
-        }
-        catch(Exception E){
-            System.err.println("System Mac Exp : "+E.getMessage());
-            return null;
-        }
-    }
-	
+
 	/**
-     * Method for get MAc of Linux Machine
-     * @param name
-     * @return 
-     */
-    private static String getMAC4Linux(String name){
-        try {
-            NetworkInterface network = NetworkInterface.getByName(name);
-            byte[] mac = network.getHardwareAddress();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < mac.length; i++){
-                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));        
-            }
-            return (sb.toString());
-        }
-        catch (Exception E) {
-            System.err.println("System Linux MAC Exp : "+E.getMessage());
-            return null;
-        } 
-    } 
-	
-    /**
-     * Method for get Mac Address of Windows Machine
-     * @return 
-     */
-    private static String getMAC4Windows(){
-        try{
-            InetAddress      addr     =InetAddress.getLocalHost();
-            NetworkInterface network  =NetworkInterface.getByInetAddress(addr);
+	 * Method for get System Mac Address
+	 * 
+	 * @return MAC Address
+	 */
+	public static String getSystemMac() {
+		try {
+			String OSName = System.getProperty("os.name");
+			if (OSName.contains("Windows")) {
+				return (getMAC4Windows());
+			} else {
+				String mac = getMAC4Linux("eth0");
+				if (mac == null) {
+					mac = getMAC4Linux("eth1");
+					if (mac == null) {
+						mac = getMAC4Linux("eth2");
+						if (mac == null) {
+							mac = getMAC4Linux("usb0");
+						}
+					}
+				}
+				return mac;
+			}
+		} catch (Exception E) {
+			System.err.println("System Mac Exp : " + E.getMessage());
+			return null;
+		}
+	}
 
-            byte[] mac = network.getHardwareAddress();
+	/**
+	 * Method for get MAc of Linux Machine
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private static String getMAC4Linux(String name) {
+		try {
+			NetworkInterface network = NetworkInterface.getByName(name);
+			byte[] mac = network.getHardwareAddress();
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+			return (sb.toString());
+		} catch (Exception E) {
+			System.err.println("System Linux MAC Exp : " + E.getMessage());
+			return null;
+		}
+	}
 
-            StringBuilder sb = new StringBuilder();
-            for(int i=0;i<mac.length;i++){
-                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
-            }
-            
-            return sb.toString();
-        }
-        catch(Exception E){
-            System.err.println("System Windows MAC Exp : "+E.getMessage());
-            return null;
-        }
-    }
+	/**
+	 * Method for get Mac Address of Windows Machine
+	 * 
+	 * @return
+	 */
+	private static String getMAC4Windows() {
+		try {
+			InetAddress addr = InetAddress.getLocalHost();
+			NetworkInterface network = NetworkInterface.getByInetAddress(addr);
+
+			byte[] mac = network.getHardwareAddress();
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+
+			return sb.toString();
+		} catch (Exception E) {
+			System.err.println("System Windows MAC Exp : " + E.getMessage());
+			return null;
+		}
+	}
 
 	public String cleanString(String aString) {
 

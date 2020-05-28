@@ -569,7 +569,7 @@
 		$scope.onExit = function() {
 
 			$rootScope.hidepagetop = false;
-			window.top.location.href = "/intelligentdashboard/#/globalview"; // works
+			window.top.location.href = "/iDashboard/#/globalview"; // works
 																				// OK
 			window.top.close();
 			window.opener.location.reload();
@@ -585,7 +585,7 @@
 					clearInterval(timer);
 					Idle.watch();
 					// $state.go('dashboard'); // Refresh the parent page
-					window.location = "/intelligentdashboard/#/globalview";
+					window.location = "/iDashboard/#/globalview";
 					// window.location.reload();
 				}
 			}
@@ -596,7 +596,7 @@
 			$rootScope.hidepagetop = true;
 			$rootScope.menubarPopup = false;
 			$scope.win = window.open(
-					"/intelligentdashboard/#/Summaryslideshowpopup", "popup",
+					"/iDashboard/#/Summaryslideshowpopup", "popup",
 					"width=1850,height=900,left=30,top=50");
 
 		}
