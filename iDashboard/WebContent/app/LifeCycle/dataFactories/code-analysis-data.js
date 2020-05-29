@@ -25,7 +25,7 @@
              var config = {headers: {
                      'Authorization': token
                      }};
-            return $http.get("rest/codequality/ca_detail",config)
+            return $http.get("rest/codequalitycontroller/ca_detail",config)
                 .then(function (response) {                	
                     return response.data;
                 });

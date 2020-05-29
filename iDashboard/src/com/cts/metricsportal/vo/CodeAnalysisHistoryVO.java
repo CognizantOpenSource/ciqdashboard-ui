@@ -5,7 +5,15 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "ca_detail")
+import com.idashboard.lifecycle.vo.CodeAnalysis_ComplexityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_DuplicationsVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_IssuesVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_MaintainabilityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
+
+@Document(collection = "LCsonarCodeQual")
 public class CodeAnalysisHistoryVO {
 	
 	private String date;

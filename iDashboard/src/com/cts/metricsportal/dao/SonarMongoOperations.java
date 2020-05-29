@@ -17,16 +17,16 @@ import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.vo.BuildJobsVO;
 import com.cts.metricsportal.vo.BuildListVO;
 import com.cts.metricsportal.vo.BuildTotalVO;
-import com.cts.metricsportal.vo.CodeAnalysisHistoryVO;
-import com.cts.metricsportal.vo.CodeAnalysisVO;
-import com.cts.metricsportal.vo.CodeAnalysis_ComplexityVO;
-import com.cts.metricsportal.vo.CodeAnalysis_CoverageVO;
-import com.cts.metricsportal.vo.CodeAnalysis_DuplicationsVO;
-import com.cts.metricsportal.vo.CodeAnalysis_IssuesVO;
-import com.cts.metricsportal.vo.CodeAnalysis_MaintainabilityVO;
-import com.cts.metricsportal.vo.CodeAnalysis_ReliabilityVO;
-import com.cts.metricsportal.vo.CodeAnalysis_SecurityVO;
-import com.cts.metricsportal.vo.CodeAnalysis_SizeVO;
+import com.idashboard.lifecycle.vo.CodeAnalysisHistoryVO;
+import com.idashboard.lifecycle.vo.CodeAnalysisVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_ComplexityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_CoverageVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_DuplicationsVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_IssuesVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_MaintainabilityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
+import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
 
 public class SonarMongoOperations extends BaseMongoOperation {
 

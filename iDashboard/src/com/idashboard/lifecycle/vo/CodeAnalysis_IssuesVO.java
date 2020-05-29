@@ -1,4 +1,4 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 public class CodeAnalysis_IssuesVO {
 
