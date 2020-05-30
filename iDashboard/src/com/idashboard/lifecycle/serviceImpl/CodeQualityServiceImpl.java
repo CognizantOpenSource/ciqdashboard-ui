@@ -3,11 +3,8 @@ package com.idashboard.lifecycle.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.mongodb.core.query.BasicQuery;
-import org.springframework.data.mongodb.core.query.Query;
-
 import com.cts.metricsportal.bo.LayerAccess;
-import com.idashboard.lifecycle.dao.SonarMongoOperation;
+import com.idashboard.lifecycle.dao.SonarMongoInterface;
 import com.idashboard.lifecycle.daoImpl.SonarMongoOperationImpl;
 import com.idashboard.lifecycle.service.CodeQualityService;
 import com.idashboard.lifecycle.vo.CodeAnalysisHistoryVO;
@@ -23,7 +20,7 @@ import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
 
 public class CodeQualityServiceImpl implements CodeQualityService{
 	
-	SonarMongoOperation codeQualityMongoOperation = new SonarMongoOperationImpl();
+	SonarMongoInterface sonarOperation = new SonarMongoOperationImpl();
 	
 	@Override
 	public List<CodeAnalysis_CoverageVO> getCodeCoverage(String AppName, String authString) {
@@ -32,7 +29,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		if(authenticateToken) {
-			CodeCoveragelst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetCoverage(AppName);
+			CodeCoveragelst=sonarOperation.Sonar_ExecuteQuery_GetCoverage(AppName);
 		}
     	return CodeCoveragelst;
 	}
@@ -44,7 +41,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		if(authenticateToken) {
-			UnitTestlst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetUnitTest(AppName);
+			UnitTestlst=sonarOperation.Sonar_ExecuteQuery_GetUnitTest(AppName);
 		}
     	return UnitTestlst;
 	}
@@ -57,7 +54,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			SizeMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetSizeMetrics(AppName);
+			SizeMetricslst=sonarOperation.Sonar_ExecuteQuery_GetSizeMetrics(AppName);
 		}
     	return SizeMetricslst;
     }
@@ -70,7 +67,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			ComplexityMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetComplexityMetrics(AppName);
+			ComplexityMetricslst=sonarOperation.Sonar_ExecuteQuery_GetComplexityMetrics(AppName);
 		}
     	return ComplexityMetricslst;
     }
@@ -83,7 +80,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			IssueMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetIssueMetrics(AppName);
+			IssueMetricslst=sonarOperation.Sonar_ExecuteQuery_GetIssueMetrics(AppName);
 		}
     	return IssueMetricslst;
     }
@@ -96,7 +93,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			reliabilityMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetReliabilityMetrics(AppName);
+			reliabilityMetricslst=sonarOperation.Sonar_ExecuteQuery_GetReliabilityMetrics(AppName);
 		}
     	return reliabilityMetricslst;
     }
@@ -110,7 +107,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			SecurityAnalysisMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetSecurityAnalysisMetrics(AppName);
+			SecurityAnalysisMetricslst=sonarOperation.Sonar_ExecuteQuery_GetSecurityAnalysisMetrics(AppName);
 		}
 		return SecurityAnalysisMetricslst;
     }
@@ -123,7 +120,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			SecurityAnalysisMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetDuplicationsMetrics(AppName);
+			SecurityAnalysisMetricslst=sonarOperation.Sonar_ExecuteQuery_GetDuplicationsMetrics(AppName);
 		}
 		return SecurityAnalysisMetricslst;
     }
@@ -136,7 +133,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
 		if(authenticateToken) {
-			MaintainabilityMetricslst=codeQualityMongoOperation.Sonar_ExecuteQuery_GetMaintainabilityMetrics(AppName);
+			MaintainabilityMetricslst=sonarOperation.Sonar_ExecuteQuery_GetMaintainabilityMetrics(AppName);
 		}
 		return MaintainabilityMetricslst;
     }
@@ -149,7 +146,7 @@ public class CodeQualityServiceImpl implements CodeQualityService{
     	boolean authenticateToken = LayerAccess.authenticateToken(authString);
     	
     	if(authenticateToken) {
-    		codeAnalysisList = codeQualityMongoOperation.Sonar_ExecuteQuery_GetCodeAnalysisMetrics();
+    		codeAnalysisList = sonarOperation.Sonar_ExecuteQuery_GetCodeAnalysisMetrics();
     	}
     	return codeAnalysisList;
     	

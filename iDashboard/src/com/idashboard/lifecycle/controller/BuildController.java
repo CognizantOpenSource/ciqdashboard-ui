@@ -12,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.BuildJobsVO;
 import com.cts.metricsportal.vo.BuildListVO;
@@ -20,7 +19,7 @@ import com.cts.metricsportal.vo.BuildTotalVO;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.idashboard.lifecycle.service.BuildService;
-import com.idashboard.lifecycle.service.BuildServiceImpl;
+import com.idashboard.lifecycle.serviceImpl.BuildServiceImpl;
 
 @Path("/buildcontroller")
 public class BuildController {
@@ -40,16 +39,9 @@ public class BuildController {
 		public List<BuildTotalVO> getBuildPerDay(@HeaderParam("Authorization") String authString,
 				@QueryParam("AppName") String AppName) {
 
-			boolean authenticateToken = LayerAccess.authenticateToken(authString);
-
 			List<BuildTotalVO> list = new ArrayList<BuildTotalVO>();
-
-			if (authenticateToken) {
-				list = buildService.getBuildPerDay(AppName);
+				list = buildService.getBuildPerDay(authString, AppName);
 				return list;
-			} else {
-				return list;
-			}
 		}
 
 		// ***************************************************************************************************/
@@ -67,15 +59,10 @@ public class BuildController {
 		public List<BuildTotalVO> getAverageBuildDuration(@HeaderParam("Authorization") String authString,
 				@QueryParam("AppName") String AppName) {
 
-			boolean authenticateToken = LayerAccess.authenticateToken(authString);
 			List<BuildTotalVO> list = new ArrayList<BuildTotalVO>();
-
-			if (authenticateToken) {
-				list = buildService.getAverageBuildDuration(AppName);
+				list = buildService.getAverageBuildDuration(authString, AppName);
 				return list;
-			} else {
-				return list;
-			}
+			 
 		}
 
 		// ***************************************************************************************************/
@@ -92,16 +79,10 @@ public class BuildController {
 		@Produces(MediaType.APPLICATION_JSON)
 		public List<BuildTotalVO> getTotalBuilds(@HeaderParam("Authorization") String authString,
 				@QueryParam("AppName") String AppName) {
-
-			boolean authenticateToken = LayerAccess.authenticateToken(authString);
-			List<BuildTotalVO> list = new ArrayList<BuildTotalVO>();
-
-			if (authenticateToken) {
-				list = buildService.getTotalBuild(AppName);
-				return list;
-			} else {
-				return list;
-			}
+			
+			return buildService.getTotalBuild(authString, AppName);
+				 
+			 
 		}
 
 		// ***************************************************************************************************/
@@ -118,16 +99,9 @@ public class BuildController {
 		public List<BuildListVO> getLatestBuilds(@HeaderParam("Authorization") String authString,
 				@QueryParam("AppName") String AppName) {
 
-			boolean authenticateToken = LayerAccess.authenticateToken(authString);
-
-			List<BuildListVO> list = new ArrayList<BuildListVO>();
-
-			if (authenticateToken) {
-				list = buildService.getLatestBuild(AppName);
-				return list;
-			} else {
-				return list;
-			}
+			return buildService.getLatestBuild(authString, AppName);
+				 
+			
 		}
 
 		// ***************************************************************************************************/
@@ -137,11 +111,9 @@ public class BuildController {
 		@Produces(MediaType.APPLICATION_JSON)
 		public List<BuildJobsVO> buildJobs(@HeaderParam("Authorization") String authString) throws JsonParseException,
 				JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			List<BuildJobsVO> buildJobList = new ArrayList<BuildJobsVO>();
-			boolean authenticateToken = LayerAccess.authenticateToken(authString);
-			if (authenticateToken) {
-				buildJobList = buildService.getBuildJobs();
-			}
+			List<BuildJobsVO> buildJobList;
+				buildJobList = buildService.getBuildJobs(authString);
+			
 			return buildJobList;
 
 		}

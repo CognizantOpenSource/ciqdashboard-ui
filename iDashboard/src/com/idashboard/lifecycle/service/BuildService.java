@@ -8,13 +8,13 @@ import com.cts.metricsportal.vo.BuildTotalVO;
 
 public interface BuildService {
 
-	public List<BuildTotalVO> getBuildPerDay(String AppName);
+	public List<BuildTotalVO> getBuildPerDay(String authString ,String AppName);
 	
-	public List<BuildListVO> getLatestBuild(String AppName);
+	public List<BuildListVO> getLatestBuild(String authString ,String AppName);
 	
-	public List<BuildTotalVO> getTotalBuild(String AppName);
+	public List<BuildTotalVO> getTotalBuild(String authString ,String AppName);
 	
-	public List<BuildTotalVO> getAverageBuildDuration(String AppName);
+	public List<BuildTotalVO> getAverageBuildDuration(String authString ,String AppName);
 	
-	public List<BuildJobsVO> getBuildJobs();
+	public List<BuildJobsVO> getBuildJobs(String authString);
 }

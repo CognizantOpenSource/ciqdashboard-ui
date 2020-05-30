@@ -3,17 +3,13 @@ package com.idashboard.lifecycle.daoImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.BadLocationException;
-
 import org.apache.log4j.Logger;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.cts.metricsportal.controllers.BaseMongoOperation;
-import com.cts.metricsportal.dao.SonarMongoOperations;
-import com.cts.metricsportal.util.BaseException;
-import com.idashboard.lifecycle.dao.SonarMongoOperation;
+import com.idashboard.lifecycle.dao.SonarMongoInterface;
 import com.idashboard.lifecycle.vo.CodeAnalysisHistoryVO;
 import com.idashboard.lifecycle.vo.CodeAnalysisVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_ComplexityVO;
@@ -25,9 +21,9 @@ import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
 
-public class SonarMongoOperationImpl extends BaseMongoOperation implements SonarMongoOperation{
+public class SonarMongoOperationImpl extends BaseMongoOperation implements SonarMongoInterface{
 
-	static final Logger logger = Logger.getLogger(SonarMongoOperations.class);
+	static final Logger logger = Logger.getLogger(SonarMongoOperationImpl.class);
 	Query Qry = new Query();
 	
 	

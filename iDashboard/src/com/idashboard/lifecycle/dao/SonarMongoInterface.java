@@ -13,7 +13,7 @@ import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
 
-public interface SonarMongoOperation {
+public interface SonarMongoInterface {
 
 	List<CodeAnalysis_CoverageVO> Sonar_ExecuteQuery_GetCoverage(String AppName);
 	

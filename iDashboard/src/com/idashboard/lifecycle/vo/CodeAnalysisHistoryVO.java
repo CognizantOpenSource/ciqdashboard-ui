@@ -1,14 +1,6 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.idashboard.lifecycle.vo.CodeAnalysis_ComplexityVO;
-import com.idashboard.lifecycle.vo.CodeAnalysis_DuplicationsVO;
-import com.idashboard.lifecycle.vo.CodeAnalysis_IssuesVO;
-import com.idashboard.lifecycle.vo.CodeAnalysis_MaintainabilityVO;
-import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
-import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
-import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
 
 @Document(collection = "LCsonarCodeQual")
 public class CodeAnalysisHistoryVO {
@@ -20,10 +12,6 @@ public class CodeAnalysisHistoryVO {
 	private String rating;
 	private String newrating;
 	private String newbugs;
-	
-	private String new_security_vulnerabilities;
-	private String new_security_rating;
-	
 	
 	private CodeAnalysis_ReliabilityVO reliability=new CodeAnalysis_ReliabilityVO();  
 	private CodeAnalysis_SecurityVO security=new CodeAnalysis_SecurityVO();
