@@ -3,7 +3,7 @@
 		<div class="col-md-12">
 
 			<div class="form-group" ng-init="">
-<!-- 				<a data-toggle="modal"  class="ion-android-arrow-back" ng-class="{'on':var2}"style="float:right; margin-top: 0%;margin-right: 2%;margin-bottom:1%;text-decoration: underline;font-size: 17px;color: #fff;" ng-click="back()"> Back</a> -->
+				<!-- 				<a data-toggle="modal"  class="ion-android-arrow-back" ng-class="{'on':var2}"style="float:right; margin-top: 0%;margin-right: 2%;margin-bottom:1%;text-decoration: underline;font-size: 17px;color: #fff;" ng-click="back()"> Back</a> -->
 				<!-- {{dashNam}} -->
 				<!--   <label for="domain" class="control-label">Domain</label> -->
 				<select
@@ -20,9 +20,9 @@
 	</div>
 
 	<div class="row">
-	
-	
-	<div class=" col-md-7 " ba-panel-class="with-scroll">
+
+
+		<div class=" col-md-7 " ba-panel-class="with-scroll">
 			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
 				style="background-size: 1433px 915px; background-position: 0px -158px;">
 				<div class="panel-heading clearfix">
@@ -39,21 +39,24 @@
 										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
 								<li><a href=""
 									ng-click="downloadImg('jpeg','line','Builds Per Day')"><i
-										class="fa fa fa-area-chart" download="Builds Per Day.jpg"></i>Download JPEG</a></li>
+										class="fa fa fa-area-chart" download="Builds Per Day.jpg"></i>Download
+										JPEG</a></li>
 							</ul>
 						</div>
 					</h3>
 				</div>
 				<div class="panel-body" style="padding-right: 0px;">
-					<div id="buildsperdayChart"   style="height: 450px;vertical-align:middle;" ng-init="">
-				<br>
-				<canvas id="line"></canvas>
-			</div>
+					<div id="buildsperdayChart"
+						style="height: 450px; vertical-align: middle;" ng-init="">
+						<br>
+						<canvas id="line"></canvas>
+					</div>
 
 
+				</div>
 			</div>
-		</div></div>
-		
+		</div>
+
 		<!-- <div class="col-md-7" ba-panel ba-panel-title="builds Per Day"
 			ba-panel-class="with-scroll">
 
@@ -82,10 +85,9 @@
 					ba-panel-class="with-scroll">
 
 					<div id="latestBuild" class="admin-chart"
-						style="width: 150px; height: 125px; text-align: center"
-						 ng-init="">
+						style="width: 150px; height: 125px; text-align: center" ng-init="">
 
-						<table id="lbuilds" class="table"  st-table="latestBuild">
+						<table id="lbuilds" class="table" st-table="latestBuild">
 							<!-- 	<thead>
 					</thead>
 
@@ -106,77 +108,83 @@
 				</div>
 
 
-<div class=" col-md-6 " ba-panel-class="with-scroll">
-			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
-				style="background-size: 1433px 915px; background-position: 0px -158px;">
-				<div class="panel-heading clearfix">
-					<h3 class="panel-title">
-						Total builds
-						<div uib-dropdown style="float: right;">
-							<a id="exportThis" uib-dropdown-toggle> <i
-								class="fa fa fa-bars"></i>
-							</a>
-							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
-								<li><i class="dropdown-arr"></i></li>
-								<li><a href=""
-									ng-click="downloadImg('png','barcharttotalbuilds','Total builds')"><i
-										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
-								<li><a href=""
-									ng-click="downloadImg('jpeg','barcharttotalbuilds','Total builds')"><i
-										class="fa fa fa-area-chart" download="Total builds.jpg"></i>Download JPEG</a></li>
-							</ul>
+				<div class=" col-md-6 " ba-panel-class="with-scroll">
+					<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+						style="background-size: 1433px 915px; background-position: 0px -158px;">
+						<div class="panel-heading clearfix">
+							<h3 class="panel-title">
+								Total builds
+								<div uib-dropdown style="float: right;">
+									<a id="exportThis" uib-dropdown-toggle> <i
+										class="fa fa fa-bars"></i>
+									</a>
+									<ul class="top-dropdown-menu profile-dropdown"
+										uib-dropdown-menu>
+										<li><i class="dropdown-arr"></i></li>
+										<li><a href=""
+											ng-click="downloadImg('png','barcharttotalbuilds','Total builds')"><i
+												class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+										<li><a href=""
+											ng-click="downloadImg('jpeg','barcharttotalbuilds','Total builds')"><i
+												class="fa fa fa-area-chart" download="Total builds.jpg"></i>Download
+												JPEG</a></li>
+									</ul>
+								</div>
+							</h3>
 						</div>
-					</h3>
-				</div>
-				<div class="panel-body" style="padding-right: 0px;">
-					<div id="totalBuilds" class="admin-chart"
-						style="width: 100%; height: 125px; text-align: left"
-						 ng-init="">
-						<canvas id="barcharttotalbuilds">                      
+						<div class="panel-body" style="padding-right: 0px;">
+							<div id="totalBuilds" class="admin-chart"
+								style="width: 100%; height: 125px; text-align: left" ng-init="">
+								<canvas id="barcharttotalbuilds">                      
                 </canvas>
-					</div>
+							</div>
 
-			</div>
-		</div></div>
-		
+						</div>
+					</div>
+				</div>
+
 			</div>
 
 			<div class="row">
-			
-			
-			<div class=" col-md-12 " ba-panel-class="with-scroll">
-			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
-				style="background-size: 1433px 915px; background-position: 0px -158px;">
-				<div class="panel-heading clearfix">
-					<h3 class="panel-title">
-						Average Build Duration (in mins)
-						<div uib-dropdown style="float: right;">
-							<a id="exportThis" uib-dropdown-toggle> <i
-								class="fa fa fa-bars"></i>
-							</a>
-							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
-								<li><i class="dropdown-arr"></i></li>
-								<li><a href=""
-									ng-click="downloadImg('png','barchart','Average Build Duration (in mins)')"><i
-										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
-								<li><a href=""
-									ng-click="downloadImg('jpeg','barchart','Average Build Duration (in mins)')"><i
-										class="fa fa fa-area-chart" download="Average Build Duration (in mins).jpg"></i>Download JPEG</a></li>
-							</ul>
+
+
+				<div class=" col-md-12 " ba-panel-class="with-scroll">
+					<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+						style="background-size: 1433px 915px; background-position: 0px -158px;">
+						<div class="panel-heading clearfix">
+							<h3 class="panel-title">
+								Average Build Duration (in mins)
+								<div uib-dropdown style="float: right;">
+									<a id="exportThis" uib-dropdown-toggle> <i
+										class="fa fa fa-bars"></i>
+									</a>
+									<ul class="top-dropdown-menu profile-dropdown"
+										uib-dropdown-menu>
+										<li><i class="dropdown-arr"></i></li>
+										<li><a href=""
+											ng-click="downloadImg('png','barchart','Average Build Duration (in mins)')"><i
+												class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+										<li><a href=""
+											ng-click="downloadImg('jpeg','barchart','Average Build Duration (in mins)')"><i
+												class="fa fa fa-area-chart"
+												download="Average Build Duration (in mins).jpg"></i>Download
+												JPEG</a></li>
+									</ul>
+								</div>
+							</h3>
 						</div>
-					</h3>
-				</div>
-				<div class="panel-body" style="padding-right: 0px;">
-					<div id="averageBuildDuration" class="admin-chart"
-						style="height: 226px;width: 100%;"  ng-init="">
+						<div class="panel-body" style="padding-right: 0px;">
+							<div id="averageBuildDuration" class="admin-chart"
+								style="height: 226px; width: 100%;" ng-init="">
 
-						<canvas id="barchart">                      
+								<canvas id="barchart">                      
                 </canvas>
-					</div>
+							</div>
 
-			</div>
-		</div></div>
-		 
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 

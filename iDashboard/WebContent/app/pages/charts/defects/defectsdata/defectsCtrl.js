@@ -1,6 +1,4 @@
-/**
- * @author v.lugovksy created on 16.12.2015
- */
+
 (function() {
 	'use strict';
 
@@ -1474,6 +1472,8 @@
 		$rootScope.defectfilterfunction = function() {
 			$scope.totdefcountfilter();
 			$scope.defectrejratefilter();
+			$scope.defectleakageSITtoUAT();
+			$scope.defectleakageSITtoPROD();
 			$scope.defectTrendChart();
 			$scope.newPriorityChart();
 			$scope.newSeverityChart();
@@ -1576,6 +1576,106 @@
 										$scope.defectRejection);
 							});
 		}
+		
+		// New Metrics
+		
+		$rootScope.defectleakageSITtoPROD = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalDef == null
+					|| $rootScope.dfromvalDef == undefined
+					|| $rootScope.dfromvalDef == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalDef;
+			}
+
+			if ($rootScope.dtovalDef == null
+					|| $rootScope.dtovalDef == undefined
+					|| $rootScope.dtovalDef == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalDef;
+			}
+			
+			vardtfrom = localStorageService.get('dtfrom');
+			// vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http
+					.get(
+							"./rest/almMetricsServices/defectRejRateFilter?dashboardName="
+									+ dashboardName + "&domainName="
+									+ domainName + "&projectName="
+									+ projectName + "&vardtfrom=" + vardtfrom
+									+ "&vardtto=" + vardtto + "&timeperiod="
+									+ $rootScope.timeperiodDef, config)
+					.success(
+							function(response) {
+								$scope.defectleakageSITtoPROD = 0;
+								//$scope.defectleakageSITtoPROD = response;
+								$scope.loadPieCharts('#defleakageSITtoPROD',
+										$scope.defectleakageSITtoPROD);
+							});
+		}
+		
+		$rootScope.defectleakageSITtoUAT = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalDef == null
+					|| $rootScope.dfromvalDef == undefined
+					|| $rootScope.dfromvalDef == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalDef;
+			}
+
+			if ($rootScope.dtovalDef == null
+					|| $rootScope.dtovalDef == undefined
+					|| $rootScope.dtovalDef == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalDef;
+			}
+			
+			vardtfrom = localStorageService.get('dtfrom');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http
+					.get(
+							"./rest/almMetricsServices/defectRejRateFilter?dashboardName="
+									+ dashboardName + "&domainName="
+									+ domainName + "&projectName="
+									+ projectName + "&vardtfrom=" + vardtfrom
+									+ "&vardtto=" + vardtto + "&timeperiod="
+									+ $rootScope.timeperiodDef, config)
+					.success(
+							function(response) {
+								$scope.defectleakageSITtoUAT = 1;
+								//$scope.defectleakageSITtoUAT = response;
+								$scope.loadPieCharts('#defleakageSITtoUAT',
+										$scope.defectleakageSITtoUAT);
+							});
+		}
+		
+		// New Metrics
+		
+		
+		
 
 		/* Date Filter Code Ends Here */
 		
