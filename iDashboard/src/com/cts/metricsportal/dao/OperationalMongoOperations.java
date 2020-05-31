@@ -584,19 +584,20 @@ public class OperationalMongoOperations extends BaseMongoOperation {
 	}
 
 	public static long getTcCount(Date startDate, Date endDate, Date dates, Date dateBefore7Days,
-			List<String> levelIdList) {
+			List<Integer> levelIdList) {
 		logger.info("Fetching ALM Total Test Cases Count..");
 		long totalTcExeCount = 0;
 		try {
 			String query = "{},{_id:0,levelId:1}";
 			Query query1 = new BasicQuery(query);
-			query1.addCriteria(Criteria.where("_id").in(levelIdList));
+			query1.addCriteria(Criteria.where("levelId").in(levelIdList));
 
 			if (startDate != null || endDate != null) {
 				query1.addCriteria(Criteria.where("testExecutionDate").gte(startDate).lte(endDate));
 			} else if (dateBefore7Days != null && dates != null) {
 				query1.addCriteria(Criteria.where("testExecutionDate").gte(dateBefore7Days).lte(dates));
 			}
+			query1.addCriteria(Criteria.where("testExecutionStatus").in("Passed", "Failed"));
 			totalTcExeCount = getMongoOperation().count(query1, TestExecutionVO.class);
 
 		} catch (NumberFormatException | BaseException | BadLocationException e) {

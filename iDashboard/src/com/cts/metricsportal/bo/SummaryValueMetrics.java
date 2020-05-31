@@ -33,6 +33,18 @@ public class SummaryValueMetrics implements MetricSummary {
 		DateTimeCalc dateTimeCalc = new DateTimeCalc();
 		Date startDate = dateTimeCalc.getStartDate(vardtfrom);
 		Date endDate = dateTimeCalc.getEndDate(vardtto);
+		
+		//Change in End Date
+		
+		Calendar calEndDate = Calendar.getInstance();
+		calEndDate.setTime(endDate);		
+		calEndDate.add(Calendar.DAY_OF_MONTH, 1);
+        
+        endDate = calEndDate.getTime();
+		
+		//Change in End Date
+		
+		
 		Date dates = new Date();
 		Date dateBefore7Days = dateTimeCalc.getDateForTimeperiod(rollingPeriod);
 		String metricValue = null;
@@ -209,8 +221,9 @@ public class SummaryValueMetrics implements MetricSummary {
 		}
 
 		if (customTemplateMetricId == 2019) {
-			List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
-					project);
+//			List<String> levelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId, domain,
+//					project);
+			List<Integer> levelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
 			long totalTcExeCount = OperationalMongoOperations.getTcCount(startDate, endDate, dates, dateBefore7Days,
 					levelIdList);
 			metricValue = Long.toString(totalTcExeCount);
@@ -391,8 +404,9 @@ public class SummaryValueMetrics implements MetricSummary {
 				rollupsheet.setProject(project);
 
 				// Total Execution Count
-				List<String> ExecutionlevelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId,
-						domain, project);
+//				List<String> ExecutionlevelIdList = AlmMongoOperations.getGlobalLevelIdExecution(dashboardName, userId,
+//						domain, project);
+				List<Integer> ExecutionlevelIdList = OperationalDAO.getGlobalLevelIds(dashboardName, userId, domain, project);
 				long totalTcExeCount = OperationalMongoOperations.getTcCount(startDate, dates, endDate, dateBefore7Days,
 						ExecutionlevelIdList);
 
