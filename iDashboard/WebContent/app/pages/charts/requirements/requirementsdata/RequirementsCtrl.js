@@ -1518,6 +1518,7 @@
 			$scope.reqPriorityChart();
 			$scope.reqTableData(1);
 			$scope.initialReqcountpaginate();
+			$rootScope.dashboardReqCount();
 		}
 
 		// ALMTotal Req. Count - Date Filter
