@@ -55,8 +55,33 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="pie-chart-item-container" style="margin-left: auto">
+		<div ba-panel ba-panel style="margin-top: 20px">
+			<div class="pie-chart-item" id="onChangeTcCount">
 
-	<div class="pie-chart-item-container">
+				<a href="#testexecution" class="descriptionLink">
+					<div style="font-size: 15px; text-align: center"
+						ng-init="dashboardExeCount()">Total Execution Count</div>
+
+
+					<div style="font-size: 15px; text-align: center"></div>
+					<div class="description-stats"
+						style="font-size: 40px; margin-top: 20px; text-align: center">{{tcexecnt}}
+					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/tot_exec.html','sm')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 20px">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div class="pie-chart-item-container">
 		<div ba-panel style="margin-top: 20px">
 			<div class="pie-chart-item" ng-init="dashboardReqVolatility()">
 				<a href="#requirements" class="descriptionLink"><div
@@ -78,7 +103,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 
 
@@ -107,7 +132,35 @@
 			</div>
 		</div>
 	</div>
+	
 	<div class="pie-chart-item-container" style="margin-right: auto">
+		<div ba-panel style="margin-top: 20px;">
+			<div class="pie-chart-item" ng-init="dashboardExeCoverage()">
+				<a href="#testexecution" class="descriptionLink">
+					<div class="chart" id="dashexecov" rel="rgba(60, 193, 95, 0.9)">
+						<span class="percent"> </span>
+					</div>
+
+					<div class="">
+
+						<div
+							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
+							class="description-stats">Test Execution Coverage</div>
+						<div class="description-stats"></div>
+
+					</div>
+				</a>
+				<div>
+					<a
+						ng-click="open('app/pages/dashboard/infoDialog/exe_cov.html','lg')">
+						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
+						height="20" style="float: right; margin-top: 20px">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="pie-chart-item-container" style="margin-right: auto">
 		<div ba-panel style="margin-top: 20px;">
 			<div class="pie-chart-item" ng-init="dashboardDesignCoverage()">
 				<a href="#testcases" class="descriptionLink">
@@ -134,59 +187,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
-	<div class="pie-chart-item-container" style="margin-left: auto">
-		<div ba-panel>
-			<div class="pie-chart-item" id="onChangeTcCount">
-
-				<a href="#testexecution" class="descriptionLink">
-					<div style="font-size: 15px; text-align: center"
-						ng-init="dashboardExeCount()">Total Execution Count</div>
-
-
-					<div style="font-size: 15px; text-align: center"></div>
-					<div class="description-stats"
-						style="font-size: 40px; margin-top: 20px; text-align: center">{{tcexecnt}}
-					</div>
-				</a>
-				<div>
-					<a
-						ng-click="open('app/pages/dashboard/infoDialog/tot_exec.html','sm')">
-						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 20px">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="pie-chart-item-container" style="margin-right: auto">
-		<div ba-panel>
-			<div class="pie-chart-item" ng-init="dashboardExeCoverage()">
-				<a href="#testexecution" class="descriptionLink">
-					<div class="chart" id="dashexecov" rel="rgba(60, 193, 95, 0.9)">
-						<span class="percent"> </span>
-					</div>
-
-					<div class="">
-
-						<div
-							style="font-size: 15px; padding-top: 20px; padding-left: 100px !important;"
-							class="description-stats">Test Execution Coverage</div>
-						<div class="description-stats"></div>
-
-					</div>
-				</a>
-				<div>
-					<a
-						ng-click="open('app/pages/dashboard/infoDialog/exe_cov.html','lg')">
-						<img src="app/pages/dashboard/infoDialog/info.png" width="20"
-						height="20" style="float: right; margin-top: 20px">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+	
+	
 
 	<div class="pie-chart-item-container" style="margin-left: auto">
 		<div ba-panel>

@@ -476,54 +476,63 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Path("/licenseDetails")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<LicenseVO> getlicenseDetails() throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			NumberFormatException, BaseException, BadLocationException, ParseException {
 		LicenseReader lr = new LicenseReader();
 		List<LicenseVO> readerValues = new ArrayList<LicenseVO>();
 
 		try {
 			readerValues = lr.getReaderValues();
+			if (readerValues.size() > 0) {
+
+				if (readerValues.get(0).getisMacIdVerify()) {
+					readerValues = readerValues;
+				} else {
+					readerValues = null;
+				}
+
+				String user = null;
+
+				if (!(readerValues == null)) {
+
+					user = readerValues.get(0).getUser();
+
+					Date expiryDate = readerValues.get(0).getEndDate();
+					int daysRemaining = (int) readerValues.get(0).getDaysRemaining();
+
+					if (readerValues.get(0).getDaysRemaining() < 5 && !(readerValues.get(0).getDaysRemaining() <= 0)) {
+						MailScheduler mailschedule = new MailScheduler();
+						mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, false);
+					}
+
+					if (readerValues.get(0).getDaysRemaining() <= 0) {
+						MailScheduler mailschedule = new MailScheduler();
+						mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, true);
+					}
+
+					String version = readerValues.get(0).getVersion();
+
+					if (version != null) {
+						if (version.equalsIgnoreCase(" Lite Version")) {
+							Update update = new Update();
+							update.set("isQbot", false);
+							Query query1 = new Query();
+							getMongoOperation().updateMulti(query1, update, UserVO.class);
+						}
+					}
+				}
+
+			} else {
+				readerValues = null;
+			}
+
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
+
 			e.printStackTrace();
-		}
-
-		if (readerValues.get(0).getisMacIdVerify()) {
-			readerValues = readerValues;
-		} else {
 			readerValues = null;
+			return readerValues;
+
 		}
-
-		String user = null;
-
-		if (!(readerValues == null)) {
-
-			user = readerValues.get(0).getUser();
-
-			Date expiryDate = readerValues.get(0).getEndDate();
-			int daysRemaining = (int) readerValues.get(0).getDaysRemaining();
-
-			if (readerValues.get(0).getDaysRemaining() < 5 && !(readerValues.get(0).getDaysRemaining() <= 0)) {
-				MailScheduler mailschedule = new MailScheduler();
-				mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, false);
-			}
-
-			if (readerValues.get(0).getDaysRemaining() <= 0) {
-				MailScheduler mailschedule = new MailScheduler();
-				mailschedule.TimerTaskForMail(daysRemaining, expiryDate, user, true);
-			}
-
-			String version = readerValues.get(0).getVersion();
-
-			if (version != null) {
-				if (version.equalsIgnoreCase(" Lite Version")) {
-					Update update = new Update();
-					update.set("isQbot", false);
-					Query query1 = new Query();
-					getMongoOperation().updateMulti(query1, update, UserVO.class);
-				}
-			}
-		}
-
 		return readerValues;
 	}
 
@@ -693,13 +702,13 @@ public class JerseyRestServices extends BaseMongoOperation {
 				if (authStatus) {
 					Query query2 = new Query();
 					if (userFromDb.isLdap()) {
-						
+
 						query2.addCriteria(Criteria.where("userId").is(authUser.getUserId()));
 						UserVO userupdateinfo = getMongoOperation().findOne(query2, UserVO.class);
-					
+
 						userInfo = userupdateinfo;
-						/*userInfo=ldapInfo*/;
-					
+						/* userInfo=ldapInfo */;
+
 					} else {
 						userInfo = userFromDb;
 						userInfo.setAuthStatus(true);

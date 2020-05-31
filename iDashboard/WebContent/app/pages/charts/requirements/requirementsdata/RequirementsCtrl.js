@@ -3019,6 +3019,50 @@
 				saveAs(blob, filename + ".xls");
 			}
 		}
+		
+		// Total Requirement Count
+		$rootScope.dashboardReqCount = function() {
+			var token = AES.getEncryptedValue();
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+			var vardtfrom = "";
+			var vardtto = "";
+
+			if ($rootScope.dfromvalDash == null
+					|| $rootScope.dfromvalDash == undefined
+					|| $rootScope.dfromvalDash == "") {
+				vardtfrom = "-";
+			} else {
+				vardtfrom = $rootScope.dfromvalDash;
+			}
+
+			if ($rootScope.dtovalDash == null
+					|| $rootScope.dtovalDash == undefined
+					|| $rootScope.dtovalDash == "") {
+				vardtto = "-";
+			} else {
+				vardtto = $rootScope.dtovalDash;
+			}
+
+			vardtfrom = localStorageService.get('dtfrom');
+			//vardtto = localStorageService.get('dtto');
+			vardtto = localStorageService.get('dttoPlus');
+
+			$http.get(
+					"rest/operationalDashboardALMServices/totalReqCount?dashboardName="
+							+ dashboardName + "&domainName=" + domainName
+							+ "&projectName=" + projectName + "&vardtfrom="
+							+ vardtfrom + "&vardtto=" + vardtto
+							+ "&timeperiod=" + $rootScope.timeperiodDash,
+					config).success(function(response) {
+				$rootScope.totalreqdata = response;
+				// alert("Req Count : " + $rootScope.totalreqdata);
+
+			});
+		}
 		/* Export graphs and tables */
 
 		// ****************************************************************
