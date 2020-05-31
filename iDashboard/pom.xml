@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>iDashboard</groupId>
   <artifactId>iDashboard</artifactId>
-  <version>jj</version>
+  <version>j</version>
   <packaging>war</packaging>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -15,18 +15,7 @@
       </resource>
     </resources>
     <plugins>
-    <!--  tomcat plugin -->
-    <plugin>
-    <groupId>org.apache.tomcat.maven</groupId>
-    <artifactId>tomcat7-maven-plugin</artifactId>
-    <version>2.2</version>
-    <configuration>
-        <url>http://localhost:8080/manager/text</url>
-        <server>TomcatServer</server>
-        <path>/iDashboard</path>
-    </configuration>
-</plugin>
-    <!--  tomcat plugin -->
+  
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.7.0</version>
