@@ -21,16 +21,16 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.cts.metricsportal.controllers.BaseMongoOperation;
-import com.cts.metricsportal.dao.JenkinsMongoOperations;
 import com.cts.metricsportal.util.BaseException;
-import com.cts.metricsportal.vo.BuildJobsVO;
-import com.cts.metricsportal.vo.BuildListVO;
-import com.cts.metricsportal.vo.BuildTotalVO;
+
 import com.idashboard.lifecycle.dao.JenkinsMongoInterface;
+import com.idashboard.lifecycle.vo.BuildJobsVO;
+import com.idashboard.lifecycle.vo.BuildListVO;
+import com.idashboard.lifecycle.vo.BuildTotalVO;
 
 public class JenkinsMongoOperationImpl extends BaseMongoOperation implements JenkinsMongoInterface{
 
-		static final Logger logger = Logger.getLogger(JenkinsMongoOperations.class);
+		static final Logger logger = Logger.getLogger(JenkinsMongoOperationImpl.class);
 			
 			// ***************************************************************************************************/
 			// Description : Convert the UTC (ISODate) to normal Date form

@@ -2,9 +2,9 @@ package com.idashboard.lifecycle.dao;
 
 import java.util.List;
 
-import com.cts.metricsportal.vo.BuildJobsVO;
-import com.cts.metricsportal.vo.BuildListVO;
-import com.cts.metricsportal.vo.BuildTotalVO;
+import com.idashboard.lifecycle.vo.BuildJobsVO;
+import com.idashboard.lifecycle.vo.BuildListVO;
+import com.idashboard.lifecycle.vo.BuildTotalVO;
 
 public interface JenkinsMongoInterface {
 

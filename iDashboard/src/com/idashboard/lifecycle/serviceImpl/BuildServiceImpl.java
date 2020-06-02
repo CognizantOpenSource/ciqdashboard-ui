@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
-import com.cts.metricsportal.bo.JenkinsMetrics;
 import com.cts.metricsportal.bo.LayerAccess;
-import com.cts.metricsportal.vo.BuildJobsVO;
-import com.cts.metricsportal.vo.BuildListVO;
-import com.cts.metricsportal.vo.BuildTotalVO;
+
 import com.idashboard.lifecycle.dao.JenkinsMongoInterface;
 import com.idashboard.lifecycle.daoImpl.JenkinsMongoOperationImpl;
 import com.idashboard.lifecycle.service.BuildService;
+import com.idashboard.lifecycle.vo.BuildJobsVO;
+import com.idashboard.lifecycle.vo.BuildListVO;
+import com.idashboard.lifecycle.vo.BuildTotalVO;
 
 public class BuildServiceImpl implements BuildService {
 
 	JenkinsMongoInterface jenkinsOperation = new JenkinsMongoOperationImpl();
-	static final Logger logger = Logger.getLogger(JenkinsMetrics.class);
+	static final Logger logger = Logger.getLogger(BuildServiceImpl.class);
 	
 	@Override
     public List<BuildTotalVO> getBuildPerDay(String authString, String AppName) {

@@ -13,13 +13,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.cts.metricsportal.util.BaseException;
-import com.cts.metricsportal.vo.BuildJobsVO;
-import com.cts.metricsportal.vo.BuildListVO;
-import com.cts.metricsportal.vo.BuildTotalVO;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.idashboard.lifecycle.service.BuildService;
 import com.idashboard.lifecycle.serviceImpl.BuildServiceImpl;
+import com.idashboard.lifecycle.vo.BuildJobsVO;
+import com.idashboard.lifecycle.vo.BuildListVO;
+import com.idashboard.lifecycle.vo.BuildTotalVO;
 
 @Path("/buildcontroller")
 public class BuildController {
