@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.cts.metricsportal.vo.CommitTrendVO;
 import com.cts.metricsportal.vo.ContributorsDetailsVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
  
 
 public interface SCMService {
     public long getFileSize(String authString,String user, String repo, String type);
 
-	public List<RepositoryDetailsVO> getGitData(String authString, String type, String userName);
+	public List<GitRepositoryVO> getGitData(String authString, String type, String userName);
 
 	public List<String> getGitName(String authString, String type);
 

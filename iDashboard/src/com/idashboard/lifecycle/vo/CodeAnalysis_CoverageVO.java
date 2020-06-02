@@ -2,7 +2,7 @@ package com.idashboard.lifecycle.vo;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "ca_detail")
+@Document(collection = "LCsonarCodeQual")
 public class CodeAnalysis_CoverageVO {
 	
 	private String coverage;

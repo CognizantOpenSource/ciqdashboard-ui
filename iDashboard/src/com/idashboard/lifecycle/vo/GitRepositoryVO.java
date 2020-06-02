@@ -1,12 +1,12 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "gitrepoInfo") 
-public class RepositoryDetailsVO {
+@Document(collection = "LCgitrepo") 
+public class GitRepositoryVO {
 	
 	private String dashboardName;
 	private String owner;

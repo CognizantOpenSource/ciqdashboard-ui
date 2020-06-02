@@ -16,11 +16,11 @@ import com.cts.metricsportal.dao.OperationalDAO;
 import com.cts.metricsportal.dao.TestManagementMongoOperations;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.DefectStatusVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
 import com.cts.metricsportal.vo.RequirementStatusVO;
 import com.cts.metricsportal.vo.TestCaseStatusVO;
 import com.cts.metricsportal.vo.TestExeStatusVO;
 import com.cts.metricsportal.vo.UserVO;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
 public class TestManagementMetrics {
 

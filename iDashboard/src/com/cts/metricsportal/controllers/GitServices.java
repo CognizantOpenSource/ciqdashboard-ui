@@ -21,7 +21,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.CommitTrendVO;
 import com.cts.metricsportal.vo.ContributorsDetailsVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 // New Approach 
 import com.cts.metricsportal.bo.GitMetrics;
 
@@ -60,14 +60,14 @@ public class GitServices extends BaseMongoOperation {
 	@GET
 	@Path("/getGitDashboardDetails")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<RepositoryDetailsVO> getGitData(
+	public List<GitRepositoryVO> getGitData(
 			@HeaderParam("Authorization") String authString,
 			@QueryParam("type") String type,
 			@QueryParam("UserName") String UserName
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
 			gitmetrics = new GitMetrics();
-			List<RepositoryDetailsVO> gitdata = gitmetrics.getGitData(authString, type, UserName);
+			List<GitRepositoryVO> gitdata = gitmetrics.getGitData(authString, type, UserName);
 			
 			return gitdata;
 	}

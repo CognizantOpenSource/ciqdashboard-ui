@@ -22,7 +22,6 @@ import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DefectVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
 import com.cts.metricsportal.vo.RequirementStatusVO;
 import com.cts.metricsportal.vo.RequirmentVO;
 import com.cts.metricsportal.vo.TestCaseStatusVO;
@@ -30,6 +29,7 @@ import com.cts.metricsportal.vo.TestCaseVO;
 import com.cts.metricsportal.vo.TestExeStatusVO;
 import com.cts.metricsportal.vo.TestExecutionVO;
 import com.cts.metricsportal.vo.UserVO;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
 public class TestManagementMongoOperations extends BaseMongoOperation {
 

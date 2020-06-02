@@ -56,7 +56,7 @@
 	        var config = {headers: {
 	                'Authorization': token
 	                }};
-		$http.get("rest/gitServices/getGitTypes",config).success(function (response) {
+		$http.get("rest/scmcontroller/getGitTypes",config).success(function (response) {
 			$scope.types = response; 
 		});
 	}
@@ -68,7 +68,7 @@
 	                'Authorization': token
 	                }};
 			$rootScope.selectedtype = selectedtype;
-		$http.get("rest/gitServices/getGitDashboardNames?type="+$rootScope.selectedtype,config).success(function (response) {
+		$http.get("rest/scmcontroller/getGitDashboardNames?type="+$rootScope.selectedtype,config).success(function (response) {
 			$scope.gitnames = response; 
 		});
 	}
@@ -79,7 +79,7 @@
 		                'Authorization': token
 		                }};
 			 $rootScope.UserName = UserName;
-			 $http.get("rest/gitServices/getRepoList?UserName="+UserName,config).success(function (response) {
+			 $http.get("rest/scmcontroller/getRepoList?UserName="+UserName,config).success(function (response) {
 					$scope.repos = response; 
 			 });		 }
 		 
@@ -95,7 +95,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-			 $http.get("rest/gitServices/getCommitUser?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+			 $http.get("rest/scmcontroller/getCommitUser?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 					$scope.contributedrops = response; 
 					 $scope.timeperioddrops = ["Last 15 days", "Last 30 days", "Last 90 days", "Last 180 days", "Last 365 days"];
 
@@ -113,7 +113,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-			 $http.get("rest/gitServices/commitswithfilter?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo+"&committer="+$rootScope.committer+"&timeperiod="+$rootScope.timeperiod,config).success(function (response) {
+			 $http.get("rest/scmcontroller/commitswithfilter?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo+"&committer="+$rootScope.committer+"&timeperiod="+$rootScope.timeperiod,config).success(function (response) {
 				 $scope.commitdetails = response; 
 				 $scope.drawChart($scope.commitdetails);
 			 });  
@@ -126,7 +126,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-			 $http.get("rest/gitServices/commitswithfilter?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo+"&committer="+$rootScope.committer+"&timeperiod="+$rootScope.timeperiod,config).success(function (response) {
+			 $http.get("rest/scmcontroller/commitswithfilter?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo+"&committer="+$rootScope.committer+"&timeperiod="+$rootScope.timeperiod,config).success(function (response) {
 				 $scope.commitdetails = response; 
 				 $scope.drawChart($scope.commitdetails);
 			 });  
@@ -135,7 +135,7 @@
 		$scope.getDashboardDetails = function(type,UserName,Password){
 			$rootScope.UserName = UserName;
 			$rootScope.Password = Password;
-			$http.get("rest/gitServices/getGitDashboardDetails?type="+type+"&UserName="+UserName).success(function (response) {
+			$http.get("rest/scmcontroller/getGitDashboardDetails?type="+type+"&UserName="+UserName).success(function (response) {
 				$scope.gitDashDetails = response; 
 		 });
 		}*/
@@ -169,7 +169,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-			 $http.get("rest/gitServices/getFileSize?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+			 $http.get("rest/scmcontroller/getFileSize?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 					$scope.filesize = response/1024; 
 			 }); 
 		 }
@@ -180,7 +180,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/CommitCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/CommitCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 						$scope.commitcount = response; 
 				 }); 
 		 }
@@ -191,7 +191,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/ContributorsCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/ContributorsCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 						$scope.contributorcount = response; 
 				 });  
 		 }
@@ -202,7 +202,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/WatchersCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/WatchersCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 						$scope.watchers = response; 
 				 });  
 			 }
@@ -214,7 +214,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/StarsCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/StarsCount?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 						$scope.stars = response; 
 				 });  
 			 }
@@ -228,7 +228,7 @@
 		                'Authorization': token
 		                }};
 		
-				 $http.get("rest/gitServices/pullrequest?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/pullrequest?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 						$scope.pulls = response; 
 						$scope.mergedinpercentage = Math.round((($scope.pulls[0]-$scope.pulls[1])/$scope.pulls[0]) * 100);
 						$scope.proposedinpercentage = Math.round(100 - $scope.mergedinpercentage);
@@ -246,7 +246,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/Issues?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/Issues?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 						$scope.issues = response; 
 						$scope.closedissuepercentage = Math.round(($scope.issues[1] / $scope.issues[0]) *100);
 						$scope.newissuepercentage = Math.round(100 - $scope.closedissuepercentage);
@@ -260,7 +260,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/topcontributors?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/topcontributors?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 					 $scope.feed = response; 
 				 });  
 			 }
@@ -270,7 +270,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-				 $http.get("rest/gitServices/commits?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+				 $http.get("rest/scmcontroller/commits?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 					 $scope.commitdetails = response; 
 					 $scope.drawChart($scope.commitdetails);
 				 });  
@@ -377,7 +377,7 @@
 		        var config = {headers: {
 		                'Authorization': token
 		                }};
-			 $http.get("rest/gitServices/weeklycommits?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
+			 $http.get("rest/scmcontroller/weeklycommits?type="+$rootScope.selectedtype+"&user="+$rootScope.UserName+"&repo="+$rootScope.selectedRepo,config).success(function (response) {
 				 $scope.weeklycommitdetails = response; 
 				 $scope.drawChart($scope.weeklycommitdetails);
 			 });  

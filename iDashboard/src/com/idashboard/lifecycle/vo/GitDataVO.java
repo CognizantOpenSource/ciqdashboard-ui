@@ -1,9 +1,12 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection = "gitrepoInfo") 
+
+import com.cts.metricsportal.vo.CommitDetailsVO;
+import com.cts.metricsportal.vo.ContributorsDetailsVO;
+@Document(collection = "LCgitrepo") 
 public class GitDataVO {
 	
 	private String repoName;

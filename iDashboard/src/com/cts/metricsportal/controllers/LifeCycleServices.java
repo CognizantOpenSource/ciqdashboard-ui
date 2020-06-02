@@ -4,14 +4,10 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
-
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,10 +27,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -52,15 +47,12 @@ import com.cts.metricsportal.vo.BuildJobsVO;
 import com.cts.metricsportal.vo.BuildListVO;
 import com.cts.metricsportal.vo.BuildTotalVO;
 import com.cts.metricsportal.vo.ChefRunsVO;
-import com.cts.metricsportal.vo.CommitTrendVO;
 import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DefectVO;
 import com.cts.metricsportal.vo.FortifyVO;
-import com.cts.metricsportal.vo.FortifyVersionsVO;
 import com.cts.metricsportal.vo.IncidentListVO;
 import com.cts.metricsportal.vo.JiraDefectVO;
 import com.cts.metricsportal.vo.JiraLifeStatusVO;
-import com.cts.metricsportal.vo.JiraReqTrendVO;
 import com.cts.metricsportal.vo.JiraRequirmentVO;
 import com.cts.metricsportal.vo.KpiDashboardVO;
 import com.cts.metricsportal.vo.KpiMetricListVO;
@@ -68,10 +60,6 @@ import com.cts.metricsportal.vo.KpiSelectedMetricVO;
 import com.cts.metricsportal.vo.LCDashboardComponentsVO;
 import com.cts.metricsportal.vo.LCDashboardVO;
 import com.cts.metricsportal.vo.ProductDashboardVO;
-import com.cts.metricsportal.vo.QualysTrendVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
-import com.cts.metricsportal.vo.RequirementStatusVO;
-import com.cts.metricsportal.vo.RequirmentVO;
 import com.cts.metricsportal.vo.TestExeStatusVO;
 import com.cts.metricsportal.vo.TestExecutionVO;
 import com.cts.metricsportal.vo.ToolSelectionVO;
@@ -95,6 +83,7 @@ import com.idashboard.lifecycle.vo.CodeAnalysis_MaintainabilityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
 @Path("/lifeCycleServices")
 public class LifeCycleServices extends BaseMongoOperation {
@@ -484,24 +473,6 @@ public class LifeCycleServices extends BaseMongoOperation {
 		}
 	}
 
-	@GET
-	@Path("/ca_detail")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<CodeAnalysisVO> codeAnalysis(@HeaderParam("Authorization") String authString) throws JsonParseException,
-			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-		List<CodeAnalysisVO> codeAnalysisList = new ArrayList<CodeAnalysisVO>();
-		String query = "{},{prjName:1, _id:0}";
-		Query query1 = new BasicQuery(query);
-		boolean authenticateToken = LayerAccess.authenticateToken(authString);
-
-		if (authenticateToken) {
-			codeAnalysisList = getMongoOperation().find(query1, CodeAnalysisVO.class);
-			return codeAnalysisList;
-		} else {
-			return codeAnalysisList;
-		}
-
-	}
 
 	/* Create New Dashboard or Update */
 	@POST
@@ -1170,11 +1141,11 @@ public class LifeCycleServices extends BaseMongoOperation {
 						gitquery.addCriteria(Criteria.where("gitType").is(gitType));
 						gitquery.addCriteria(Criteria.where("repositoryDetails.repoName").is(gitRepo));
 
-						List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+						List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 						long commitcount = 0;
 						long contributorcount = 0;
 
-						gitdata = getMongoOperation().find(gitquery, RepositoryDetailsVO.class);
+						gitdata = getMongoOperation().find(gitquery, GitRepositoryVO.class);
 
 						if (!gitdata.isEmpty()) {
 							for (int j = 0; j < gitdata.get(0).getRepositoryDetails().size(); j++) {
@@ -1463,11 +1434,11 @@ public class LifeCycleServices extends BaseMongoOperation {
 						gitquery.addCriteria(Criteria.where("gitType").is(gitType));
 						gitquery.addCriteria(Criteria.where("repositoryDetails.repoName").is(gitRepo));
 
-						List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+						List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 						long commitcount = 0;
 						long contributorcount = 0;
 
-						gitdata = getMongoOperation().find(gitquery, RepositoryDetailsVO.class);
+						gitdata = getMongoOperation().find(gitquery, GitRepositoryVO.class);
 
 						if (!gitdata.isEmpty()) {
 							for (int j = 0; j < gitdata.get(0).getRepositoryDetails().size(); j++) {
@@ -2092,9 +2063,9 @@ public class LifeCycleServices extends BaseMongoOperation {
 				gitquery.addCriteria(Criteria.where("gitType").is(gitType));
 				gitquery.addCriteria(Criteria.where("repositoryDetails.repoName").is(gitRepo));
 
-				List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+				List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 
-				gitdata = getMongoOperation().find(gitquery, RepositoryDetailsVO.class);
+				gitdata = getMongoOperation().find(gitquery, GitRepositoryVO.class);
 
 				if (!gitdata.isEmpty()) {
 					for (int repo = 0; repo < gitdata.get(0).getRepositoryDetails().size(); repo++) {
@@ -2161,9 +2132,9 @@ public class LifeCycleServices extends BaseMongoOperation {
 				gitquery.addCriteria(Criteria.where("gitType").is(gitType));
 				gitquery.addCriteria(Criteria.where("repositoryDetails.repoName").is(gitRepo));
 
-				List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+				List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 
-				gitdata = getMongoOperation().find(gitquery, RepositoryDetailsVO.class);
+				gitdata = getMongoOperation().find(gitquery, GitRepositoryVO.class);
 
 				if (!gitdata.isEmpty()) {
 					for (int j = 0; j < gitdata.get(0).getRepositoryDetails().size(); j++) {

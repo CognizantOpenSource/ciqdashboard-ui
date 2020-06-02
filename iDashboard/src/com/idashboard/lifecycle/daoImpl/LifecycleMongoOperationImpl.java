@@ -13,14 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.text.BadLocationException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -30,8 +22,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
-import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.dao.OperationalDAO;
 import com.cts.metricsportal.util.BaseException;
@@ -45,7 +35,6 @@ import com.cts.metricsportal.vo.KpiSelectedMetricVO;
 import com.cts.metricsportal.vo.LCDashboardComponentsVO;
 import com.cts.metricsportal.vo.LCDashboardVO;
 import com.cts.metricsportal.vo.ProductDashboardVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
 import com.cts.metricsportal.vo.TestExeStatusVO;
 import com.cts.metricsportal.vo.TestExecutionVO;
 import com.cts.metricsportal.vo.UserStoriesIterationVO;
@@ -60,6 +49,7 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idashboard.lifecycle.dao.LifecycleMongoInterface;
 import com.idashboard.lifecycle.vo.CodeAnalysisVO;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
 public class LifecycleMongoOperationImpl extends BaseMongoOperation implements LifecycleMongoInterface {
 
@@ -612,11 +602,11 @@ public class LifecycleMongoOperationImpl extends BaseMongoOperation implements L
 						gitquery.addCriteria(Criteria.where("gitType").is(gitType));
 						gitquery.addCriteria(Criteria.where("repositoryDetails.repoName").is(gitRepo));
 
-						List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+						List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 						long commitcount = 0;
 						long contributorcount = 0;
 
-						gitdata = getMongoOperation().find(gitquery, RepositoryDetailsVO.class);
+						gitdata = getMongoOperation().find(gitquery, GitRepositoryVO.class);
 
 						if (!gitdata.isEmpty()) {
 							for (int j = 0; j < gitdata.get(0).getRepositoryDetails().size(); j++) {
@@ -878,11 +868,11 @@ public class LifecycleMongoOperationImpl extends BaseMongoOperation implements L
 						gitquery.addCriteria(Criteria.where("gitType").is(gitType));
 						gitquery.addCriteria(Criteria.where("repositoryDetails.repoName").is(gitRepo));
 
-						List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+						List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 						long commitcount = 0;
 						long contributorcount = 0;
 
-						gitdata = getMongoOperation().find(gitquery, RepositoryDetailsVO.class);
+						gitdata = getMongoOperation().find(gitquery, GitRepositoryVO.class);
 
 						if (!gitdata.isEmpty()) {
 							for (int j = 0; j < gitdata.get(0).getRepositoryDetails().size(); j++) {

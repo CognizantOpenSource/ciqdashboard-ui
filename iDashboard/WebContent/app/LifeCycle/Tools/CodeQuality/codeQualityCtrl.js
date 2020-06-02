@@ -83,32 +83,20 @@
 
 		// #1 Get Code Coverage Details
 		$scope.getcoverage = function(projectName) {
-			
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
+
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
-			$http({
-                url : "./rest/codequalitycontroller/getcoverage",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 gethomepagecoverage(response);
-          });
-         
-//			$http.get(
-//					"rest/codequalitycontroller/getcoverage?projectname="
-//							+ projectName, config).success(function(response) {
-//				gethomepagecoverage(response);
-//			});
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			$http.get(
+					"rest/codequality/getcoverage?projectname="
+							+ projectName, config).success(function(response) {
+				gethomepagecoverage(response);
+			});
 
 		}
 
@@ -276,33 +264,20 @@
 
 		// #2 Get Unit Test Metrics
 		$scope.getunittest = function(projectName) {
-			
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
-			
+
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
 
-			$http({
-                url : "./rest/codequalitycontroller/getunittest",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getunittestmetrics(response);
-          });
-//			$http.get(
-//					"rest/codequalitycontroller/getunittest?projectname="
-//							+ projectName, config).success(function(response) {
-//				getunittestmetrics(response);
-//			});
+			$http.get(
+					"rest/codequality/getunittest?projectname="
+							+ projectName, config).success(function(response) {
+				getunittestmetrics(response);
+			});
 
 		}
 
@@ -460,31 +435,20 @@
 
 		// #3 Get Size Metrics
 		$scope.getsize = function(projectName) {
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
+
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
 
-			$http({
-                url : "./rest/codequalitycontroller/getsizemetrics",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getsizemetrics(response);
-          });
-//			$http.get(
-//					"rest/codequalitycontroller/getsizemetrics?projectname="
-//							+ projectName, config).success(function(response) {
-//				getsizemetrics(response);
-//			});
+			$http.get(
+					"rest/codequality/getsizemetrics?projectname="
+							+ projectName, config).success(function(response) {
+				getsizemetrics(response);
+			});
 
 		}
 
@@ -503,32 +467,20 @@
 
 		// #4 Get Complexity Metrics
 		$scope.getcomplexity = function(projectName) {
-			
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
+
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
-			
-			$http({
-                url : "./rest/codequalitycontroller/getcomplexitymetrics",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getcomplexitymetrics(response);
-          });
-//			$http.get(
-//					"rest/codequalitycontroller/getcomplexitymetrics?projectname="
-//							+ projectName, config).success(function(response) {
-//				getcomplexitymetrics(response);
-//			});
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			$http.get(
+					"rest/codequality/getcomplexitymetrics?projectname="
+							+ projectName, config).success(function(response) {
+				getcomplexitymetrics(response);
+			});
 
 		}
 
@@ -548,33 +500,19 @@
 		// #5 Get Issues Metrics
 		$scope.getissues = function(projectName) {
 
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
-//			
-			
-			$http({
-                url : "./rest/codequalitycontroller/getissuemetrics",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getissuemetrics(response);
-          });
-			
-//			$http.get(
-//					"rest/codequalitycontroller/getissuemetrics?projectname="
-//							+ projectName, config).success(function(response) {
-//				getissuemetrics(response);
-//			});
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			$http.get(
+					"rest/codequality/getissuemetrics?projectname="
+							+ projectName, config).success(function(response) {
+				getissuemetrics(response);
+			});
 
 		}
 
@@ -594,32 +532,19 @@
 		// #6 Get Get reliability Metrics
 
 		$scope.getreliability = function(projectName) {
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
 
-			$http({
-                url : "./rest/codequalitycontroller/getreliabilitymetrics",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getreliabilitymetrics(response);
-          });
-			
-//			$http.get(
-//					"rest/codequalitycontroller/getreliabilitymetrics?projectname="
-//							+ projectName, config).success(function(response) {
-//				getreliabilitymetrics(response);
-//			});
+			$http.get(
+					"rest/codequality/getreliabilitymetrics?projectname="
+							+ projectName, config).success(function(response) {
+				getreliabilitymetrics(response);
+			});
 		}
 
 		function getreliabilitymetrics(data) {
@@ -780,32 +705,19 @@
 		// #7 Get SecurityAnalysis Metrics
 
 		$scope.getsecurityanalysis = function(projectName) {
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
 
-			$http({
-                url : "./rest/codequalitycontroller/getsecurityanalysis",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getsecurityanalysismetrics(response);
-          }); 
-			
-//			$http.get(
-//					"rest/codequalitycontroller/getsecurityanalysis?projectname="
-//							+ projectName, config).success(function(response) {
-//				getsecurityanalysismetrics(response);
-//			});
+			$http.get(
+					"rest/codequality/getsecurityanalysis?projectname="
+							+ projectName, config).success(function(response) {
+				getsecurityanalysismetrics(response);
+			});
 		}
 
 		function getsecurityanalysismetrics(data) {
@@ -984,31 +896,17 @@
 		$scope.getduplications = function(projectName) {
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
-//
-//			$http.get(
-//					"rest/codequality/getduplications?projectname="
-//							+ projectName, config).success(function(response) {
-//				getduplicationsmetrics(response);
-//			});
-			
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
-			
-			$http({
-                url : "./rest/codequalitycontroller/getduplications",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getduplicationsmetrics(response);
-          });
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			$http.get(
+					"rest/codequality/getduplications?projectname="
+							+ projectName, config).success(function(response) {
+				getduplicationsmetrics(response);
+			});
 		}
 
 		function getduplicationsmetrics(data) {
@@ -1159,30 +1057,17 @@
 		$scope.getmaintainability = function(projectName) {
 			var token = AES.getEncryptedValue();
 
-//			var config = {
-//				headers : {
-//					'Authorization' : token
-//				}
-//			};
-//
-//			$http.get(
-//					"rest/codequalitycontroller/getmaintainability?projectname="
-//							+ projectName, config).success(function(response) {
-//				getmaintainabilitymetrics(response);
-//			});
-			
-			var paramdata = new FormData();
-			paramdata.append('projectname', projectName);
-			$http({
-                url : "./rest/codequalitycontroller/getmaintainability",
-                method : "GET",
-                data : paramdata,
-                headers : {
-                    'Authorization' : token
-                }
-			 }).success(function (response) {
-				 getmaintainabilitymetrics(response);
-          });
+			var config = {
+				headers : {
+					'Authorization' : token
+				}
+			};
+
+			$http.get(
+					"rest/codequality/getmaintainability?projectname="
+							+ projectName, config).success(function(response) {
+				getmaintainabilitymetrics(response);
+			});
 		}
 
 		function getmaintainabilitymetrics(data) {

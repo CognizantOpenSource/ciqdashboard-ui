@@ -18,10 +18,10 @@ import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.CommitDetailsVO;
 import com.cts.metricsportal.vo.CommitTrendVO;
 import com.cts.metricsportal.vo.ContributorsDetailsVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
 import com.idashboard.lifecycle.dao.GitMongoInterface;
 import com.idashboard.lifecycle.daoImpl.GitMongoOperationImpl;
 import com.idashboard.lifecycle.service.SCMService;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
  
 
@@ -34,7 +34,7 @@ public class SCMServiceImpl implements SCMService {
     
     
     public long getFileSize(String authString, String user, String repo, String type) {
-        List<RepositoryDetailsVO> gitdata = null;
+        List<GitRepositoryVO> gitdata = null;
         long fileSize = 0;
         boolean authenticateToken = LayerAccess.authenticateToken(authString);
         
@@ -81,7 +81,7 @@ public class SCMServiceImpl implements SCMService {
     */
    public List<String> getGitName(String authString, String type) {
 		List<String> gitNameList = new ArrayList<String>();
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -89,7 +89,7 @@ public class SCMServiceImpl implements SCMService {
 			gitdata = gitOperation.Git_GetGitName(type);
 			
 			if(gitdata != null && !gitdata.isEmpty()) {
-				for(RepositoryDetailsVO rd : gitdata) {
+				for(GitRepositoryVO rd : gitdata) {
 					gitNameList.add(rd.getGitName());
 				}
    		}
@@ -106,8 +106,8 @@ public class SCMServiceImpl implements SCMService {
     * 
     * @return List 
     */
-	public List<RepositoryDetailsVO> getGitData(String authString, String type,String userName) {
-		List<RepositoryDetailsVO> gitdata = null;
+	public List<GitRepositoryVO> getGitData(String authString, String type,String userName) {
+		List<GitRepositoryVO> gitdata = null;
 		
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -127,7 +127,7 @@ public class SCMServiceImpl implements SCMService {
      * @return List repoList
      */
 	public List<String> getGitRepoList(String authString, String userName) {
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		List<String> repoList =  new ArrayList<String>();
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -154,7 +154,7 @@ public class SCMServiceImpl implements SCMService {
      * @return commitCount 
      */
 	public long getCommitsCount(String authString, String user, String repo, String type) {
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		long commitCount = 0;
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -182,7 +182,7 @@ public class SCMServiceImpl implements SCMService {
      * Returns contributor count
      */
 	public long getContributors(String authString, String user, String repo, String type) {
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		long contributorCount = 0;
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -213,7 +213,7 @@ public class SCMServiceImpl implements SCMService {
      * Returns watchers count
      */
 	public long getWatchers(String authString, String user, String repo, String type) {
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		long watchers = 0;
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -243,7 +243,7 @@ public class SCMServiceImpl implements SCMService {
      * Returns starcount
      */
 	public long getStarsCount(String authString,String user,String repo,String type) {
-		List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+		List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 		long starCount = 0;
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		
@@ -272,7 +272,7 @@ public class SCMServiceImpl implements SCMService {
      * Returns pulldetails
      */
 	public List<Integer> getPullRequest(String authString,String user,String repo,String type) {
-			List<RepositoryDetailsVO> gitdata = null;
+			List<GitRepositoryVO> gitdata = null;
 			List<Integer> pullDetails = new ArrayList<Integer>();
 			int totalPulls = 0; int mergeCount = 0;
 			boolean authenticateToken = LayerAccess.authenticateToken(authString);
@@ -308,7 +308,7 @@ public class SCMServiceImpl implements SCMService {
      */
 	public List<Integer> getIssues(String authString,String user,String repo,String type) {
 		List<Integer> issueDetails = new ArrayList<Integer>();
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		int totalIssues = 0; int closedIssueCount = 0;
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		if(authenticateToken) {
@@ -339,7 +339,7 @@ public class SCMServiceImpl implements SCMService {
      * Returns final list of contributors
      */
 	public List<ContributorsDetailsVO> getTopContributors(String authString,String user,String repo,String type) {
-		List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+		List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 		List<CommitDetailsVO> topcontributors = new ArrayList<CommitDetailsVO>();
 		List<Integer> blackList = new ArrayList<Integer>();
 		List<ContributorsDetailsVO> final_List = new ArrayList<ContributorsDetailsVO>();
@@ -412,7 +412,7 @@ public class SCMServiceImpl implements SCMService {
      */
 	
 	public List<CommitTrendVO> getCommits(String authString,String user,String repo,String type) {
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		List<CommitTrendVO> trendvoList=new ArrayList<CommitTrendVO>();
 		List<CommitDetailsVO> commitDetails = new ArrayList<CommitDetailsVO>();
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
@@ -476,7 +476,7 @@ public class SCMServiceImpl implements SCMService {
      * @return
      */
 	public List<CommitTrendVO> getCommitsWithFilter(String authString,String user,String repo,String type,String committer,String timeperiod) {
-		List<RepositoryDetailsVO> gitdata = null;
+		List<GitRepositoryVO> gitdata = null;
 		List<CommitTrendVO> trendvoList=new ArrayList<CommitTrendVO>();
 		boolean authenticateToken = LayerAccess.authenticateToken(authString);
 		if(authenticateToken) {
@@ -582,7 +582,7 @@ public class SCMServiceImpl implements SCMService {
      * @return 
      */
 	public List<CommitTrendVO> getWeeklyCommits(String authString, String user, String repo, String type) {
-		List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
+		List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
 		List<CommitTrendVO> trendvoList=new ArrayList<CommitTrendVO>();
 		List<CommitDetailsVO> commitDetails = new ArrayList<CommitDetailsVO>();
 		
@@ -641,7 +641,7 @@ public class SCMServiceImpl implements SCMService {
 	private List<String> populateUserList(String user, String repo, String type)
     {
         List<String> userlist = new ArrayList<String>();
-        List<RepositoryDetailsVO> commituserlist = gitOperation.Git_GetCommitUser(user, repo, type);
+        List<GitRepositoryVO> commituserlist = gitOperation.Git_GetCommitUser(user, repo, type);
         for(int i=0;i<commituserlist.get(0).getRepositoryDetails().size();i++){
             if(commituserlist.get(0).getRepositoryDetails().get(i).getRepoName().equalsIgnoreCase(repo)){
                 for(int j=0; j<commituserlist.get(0).getRepositoryDetails().get(i).getCommitDetails().size();j++){

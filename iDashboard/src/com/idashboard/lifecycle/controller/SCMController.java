@@ -18,35 +18,15 @@ import com.cts.metricsportal.bo.GitMetrics;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.CommitTrendVO;
 import com.cts.metricsportal.vo.ContributorsDetailsVO;
-import com.cts.metricsportal.vo.RepositoryDetailsVO;
 import com.idashboard.lifecycle.service.SCMService;
 import com.idashboard.lifecycle.serviceImpl.SCMServiceImpl;
-import com.sun.jersey.multipart.FormDataParam;
+import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
  
-
+@Path("/scmcontroller")
 public class SCMController {
 	
     SCMService scmService = new SCMServiceImpl();
-    
-    @GET
-    @Path("/getFileSize")
-    @Produces(MediaType.APPLICATION_JSON)
-    public long getFileSize(
-            @HeaderParam("Authorization") String authString,
-            @FormDataParam("user") String user,
-            @FormDataParam("repo") String repo,
-            @FormDataParam("type") String type
-            ) throws JsonParseException,
-            JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-            
-            long fileSize = 0;
-            fileSize = scmService.getFileSize(authString,user, repo,type);
-            
-            return fileSize;
-        
-            }
-    
     
     @GET
 	@Path("/getGitTypes")
@@ -54,7 +34,6 @@ public class SCMController {
 	public List<String> getGitTypes(@HeaderParam("Authorization") String authString
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-		scmService = (SCMService) new GitMetrics();
 		List<String> gitTypeList = scmService.getGitTypes(authString);
 		
 		return gitTypeList;
@@ -70,7 +49,6 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
 			List<String> gitNameList = scmService.getGitName(authString, type);
 			
 			return gitNameList;
@@ -81,14 +59,14 @@ public class SCMController {
     @GET
 	@Path("/getGitDashboardDetails")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<RepositoryDetailsVO> getGitData(
+	public List<GitRepositoryVO> getGitData(
 			@HeaderParam("Authorization") String authString,
 			@QueryParam("type") String type,
 			@QueryParam("UserName") String UserName
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
-			List<RepositoryDetailsVO> gitdata = scmService.getGitData(authString, type, UserName);
+			
+			List<GitRepositoryVO> gitdata = scmService.getGitData(authString, type, UserName);
 			
 			return gitdata;
 	}
@@ -104,14 +82,27 @@ public class SCMController {
 			
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<String> repoList =  scmService.getGitRepoList(authString, UserName);
 			
 			return repoList;
 			
 	}
     
-    
+    @GET
+    @Path("/getFileSize")
+    @Produces(MediaType.APPLICATION_JSON)
+    public long getFileSize(
+            @HeaderParam("Authorization") String authString,
+            @QueryParam("user") String user,
+            @QueryParam("repo") String repo,
+            @QueryParam("type") String type
+            ) throws JsonParseException,
+            JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
+    	
+    			return scmService.getFileSize(authString, user, repo, type);
+        
+            }
     
     @GET
 	@Path("/CommitCount")
@@ -123,7 +114,6 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
 			long commitCount = 0;
 			commitCount = scmService.getCommitsCount(authString, user, repo, type);
 			
@@ -142,9 +132,8 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
 			long contributorCount = 0;
-			contributorCount = scmService.getContributors(authString, user, repo, type);
+				contributorCount = scmService.getContributors(authString, user, repo, type);
 			
 			return contributorCount;
 	}
@@ -160,9 +149,8 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
 			long watchers = 0;
-			watchers = scmService.getWatchers(authString, user, repo, type);
+				watchers = scmService.getWatchers(authString, user, repo, type);
 			
 			return watchers;
 			
@@ -180,7 +168,6 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
 			long stars = scmService.getStarsCount(authString, user, repo, type);
 			
 			return stars;
@@ -198,7 +185,6 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
 			List<Integer> pullDetails = scmService.getPullRequest(authString, user, repo, type);
 			
 			return pullDetails;
@@ -217,7 +203,7 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<Integer> issueDetails = scmService.getIssues(authString, user, repo, type);
 			
 			return issueDetails;
@@ -235,7 +221,7 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<ContributorsDetailsVO> finalList = scmService.getTopContributors(authString, user, repo, type);
 			
 			return finalList;
@@ -273,7 +259,7 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<String> userList = scmService.getTimePeriod(authString);
 				
 			return userList;
@@ -292,7 +278,7 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<CommitTrendVO> trendvoList = scmService.getCommits(authString,user, repo, type);
 			
 			return trendvoList;
@@ -314,7 +300,7 @@ public class SCMController {
 			@QueryParam("timeperiod") String timeperiod
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<CommitTrendVO> trendvoList = scmService.getCommitsWithFilter(authString, user, repo, type, committer, timeperiod);
 			
 			return trendvoList;
@@ -333,7 +319,7 @@ public class SCMController {
 			@QueryParam("type") String type
 			) throws JsonParseException,
 			JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException {
-			scmService = (SCMService) new GitMetrics();
+			
 			List<CommitTrendVO> trendvoList= scmService.getWeeklyCommits(authString, user, repo, type);
 
 			return trendvoList;

@@ -109,6 +109,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 					}
 				}
 				if(authenticationStatus != AuthenticationService.OK) {
+					//System.out.println(httpServletRequest.getPathInfo());
 					 AuthenticationService authenticationService = new AuthenticationService();
 					 authenticationStatus = authenticationService.authenticate(authCredentials, isPlugin);	
 				}
