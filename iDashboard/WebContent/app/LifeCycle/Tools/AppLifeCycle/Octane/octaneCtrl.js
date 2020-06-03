@@ -69,7 +69,7 @@
 							+ selectedOctaneProject, config).success(
 					function(response) {
 						$scope.octaneSprintName = response[0];
-						$scope.octaneReleaseName = "Release12";
+						$scope.octaneReleaseName = "1001";
 
 					});
 

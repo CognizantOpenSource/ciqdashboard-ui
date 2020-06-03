@@ -21,6 +21,7 @@ import javax.ws.rs.QueryParam;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -134,10 +135,10 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 				Query query0 = new Query();
 				query0.addCriteria(Criteria.where("projectName").in(workspaceName));
 				query0.addCriteria(Criteria.where("startDate").in(listDetails));
+				query0.with(new Sort(Sort.Direction.ASC,"startDate"));
 				
 				//sprintDetails = getMongoOperation().getCollection("OctaneSprint").distinct("sprintId",query0.getQueryObject());
 				sprintdet = getMongoOperation().find(query0, OctaneDetailsVO.class);
-				
 				//sprintdetails in reverse order --> last, secondLast, thirdLast
 				sprintDetails.add(0, sprintdet.get(3).getSprintId());
 				sprintDetails.add(1, sprintdet.get(2).getSprintId());
