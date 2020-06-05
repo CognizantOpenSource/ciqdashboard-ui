@@ -1,8 +1,8 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "OctaneUserStory") 
+@Document(collection = "LCoctaneUserStory") 
 public class OctaneStoryVO {
 
 	

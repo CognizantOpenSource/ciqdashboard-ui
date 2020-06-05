@@ -1,4 +1,4 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "fortifyDetails") 
+@Document(collection = "LCfortifyDetails") 
 public class FortifyVO {
 
 	private String  projectName=null;

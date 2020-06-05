@@ -1,4 +1,4 @@
-package com.cts.metricsportal.dao;
+package com.idashboard.lifecycle.daoImpl;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -38,17 +38,18 @@ import com.cts.metricsportal.vo.DefectTrendVO;
 import com.cts.metricsportal.vo.DefectVO;
 import com.cts.metricsportal.vo.JiraDefectVO;
 import com.cts.metricsportal.vo.JiraRequirmentVO;
+import com.idashboard.lifecycle.dao.OctaneMongoInterface;
 import com.idashboard.lifecycle.vo.OctaneDataVO;
 import com.idashboard.lifecycle.vo.OctaneDefectVO;
 import com.idashboard.lifecycle.vo.OctaneDetailsVO;
 import com.idashboard.lifecycle.vo.OctaneStoryVO;
 
-public class OctaneMongoOperations extends BaseMongoOperation {
+public class OctaneMongoOperationImpl extends BaseMongoOperation implements OctaneMongoInterface {
 
-	static final Logger logger = Logger.getLogger(OctaneMongoOperations.class);
+	static final Logger logger = Logger.getLogger(OctaneMongoOperationImpl.class);
 	
 	@SuppressWarnings("unchecked")
-	public static List<String> getOctaneProjectDetails() throws JsonParseException, JsonMappingException, IOException,
+	public List<String> getOctaneProjectDetails() throws JsonParseException, JsonMappingException, IOException,
 	NumberFormatException, BaseException, BadLocationException {
 		List<String> projectcoll = null;
 
@@ -57,7 +58,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 		return projectcoll;
 	}
 	
-	public static List<String> getOctaneSprint(String workspaceName) throws JsonParseException, JsonMappingException, IOException,
+	public List<String> getOctaneSprint(String workspaceName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 			List<String> sprintDetails = new ArrayList<String>();
 
@@ -100,7 +101,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<String> getOctaneSprintDetails(String workspaceName) throws JsonParseException, JsonMappingException, IOException,
+	public List<String> getOctaneSprintDetails(String workspaceName) throws JsonParseException, JsonMappingException, IOException,
 		NumberFormatException, BaseException, BadLocationException {
 		List<String> sprintDetails = new ArrayList<String>();
 		List<OctaneDetailsVO> sprintdet = new ArrayList<OctaneDetailsVO>();
@@ -151,7 +152,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 		return sprintDetails;
 	}
 	
-	public static List<String> getOctaneCurrentSprint(String workspaceName) throws JsonParseException, JsonMappingException, IOException,
+	public List<String> getOctaneCurrentSprint(String workspaceName) throws JsonParseException, JsonMappingException, IOException,
 		NumberFormatException, BaseException, BadLocationException {
 		List<String> sprintName = new ArrayList<String>();
 
@@ -169,8 +170,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 	
 		return sprintName;
 	}
-	public static long getDaysLeftInSprint(String dashboardName,String workspaceName) throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+	public long getDaysLeftInSprint(String dashboardName,String workspaceName) throws JsonParseException, JsonMappingException, NumberFormatException, BaseException, IOException, BadLocationException {
 			long daysLeft = 0;
 			
 			if(workspaceName != null && (!workspaceName.equalsIgnoreCase(IdashboardConstantsUtil.UNDEFINED)))
@@ -198,7 +198,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 			
 
 	}
-	public static long getBacklogCount(String dashboardName,String workspaceName) throws JsonParseException, JsonMappingException, IOException,
+	public long getBacklogCount(String dashboardName,String workspaceName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 			long backlogCount = 0;
 			
@@ -225,7 +225,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<OctaneDataVO> getSprintStatus(String dashboardName, String workspaceName, String sprintSelected) throws JsonParseException, JsonMappingException, IOException,
+	public List<OctaneDataVO> getSprintStatus(String dashboardName, String workspaceName, String sprintSelected) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 		
 				int k =0; int j=0;
@@ -289,7 +289,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<OctaneDataVO> getSprintVelocity(String dashboardName,
+	public List<OctaneDataVO> getSprintVelocity(String dashboardName,
 			String workspaceName, String sprintSelected) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 				
@@ -360,7 +360,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<OctaneDataVO> getHourInvested(String dashboardName, String workspaceName, String sprintSelected) throws JsonParseException,
+	public List<OctaneDataVO> getHourInvested(String dashboardName, String workspaceName, String sprintSelected) throws JsonParseException,
 	JsonMappingException, IOException, NumberFormatException, BaseException, BadLocationException
 	{
 		int k =0; int j=0;
@@ -427,7 +427,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 		return hoursList;
 	}
 	
-	public static long getOctaneDefectCount(String dashboardName, String userId,
+	public long getOctaneDefectCount(String dashboardName, String userId,
 			String workspaceName, String OctaneSprintId) throws NumberFormatException, BaseException, BadLocationException {
 		long defCount=0;
 		logger.info("Fetching Octane Defect Count Filter..");
@@ -448,7 +448,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 		return trendvolist;
 	}
 */
-	public static List<OctaneDataVO> getOctaneDefectSeveritychart(String dashboardName, String userId, String workspaceName, String sprintSelected) throws NumberFormatException, BaseException,
+	public List<OctaneDataVO> getOctaneDefectSeveritychart(String dashboardName, String userId, String workspaceName, String sprintSelected) throws NumberFormatException, BaseException,
 	BadLocationException, JsonParseException, JsonMappingException, IOException {
 		
 		logger.info("Fetching Octane Defect Severity Chart.");
@@ -539,7 +539,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 			return result;
 		}
 
-	public static List<Long> getOctaneDefectStatusChart(String dashboardName, String userId, String workspaceName, String sprintSelected) throws NumberFormatException,
+	public List<Long> getOctaneDefectStatusChart(String dashboardName, String userId, String workspaceName, String sprintSelected) throws NumberFormatException,
 	BaseException, BadLocationException, JsonParseException, JsonMappingException, IOException {
 		logger.info("Fetching Octane Defect Status..");
 		List<Long> result= new ArrayList<Long>();
@@ -609,7 +609,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 	return result;
 	}
 
-	public static List<DefectStatusVO> getDefectuserchartQuery(String dashboardName, String userId, String workspaceName, String OctaneSprintId) throws NumberFormatException, BaseException, BadLocationException {
+	public List<DefectStatusVO> getDefectuserchartQuery(String dashboardName, String userId, String workspaceName, String OctaneSprintId) throws NumberFormatException, BaseException, BadLocationException {
 		List<DefectStatusVO> result=null;
 		logger.info("Fetching ALM Defect User Chart..");
 	  
@@ -625,7 +625,7 @@ public class OctaneMongoOperations extends BaseMongoOperation {
 			
 	}
 
-	public static List<OctaneDataVO> getOctaneDefectPrioritychart(String dashboardName, String userId, String workspaceName, String sprintSelected) throws NumberFormatException, BaseException,
+	public List<OctaneDataVO> getOctaneDefectPrioritychart(String dashboardName, String userId, String workspaceName, String sprintSelected) throws NumberFormatException, BaseException,
 	BadLocationException, JsonParseException, JsonMappingException, IOException {
 		
 		logger.info("Fetching Octane Defect Priority Chart.");

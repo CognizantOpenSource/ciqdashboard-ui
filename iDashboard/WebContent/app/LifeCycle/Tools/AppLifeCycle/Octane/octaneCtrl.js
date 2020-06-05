@@ -40,7 +40,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/octaneprojectdetails?dashboardName="
+					"rest/octane/octaneprojectdetails?dashboardName="
 							+ dashboardName, config).success(
 					function(response) {
 						$scope.octaneprojects = response;
@@ -64,7 +64,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getcurrentsprint?dashboardName="
+					"rest/octane/getcurrentsprint?dashboardName="
 							+ dashboardName + "&projectName="
 							+ selectedOctaneProject, config).success(
 					function(response) {
@@ -84,7 +84,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getdaysleftinsprint?dashboardName="
+					"rest/octane/getdaysleftinsprint?dashboardName="
 							+ dashboardName + "&projectName="
 							+ selectedOctaneProject, config).success(
 					function(response) {
@@ -103,7 +103,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getbacklogcount?dashboardName="
+					"rest/octane/getbacklogcount?dashboardName="
 							+ dashboardName + "&projectName="
 							+ selectedOctaneProject, config).success(
 					function(response) {
@@ -158,7 +158,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getsprintstatus?dashboardName="
+					"rest/octane/getsprintstatus?dashboardName="
 							+ dashboardName + "&projectName="
 							+ $rootScope.selectedOctaneProject
 							+ "&selectedSprint=" + $scope.sprintSel, config)
@@ -299,7 +299,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getsprintvelocity?dashboardName="
+					"rest/octane/getsprintvelocity?dashboardName="
 							+ dashboardName + "&projectName="
 							+ $rootScope.selectedOctaneProject
 							+ "&selectedSprint=" + $scope.sprintSel, config)
@@ -420,7 +420,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/gethourinvested?dashboardName="
+					"rest/octane/gethourinvested?dashboardName="
 							+ dashboardName + "&projectName="
 							+ $rootScope.selectedOctaneProject
 							+ "&selectedSprint=" + $scope.sprintSel, config)
@@ -568,7 +568,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getdefectseveritychart?dashboardName="
+					"rest/octane/getdefectseveritychart?dashboardName="
 							+ dashboardName + "&projectName="
 							+ $rootScope.selectedOctaneProject
 							+ "&selectedSprint=" + $scope.sprintSel, config)
@@ -711,7 +711,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getdefectstatuschart?dashboardName="
+					"rest/octane/getdefectstatuschart?dashboardName="
 							+ dashboardName + "&projectName="
 							+ $rootScope.selectedOctaneProject
 							+ "&selectedSprint=" + $scope.sprintSel, config)
@@ -781,7 +781,7 @@
 				}
 			};
 			$http.get(
-					"rest/OctaneLifeCycleServices/getdefectprioritychart?dashboardName="
+					"rest/octane/getdefectprioritychart?dashboardName="
 							+ dashboardName + "&projectName="
 							+ $rootScope.selectedOctaneProject
 							+ "&selectedSprint=" + $scope.sprintSel, config)

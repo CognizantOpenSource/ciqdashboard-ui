@@ -20,7 +20,7 @@ import com.cts.metricsportal.dao.OctaneMongoOperations;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.JiraRequirmentVO;
-import com.cts.metricsportal.vo.OctaneDataVO;
+import com.idashboard.lifecycle.vo.OctaneDataVO;
 
 public class OctaneLifeMetrics {
 

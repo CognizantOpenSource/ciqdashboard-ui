@@ -29,7 +29,6 @@ import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DefectTrendVO;
 import com.cts.metricsportal.vo.DefectVO;
 import com.cts.metricsportal.vo.JiraRequirmentVO;
-import com.cts.metricsportal.vo.OctaneDataVO;
 import com.cts.metricsportal.vo.ReqTrendVO;
 import com.cts.metricsportal.vo.RequirementStatusVO;
 import com.cts.metricsportal.vo.RequirmentVO;
@@ -40,6 +39,7 @@ import com.cts.metricsportal.vo.TestCaseVO;
 import com.cts.metricsportal.vo.TestExeStatusVO;
 import com.cts.metricsportal.vo.TestExeTrendVO;
 import com.cts.metricsportal.vo.TestExecutionVO;
+import com.idashboard.lifecycle.vo.OctaneDataVO;
 
 
 @Path("/OctaneLifeCycleServices")

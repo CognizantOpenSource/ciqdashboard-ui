@@ -21,7 +21,6 @@
 
         // search for current builds
         function details() {
-        	debugger;
         	 var token  = AES.getEncryptedValue();
              var config = {headers: {
                      'Authorization': token

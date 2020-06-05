@@ -49,7 +49,6 @@ import com.cts.metricsportal.vo.BuildTotalVO;
 import com.cts.metricsportal.vo.ChefRunsVO;
 import com.cts.metricsportal.vo.DefectStatusVO;
 import com.cts.metricsportal.vo.DefectVO;
-import com.cts.metricsportal.vo.FortifyVO;
 import com.cts.metricsportal.vo.IncidentListVO;
 import com.cts.metricsportal.vo.JiraDefectVO;
 import com.cts.metricsportal.vo.JiraLifeStatusVO;
@@ -83,6 +82,7 @@ import com.idashboard.lifecycle.vo.CodeAnalysis_MaintainabilityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_ReliabilityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SecurityVO;
 import com.idashboard.lifecycle.vo.CodeAnalysis_SizeVO;
+import com.idashboard.lifecycle.vo.FortifyVO;
 import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
 @Path("/lifeCycleServices")

@@ -1,4 +1,4 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,10 +1,10 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "OctaneSprint") 
+@Document(collection = "LCoctaneSprint") 
 public class OctaneDetailsVO {
 
 	private String sprintId;

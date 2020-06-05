@@ -1,10 +1,10 @@
-package com.cts.metricsportal.vo;
+package com.idashboard.lifecycle.vo;
 
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "OctaneDefects") 
+@Document(collection = "LCoctaneDefects") 
 public class OctaneDefectVO {
 
 	private String projectId;

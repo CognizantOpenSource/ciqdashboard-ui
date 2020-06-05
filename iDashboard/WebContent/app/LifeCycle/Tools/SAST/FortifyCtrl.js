@@ -47,7 +47,7 @@
 		// get Fortify projects
 		$scope.initialFortifyProjects = function() {
 
-			$http.get("rest/lifeCycleServices/fortifyprojectdetails", config)
+			$http.get("rest/SASTController/fortifyprojectdetails", config)
 					.success(function(response) {
 						$scope.fortifyprojects = response;
 
@@ -62,7 +62,7 @@
 			$rootScope.selectedFortifyProject = selectedFortifyProject;
 
 			$http.get(
-					"rest/lifeCycleServices/fortifyversiondetails?selectedFortifyProject="
+					"rest/SASTController/fortifyversiondetails?selectedFortifyProject="
 							+ selectedFortifyProject, config).success(
 					function(response) {
 						$scope.fortifyversions = response;
@@ -82,7 +82,7 @@
 			
 			$http
 					.get(
-							"rest/lifeCycleServices/fortifyHomeMetrics?selectedFortifyProject="
+							"rest/SASTController/fortifyHomeMetrics?selectedFortifyProject="
 									+ $rootScope.selectedFortifyProject
 									+ "&selectedFortifyVersion="
 									+ $rootScope.selectedFortifyVersion, config)
@@ -111,7 +111,7 @@
 		$scope.fortifyPriorityChart = function() {
 
 			$http.get(
-					"rest/lifeCycleServices/fortifyMetrics?selectedFortifyProject="
+					"rest/SASTController/fortifyMetrics?selectedFortifyProject="
 							+ $rootScope.selectedFortifyProject
 							+ "&selectedFortifyVersion="
 							+ $rootScope.selectedFortifyVersion, config)
@@ -272,7 +272,7 @@
 		
 		$scope.fortifyLast3VersionChart = function() {
 			$http.get(
-					"rest/lifeCycleServices/fortifyLast3VersionChart?selectedFortifyProject="
+					"rest/SASTController/fortifyLast3VersionChart?selectedFortifyProject="
 							+ $rootScope.selectedFortifyProject, config)
 					.success(function(response) {
 						$scope.fortifyVersionDetails = response;
