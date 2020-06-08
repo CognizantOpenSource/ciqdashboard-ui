@@ -22,7 +22,7 @@ public class FortifyMongoOperationImpl extends BaseMongoOperation implements For
 	public List<String> Fortify_ExecuteQuery_getProjectNames() {
 		List<String> projectNames = null;
 		try {
-			projectNames = getMongoOperation().getCollection("fortifyDetails").distinct("projectName");
+			projectNames = getMongoOperation().getCollection("LCfortifyDetails").distinct("projectName");
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
 
 			e.printStackTrace();
@@ -30,7 +30,7 @@ public class FortifyMongoOperationImpl extends BaseMongoOperation implements For
 		return projectNames;
 	}
 
-	@SuppressWarnings({ "null" })
+	
 	@Override
 	public List<String> Fortify_ExecuteQuery_getVersionDetails(String selectedFortifyProject) {
 
@@ -114,7 +114,7 @@ public class FortifyMongoOperationImpl extends BaseMongoOperation implements For
 
 	@Override
 	public List<FortifyVO> Fortify_ExecuteQuery_getFortifyLast3VersionChart(String selectedFortifyProject) {
-		
+
 		List<FortifyVO> fortifyDetails = new ArrayList<FortifyVO>();
 		Query query1 = new Query();
 		query1.addCriteria(Criteria.where("projectName").is(selectedFortifyProject));
@@ -122,7 +122,7 @@ public class FortifyMongoOperationImpl extends BaseMongoOperation implements For
 		try {
 			fortifyDetails = getMongoOperation().find(query1, FortifyVO.class);
 		} catch (NumberFormatException | BaseException | BadLocationException e) {
-			
+
 			e.printStackTrace();
 		}
 		return fortifyDetails;

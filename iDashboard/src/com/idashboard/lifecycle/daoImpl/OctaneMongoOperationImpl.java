@@ -53,7 +53,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 	NumberFormatException, BaseException, BadLocationException {
 		List<String> projectcoll = null;
 
-			projectcoll = getMongoOperation().getCollection("OctaneUserStory").distinct("projectName");
+			projectcoll = getMongoOperation().getCollection("LCoctaneUserStory").distinct("projectName");
 
 		return projectcoll;
 	}
@@ -80,7 +80,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 				
 				
 				//get distinct issueSprintName
-				List<String> allSprint = getMongoOperation().getCollection("OctaneSprint").distinct("sprintId", query1.getQueryObject());
+				List<String> allSprint = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintId", query1.getQueryObject());
 				
 				
 				if(!allSprint.isEmpty())
@@ -88,7 +88,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 					Query query2 = new Query();
 					query2.addCriteria(Criteria.where("sprintName").in(allSprint));
 					
-					List<String> allRelease = getMongoOperation().getCollection("OctaneSprint").distinct("releaseId", query1.getQueryObject());
+					List<String> allRelease = getMongoOperation().getCollection("LCoctaneSprint").distinct("releaseId", query1.getQueryObject());
 					
 					sprintDetails.add(allSprint.get(0));
 					sprintDetails.add(allRelease.get(0));
@@ -116,7 +116,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 			Query currSprint = new Query();
 			currSprint.addCriteria(Criteria.where("projectName").in(workspaceName));
 			currSprint.addCriteria(Criteria.where("startDate").lte(todayDate));
-			List<Date> startdateList = getMongoOperation().getCollection("OctaneSprint").distinct("startDate",currSprint.getQueryObject());
+			List<Date> startdateList = getMongoOperation().getCollection("LCoctaneSprint").distinct("startDate",currSprint.getQueryObject());
 			startdateList.remove(null);
 			
 			Collections.sort(startdateList);
@@ -138,7 +138,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 				query0.addCriteria(Criteria.where("startDate").in(listDetails));
 				query0.with(new Sort(Sort.Direction.ASC,"startDate"));
 				
-				//sprintDetails = getMongoOperation().getCollection("OctaneSprint").distinct("sprintId",query0.getQueryObject());
+				//sprintDetails = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintId",query0.getQueryObject());
 				sprintdet = getMongoOperation().find(query0, OctaneDetailsVO.class);
 				//sprintdetails in reverse order --> last, secondLast, thirdLast
 				sprintDetails.add(0, sprintdet.get(3).getSprintId());
@@ -164,7 +164,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 			query1.addCriteria(Criteria.where("projectName").in(workspaceName));
 			query1.addCriteria(Criteria.where("sprintId").is(currentSprintId));
 		
-			sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", query1.getQueryObject());
+			sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", query1.getQueryObject());
 		
 		}
 	
@@ -183,7 +183,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 		
 				try {
 					//get distinct sprintName
-					List<Date> sprintEndDate = getMongoOperation().getCollection("OctaneSprint").distinct("endDate", query1.getQueryObject());
+					List<Date> sprintEndDate = getMongoOperation().getCollection("LCoctaneSprint").distinct("endDate", query1.getQueryObject());
 					Date daysleft = sprintEndDate.get(0);
 					Date todayDate = new Date();
 					daysLeft = daysleft.getTime()-todayDate.getTime();  //in millisec
@@ -257,7 +257,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 					Query sname = new Query();
 					sname.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
 					sname.addCriteria(Criteria.where("projectName").in(workspaceName));
-					List<String> sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", sname.getQueryObject());
+					List<String> sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", sname.getQueryObject());
 					
 					Query query0 = new Query();
 					query0.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
@@ -325,7 +325,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 					Query sname = new Query();
 					sname.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
 					sname.addCriteria(Criteria.where("projectName").in(workspaceName));
-					List<String> sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", sname.getQueryObject());
+					List<String> sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", sname.getQueryObject());
 					
 					Query query0 = new Query();
 					query0.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
@@ -395,7 +395,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 			Query sname = new Query();
 			sname.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
 			sname.addCriteria(Criteria.where("projectName").in(workspaceName));
-			List<String> sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", sname.getQueryObject());
+			List<String> sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", sname.getQueryObject());
 			
 			Query query0 = new Query();
 			query0.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
@@ -483,7 +483,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 			Query sname = new Query();
 			sname.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
 			sname.addCriteria(Criteria.where("projectName").in(workspaceName));
-			List<String> sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", sname.getQueryObject());
+			List<String> sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", sname.getQueryObject());
 			
 			Query query0 = new Query();
 			query0.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
@@ -572,7 +572,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 			Query sname = new Query();
 			sname.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
 			sname.addCriteria(Criteria.where("projectName").in(workspaceName));
-			List<String> sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", sname.getQueryObject());
+			List<String> sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", sname.getQueryObject());
 			
 			Query query1 = new Query();
 			query1.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
@@ -660,7 +660,7 @@ public class OctaneMongoOperationImpl extends BaseMongoOperation implements Octa
 			Query sname = new Query();
 			sname.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));
 			sname.addCriteria(Criteria.where("projectName").in(workspaceName));
-			List<String> sprintName = getMongoOperation().getCollection("OctaneSprint").distinct("sprintName", sname.getQueryObject());
+			List<String> sprintName = getMongoOperation().getCollection("LCoctaneSprint").distinct("sprintName", sname.getQueryObject());
 			
 			Query query0 = new Query();
 			query0.addCriteria(Criteria.where("sprintId").in(sprintDetailsList.get(i)));

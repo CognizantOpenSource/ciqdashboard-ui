@@ -3400,6 +3400,7 @@ public class LifeCycleServices extends BaseMongoOperation {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/fortifyprojectdetails")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -3411,13 +3412,14 @@ public class LifeCycleServices extends BaseMongoOperation {
 		boolean authenticateToken = LayerAccess.getOperationalLayerAccess(authString);
 
 		if (authenticateToken) {
-			projectcoll = getMongoOperation().getCollection("fortifyDetails").distinct("projectName");
+			projectcoll = getMongoOperation().getCollection("LCfortifyDetails").distinct("projectName");
 		}
 
 		return projectcoll;
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/fortifyversiondetails")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -3432,7 +3434,7 @@ public class LifeCycleServices extends BaseMongoOperation {
 		query1.addCriteria(Criteria.where("projectName").in(selectedFortifyProject));
 
 		if (authenticateToken) {
-			versioncoll = getMongoOperation().getCollection("fortifyDetails").distinct("versions.versionId",
+			versioncoll = getMongoOperation().getCollection("LCfortifyDetails").distinct("versions.versionId",
 					query1.getQueryObject());
 		}
 
