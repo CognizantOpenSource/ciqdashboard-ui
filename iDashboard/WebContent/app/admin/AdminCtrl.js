@@ -115,7 +115,7 @@
 				}
 			};
 
-			var uri = "./rest/jsonServices/saveToolDetails?toolsSelected="
+			var uri = "./rest/lifecyclelayoutcontroller/saveToolDetails?toolsSelected="
 					+ $scope.selectedTool + "&template=" + $scope.selection
 			var encodeduri = encodeURI(uri);
 
@@ -151,7 +151,7 @@
 				}
 			};
 
-			$http.get("./rest/jsonServices/isToolSelectedAlready", config)
+			$http.get("./rest/templatecustomizationcontroller/isToolSelectedAlready", config)
 					.success(
 							function(response) {
 								$scope.toolLists = [];
@@ -237,28 +237,28 @@
 								for (var i = 0; i < model.lists.selected.length; i++) {
 
 									if (model.lists.selected[i].label == "SCM") {
-										$scope.imgPath = "app\\pages\\admin\\icon-github.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-github.png";
 										$scope.key = "gitHub";
 									} else if (model.lists.selected[i].label == "Test Management") {
-										$scope.imgPath = "app\\pages\\admin\\icon-hp.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-hp.png";
 										$scope.key = "testManagement";
 									} else if (model.lists.selected[i].label == "Code Quality") {
-										$scope.imgPath = "app\\pages\\admin\\icon-sonar.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-sonar.png";
 										$scope.key = "codeQuality";
 									} else if (model.lists.selected[i].label == "User Story") {
-										$scope.imgPath = "app\\pages\\admin\\icon-jira.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-jira.png";
 										$scope.key = "userStory";
 									} else if (model.lists.selected[i].label == "Deployment") {
-										$scope.imgPath = "app\\pages\\admin\\icon-chef.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-chef.png";
 										$scope.key = "chef";
 									} else if (model.lists.selected[i].label == "Build") {
-										$scope.imgPath = "app\\pages\\admin\\icon-jenkins.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-jenkins.png";
 										$scope.key = "build";
 									} else if (model.lists.selected[i].label == "Fortify") {
-										$scope.imgPath = "app\\pages\\admin\\icon-fortify.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-fortify.png";
 										$scope.key = "fortify";
 									} else if (model.lists.selected[i].label == "ALM-Octane") {
-										$scope.imgPath = "app\\pages\\admin\\icon-octane.png";
+										$scope.imgPath = "app\\admin\\templateCustomization\\infoDialog\\icon-octane.png";
 										$scope.key = "octane";
 									}
 
@@ -313,7 +313,7 @@
 
 			$http
 					.get(
-							"./rest/jsonServices/templateNameInOperational?templateName="
+							"./rest/templatecustomizationcontroller/templateNameInOperational?templateName="
 									+ encodeURIComponent($scope.data), config)
 					.success(
 							function(response) {
@@ -339,7 +339,7 @@
 									$uibModal
 											.open({
 												animation : true,
-												templateUrl : 'app/pages/admin/deleteUnusedTemplate.html',
+												templateUrl : 'app/admin/templateCustomization/deleteUnusedTemplate.html',
 
 												scope : $scope,
 												size : 'sm',
@@ -378,7 +378,7 @@
 			$scope.templatename = data;
 			$http
 					.get(
-							"./rest/jsonServices/deleteTemplateName?templateName="
+							"./rest/templatecustomizationcontroller/deleteTemplateName?templateName="
 									+ encodeURIComponent($scope.templatename),
 							config)
 					.success(
@@ -388,7 +388,7 @@
 									$scope.$dismiss();
 									$scope
 											.open(
-													'app/pages/admin/deletedTemplateMsg.html',
+													'app/admin/templateCustomization/infoDialog/deletedTemplateMsg.html',
 													'sm')
 								}
 
@@ -412,7 +412,7 @@
 			}
 
 			$http({
-				url : "./rest/jsonServices/deleteUnusedTemplateName",
+				url : "./rest/templatecustomizationcontroller/deleteUnusedTemplateName",
 				method : "GET",
 				params : paramdata,
 				headers : {
@@ -427,7 +427,7 @@
 									$scope.$dismiss();
 									$scope
 											.open(
-													'app/pages/admin/cannotDeleteTemplate.html',
+													'app/admin/templateCustomization/cannotDeleteTemplate.html',
 													'sm')
 								}
 
@@ -457,7 +457,7 @@
 			$rootScope.metricSelected = localStorageService
 					.get('metricSelected');
 			if ($rootScope.metricSelected == null) {
-				$scope.open('app/pages/admin/selectMetric.html', 'sm');
+				$scope.open('app/admin/templateCustomization/selectMetric.html', 'sm');
 			}
 			$rootScope.isAlmTool = localStorageService.get('almMetric');
 			$rootScope.isJiratool = localStorageService.get('jiraMetric');
@@ -485,10 +485,10 @@
 
 			}
 			if ($scope.selectTemplate == undefined) {
-				$scope.open('app/pages/admin/provideTemplatename.html', 'sm');
+				$scope.open('app/admin/app/admin/templateCustomization/provideTemplatename.html', 'sm');
 			} else {
 				$http({
-					url : "./rest/jsonServices/saveMetricDetails",
+					url : "./rest/templatecustomizationcontroller/saveMetricDetails",
 					method : "POST",
 					params : Viewdata,
 					headers : {
@@ -502,7 +502,7 @@
 									if (response == 0) {
 										$scope
 												.open(
-														'app/pages/admin/templateSavedSuccessfully.html',
+														'app/admin/templateCustomization/templateSavedSuccessfully.html',
 														'sm');
 
 										setTimeout(
@@ -550,7 +550,7 @@
 
 			}
 			$http({
-				url : "./rest/jsonServices/updateMetricDetails",
+				url : "./rest/templatecustomizationcontroller/updateMetricDetails",
 				method : "POST",
 				params : Viewdata,
 				headers : {
@@ -626,7 +626,7 @@
 				selectTemplate : $scope.selectTemplate
 			}
 			$http({
-				url : "./rest/jsonServices/existTemplateName",
+				url : "./rest/templatecustomizationcontroller/existTemplateName",
 				method : "POST",
 				params : templateData,
 				headers : {
@@ -637,7 +637,7 @@
 
 						if (response) {
 							$scope.open(
-									'app/pages/admin/existTemplateName.html',
+									'app/admin/templateCustomization/existTemplateName.html',
 									'sm');
 						}
 					});
@@ -729,7 +729,7 @@
 
 			$http
 					.get(
-							"./rest/jsonServices/metricAvailableList?almMetric="
+							"./rest/templatecustomizationcontroller/metricAvailableList?almMetric="
 									+ $scope.almtoolvalue + "&jiraMetric="
 									+ $scope.jiratoolvalue, config)
 					.success(
@@ -948,7 +948,7 @@
 				}
 			};
 			$http
-					.get("./rest/jsonServices/getNumberOfTemplate", config)
+					.get("./rest/templatecustomizationcontroller/getNumberOfTemplate", config)
 					.success(
 							function(response) {
 								$scope.numberOfTemplate = response;
@@ -987,7 +987,7 @@
 				}
 			};
 
-			$http.get("./rest/jsonServices/templateDetails", config).success(
+			$http.get("./rest/templatecustomizationcontroller/templateDetails", config).success(
 					function(response) {
 						$scope.templateTableDetails = response;
 
@@ -1024,7 +1024,7 @@
 			};
 			$http
 					.get(
-							"rest/operationalServices/customTemplateView?selectedcustomtemplate="
+							"rest/templatecustomizationcontroller/customTemplateView?selectedcustomtemplate="
 									+ encodeURIComponent($scope.selectedcustomtemplate),
 							config).success(function(response) {
 						if (response != 0)
@@ -1097,7 +1097,7 @@
 				}
 			};
 			$http.get(
-					"rest/operationalServices/customTemplateView?selectedcustomtemplate="
+					"rest/templatecustomizationcontroller/customTemplateView?selectedcustomtemplate="
 							+ encodeURIComponent($scope.myselectedTemplate),
 					config).success(function(response) {
 				if (response != 0)
@@ -1494,7 +1494,7 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/adminDetails", config).success(
+			$http.get("./rest/usercontroller/getuserdetails", config).success(
 					function(response) {
 						$rootScope.userDetails = response;
 						$rootScope.totalcnt = response.length;
@@ -1552,7 +1552,7 @@
 
 			$http
 					.get(
-							"./rest/jsonServices/roleChange?userId="
+							"./rest/usercontroller/roleChange?userId="
 									+ $scope.roleUserId + "&role="
 									+ $scope.valuerole, config)
 					.success(
@@ -1561,7 +1561,7 @@
 								if (response == 1) {
 									$scope
 											.open(
-													'app/pages/admin/roleUpdatedSuccessfully.html',
+													'/app/admin/UserManagement/msgDlg/roleUpdatedSuccessfully.html',
 													'sm');
 									setTimeout(function() {
 										$scope.reload();
@@ -1848,9 +1848,9 @@
 					'Authorization' : token
 				}
 			};
-			var data = angular.toJson(loginRequests);
+			//var data = angular.toJson(loginRequests);
 			$http({
-				url : "./rest/jsonServices/deleteUserInfo", //deleteUserList
+				url : "./rest/usercontroller/deleteUserInfo", //deleteUserList
 				method : "POST",
 				data : userId,
 				headers : {
@@ -1859,6 +1859,7 @@
 			}).success(function(response) {
 				$scope.getAdminTableDetails();
 				$scope.getUserCount();
+				$scope.reload();
 			});
 		}
 		// End of the Delete user
@@ -1871,11 +1872,10 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/getloginRequests", config).success(
+			$http.get("./rest/usercontroller/getloginRequests", config).success(
 					function(response) {
 
 						$scope.loginRequests = response;
-						console.log("dataa", $scope.loginRequests)
 						$scope.rowCollection = response;
 					})
 		}
@@ -1906,7 +1906,7 @@
 			$scope.iduser = userid;
 
 			$http.get(
-					"rest/jsonServices/updateDashboards?&userId="
+					"rest/usercontroller/updateDashboards?&userId="
 							+ $scope.iduser, config).success(
 					function(response) {
 						$scope.updateinfo = response;
@@ -1932,11 +1932,12 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/getActiveUsers", config).success(
+			$http.get("./rest/usercontroller/getActiveUsers", config).success(
 					function(response) {
 
 						$rootScope.activeUsers = response;
 						$rootScope.activeUsersRowCollection = response;
+						
 					})
 		}
 		// To fetch Inactive users
@@ -1947,7 +1948,7 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/getInactiveUsers", config).success(
+			$http.get("./rest/usercontroller/getInactiveUsers", config).success(
 					function(response) {
 
 						$rootScope.inactiveUsers = response;
@@ -1964,7 +1965,7 @@
 				}
 			};
 			$http
-					.get("./rest/jsonServices/adminUserCount", config)
+					.get("./rest/usercontroller/adminUserCount", config)
 					.success(
 							function(response) {
 								$rootScope.inactiveUsersCount = response[0].inactiveUsers;
@@ -1983,7 +1984,7 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/lockedAccountCount", config)
+			$http.get("./rest/usercontroller/lockedAccountCount", config)
 					.success(function(response) {
 						$scope.lockedAccountDetails = response;
 						$scope.lockedAccountDetailsSmartTable = response;
@@ -2002,7 +2003,7 @@
 			var data = angular.toJson(activeUsers);
 
 			$http({
-				url : "./rest/jsonServices/inactivateUsers",
+				url : "./rest/usercontroller/inactivateUsers",
 				method : "POST",
 				data : data,
 				headers : {
@@ -2011,6 +2012,7 @@
 			}).success(function(response) {
 				$scope.getActiveUsers();
 				$scope.getUserCount();
+				$scope.reload();
 			});
 		}
 		/*
@@ -2027,7 +2029,7 @@
 			var data = angular.toJson(inactiveUsers);
 
 			$http({
-				url : "./rest/jsonServices/activateUsers",
+				url : "./rest/usercontroller/activateUsers",
 				method : "POST",
 				data : data,
 				headers : {
@@ -2036,6 +2038,7 @@
 			}).success(function(response) {
 				$scope.getInactiveUsers();
 				$scope.getUserCount();
+				$scope.reload();
 			});
 		}
 
@@ -2050,7 +2053,7 @@
 			var data = angular.toJson(loginRequests);
 			console.log("dataa", data)
 			$http({
-				url : "./rest/jsonServices/loginRequests",
+				url : "./rest/usercontroller/loginRequests",
 				method : "POST",
 				data : data,
 				headers : {
@@ -2059,6 +2062,7 @@
 			}).success(function(response) {
 				$scope.getLoginRequests()
 				$scope.getUserCount();
+				$scope.reload();
 			});
 		}
 
@@ -2072,7 +2076,7 @@
 			};
 			var data = angular.toJson(lockedAccountDetails);
 			$http({
-				url : "./rest/jsonServices/lockRequests",
+				url : "./rest/usercontroller/lockRequests",
 				method : "POST",
 				data : data,
 				headers : {
@@ -2118,7 +2122,7 @@
 		$scope.updateLicenseKey = function() {
 			$uibModal.open({
 				animation : true,
-				templateUrl : 'app/pages/admin/updateLicenseKey.html',
+				templateUrl : 'app/admin/updateLicenseKey.html',
 				scope : $scope,
 				size : 'sm',
 				resolve : {
@@ -2139,13 +2143,13 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/updateLicenseKey?licenseKey=" + key,
+			$http.get("./rest/Licensecontroller/updateLicenseKey?licenseKey=" + key,
 					config).success(
 					function(response) {
 						$scope.result = response;
 						if ($scope.result == true) {
 							$scope.open(
-									'app/pages/admin/licenseKeyUpdated.html',
+									'app/admin/licenseKeyUpdated.html',
 									'sm');
 						}
 					})
@@ -2268,7 +2272,7 @@
 			}
 
 			$http({
-				url : "rest/jsonServices/createAdminUser",
+				url : "rest/usercontroller/createAdminUser",
 				method : "POST",
 				data : signUpData,
 				headers : {
@@ -2309,7 +2313,7 @@
 			updateData.append('mobileNum', $scope.mobile);
 
 			$http({
-				url : "rest/jsonServices/adminupdate",
+				url : "rest/usercontroller/adminupdate",
 				method : "POST",
 				data : updateData,
 				headers : {
@@ -2334,7 +2338,7 @@
 		}
 
 		$scope.showSuccessMsg = function() {
-			$scope.open('/app/admin/UserManagement/manageUser/savedSuccessfully.html', 'sm');
+			$scope.open('/app/admin/UserManagement/msgDlg/savedSuccessfully.html', 'sm');
 			setTimeout(function() {
 				$scope.reload();
 			}, 1000);
@@ -2342,12 +2346,12 @@
 		};
 
 		$scope.showCreateSuccessMsg = function() {
-			$scope.open('app/pages/admin/createdSuccessfully.html', 'sm');
+			$scope.open('app/admin/UserManagement/msgDlg/createdSuccessfully.html', 'sm');
 		};
 
 		$scope.showWarningMsg = function(value) {
 			$scope.value = value;
-			$scope.openwarning($scope.value, 'app/pages/admin/warningMsg.html',
+			$scope.openwarning($scope.value, 'app/admin/UserManagement/msgDlg/warningMsg.html',
 					'sm');
 		};
 
@@ -2380,7 +2384,7 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/getprojectsforadminaccess", config)
+			$http.get("rest/usercontroller/getprojectsforadminaccess", config)
 					.success(function(response) {
 						$scope.rel_items = response;
 						console.log("2result::");
@@ -2395,7 +2399,7 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/getjiraprojectsforadminaccess",
+			$http.get("rest/usercontroller/getjiraprojectsforadminaccess",
 					config).success(function(response) {
 				$scope.rel_jira_items = response;
 				$scope.rel_jira_items = updateJiraViewData();
@@ -2938,7 +2942,7 @@
 			}
 
 			$http({
-				url : "./rest/jsonServices/saveAdminProjectAccess",
+				url : "./rest/usercontroller/saveAdminProjectAccess",
 				method : "POST",
 				params : selectedProjects,
 				headers : {
@@ -3566,7 +3570,7 @@
 			}
 
 			$http({
-				url : "./rest/jsonServices/saveAdminProjectAccess",
+				url : "./rest/usercontroller/saveAdminProjectAccess",
 				method : "POST",
 				params : selectedProjects,
 				headers : {
@@ -3654,7 +3658,7 @@
 					'Authorization' : token
 				}
 			};
-			$http.get("./rest/jsonServices/adminDetails", config).success(
+			$http.get("rest/usercontroller/getuserdetails", config).success(
 					function(response) {
 						$scope.userDrops = response;
 						$scope.multiusers = [];
@@ -3781,7 +3785,7 @@
 				if (filetypeValid == "Yes") {
 					// REST CALL
 					$http({
-						url : "./rest/jsonServices/uploadOrgLogo",
+						url : "./rest/usercontroller/uploadOrgLogo",
 						method : "POST",
 						data : userDetails,
 						headers : {
@@ -3880,7 +3884,7 @@
 				if (filetypeValid == "Yes") {
 					// REST CALL
 					$http({
-						url : "./rest/jsonServices/uploadUserImg",
+						url : "./rest/usercontroller/uploadUserImg",
 						method : "POST",
 						data : userImgDetails,
 						headers : {
@@ -3961,14 +3965,14 @@
 			};
 
 			$http
-					.get("./rest/jsonServices/removeImg?userId=" + userId,
+					.get("./rest/usercontroller/removeImg?userId=" + userId,
 							config)
 					.success(
 							function(response) {
 								if (response == 1) {
 									$scope
 											.open(
-													'app/pages/admin/orgLogoRemovedMsg.html',
+													'/app/admin/UserManagement/msgDlg/orgLogoRemovedMsg.html',
 													'sm');
 									setTimeout(function() {
 										$state.reload();

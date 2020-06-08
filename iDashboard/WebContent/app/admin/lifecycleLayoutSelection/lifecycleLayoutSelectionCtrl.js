@@ -156,7 +156,7 @@
 				}
 			};
 
-			var uri = "./rest/lifecycleLayoutSelectionServices/saveToolDetails?toolsSelected="
+			var uri = "./rest/lifecyclelayoutcontroller/saveToolDetails?toolsSelected="
 					+ $scope.selectedTool + "&template=" + $scope.selection
 			var encodeduri = encodeURI(uri);
 
