@@ -83,7 +83,7 @@
 		$scope.licenseCheck = function() {
 			
 			$http
-					.get("./rest/jsonServices/licenseDetails")
+					.get("./rest/Licensecontroller/licenseDetails")
 					.success(
 							function(response) {
 								
