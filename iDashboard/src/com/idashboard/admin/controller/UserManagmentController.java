@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.vo.UserCountVO;
 import com.idashboard.admin.service.UserManagementService;
 import com.idashboard.admin.serviceImpl.UserManagementServiceImpl;
@@ -256,6 +257,24 @@ public class UserManagmentController {
 		LckReqCount = UserService.GetLockRequests(authString, output);
 		return LckReqCount;
 	}
+	
+	@POST
+	@Path("/savenewpassword")
+	@Produces(MediaType.APPLICATION_JSON)
+	public int savenewpassword(@HeaderParam("Authorization") String authString,
+			@HeaderParam("oldpassword") String oldPassword, @HeaderParam("newpassword") String newPassword) {
+		int count = 0;
+
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+
+		if (authenticateToken) {
+			count = UserService.SaveNewpassword(authString, oldPassword, newPassword);
+		}
+		return count;
+	}
+	
+	
+	
 	
 	
 	

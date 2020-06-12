@@ -808,55 +808,53 @@ public class UserManagementMongoOperationImpl extends BaseMongoOperation impleme
 		}
 		return objArray;
 	}
-	
+
 	public int UserManagement_ExecuteQuery_LoginRequests(String authString, String output) {
-		
+
 		int count = 0;
 		try {
-			
-	
-				ObjectMapper mapper = new ObjectMapper();
-				List<UserVO> myObjects = mapper.readValue(output, new TypeReference<List<UserVO>>() {
-				});
 
-				// Whitelisting - Security fix for JSON injection
+			ObjectMapper mapper = new ObjectMapper();
+			List<UserVO> myObjects = mapper.readValue(output, new TypeReference<List<UserVO>>() {
+			});
 
-				Query userquery = new Query();
-				List<UserVO> userInfo = getMongoOperation().find(userquery, UserVO.class);
-				List<UserVO> testedUserInfo = new ArrayList<UserVO>();
+			// Whitelisting - Security fix for JSON injection
 
-				for (UserVO vo : myObjects) {
-					for (UserVO uvo : userInfo) {
-						if (vo.getEmail().equalsIgnoreCase(uvo.getEmail())
-								&& vo.getPassword().equalsIgnoreCase(uvo.getPassword())
-								&& vo.getRole().equalsIgnoreCase(uvo.getRole())
-								&& vo.getUserId().equalsIgnoreCase(uvo.getUserId())
-								&& vo.getUserName().equalsIgnoreCase(uvo.getUserName())) {
-							testedUserInfo.add(vo);
-							break;
-						}
+			Query userquery = new Query();
+			List<UserVO> userInfo = getMongoOperation().find(userquery, UserVO.class);
+			List<UserVO> testedUserInfo = new ArrayList<UserVO>();
+
+			for (UserVO vo : myObjects) {
+				for (UserVO uvo : userInfo) {
+					if (vo.getEmail().equalsIgnoreCase(uvo.getEmail())
+							&& vo.getPassword().equalsIgnoreCase(uvo.getPassword())
+							&& vo.getRole().equalsIgnoreCase(uvo.getRole())
+							&& vo.getUserId().equalsIgnoreCase(uvo.getUserId())
+							&& vo.getUserName().equalsIgnoreCase(uvo.getUserName())) {
+						testedUserInfo.add(vo);
+						break;
 					}
 				}
+			}
 
-				// Whitelisting ends here
+			// Whitelisting ends here
 
-				for (int i = 0; i < testedUserInfo.size(); i++) {
+			for (int i = 0; i < testedUserInfo.size(); i++) {
 
-					if (testedUserInfo.get(i).isAccessible()) {
-						Query query = new Query();
-						Update update = new Update();
-						update.set("isAccessible", testedUserInfo.get(i).isAccessible());
-						update.set("isActive", true);
+				if (testedUserInfo.get(i).isAccessible()) {
+					Query query = new Query();
+					Update update = new Update();
+					update.set("isAccessible", testedUserInfo.get(i).isAccessible());
+					update.set("isActive", true);
 
-						query.addCriteria(Criteria.where("userId").is(testedUserInfo.get(i).getUserId()));
+					query.addCriteria(Criteria.where("userId").is(testedUserInfo.get(i).getUserId()));
 
-						getMongoOperation().updateFirst(query, update, UserVO.class);
-						count = 1;
-					}
+					getMongoOperation().updateFirst(query, update, UserVO.class);
+					count = 1;
 				}
-				
-			
-		}catch(Exception ex) {
+			}
+
+		} catch (Exception ex) {
 			logger.error(ex.getMessage());
 		}
 		return count;
@@ -1084,6 +1082,47 @@ public class UserManagementMongoOperationImpl extends BaseMongoOperation impleme
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
 		}
+		return count;
+	}
+
+	public int UserManagement_ExecuteQuery_Savenewpassword(String authString, 
+			String oldPassword, String newPassword)
+			 {
+		
+		int count = 0;
+		
+		String dbPassword = "";
+		String newPassword1 ="";
+
+		try {
+			
+			EncryptL encrypt = new EncryptL();
+			AuthenticationService authenticationService = new AuthenticationService();
+			
+			UserVO authUser = authenticationService.getUserDetails(authString);
+
+			
+			Query query1 = new Query();
+			query1.addCriteria(Criteria.where("userId").is(authUser.getUserId()));
+			UserVO userFromDb = getMongoOperation().findOne(query1, UserVO.class);
+			
+			dbPassword = userFromDb.getPassword();
+			
+			String oldPassword1 = encrypt.calculateHash(authenticationService.decryptHeader(oldPassword));
+			
+			if (dbPassword.equalsIgnoreCase(oldPassword1)) {
+				newPassword1 =encrypt.calculateHash(authenticationService.decryptHeader(newPassword));
+				Update update = new Update(); 
+				update.set("password", newPassword1);
+				getMongoOperation().updateFirst(query1, update, UserVO.class);
+				count++;
+			}
+			
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+		}
+
 		return count;
 	}
 

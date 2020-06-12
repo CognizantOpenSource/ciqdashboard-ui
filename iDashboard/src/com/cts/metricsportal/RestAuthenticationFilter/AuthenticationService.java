@@ -22,7 +22,8 @@ import com.cts.metricsportal.util.PropertyManager;
 import com.cts.metricsportal.util.SessionHandler;
 import com.cts.metricsportal.vo.IdashboardSession;
 import com.cts.metricsportal.vo.OperationalDashboardVO;
-import com.cts.metricsportal.vo.UserVO;
+import com.idashboard.admin.vo.UserVO;
+//import com.cts.metricsportal.vo.UserVO;
 
 public class AuthenticationService extends BaseMongoOperation {
 	

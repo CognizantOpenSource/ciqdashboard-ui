@@ -305,5 +305,18 @@ public class UserManagementServiceImpl implements UserManagementService {
 		}
 		return count;
 	}
+	
+	@Override
+	public int SaveNewpassword(String authString, String oldPassword, String newPassword) {
+		int count = 0;
+
+		AuthenticationService authenticateService = new AuthenticationService();
+		boolean authenticateToken = LayerAccess.authenticateToken(authString);
+
+		if (authenticateToken) {
+			count = UserOperation.UserManagement_ExecuteQuery_Savenewpassword(authString, oldPassword, newPassword);
+		}
+		return count;
+	}
 
 }

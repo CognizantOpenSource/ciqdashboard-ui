@@ -61,5 +61,8 @@ public interface UserManagementMongoInterface {
 	public int UserManagement_ExecuteQuery_GetLockRequests(String authString, String output);
 	
 	public int UserManagement_ExecuteQuery_LoginRequests(String authString, String output);
+	
+	public int UserManagement_ExecuteQuery_Savenewpassword(String authString,String oldPassword, String newPassword);
+	
 
 }

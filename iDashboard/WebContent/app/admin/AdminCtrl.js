@@ -3998,6 +3998,44 @@
 
 		});
 		
+		//Change Password
+		// change password - save
+		$scope.savenewpassword = function(oldPassword, newPassword, confirmnewpassword) {
+			
+			if (newPassword == confirmnewpassword) {
+				var oldPassword = oldPassword;
+				var newPassword = newPassword;
+				
+				
+				
+				var token = AES.getEncryptedValue();
+				
+				$http({
+					url : "./rest/usercontroller/savenewpassword",
+					method : "POST",
+					headers : {
+						'Authorization' : token,
+						'oldPassword' : AES.encode(oldPassword),
+						'newPassword' : AES.encode(newPassword)
+					}
+				})
+						.success(
+								function(response) {
+									$scope.result = response;
+									
+									if ($scope.result == 1) {
+										$scope.open('app/admin/changePasswordSuccess.html',
+														'sm');
+									}else {
+										$scope.open('app/admin/changePasswordFail.html',
+										'sm');
+									}
+								});
+			} else {
+				$scope.open('app/admin/errorChangePassword.html', 'sm');
+			}
+		}
+		
 		
 	}
 

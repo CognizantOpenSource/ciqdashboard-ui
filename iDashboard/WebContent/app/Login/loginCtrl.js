@@ -208,7 +208,7 @@
 		};
 
 		
-		// change password - save
+		/*// change password - save
 		$scope.savenewpassword = function(oldPassword, newPassword, confirmnewpassword) {
 			
 			if (newPassword == confirmnewpassword) {
@@ -235,9 +235,9 @@
 									}
 								});
 			} else {
-				$scope.open('app/Login/errorChangePassword.html', 'sm');
+				$scope.open('app/admin/errorChangePassword.html', 'sm');
 			}
-		}
+		}*/
 
 		$scope.Resetpassword = function(newPassword, confirmnewpassword) {
 			if (newPassword == confirmnewpassword) {
@@ -822,7 +822,7 @@
 								else {
 									/* ("either Invalid Credentials or account locked"); */
 									//check if account is locked
-									alert(data.acLock);
+									
 									if(data.acLock){
 																								/*localStorageService.set('acLock', data.acLock);*/
 										$rootScope.acLock = true;

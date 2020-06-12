@@ -11,7 +11,8 @@ import java.security.SecureRandom;
 import com.cognizant.idashboard.iAuthentication;
 import com.cts.metricsportal.dao.SessionMongoOperation;
 import com.cts.metricsportal.vo.IdashboardSession;
-import com.cts.metricsportal.vo.UserVO;
+import com.idashboard.admin.vo.UserVO;
+//import com.cts.metricsportal.vo.UserVO;
 
 public class SessionHandler {
 	
