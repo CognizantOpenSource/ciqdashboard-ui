@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.text.BadLocationException;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.KpiDashboardVO;

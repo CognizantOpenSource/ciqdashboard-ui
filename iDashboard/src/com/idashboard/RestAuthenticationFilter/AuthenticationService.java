@@ -1,4 +1,4 @@
-package com.cts.metricsportal.RestAuthenticationFilter;
+package com.idashboard.RestAuthenticationFilter;
 /**
 @author 653731
 */

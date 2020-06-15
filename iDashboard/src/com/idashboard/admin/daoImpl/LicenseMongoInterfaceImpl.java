@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.util.PropertyManager;

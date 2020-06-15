@@ -58,7 +58,7 @@
 																		'app/Operational/Defects/defectsCtrl.js',
 																		'app/Operational/Defects/defectsJiraCtrl.js',
 																		'app/Operational/Execution/TestExecutionCtrl.js',
-																		'app/Login/loginCtrl.js'
+																		'app/Login/loginCtrl.js',
 																		'lib/funnel-chart.js',
 																		'lib/jquery.easypiechart.js',
 																		'app/Dashboard/highlightsCtrl.js',
@@ -193,13 +193,13 @@
 
 						})
 						
-				.state('register', 
+				/*.state('register', 
 						{
 					url : '/register',
 					title : 'SignUp',
 					templateUrl : 'app/pages/login/register.html'
 
-				})
+				})*/
 
 				.state('admin',
 						{

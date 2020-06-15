@@ -6,7 +6,7 @@ import java.util.List;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.QueryParam;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.vo.UserCountVO;
 import com.idashboard.admin.vo.UserProjectVO;
 import com.idashboard.admin.vo.UserVO;

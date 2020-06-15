@@ -1,4 +1,4 @@
-package com.cts.metricsportal.RestAuthenticationFilter;
+package com.idashboard.RestAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 			//System.out.println(httpServletRequest.getPathInfo());
 			
 			// --done by Adhish 653731
-			if(httpServletRequest.getPathInfo().contains("/jsonServices/signup")
+			if(httpServletRequest.getPathInfo().contains("/logincontroller/signup")
 				||	httpServletRequest.getPathInfo().contains("/authentication") || 
 				httpServletRequest.getPathInfo().contains("/licenseDetails") ||
 				httpServletRequest.getPathInfo().contains("/getldapstatus") ||

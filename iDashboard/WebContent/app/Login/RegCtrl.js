@@ -4,13 +4,15 @@
 angular.module('MetricsPortal.Login').controller(
 			'RegCtrl', RegCtrl);
 /** @ngInject */
-function RegCtrl($scope,$base64, $rootScope, $window, localStorageService, reCAPTCHA, $location,$http,$state,toastr) {
+function RegCtrl($scope,AES,$base64, $rootScope, $window, localStorageService, reCAPTCHA, $location,$http,$state,toastr) {
 	
 	
 	
 	reCAPTCHA.setPublicKey('6LeCi2MUAAAAACmT5vTmbuACR24AVyXO5oWpy3AR');
 
 	 $scope.signUpUser = function(form) {
+		 
+		 alert($scope.userid=form.suserId);
 
 	   	    $scope.userid=form.suserId;
 	   	    $scope.password=form.spassword ;
@@ -19,20 +21,22 @@ function RegCtrl($scope,$base64, $rootScope, $window, localStorageService, reCAP
 	   	    $scope.email=form.email;
 	   	    $scope.mobile=form.mobile;
 	   	    $scope.captcha = form.captcha;
+	      
+	        //$scope.password = btoa($scope.password);
 	   	    
 	   	   
-	      
-	        $scope.password = btoa($scope.password);
-	   
-	        
-	        
+	   	    
+	   	    $scope.password=AES.encode($scope.password);
+	   	    
+	   	   
+	   	    
 	   	var signUpData = {userId:$scope.userid,password:$scope.password,
 	   			 userName:$scope.username,
 	   			email:$scope.email,mobileNum:$scope.mobile}
 	   	 
 	   
 	    $http({
-	    url: "./rest/jsonServices/signup",
+	    url: "./rest/logincontroller/signup",
 	    method: "POST",
 	    params: signUpData
 	    }).success(function (response) {

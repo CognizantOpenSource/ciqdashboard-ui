@@ -8,7 +8,7 @@ import javax.ws.rs.HeaderParam;
 
 import org.apache.log4j.Logger;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.vo.UserCountVO;
 import com.idashboard.admin.dao.UserManagementMongoInterface;

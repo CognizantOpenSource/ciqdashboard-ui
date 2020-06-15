@@ -28,7 +28,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.TestManagementMetrics;
 import com.cts.metricsportal.dao.OperationalDAO;
 import com.cts.metricsportal.util.BaseException;

@@ -1942,6 +1942,8 @@
 		}
 		// To fetch Inactive users
 		$scope.getInactiveUsers = function() {
+			
+						
 			var token = AES.getEncryptedValue();
 			var config = {
 				headers : {
@@ -2027,6 +2029,7 @@
 				}
 			};
 			var data = angular.toJson(inactiveUsers);
+			
 
 			$http({
 				url : "./rest/usercontroller/activateUsers",

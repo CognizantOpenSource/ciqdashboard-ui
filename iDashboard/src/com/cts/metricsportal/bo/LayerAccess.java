@@ -1,6 +1,6 @@
 package com.cts.metricsportal.bo;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 
 public class LayerAccess {
 	

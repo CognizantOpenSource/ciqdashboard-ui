@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.idashboard.lifecycle.dao.OctaneMongoInterface;

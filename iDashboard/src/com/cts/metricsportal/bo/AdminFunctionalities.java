@@ -14,7 +14,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.dao.AdminMongoOperations;
 import com.cts.metricsportal.dao.GitMongoOperations;
 import com.cts.metricsportal.util.BaseException;

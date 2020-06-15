@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.cognizant.qbot.exception.BaseException;
-import com.cts.metricsportal.LicenseReader.LicenseReader;
+import com.idashboard.LicenseReader.*;
 
 
 public class PropertyManager {

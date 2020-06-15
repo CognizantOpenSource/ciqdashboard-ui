@@ -5,7 +5,7 @@
 
 package com.cts.metricsportal.controllers;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.PropertyManager;

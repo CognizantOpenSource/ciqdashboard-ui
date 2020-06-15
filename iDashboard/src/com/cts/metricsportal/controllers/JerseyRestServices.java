@@ -54,11 +54,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.cognizant.cimesg.accessjl.core.LdapAuthentication;
 import com.cognizant.cimesg.encryptl.core.EncryptL;
 import com.cognizant.idashboard.iAuthentication;
-import com.cts.metricsportal.LicenseReader.LicenseReader;
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.LicenseReader.*;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.dao.AlmMongoOperations;
-import com.cts.metricsportal.emailScheduler.MailScheduler;
+import com.idashboard.emailScheduler.MailScheduler;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.IdashboardConstantsUtil;
 import com.cts.metricsportal.util.PropertyManager;
@@ -73,7 +73,7 @@ import com.cts.metricsportal.vo.DefectVO;
 import com.cts.metricsportal.vo.DomainProjectVO;
 import com.cts.metricsportal.vo.DomainVO;
 import com.cts.metricsportal.vo.LevelItemsVO;
-import com.cts.metricsportal.vo.LicenseVO;
+
 import com.cts.metricsportal.vo.MenuItemsVO;
 import com.cts.metricsportal.vo.MenuListVO;
 import com.cts.metricsportal.vo.OperationDashboardDetailsVO;
@@ -92,9 +92,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.idashboard.admin.vo.LicenseVO;
 import com.idashboard.admin.vo.UserVO;
 import com.mongodb.BasicDBObject;
 import com.sun.jersey.multipart.FormDataParam;
+import com.idashboard.LicenseReader.*;
 
 @Path("/jsonServices")
 public class JerseyRestServices extends BaseMongoOperation {
@@ -482,8 +484,8 @@ public class JerseyRestServices extends BaseMongoOperation {
 		List<LicenseVO> readerValues = new ArrayList<LicenseVO>();
 
 		try {
-			readerValues = lr.getReaderValues();
-		} catch (ServletException e) {
+			//readerValues = lr.getReaderValues();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

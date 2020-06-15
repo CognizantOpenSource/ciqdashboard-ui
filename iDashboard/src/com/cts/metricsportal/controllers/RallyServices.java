@@ -38,7 +38,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.cognizant.cimesg.accessjl.core.LdapAuthentication;
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.util.IdashboardConstantsUtil;

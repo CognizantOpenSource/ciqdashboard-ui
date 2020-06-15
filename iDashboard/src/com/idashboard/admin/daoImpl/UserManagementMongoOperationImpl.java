@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.cognizant.cimesg.encryptl.core.EncryptL;
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.LayerAccess;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 
@@ -1018,7 +1018,7 @@ public class UserManagementMongoOperationImpl extends BaseMongoOperation impleme
 
 			for (int i = 0; i < testedUserInfo.size(); i++) {
 
-				if (testedUserInfo.get(i).isActive() == false) {
+				if (testedUserInfo.get(i).isActive() == true) {
 					Query query = new Query();
 					Update update = new Update();
 					update.set("isActive", true);

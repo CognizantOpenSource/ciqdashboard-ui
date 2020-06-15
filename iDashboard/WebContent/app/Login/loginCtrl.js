@@ -1,53 +1,48 @@
 (function() {
 	'use strict';
 
-	angular.module('MetricsPortal.Login').service('UserService',
-			function() {
+	angular.module('MetricsPortal.Login').service('UserService', function() {
 
-				var uservo = " ";
+		var uservo = " ";
 
-				this.setuservo = function(uservo) {
-					this.uservo = uservo;
-				};
+		this.setuservo = function(uservo) {
+			this.uservo = uservo;
+		};
 
-				this.getuservo = function() {
-					return this.uservo;
-				};
+		this.getuservo = function() {
+			return this.uservo;
+		};
 
-			}).controller('LoginCtrl', LoginCtrl,
-			function($scope, UserService) {
+	}).controller('LoginCtrl', LoginCtrl, function($scope, UserService) {
 
-			});
+	});
 
-	function LoginCtrl($uibModal, AES, Idle, $scope, $rootScope, $templateCache,
-			$base64, $window, $location, $http, $state, localStorageService,
-			$cookies, $sessionStorage, $route, toastr, $timeout) {
-		
-		
-		
+	function LoginCtrl($uibModal, AES, Idle, $scope, $rootScope,
+			$templateCache, $base64, $window, $location, $http, $state,
+			localStorageService, $cookies, $sessionStorage, $route, toastr,
+			$timeout) {
+
 		// Init
-		
-		
-		
 
 		// $rootScope.loggedIn = false;
 		$rootScope.registration = false;
 		$rootScope.registereduser = false;
 		$rootScope.changeMenu = false;
 		$rootScope.menubar = false;
-		
+
 		$scope.operationaldrops = true;
 		$scope.wrongpasswordcount = 0;
 		$scope.started = false;
 		$rootScope.var4 = true;
-		
+
 		//653731 on 10/01/19
-		localStorageService.set('aclockonwrongpassword',false); //on refresh intialize false
-		
-		$rootScope.aclockonwrongpassword = localStorageService.get('aclockonwrongpassword'); //  after entering wrong password "lock flag"
-		
+		localStorageService.set('aclockonwrongpassword', false); //on refresh intialize false
+
+		$rootScope.aclockonwrongpassword = localStorageService
+				.get('aclockonwrongpassword'); //  after entering wrong password "lock flag"
+
 		$rootScope.acLock = false; // locked account flag from back end
-		
+
 		$rootScope.isAdmin = localStorageService.get('admin');
 		$rootScope.loggedInuserId = localStorageService.get('loggedInuserId');
 		$rootScope.userNamee = localStorageService.get('userNamee');
@@ -71,7 +66,6 @@
 		// localStorageService.set('timeperiod',"Last 90 days");
 		$rootScope.projects = localStorageService.get('projects');
 
-
 		var screenWidth = $window.innerWidth;
 
 		if (screenWidth < 700) {
@@ -81,12 +75,12 @@
 		}
 
 		$scope.licenseCheck = function() {
-			
+
 			$http
 					.get("./rest/Licensecontroller/licenseDetails")
 					.success(
 							function(response) {
-								
+
 								$rootScope.licenseDetails = response;
 								localStorageService.set('licenseDetails',
 										$rootScope.licenseDetails);
@@ -179,7 +173,6 @@
 
 		$scope.changeState = function() {
 			$rootScope.registration = true;
-			$state.go('register');
 		}
 		$scope.pageReload = function() {
 			location.reload();
@@ -207,7 +200,6 @@
 			});
 		};
 
-		
 		/*// change password - save
 		$scope.savenewpassword = function(oldPassword, newPassword, confirmnewpassword) {
 			
@@ -250,35 +242,33 @@
 				};
 
 				$http({
-					url : "./rest/jsonServices/Resetpassword",
+					url : "./rest/logincontroller/Resetpassword",
 					method : "POST",
 					data : newPassword,
 					headers : {
 						'Authorization' : token
 					}
-				})
-						.success(
-								function(response) {
-									$scope.result = response;
-									if ($scope.result == 0) {
-										$scope
-												.open(
-														'app/Login/changePasswordSuccess.html',
-														'sm');
-									}
-								});
+				}).success(
+						function(response) {
+							$scope.result = response;
+							if ($scope.result == 0) {
+								$scope.open(
+										'app/Login/changePasswordSuccess.html',
+										'sm');
+							}
+						});
 			} else {
 				$scope.open('app/Login/errorChangePassword.html', 'sm');
 			}
 		}
-		
+
 		//added by 653731
 		$rootScope.showExpiredMessages = function(whichMsg) {
-			 if (whichMsg == 0)
-	                $scope.sessionMgs = "Session expired. At least one other session with the same user credential is active. Please terminate that session in order to proceed with this one."
-	          else
-	                $scope.sessionMgs = "Session expired. Please provide the password for current logged in user.";
-			 
+			if (whichMsg == 0)
+				$scope.sessionMgs = "Session expired. At least one other session with the same user credential is active. Please terminate that session in order to proceed with this one."
+			else
+				$scope.sessionMgs = "Session expired. Please provide the password for current logged in user.";
+
 			$uibModal.open({
 				animation : true,
 				templateUrl : 'app/Login/sessionExpired.html',
@@ -294,25 +284,24 @@
 
 		// added by Adhish-653731
 		$rootScope.logout = function() {
-			 var token = AES.getEncryptedValue();
-	            $http({
-	                url: "./rest/jsonServices/logout",
-	                method: "POST",
-	                headers: {
-	                    'Authorization': token
-	                }
-	            }).success(
-	                function (response) {
-	                    if (response) {
-	                        localStorageService.clearAll();
-	                        $window.localStorage.clear();
-	                        delete $sessionStorage.admin;
-	            			delete $sessionStorage.description;
-	                        $rootScope.loggedIn = false;
-	                        window.location = "./";
-	                    }
+			var token = AES.getEncryptedValue();
+			$http({
+				url : "./rest/jsonServices/logout",
+				method : "POST",
+				headers : {
+					'Authorization' : token
+				}
+			}).success(function(response) {
+				if (response) {
+					localStorageService.clearAll();
+					$window.localStorage.clear();
+					delete $sessionStorage.admin;
+					delete $sessionStorage.description;
+					$rootScope.loggedIn = false;
+					window.location = "./";
+				}
 
-	                });
+			});
 
 		}
 
@@ -465,7 +454,7 @@
 		}
 
 		$scope.SessionData = function(role, menuType) {
-		
+
 			if (menuType == "dashbot") {
 				$rootScope.menubar = false;
 				$scope.operationaldrops = false;
@@ -491,7 +480,7 @@
 				$rootScope.var6 = false;
 
 			} else if (menuType == "operational") {
-				
+
 				$rootScope.menubar = false;
 				$scope.operationaldrops = true;
 				$sessionStorage.menuType1 = menuType;
@@ -511,7 +500,8 @@
 				$rootScope.var4 = false;
 				$rootScope.var5 = false;
 				$rootScope.var6 = false;
-			} else if (menuType == "custmetric" || menuType == "coEDashboard" ||menuType == "riskCompliance") {
+			} else if (menuType == "custmetric" || menuType == "coEDashboard"
+					|| menuType == "riskCompliance") {
 				$scope.operationaldrops = false;
 				$rootScope.menubar = false;
 				$sessionStorage.menuType1 = menuType;
@@ -592,53 +582,69 @@
 			}
 
 		}
-		 //-------------------------------------------
+		//-------------------------------------------
 
-        // Authentication
+		// Authentication
 		$scope.showGroup = function(userName, password) {
-			
+
 			localStorageService.set('userIdA', userName);
 			localStorageService.set('passwordA', password);
 
 			if ((userName == null || userName == '')
-			  &&(password == null || password == '')) {
+					&& (password == null || password == '')) {
 				$scope.showErrorMsg();
 				$rootScope.loggedIn = false;
 			}
-			$http.post("./rest/jsonServices/authentication",
+			$http
+					.post(
+							"./rest/logincontroller/authentication",
 							$scope.Authorization,
 							{
 								withCredentials : true,
 								headers : {
-								'Authorization' : 'Basic '+ 
-								AES.encode(localStorageService.get('userIdA')+ ":"
-								+ localStorageService.get('passwordA'))
+									'Authorization' : 'Basic '
+											+ AES.encode(localStorageService
+													.get('userIdA')
+													+ ":"
+													+ localStorageService
+															.get('passwordA'))
 								}
 							})
-					.success(function(data) {
-						
+					.success(
+							function(data) {
+
 								if (data.userName != null && !data.acLock) {
 									var landingPage = '';
 									$scope.inValidCredentials = false;
 									$rootScope.role = data.role;
 									$rootScope.loggedInuserId = userName;
 									if (data != null && data.accessible == true) {
-										localStorageService.set('passwordA', AES.encode(data._id)); //password will be session token now.
-										localStorageService.set('loggedIn',true);
-										localStorageService.set('userImg',data.userImg);
-										localStorageService.set('isLdap',data.ldap);
+										localStorageService.set('passwordA',
+												AES.encode(data._id)); //password will be session token now.
+										localStorageService.set('loggedIn',
+												true);
+										localStorageService.set('userImg',
+												data.userImg);
+										localStorageService.set('isLdap',
+												data.ldap);
 
-										localStorageService.set('ispassReset',data.ispassReset);
-										$rootScope.passReset = localStorageService.get('ispassReset');
-										
-										localStorageService.set('picSrc',data.profilePhoto);
-										$rootScope.picSrc = localStorageService.get('picSrc');
+										localStorageService.set('ispassReset',
+												data.ispassReset);
+										$rootScope.passReset = localStorageService
+												.get('ispassReset');
 
-										$rootScope.isLdap = localStorageService.get('isLdap');
+										localStorageService.set('picSrc',
+												data.profilePhoto);
+										$rootScope.picSrc = localStorageService
+												.get('picSrc');
+
+										$rootScope.isLdap = localStorageService
+												.get('isLdap');
 
 										if ($rootScope.isLdap == false) {
 											$rootScope.profilePicAvailable = false;
-											$rootScope.picSrc = localStorageService.get('userImg');
+											$rootScope.picSrc = localStorageService
+													.get('userImg');
 										} else if ($rootScope.isLdap == true
 												&& (localStorageService
 														.get('picSrc') == null || localStorageService
@@ -673,7 +679,8 @@
 											$rootScope.profilePicAvailable = true;
 										}
 										$rootScope.started = true;
-										localStorageService.set('loggedIn',true);
+										localStorageService.set('loggedIn',
+												true);
 										localStorageService.set('userNamee',
 												data.userName);
 										$rootScope.userNamee = localStorageService
@@ -732,7 +739,6 @@
 
 										if ($rootScope.passReset == true) {
 											$rootScope.loggedIn = false;
-											
 
 										} else {
 											$rootScope.loggedIn = true;
@@ -747,7 +753,8 @@
 										if (data.selectedProjects == null) {
 											localStorageService.set('projects',
 													false);
-											$rootScope.projects = localStorageService.get('projects');
+											$rootScope.projects = localStorageService
+													.get('projects');
 										} else if (data.selectedProjects.length != 0) {
 											localStorageService.set('projects',
 													true);
@@ -787,7 +794,7 @@
 											$rootScope.var3 = false;
 											$rootScope.var5 = false;
 										} else if ($rootScope.operational) {
-											$state.go('operational');
+											$state.go('Operational');
 											$rootScope.var1 = true;
 											$rootScope.menubar = false;
 
@@ -822,19 +829,21 @@
 								else {
 									/* ("either Invalid Credentials or account locked"); */
 									//check if account is locked
-									
-									if(data.acLock){
-																								/*localStorageService.set('acLock', data.acLock);*/
+									if (data.acLock) {
+										/*localStorageService.set('acLock', data.acLock);*/
 										$rootScope.acLock = true;
-										
-									}
-									else
-									{
+
+									} else {
 										$scope.wrongpasswordcount = $scope.wrongpasswordcount + 1;
-										localStorageService.set('wrongpasswordcount', $scope.wrongpasswordcount);
+										alert($scope.wrongpasswordcount);
+										localStorageService.set(
+												'wrongpasswordcount',
+												$scope.wrongpasswordcount);
 										
+										alert($scope.wrongpasswordcount >= 3);
+
 										if ($scope.wrongpasswordcount >= 3) {
-											
+
 											var token = AES.getEncryptedValue();
 											var config = {
 												headers : {
@@ -843,7 +852,7 @@
 											};
 											$http
 													.get(
-															"./rest/jsonServices/lockAccount",
+															"./rest/logincontroller/lockAccount",
 															config)
 													.success(
 															function(response) {
@@ -858,84 +867,82 @@
 																			.go('index');
 																}
 															})
-										}
-										else {
+										} else {
 											$scope.showErrorMsg();
 										}
 									}
-									
-									
+
 								}
 
 							})
 		}
 
-			/*
-			 * .error(function(data){ $scope.showErrorMsg();
-			 * 
-			 * });
-			 */
+		/*
+		 * .error(function(data){ $scope.showErrorMsg();
+		 * 
+		 * });
+		 */
 
-			$scope.updateSideBar = function(role, menuType) {
-
-				/*
-				 * $http.get("./rest/jsonServices/getMenuItems?role="+role+"&menuType="+menuType).success(function
-				 * (response) { $rootScope.menus=response;
-				 * $scope.childmethod(response);
-				 *  }) ;
-				 */
-
-				// alert("updateSideBar" + menuType);
-				if (menuType == "dashbot") {
-					$rootScope.menubar = false;
-					$scope.sideBar(menuType);
-
-					$rootScope.var1 = false;
-					$rootScope.var2 = false;
-					$rootScope.var3 = true;
-					$rootScope.var5 = false;
-
-				} else if (menuType == "lifecycle") {
-					$rootScope.menubar = false;
-					$scope.sideBar(menuType);
-					$rootScope.var1 = false;
-					$rootScope.var2 = true;
-					$rootScope.var3 = false;
-					$rootScope.var5 = false;
-
-				} else {
-					$rootScope.menubar = true;
-					$scope.sideBar(menuType);
-					$rootScope.var1 = true;
-					$rootScope.var2 = false;
-					$rootScope.var3 = false;
-					$rootScope.var5 = false;
-				}
-
-			};
-
-			$scope.sideBar = function(menuType) {
-
-				$sessionStorage.menuType = menuType;
-
-				//console.log("menuTyp menuTypeValue" + $sessionStorage.menuType);
-			};
+		$scope.updateSideBar = function(role, menuType) {
 
 			/*
-			 * $scope.childmethod = function(response) {
-			 * 
-			 * $rootScope.$emit("CallParentMethod", response); };
+			 * $http.get("./rest/jsonServices/getMenuItems?role="+role+"&menuType="+menuType).success(function
+			 * (response) { $rootScope.menus=response;
+			 * $scope.childmethod(response);
+			 *  }) ;
 			 */
 
-			$scope.showErrorMsg = function() {
-				//alert("error page");
-				$("#loginError").fadeOut(200000);
-				$scope.errorMessage = " UserId and Password didn't match.Please enter valid credentials";
-				/*
-				 * toastr.error("UserId and Password didn't match.Please Enter
-				 * Valid Credentials", 'Error');
-				 */
-			};
+			// alert("updateSideBar" + menuType);
+			if (menuType == "dashbot") {
+				$rootScope.menubar = false;
+				$scope.sideBar(menuType);
+
+				$rootScope.var1 = false;
+				$rootScope.var2 = false;
+				$rootScope.var3 = true;
+				$rootScope.var5 = false;
+
+			} else if (menuType == "lifecycle") {
+				$rootScope.menubar = false;
+				$scope.sideBar(menuType);
+				$rootScope.var1 = false;
+				$rootScope.var2 = true;
+				$rootScope.var3 = false;
+				$rootScope.var5 = false;
+
+			} else {
+				$rootScope.menubar = true;
+				$scope.sideBar(menuType);
+				$rootScope.var1 = true;
+				$rootScope.var2 = false;
+				$rootScope.var3 = false;
+				$rootScope.var5 = false;
+			}
+
+		};
+
+		$scope.sideBar = function(menuType) {
+
+			$sessionStorage.menuType = menuType;
+
+			//console.log("menuTyp menuTypeValue" + $sessionStorage.menuType);
+		};
+
+		/*
+		 * $scope.childmethod = function(response) {
+		 * 
+		 * $rootScope.$emit("CallParentMethod", response); };
+		 */
+
+		$scope.showErrorMsg = function() {
+			//alert("error page");
+			$("#loginError").fadeOut(200000);
+			$scope.errorMessage = " UserId and Password didn't match.Please enter valid credentials";
+			/*
+			 * toastr.error("UserId and Password didn't match.Please Enter
+			 * Valid Credentials", 'Error');
+			 */
+		};
 
 		//}
 

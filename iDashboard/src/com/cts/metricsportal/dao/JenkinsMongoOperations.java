@@ -24,7 +24,7 @@ import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.vo.BuildJobsVO;
 import com.cts.metricsportal.vo.BuildListVO;

@@ -37,7 +37,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.DateTimeCalc;
 import com.cts.metricsportal.bo.JiraMetrics;
 import com.cts.metricsportal.bo.LayerAccess;

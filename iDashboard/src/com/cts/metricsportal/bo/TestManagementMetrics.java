@@ -10,7 +10,7 @@ import javax.ws.rs.HeaderParam;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.dao.GitMongoOperations;
 import com.cts.metricsportal.dao.OperationalDAO;
 import com.cts.metricsportal.dao.TestManagementMongoOperations;

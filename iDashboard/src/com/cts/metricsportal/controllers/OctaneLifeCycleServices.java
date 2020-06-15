@@ -21,7 +21,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.cts.metricsportal.RestAuthenticationFilter.AuthenticationService;
+import com.idashboard.RestAuthenticationFilter.AuthenticationService;
 import com.cts.metricsportal.bo.AlmMetrics;
 import com.cts.metricsportal.bo.OctaneLifeMetrics;
 import com.cts.metricsportal.util.BaseException;
