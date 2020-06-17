@@ -9,7 +9,7 @@ angular.module(
 						'oc.lazyLoad', 'angularUtils.directives.dirPagination',
 						'dndLists', 'MetricsPortal.theme','MetricsPortal.admin',
 						 'MetricsPortal.LifeCycle','MetricsPortal.Login',
-						'MetricsPortal.QBot', 'MetricsPortal.SlideShow'])
+						'MetricsPortal.QBot', 'MetricsPortal.SlideShow','MetricsPortal.RiskCompliance','MetricsPortal.ReportData'])
 		.config(function(IdleProvider, KeepaliveProvider, TitleProvider) {
 			TitleProvider.enabled(false);
 			IdleProvider.idle(1200); // 20 mins
