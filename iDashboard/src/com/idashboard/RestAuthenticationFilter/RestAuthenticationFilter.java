@@ -51,6 +51,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 				httpServletRequest.getPathInfo().contains("/getldapstatus") ||
 				httpServletRequest.getPathInfo().contains("/lockAccount") ||
 				httpServletRequest.getPathInfo().contains("/reportDataServices") ||
+				httpServletRequest.getPathInfo().contains("/RiskComplianceServices") ||
 				
 				(!httpServletRequest.getPathInfo().contains("/qbotServices/checkQbotHome")) && httpServletRequest.getPathInfo().contains("/qbotServices")){
 				

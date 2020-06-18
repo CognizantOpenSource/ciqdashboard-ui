@@ -190,7 +190,6 @@
 							config)
 					.success(
 							function(response) {
-								console.log(response);
 								$rootScope.countdetails1 = response;
 								console.log("iuhilh0",$rootScope.countdetails1 );
 							
@@ -279,7 +278,6 @@
 					'Authorization' : token
 				}
 			};
-			console.log(token)
 			$http
 					.get(
 							"rest/RiskComplianceServices/openRisksEthicalDataUSAgencyCount",

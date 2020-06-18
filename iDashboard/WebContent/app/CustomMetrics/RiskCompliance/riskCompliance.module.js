@@ -88,18 +88,7 @@
             }, */
         })
         
-        .state('retiredAppsOpenRisksbyDivision', {
-          url: '/retiredAppsOpenRisksbyDivision',
-          directive:'baSidebar',
-          templateUrl: 'app/CustomMetrics/RiskCompliance/retiredAppsOpenRisksbyDivision.html',
-          controller:'riskComplianceCtrl',
-          title: 'Retired Apps Open Risks by Division',
-        /*  sidebarMeta: {
-              icon: 'ion-android-home',
-              order: 0,
-            }, */
-        })
-      
+        
         .state('archersbyStatus', {
             url: '/archersbyStatus',
             directive:'baSidebar',
@@ -111,17 +100,7 @@
                 order: 0,
               }, */
           })
-          .state('archersDependentOnVendors', {
-            url: '/archersDependentOnVendors',
-            directive:'baSidebar',
-            templateUrl: 'app/CustomMetrics/RiskCompliance/archersDependentOnVendors.html',
-            controller:'riskComplianceCtrl',
-            title: 'archers Dependent On Vendors',
-          /*  sidebarMeta: {
-                icon: 'ion-android-home',
-                order: 0,
-              }, */
-          })
+          
         .state('archersCriticalHighbyDivision', {
             url: '/archersCriticalHighbyDivision',
             directive:'baSidebar',
@@ -166,17 +145,7 @@
                 order: 0,
               }, */
           })
-            .state('networkPenetrationCriticalHighMediumbyDivision', {
-            url: '/networkPenetrationCriticalHighMediumbyDivision',
-            directive:'baSidebar',
-            templateUrl: 'app/CustomMetrics/RiskCompliance/networkPenetrationCriticalHighMediumbyDivision.html',
-            controller:'riskComplianceCtrl',
-            title: 'Network Penetration Critical High Medium by Division',
-          /*  sidebarMeta: {
-                icon: 'ion-android-home',
-                order: 0,
-              }, */
-          })
+           
             /*.state('networkPenetrationbyDivision', {
             url: '/networkPenetrationbyDivision',
             directive:'baSidebar',
@@ -199,28 +168,7 @@
                 order: 0,
               }, */
           })
-          .state('riskRegisterIssues', {
-            url: '/riskRegisterIssues',
-            directive:'baSidebar',
-            templateUrl: 'aapp/CustomMetrics/RiskCompliance/riskRegisterIssues.html',
-            controller:'riskComplianceCtrl',
-            title: 'Risk Register Issues',
-          /*  sidebarMeta: {
-                icon: 'ion-android-home',
-                order: 0,
-              }, */
-          })
-                    .state('cyberSecurityAdoptionTracks', {
-            url: '/cyberSecurityAdoptionTracks',
-            directive:'baSidebar',
-            templateUrl: 'app/CustomMetrics/RiskCompliance/cyberSecurityAdoptionTracks.html',
-            controller:'riskComplianceCtrl',
-            title: 'Cyber Security Adoption Tracks',
-          /*  sidebarMeta: {
-                icon: 'ion-android-home',
-                order: 0,
-              }, */
-          })
+               
           .state(
 						'usAgengyTrendOpenRisks',
 						{
