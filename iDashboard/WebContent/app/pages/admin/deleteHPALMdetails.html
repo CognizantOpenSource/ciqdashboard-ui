@@ -1,0 +1,20 @@
+
+<div class="modal-content" style="margin-top:450px;" ng-controller="AdminCtrl">
+  <div class="modal-header bg-danger">
+    <i class="ion-flame modal-icon"></i><span>Delete</span>
+
+ <!-- <a ng-click="cancel()">
+         <img src="./assets/img/close.png" style="float:right; margin-top: 2px; margin-right: 2px; height: 25px; width: 25px;" >
+  </a> -->
+  <button type="button" class="close" ng-click="cancel();$dismiss()" aria-label="closeed">
+			<span aria-hidden="true"> x</span>
+		</button> 
+  </div>
+  <div class="modal-body text-center">Are you sure  to delete the particular domain and project ?</div>
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-danger" ng-click="deleteHPALMRoww(data)">Yes</button>
+   
+     <button type="button" class="btn btn-danger" ng-click="$dismiss()">No</button>
+  </div>
+</div>

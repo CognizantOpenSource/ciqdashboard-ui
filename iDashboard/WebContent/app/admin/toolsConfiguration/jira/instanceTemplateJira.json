@@ -1,8 +1,0 @@
-{
-	"name": "Sample_InstanceName",
-	"projects": [
-	{
-                    "prjKey" : "Sample Jira Project"
-                }
-                ]
-}

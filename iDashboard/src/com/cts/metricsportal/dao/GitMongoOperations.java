@@ -5,7 +5,7 @@
 package com.cts.metricsportal.dao;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.util.BaseException;
-import com.idashboard.lifecycle.vo.GitRepositoryVO;
+import com.cts.metricsportal.vo.RepositoryDetailsVO;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Sort;
@@ -67,11 +67,11 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getCommitUser(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getCommitUser(String user, String repo, String type) {
         Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-        List<GitRepositoryVO> commituserlist = null;
+        List<RepositoryDetailsVO> commituserlist = null;
         try {
-            commituserlist = getMongoOperation().find(query1, GitRepositoryVO.class);
+            commituserlist = getMongoOperation().find(query1, RepositoryDetailsVO.class);
         } catch (Exception ex) {
         	logger.error("Failed commit user "+ex);
         } 
@@ -102,12 +102,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return List<RepositoryDetailsVO> gitdata
      */
-    public static List<GitRepositoryVO> getGitName(String type) {
+    public static List<RepositoryDetailsVO> getGitName(String type) {
     	Query query1 = buildQuery_getGitName(type);
-    	List<GitRepositoryVO> gitdata =  new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata =  new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     		
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
     		
@@ -126,12 +126,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * Returns git details 
      */
-    public static List<GitRepositoryVO> getGitData(String type, String userName) {
+    public static List<RepositoryDetailsVO> getGitData(String type, String userName) {
     	Query query1 = buildQuery_getGitData(type, userName);
-    	List<GitRepositoryVO> gitdata =  new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata =  new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error("Failed to fetch Git Data "+e);
@@ -150,12 +150,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * Returns git data details
      */
-    public static List<GitRepositoryVO> getFileSize(String user, String repo, String type){
+    public static List<RepositoryDetailsVO> getFileSize(String user, String repo, String type){
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error("Failed to fetch File size "+e);
@@ -173,12 +173,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return List 
      */
-    public static List<GitRepositoryVO> getRepoList(String userName){
+    public static List<RepositoryDetailsVO> getRepoList(String userName){
     	Query query1 = buildQuery_getRepoList(userName);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error("Failed to fetch Repo List "+e);
@@ -197,12 +197,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * Returns List of Git details
      */
-    public static List<GitRepositoryVO> getCommitCount(String user, String repo, String type ){
+    public static List<RepositoryDetailsVO> getCommitCount(String user, String repo, String type ){
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error("Failed to fetch commit count "+e);
@@ -221,12 +221,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * Returns List of Git details
      */
-    public static List<GitRepositoryVO> getContributorsList(String user, String repo, String type ){
+    public static List<RepositoryDetailsVO> getContributorsList(String user, String repo, String type ){
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -245,12 +245,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * Returns git data
      */
-    public static List<GitRepositoryVO> getWatchers(String user, String repo, String type ){
+    public static List<RepositoryDetailsVO> getWatchers(String user, String repo, String type ){
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();;
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();;
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -269,12 +269,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * Returns git data details
      */
-    public static List<GitRepositoryVO> getStarsCount(String user, String repo, String type ){
+    public static List<RepositoryDetailsVO> getStarsCount(String user, String repo, String type ){
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();;
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();;
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -293,12 +293,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getPullRequest(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getPullRequest(String user, String repo, String type) {
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();;
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();;
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -317,12 +317,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getIssues(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getIssues(String user, String repo, String type) {
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();;
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();;
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
     		
     		logger.error(e.getMessage());
@@ -341,12 +341,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getTopContributors(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getTopContributors(String user, String repo, String type) {
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -365,12 +365,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getCommits(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getCommits(String user, String repo, String type) {
     	Query query1 = buildQuery_getCommits(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -389,12 +389,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getCommitsWithFilter(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getCommitsWithFilter(String user, String repo, String type) {
     	Query query1 = buildQuery_getCommits(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());
@@ -413,12 +413,12 @@ public class GitMongoOperations extends BaseMongoOperation{
      * 
      * @return
      */
-    public static List<GitRepositoryVO> getWeeklyCommits(String user, String repo, String type) {
+    public static List<RepositoryDetailsVO> getWeeklyCommits(String user, String repo, String type) {
     	Query query1 = buildQuery_getRepositoryDetails(user, repo, type);
-    	List<GitRepositoryVO> gitdata = new ArrayList<GitRepositoryVO>();
+    	List<RepositoryDetailsVO> gitdata = new ArrayList<RepositoryDetailsVO>();
     	
     	try {
-    		gitdata = getMongoOperation().find(query1, GitRepositoryVO.class);
+    		gitdata = getMongoOperation().find(query1, RepositoryDetailsVO.class);
     	} catch(NumberFormatException | BaseException | BadLocationException e) {
 		
     		logger.error(e.getMessage());

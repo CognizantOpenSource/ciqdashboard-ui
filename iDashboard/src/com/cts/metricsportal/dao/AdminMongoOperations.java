@@ -7,9 +7,9 @@ package com.cts.metricsportal.dao;
 import com.cts.metricsportal.controllers.BaseMongoOperation;
 import com.cts.metricsportal.util.BaseException;
 import com.cts.metricsportal.vo.LevelItemsVO;
+import com.cts.metricsportal.vo.RepositoryDetailsVO;
 import com.cts.metricsportal.vo.UserProjectVO;
 import com.cts.metricsportal.vo.UserVO;
-import com.idashboard.lifecycle.vo.GitRepositoryVO;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;

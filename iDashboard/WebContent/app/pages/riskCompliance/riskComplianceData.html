@@ -1,0 +1,240 @@
+
+<div ng-controller="riskComplianceCtrl">
+
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12"
+			ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight:bold">AST-Open Risks
+					<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href="" ng-click="exportTableToCSV('openRisk.csv')"><i
+										class="ion-document"></i>Export in CSV</a></li>
+								<li><a href="" id="exportThis"ng-click="exportTableToExcel('tblData', 'openRisk-data')"><i
+										class="ion-document-text"></i>Export in XLS</a></li>
+							</ul>
+						</div></h3>
+				</div>
+				<div class="panel-body"">
+
+					<div class="horizontal-scroll">
+						<table class="table" id="tblData" style="margin-top: -10px;">
+							<thead>
+
+
+
+								<tr>
+
+									<th style="width: 23%; font-weight: bold">Division</th>
+									<th style="width: 21%; font-weight: bold">Qualys-Vulnerabilities</th>
+									<th style="width: 14%; font-weight: bold">Archers</th>
+									<th style="width: 17%; font-weight: bold">Ethical-Hacks</th>
+									<th style="width: 15%; font-weight: bold">Network-Penetration</th>
+
+
+								</tr>
+
+							</thead>
+
+							<tbody
+								ng-init="URagencyOpenRisks();URagencyOpenRisksArcherData();URagencyOpenRisksEthicalData();URagencyOpenRisksNetworkData();">
+								<tr>
+									<td ng-model="selectedDivision" ><a style="color: #58d68d"
+										ng-click="openUsTransferAgencyGraph(selectedDivision)"><B>{{divisinList[0]}}</B></a></td>
+									<td class="underlineText"><a ng-click="getQualysDetailsData(divisinList[0])"style="text-decoration-color:#58d68d;">{{openRiskusAgency1}}</a></td>
+
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[0])"style="text-decoration-color:#58d68d;">{{openRiskusAgencyArcher}}</a></td>
+
+									<td class="underlineText"><a ng-click="getDetailsData(divisinList[0])"style=" text-decoration-color:#58d68d;">{{openRiskusAgencyEthicalData}}</a></td>
+
+
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[0])"style="text-decoration-color:#58d68d;">{{openRiskusAgencyNetworkData}}</a></td>
+
+								</tr>
+								<tr>
+
+									<td ng-model="selectedDivision"style="width: 10%" ><a style="color: #58d68d"
+										ng-click="openSubAccountingGraph()"><B> {{divisinList[1]}}</B></a></td>
+									<td class="underlineText"><a ng-click="getQualysDetailsData(divisinList[1])"style="text-decoration-color:#58d68d">{{openRisksSubaccounting1}}</a></td>
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[1])"style="text-decoration-color:#58d68d;">{{openRisksSubaccountingArcherData}}</a></td>
+									<td class="underlineText"><a ng-click="getDetailsData(divisinList[1])"style="text-decoration-color:#58d68d;">{{openRisksSubaccountingEthicalData}}</a></td>
+
+
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[1])"style="text-decoration-color:#58d68d;">{{openRisksSubaccountingNetworkData}}</a></td>
+
+								</tr>
+								<tr>
+									<td ng-model="selectedDivision"style="width: 10%"><a style="color: #58d68d"
+										ng-click="openCoreGraph(selectedDivision)"><B> {{divisinList[2]}}</B></a></td>
+									<td class="underlineText"><a ng-click="getQualysDetailsData(divisinList[2])"style="text-decoration-color:#58d68d">{{OpenRisksOnCoreMiddleCount1}}</a></td>
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[2])"style="text-decoration-color:#58d68d;">{{OpenRisksOnCoreMiddleCountArcherData}}</a></td>
+									<td class="underlineText"><a ng-click="getDetailsData(divisinList[2])"style="text-decoration-color:#58d68d">{{OpenRisksOnCoreMiddleCountEthicalData}}</a></td>
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[2])"style="text-decoration-color:#58d68d;">{{OpenRisksOnCoreMiddleCountNetworkData}}</a></td>
+
+								</tr>
+
+								<tr>
+									<td ng-model="selectedDivision" style="width: 10%"><a style="color: #58d68d"
+										ng-click="openAlternativeInvestmentGraph(selectedDivision)"><B>{{divisinList[3]}}</B></a></td>
+									<td class="underlineText"><a ng-click="getQualysDetailsData(divisinList[3])"style="text-decoration-color:#58d68d;">{{openRiskAlternativeInvestmentCount1}}</a></td>
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[3])"style="text-decoration-color:#58d68d;">{{openRiskAlternativeInvestmentCountArcherData}}</a></td>
+									<td class="underlineText" "><a ng-click="getDetailsData(divisinList[3])"style="text-decoration-color:#58d68d;">{{openRiskAlternativeInvestmentCountEthicalData}}</a></td>
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[3])"style="text-decoration-color:#58d68d;">{{openRiskAlternativeInvestmentCountNetworkData}}</a></td>
+
+								</tr>
+
+								<tr>
+									<td ng-model="selectedDivision" style="width: 10%"><a style="color: #58d68d"
+										ng-click="openGiarsGraph(selectedDivision)"><B>{{divisinList[4]}}</B></a></td>
+									<td class="underlineText" ><a ng-click="getQualysDetailsData(divisinList[4])"style="text-decoration-color:#58d68d;">{{openRiskGiarsCount1}}</a></td>
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[4])"style="text-decoration-color:#58d68d;">{{openRiskGiarsCountArcherData}}</a></td>
+									<td class="underlineText"><a ng-click="getDetailsData(divisinList[4])"style="text-decoration-color:#58d68d;">{{openRiskGiarsCountEthicalData}}</a></td>
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[4])"style="text-decoration-color:#58d68d;">{{openRiskGiarsCountNetworkData}}</a></td>
+
+								</tr>
+
+								<tr>
+									<td ng-model="selectedDivision"  style="width: 10%"><a style="color: #58d68d"
+										ng-click="openEMEAGraph(selectedDivision)"><B>{{divisinList[5]}}</B></a></td>
+									<td class="underlineText" ><a ng-click="getQualysDetailsData(divisinList[5])"style="text-decoration-color:#58d68d;">{{openRiskEMEACount1}}</a></td>
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[5])"style="text-decoration-color:#58d68d;">{{openRiskEMEACountArcherData}}</a></td>
+									<td class="underlineText"><a ng-click="getDetailsData(divisinList[5])"style="text-decoration-color:#58d68d;">{{openRiskEMEACountEthicalData}}</a></td>
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[5])"style="text-decoration-color:#58d68d;">{{openRiskEMEACountNetworkData}}</a></td>
+
+								</tr>
+								<tr>
+									<td ng-model="selectedDivision" style="width: 10%"><a style="color: #58d68d"
+										ng-click="openGlobalFundGraph(selectedDivision)"><B>{{divisinList[6]}}</B></a></td>
+									<td class="underlineText"><a ng-click="getQualysDetailsData(divisinList[6])"style=" text-decoration-color:#58d68d;">{{openRiskGlobalFundCount1}}</a></td>
+									<td class="underlineText"><a ng-click="getArchersDetailsData(divisinList[6])"style="text-decoration-color:#58d68d;">{{openRiskGlobalFundCountArcherData}}</a></td>
+									<td class="underlineText" ><a ng-click="getDetailsData(divisinList[6])"style=" text-decoration-color:#58d68d;">{{openRiskGlobalFundCountEthicalData}}</a></td>
+									<td class="underlineText"><a ng-click="getNetworkDetailsData(divisinList[6])"style="text-decoration-color:#58d68d;">{{openRiskGlobalFundCountNetworkData}}</a></td>
+
+								</tr>
+							</tbody>
+
+
+
+
+
+						</table>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+
+<div>
+ <div ng-init="getCsvEthicalDetails();"></div>
+ <div ng-hide=true id="exportableBizEthicalDetails">
+ <table class="table"   border="1">
+    <thead>
+
+	
+    <tr class="sortable ">
+  <th >Taxonomy LOB</th>
+    
+   <th >Remediation Status</th> 
+ 
+    <th >Division</th>
+    <th>Severity</th>
+    <th >Remediation Due Date</th>
+      <th >App Mnemonic</th>
+         <th  >Exception Expiration Date</th>
+     <th >Line Of Business</th>
+       <th >App Owner</th> 
+     <th>Vulnerability Class</th>
+       <th >Title</th>
+       <th >Name</th>
+    <th >Actual Fix Date</th> 
+ <th >Internal/External</th>
+    <th >Over Due</th>
+    <th >Scan Source UID</th>
+      <th >Description</th>
+         <th  >Re-Test Request Date</th>
+      <th >Re-Test Scheduled Date</th>
+       <th  >Current ExceptionID</th> 
+     <th >Original Remediation Due Date</th>
+       <th  >Eh -IT SIRO</th>
+       
+    
+      
+       
+</tr>
+</thead>
+<tbody >
+ <tr ng-repeat="item in usAgencyEthicalDetails" >
+   
+ <td >{{item.taxonomyLOB}}</td>
+     <td >{{item.remediationStatus}}</td>
+<td >{{item.division}}</td>
+ <td >{{item.severity}}</td>
+     <td >{{item.remediationDueDate}}</td>
+<td >{{item.appMnemonic}}</td>
+
+
+      <td  >{{item.exceptionExpirationDate}}</td>
+      <td >{{item.lineofBusiness}}</td>
+      <td >{{item.appOwner}}</td>
+      <td >{{item.vulnerabilityClass}}</td>
+      <td >{{item.title}}</td>
+      
+      <td >{{item.name}}</td>
+           <td  >{{item.actualFixDate}}</td>
+           <td >{{item.internalExternal}}</td>
+        <td >{{item.overDue}}</td> 
+        
+        <td >{{item.scanSourceUID}}</td>
+           <td >{{item.description}}</td>
+           <td >{{item.reTestRequestDate}}</td>
+        <td >{{item.reTestScheduledDate}}</td> 
+        
+           <td >{{item.currentExceptionID}}</td>
+           <td  >{{item.originalRemediationDueDate}}</td>
+           <td >{{item.ehITSIRO}}</td>
+        
+        
+       
+        
+        
+        
+        
+        
+        
+        
+      
+    </tr>
+    </tbody>
+   
+  </table>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+

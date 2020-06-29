@@ -7,13 +7,13 @@ angular.module(
 						'ngCookies','ngStorage', 'ngRoute',
 						'ngIdle', 'reCAPTCHA', 'LocalStorageModule',
 						'oc.lazyLoad', 'angularUtils.directives.dirPagination',
-						'dndLists', 'MetricsPortal.theme','MetricsPortal.admin',
-						 'MetricsPortal.LifeCycle','MetricsPortal.Login',
-						'MetricsPortal.QBot', 'MetricsPortal.SlideShow'])
+						'dndLists', 'MetricsPortal.theme',
+						'MetricsPortal.pages', 'MetricsPortal.LifeCycle',
+						'MetricsPortal.QBot', 'MetricsPortal.SlideShow' ])
 		.config(function(IdleProvider, KeepaliveProvider, TitleProvider) {
 			TitleProvider.enabled(false);
 			IdleProvider.idle(1200); // 20 mins
-			IdleProvider.timeout(5); // in seconds
+			IdleProvider.timeout(5); //in seconds
 			KeepaliveProvider.interval(60); // heartbeat in seconds(every 1 min)
 			// KeepaliveProvider.http('/api/heartbeat'); // URL that makes sure
 			// session

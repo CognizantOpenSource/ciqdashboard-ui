@@ -1,0 +1,148 @@
+
+<info-dialog></info-dialog>
+<dashboard-pie-chart></dashboard-pie-chart>
+<div ng-if="tool == 'ALM'" ng-controller="OperationalDashboardCtrl">
+<div class="row">
+<div class="col-lg-6 col-md-12 col-sm-12"     
+         ba-panel 
+         ba-panel-title="Highlights"
+         ba-panel-class="with-scroll">
+      <div  ng-include="'app/pages/dashboard/highlights.html'"></div>
+         
+    </div>
+ 
+ 
+<!-- <div class="row">
+ 
+     <div class="col-xlg-3 col-lg-6 col-md-6 col-sm-12 col-xs-12"
+       ba-panel
+       ba-panel-title="Highlights"
+       ba-panel-class="large-panel with-scroll feed-panel">
+    <blur-feed></blur-feed>
+  </div>  
+   -->
+   <div class="col-lg-6 col-md-12 col-sm-12"    
+         ba-panel-class="with-scroll">
+         <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+			style="background-size: 1433px 915px; background-position: 0px -158px;">
+         <div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Artifacts Count
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','artifactchart','Artifacts Count')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','artifactchart','Artifacts Count')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+			<div class="panel-body" style="padding-right: 0px;">
+				<div id="artifactdiv" ng-controller="artifactCountCtrl" style="height:500px"  ng-init="artifactCountChart()">
+      				   <canvas  id="artifactchart"></canvas>
+        		 </div>
+      			   <div>   <a ng-click="open('app/pages/dashboard/infoDialog/artifactCount.html')">
+       				  <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-right:20px" ></a> </div>
+      	 </div> 
+       </div>
+    </div>
+ 
+      
+     <!--   <div class="col-xlg-9 col-lg-6 col-md-6 col-sm-12 col-xs-12"
+       ba-panel
+       ba-panel-title="Calendar"
+       ba-panel-class="xmedium-panel feed-comply-panel with-scroll calendar-panel">
+    <dashboard-calendar></dashboard-calendar>
+  </div> -->
+      
+      
+    <!--   <div class="col-xlg-4 col-lg-12 col-md-12 col-sm-5 col-xs-12"
+           ba-panel
+           ba-panel-class="popular-app medium-panel">
+        <popular-app></popular-app>
+      </div> -->
+    </div>
+
+
+<div class="row">
+  <div class="col-lg-6 col-md-12 col-sm-12"
+       ba-panel-class="with-scroll">
+       <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+			style="background-size: 1433px 915px; background-position: 0px -158px;">
+       <div class="panel-heading clearfix">
+				<h3 class="panel-title">
+					Average Defect Resolution Time
+					<div uib-dropdown style="float: right;">
+						<a id="exportThis" uib-dropdown-toggle> <i
+							class="fa fa fa-bars"></i>
+						</a>
+						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+							<li><i class="dropdown-arr"></i></li>
+							<li><a href=""
+								ng-click="downloadImg('png','resolutionchart','Average Defect Resolution Time')"><i
+									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+							<li><a href=""
+								ng-click="downloadImg('jpeg','resolutionchart','Average Defect Resolution Time')"><i
+									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+						</ul>
+					</div>
+				</h3>
+			</div>
+        <div class="panel-body" style="padding-right: 0px;">
+    <div ng-include="'app/pages/charts/defects/defectsdata/defectResolutionTime.html'"></div>
+   
+     
+    <div><a ng-click="open('app/pages/dashboard/infoDialog/defectResolutionTime.html ')">
+    <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-right:20px" ></a> </div>
+     </div>
+     </div>
+  </div>
+  
+ 	  <div class="col-lg-6 col-md-12 col-sm-12"
+           ba-panel-class="with-scroll">
+            <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+			style="background-size: 1433px 915px; background-position: 0px -158px;">  
+               <div class="panel-heading clearfix">
+				<h3 class="panel-title">
+					Requirements By Priority
+					<div uib-dropdown style="float: right;">
+						<a id="exportThis" uib-dropdown-toggle> <i
+							class="fa fa fa-bars"></i>
+						</a>
+						<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+							<li><i class="dropdown-arr"></i></li>
+							<li><a href=""
+								ng-click="downloadImg('png','priorfunnel','Requirements By Priority')"><i
+									class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+							<li><a href=""
+								ng-click="downloadImg('jpeg','priorfunnel','Requirements By Priority')"><i
+									class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+						</ul>
+					</div>
+				</h3>
+			</div>  
+           <div class="panel-body" style="padding-right: 0px;">
+           <div  id="priorfunneldiv" class="admin-chart" ng-controller="DashboardPieChartCtrl" ng-init="reqPrioirtyFunnel()" style="height:300px">
+			<canvas id="priorfunnel" height="250" style="margin-top:40px;margin-left:100px"> </canvas></div>
+			
+			
+           <div><a ng-click="open('app/pages/dashboard/infoDialog/funnelChart.html')">
+           <img src="app/pages/dashboard/infoDialog/info.png" width="20" height="20" style="float:right; margin-right:20px" ></a> </div>
+      </div> 
+      </div>
+      </div>
+     
+</div>
+
+</div>
+
+   
+  
+

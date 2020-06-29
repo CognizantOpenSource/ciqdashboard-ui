@@ -476,7 +476,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 	@Path("/licenseDetails")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<LicenseVO> getlicenseDetails() throws JsonParseException, JsonMappingException, IOException,
-			NumberFormatException, BaseException, BadLocationException {
+			NumberFormatException, BaseException, BadLocationException, ParseException {
 		LicenseReader lr = new LicenseReader();
 		List<LicenseVO> readerValues = new ArrayList<LicenseVO>();
 
@@ -485,17 +485,20 @@ public class JerseyRestServices extends BaseMongoOperation {
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		if (readerValues.get(0).getisMacIdVerify()) {
-			readerValues = readerValues;
-		} else {
 			readerValues = null;
 		}
+
+		
 
 		String user = null;
 
 		if (!(readerValues == null)) {
+			
+			if (readerValues.get(0).getisMacIdVerify()) {
+				readerValues = readerValues;
+			} else {
+				readerValues = null;
+			}
 
 			user = readerValues.get(0).getUser();
 
@@ -539,9 +542,9 @@ public class JerseyRestServices extends BaseMongoOperation {
 		String userId = UserEncrypt.getUser(authString);
 
 		AuthenticationService AuthServ = new AuthenticationService();
-		boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
+		/*boolean adminstatus = LayerAccess.getAdminLayerAccess(authString);
 
-		if (!adminstatus) {
+		if (!adminstatus) {*/
 			Update update = new Update();
 			update.set("acLock", true);
 
@@ -550,9 +553,9 @@ public class JerseyRestServices extends BaseMongoOperation {
 			getMongoOperation().updateMulti(query, update, UserVO.class);
 
 			return true;
-		} else {
+		/*} else {
 			return false;
-		}
+		}*/
 	}
 
 	// Check LDAP Status of User
@@ -1257,7 +1260,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		int count = 0;
 
-		UserVO uservo = new UserVO();
+		/*UserVO uservo = new UserVO();
 		Query query = new Query();
 		byte[] decoded = DatatypeConverter.parseBase64Binary(password);
 		char[] encryptedPassword = iAuthentication.write(decoded);
@@ -1265,11 +1268,21 @@ public class JerseyRestServices extends BaseMongoOperation {
 
 		for (char ch : encryptedPassword) {
 			sb.append(ch);
-		}
+		}*/
+		
+		String encryptedPassword;
+		AuthenticationService authenticationService = new AuthenticationService();
+		EncryptL encrypt = new EncryptL();
+		UserVO uservo = new UserVO();
+		Query query = new Query();
+
+		encryptedPassword = encrypt.calculateHash(authenticationService.decryptHeader(password));
+
+		//StringBuilder sb = new StringBuilder();
 
 		uservo.setAdmin(false);
 		uservo.setUserId(userId);
-		uservo.setPassword(sb.toString());
+		uservo.setPassword(encryptedPassword);
 		uservo.setLdap(false);
 		uservo.setLifeCycle(false);
 		uservo.setCoEDashboard(false);
@@ -1784,8 +1797,35 @@ public class JerseyRestServices extends BaseMongoOperation {
 			@HeaderParam("oldpassword") String oldPassword, @HeaderParam("newpassword") String newPassword)
 			throws Exception {
 		int count = 0;
-
+		
+		String dbPassword = "";
+		String newPassword1 ="";
+		
+		EncryptL encrypt = new EncryptL();
 		AuthenticationService authenticationService = new AuthenticationService();
+		
+		UserVO authUser = authenticationService.getUserDetails(authString);
+
+		
+		Query query1 = new Query();
+		query1.addCriteria(Criteria.where("userId").is(authUser.getUserId()));
+		UserVO userFromDb = getMongoOperation().findOne(query1, UserVO.class);
+		
+		dbPassword = userFromDb.getPassword();
+		
+		String oldPassword1 = encrypt.calculateHash(authenticationService.decryptHeader(oldPassword));
+		
+		if (dbPassword.equalsIgnoreCase(oldPassword1)) {
+			newPassword1 =encrypt.calculateHash(authenticationService.decryptHeader(newPassword));
+			Update update = new Update(); 
+			update.set("password", newPassword1);
+			getMongoOperation().updateFirst(query1, update, UserVO.class);
+			count++;
+		}
+		
+		
+
+		/*AuthenticationService authenticationService = new AuthenticationService();
 		String userId = authenticationService.getUser(authString);
 		Query query1 = new Query();
 		query1.addCriteria(Criteria.where("userId").is(userId));
@@ -1798,7 +1838,7 @@ public class JerseyRestServices extends BaseMongoOperation {
 			update.set("password", newPassword1);
 			getMongoOperation().updateFirst(query1, update, UserVO.class);
 			count++;
-		}
+		}*/
 
 		return count;
 	}

@@ -52,6 +52,7 @@ DateTimeCalc dateTimeCalc = new DateTimeCalc();
 	public List<String> getOctaneCurrentSprint(String authString,String dashboardName,String workspaceName) throws JsonParseException, JsonMappingException, IOException,
 			NumberFormatException, BaseException, BadLocationException {
 			List<String> sprintDetails = null;
+			AuthenticationService UserEncrypt = new AuthenticationService();
 			
 			boolean authenticateToken = LayerAccess.authenticateToken(authString);
 
@@ -66,6 +67,7 @@ DateTimeCalc dateTimeCalc = new DateTimeCalc();
 			NumberFormatException, BaseException, BadLocationException {
 			long daysLeft = 0;
 			
+			AuthenticationService UserEncrypt = new AuthenticationService();
 			boolean authenticateToken = LayerAccess.authenticateToken(authString);
 			 
 			 if(authenticateToken){

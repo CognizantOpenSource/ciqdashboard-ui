@@ -22,7 +22,8 @@ body {
     height: 100%;
     top: 0;
     left: 0;
-    background: url("../assets/img/iDashboard-bg.jpg") no-repeat center center;
+    /* background: url("../assets/img/iDashboard-bg.jpg") no-repeat center center; */
+    background-color:#fff;
     background-size: cover;
     will-change: transform;
     z-index: -1; }

@@ -15,6 +15,9 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +39,16 @@ public class LicenseReader extends HttpServlet {
 	// into fn
 	static final Logger logger = Logger.getLogger(LicenseReader.class);
 
-	public List<LicenseVO> getReaderValues() throws ServletException {
+	public List<LicenseVO> getReaderValues() throws ServletException, ParseException {
+		
+		List<LicenseVO> licenseDetails = new ArrayList<LicenseVO>();
+
+		try {
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+		}
+
 		// Get License file location
 		// URL url = getClass().getResource("iDashboardLicense.elf");
 		String filePath = null;
@@ -48,7 +60,7 @@ public class LicenseReader extends HttpServlet {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		
+
 		File file = new File(securedFilePath);
 
 		boolean macIdVerify = false;
@@ -71,9 +83,13 @@ public class LicenseReader extends HttpServlet {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("IO Exception :: File does not exist");
+			licenseDetails =null;
+			return licenseDetails;
+			
+			
 		}
 
-		List<LicenseVO> licenseDetails = new ArrayList<LicenseVO>();
+		
 
 		if (!(bytes == null)) {
 			// Decrypt License file
@@ -86,26 +102,34 @@ public class LicenseReader extends HttpServlet {
 				String[] details = decyptedString.split("\n");
 
 				// Get version and toollist from decrypt
-				startDate = new Date(details[0]);
-				endDate = new Date(details[1]);
+				/*
+				 * startDate = new Date(details[0]); endDate = new Date(details[1]);
+				 */
+				DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+				startDate = (Date) formatter.parse(details[0].toString());
+				endDate = (Date) formatter.parse(details[1].toString());
+
 				user = details[2];
 				macId = details[3];
 				layerAccess = details[4];
 
-				layerAccess = layerAccess.replaceAll("\\[", "").replaceAll("\\]", "");
+				if (layerAccess.isEmpty()) {
 
-				String[] layers = layerAccess.split(",");
+					layerAccess = layerAccess.replaceAll("\\[", "").replaceAll("\\]", "");
 
-				int index = 0;
+					String[] layers = layerAccess.split(",");
 
-				version = layers[1];
+					int index = 0;
 
-				for (int i = 1; i <= (layers.length / 3); i++) {
-					toollist.add(layers[(i * 3) - 1]);
+					version = layers[1];
+
+					for (int i = 1; i <= (layers.length / 3); i++) {
+						toollist.add(layers[(i * 3) - 1]);
+					}
 				}
 
 				String macAddress = getSystemMac();
-				
+
 				// MAC ID Verify
 				if (macAddress.equalsIgnoreCase(macId)) {
 					// System.out.println("MAC ID Verified");

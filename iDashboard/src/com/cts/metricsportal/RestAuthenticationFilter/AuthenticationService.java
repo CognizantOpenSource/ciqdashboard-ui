@@ -90,7 +90,7 @@ public class AuthenticationService extends BaseMongoOperation {
 		UserVO requestUser = getUserDetailsPassEncrypted(authCredentials);
 		String userId = requestUser.getUserId();
 		String password = requestUser.getPassword();
-		
+
 		Query query1 = new Query();
 		query1.addCriteria(Criteria.where("userId").is(userId));
 		UserVO vo = null;

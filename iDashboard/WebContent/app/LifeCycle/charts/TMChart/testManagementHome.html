@@ -1,0 +1,52 @@
+<div class="widgets gridster" ng-controller="testManagementMetricsCtrl" ng-init="getvalues()">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group" ng-init="setdomain()">
+			
+					<div class="form-group col-md-4">
+		<select ng-disabled="!formelem" style="outline: 0; width: 100%; height: 25px; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
+					name='domain' id="domain" class="form-control"
+					ng-model="selecteddomain"
+					ng-options="domain for domain in domains"
+					ng-change="getproject(selecteddomain)" required>
+					<option value="" disabled>Domain</option>	
+				</select> 			
+			</div>	
+			
+ 				<div class="form-group col-md-4" ng-init="getproject(selecteddomain)">
+		<select ng-disabled="!formelem" style="outline: 0; width: 100%; height: 25px; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
+					name='project' id="project" class="form-control"
+					ng-model="selectedproject"
+					ng-options="project for project in projects"
+					 ng-change="getrelease(selectedproject)"required>
+					<option value="" disabled>Project</option>	
+				</select> 			
+			</div>	
+			
+		<div class="form-group col-md-4" ng-init="getrelease(selectedproject)">
+		<select ng-disabled="!formelem" style="outline: 0; width: 100%; height: 25px; font-size: xx-small; background-color: rgba(87, 95, 118, 1)"
+					name='repo' id="repo" class="form-control"
+					ng-model="selectedrelease"
+					ng-options="release for release in releases"
+					ng-change="getSelectedRelease(selectedrelease);testExeStatusPie()"required>
+					<option value="" disabled>Release</option>	
+				</select> 			
+			</div>
+				
+
+			</div>
+		</div>
+	</div>
+
+<div class="row">
+		<div class="col-md-12" ba-panel ba-panel-title="Test Execution Status" ng-init="testExeStatusPie()" >
+			<div > <a ng-click="open()" >View more metrics </a> </div>
+
+		<div id="statuspiedivs" class="admin-chart" style="height:140px">
+		<canvas id="tmstatuschart" height= "50%"> </canvas>	
+                
+		</div>
+
+		</div>
+	</div>
+</div>

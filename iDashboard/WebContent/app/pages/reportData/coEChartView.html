@@ -1,0 +1,308 @@
+<!-- <div ng-controller="reportDataCtrl" ng-init=" coEChartView();">
+
+	<div class="row">
+		<a href="javascript:dc.filterAll(); dc.renderAll();">
+			<button type="button" data-toggle="modal"
+				class="btn btn-default btn-raised"
+				style="background: #1c3f5d; margin-bottom: 15px; margin-right: 15px; float: right;">Reset
+				All</button>
+		</a>
+	</div>
+
+	<div class="row with-scroll">
+
+		<div class="col-lg-6 col-md-6" ba-panel ba-panel-title="Vertical Wise"
+			ba-panel-class="with-scroll">
+			<div id="funding-chart" class=" "></div>
+		</div>
+
+
+		<div class="col-lg-6 col-md-6" ba-panel
+			ba-panel-title="Capability Wise" ba-panel-class="with-scroll">
+			<div id="funding-chart1" class=" "></div>
+		</div>
+
+
+
+	</div>
+
+	<div class="row with-scroll">
+		<div class="col-lg-6 col-md-6" ba-panel ba-panel-title="Geo Wise"
+			ba-panel-class="with-scroll">
+			<div id="state-donations" class=" "></div>
+
+		</div>
+
+
+		<div class="col-lg-6 col-md-6" ba-panel ba-panel-title="Impact Wise"
+			ba-panel-class="with-scroll">
+			<div id="funding-chart2" class=" "></div>
+		</div>
+	</div>
+	<div
+		style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.12);margin-bottom: 27px;margin-top: 6px;"></div>
+
+	<div class="row with-scroll">
+
+		<div class="col-lg-6 col-md-6" ba-panel
+			ba-panel-title="Type of Support" ba-panel-class="with-scroll">
+			<div id="poverty-chart" class=" "></div>
+		</div>
+
+
+	</div>
+	<div class="row with-scroll">
+		<div class="col-lg-12 col-md-12" ba-panel
+			ba-panel-title="Type of Support-Detailing"
+			ba-panel-class="with-scroll">
+			<div id="poverty-chart1" class=" "></div>
+		</div>
+	</div>
+
+
+</div> -->
+
+ <div ng-controller="reportDataCtrl" ng-init="verticalChart();typeOfSupport();impactChart();geoChart();coeChart();supportGroup();">
+	
+
+	<div class="row with-scroll">
+
+		<div class="col-lg-6 col-md-6 col-sm-6" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight: bold">
+						Vertical Wise
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','VerticalWise','Vertical Wise')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','VerticalWise','Vertical Wise')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+
+					<div class="horizontal-scroll">
+
+
+
+						<div id="divisionQualysdiv" class="admin-chart"
+							
+							style="height: 300px; margin-top: 1%">
+
+							<canvas id="qualysdivision" height="100%">
+</canvas>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight: bold">
+						Geo Wise
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','GeoWise','Geo Wise')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','GeoWise','Geo Wise')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+
+					<div class="horizontal-scroll">
+						<div id="geodiv" class="admin-chart"
+							
+							style="height: 300px; margin-top: 1%">
+
+							<canvas id="geodivision" height="100%">
+</canvas>
+						</div>
+					</div>
+
+
+
+
+				</div>
+
+
+
+			</div>
+		</div>
+
+
+	</div>
+	<div class="row with-scroll">
+		<div class="col-lg-6 col-md-6" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight: bold">
+						Capability Wise
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','CapabilityWise','Capability Wise')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','CapabilityWise','Capability Wise')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" ng-init="">
+
+					<div class="horizontal-scroll">
+						<div id="coediv" class="admin-chart"
+							
+							style="height: 300px; margin-top: 1%">
+
+							<canvas id="coedivision" height="100%">
+</canvas>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6" ba-panel-class="with-scroll">
+			<div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title" style="font-weight: bold">
+					Impact Wise
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','archerdivision','Impact Wise')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','archerdivision','Impact Wise')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" ng-init="">
+
+					<div class="horizontal-scroll">
+						<div id="impactDatadiv" class="admin-chart"
+					
+							style="height: 300px; margin-top: 1%">
+
+							<canvas id="impactData" height="100%">
+</canvas>
+						</div>
+					</div>
+
+
+
+
+				</div>
+
+			</div>
+		</div>
+		</div>
+		<div class="row with-scroll">
+		
+		<div class="col-lg-12 col-md-12 col-sm-12"
+           ba-panel-class="with-scroll">
+           <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+           <div class="panel-heading clearfix">
+					<h3 class="panel-title">
+						Type of Support
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','groupbarchart','Type of Support')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','groupbarchart','Type of Support')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+           <div class="panel-body" style="padding-right: 0px;">
+           <div id="exediv" class="admin-chart"  ng-init="" style="height:300px">
+
+<canvas id="groupbarchart"></canvas>
+                
+</div>
+           </div>
+           </div>
+      </div>
+ <div class="col-lg-12 col-md-12 col-sm-12"
+           ba-panel-class="with-scroll">
+           <div class="panel panel-blur" zoom-in="" ba-panel-blur=""
+				style="background-size: 1433px 915px; background-position: 0px -158px;">
+           <div class="panel-heading clearfix">
+					<h3 class="panel-title">
+					Type of Support-Detailing
+						<div uib-dropdown style="float: right;">
+							<a id="exportThis" uib-dropdown-toggle> <i
+								class="fa fa fa-bars"></i>
+							</a>
+							<ul class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+								<li><i class="dropdown-arr"></i></li>
+								<li><a href=""
+									ng-click="downloadImg('png','designerbarchart','Type of Support Details')"><i
+										class="fa fa fa-bar-chart-o"></i>Download PNG</a></li>
+								<li><a href=""
+									ng-click="downloadImg('jpeg','designerbarchart','Type of Support Details')"><i
+										class="fa fa fa-area-chart"></i>Download JPEG</a></li>
+							</ul>
+						</div>
+					</h3>
+				</div>
+           <div class="panel-body" style="padding-right: 0px;">
+           <div id="exedivv" class="admin-chart"  ng-init="" style="height:300px">
+           
+
+<canvas id="designerbarchart"></canvas>
+                
+</div>
+           </div>
+           </div>
+      </div>
+		
+		</div>
+		
+		
+	</div>
+

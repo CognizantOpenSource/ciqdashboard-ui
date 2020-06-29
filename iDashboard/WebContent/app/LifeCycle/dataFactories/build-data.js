@@ -13,6 +13,14 @@
 
     function buildData($http, AES, $base64, localStorageService) {       
     	
+    	/* function getEncryptedValue()
+   	  {
+   		 var username= localStorageService.get('userIdA');
+   	     var password= localStorageService.get('passwordA');
+   	        var tokeen =$base64.encode(username+":"+password);
+   	        
+   	        return tokeen;
+   	       }*/
 
         return {
             details: details
@@ -26,7 +34,7 @@
              var config = {headers: {
                      'Authorization': token
                      }};
-            return $http.get("rest/buildcontroller/buildsJobs",config)
+            return $http.get("rest/lifeCycleServices/buildsJobs",config)
                 .then(function (response) {                	
                     return response.data;
                 });

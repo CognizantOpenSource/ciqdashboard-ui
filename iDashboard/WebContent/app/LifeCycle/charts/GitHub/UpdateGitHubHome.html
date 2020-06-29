@@ -1,0 +1,52 @@
+<div ng-controller="GitChartCtrl" >
+
+<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">		
+		<div class="form-group col-md-3" ng-init="settype()"> 
+		<select style="outline: 0; width: 135px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='type' id="type" class="form-control"
+					ng-model="selectedtype"
+					ng-options="type for type in types"
+					ng-change="getusertype(type);getgitnames(type)" required>
+					<option value="" disabled>Select Type</option>	
+				</select> 	{{selectedtype}}			
+			</div>	
+			
+				<div class="form-group col-md-4" ng-init="">
+		<select style="outline: 0; width: 180px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='gitname' id="gitname" class="form-control"
+					ng-model="UserName"
+					ng-options="gitname for gitname in gitnames"
+					ng-change="getRepoList(gitname)" required>
+					<option value="" disabled>Select GitName</option>	
+				</select> 		{{UserName}}		
+			</div>	
+			
+			<div class="form-group col-md-3" ng-init="">
+		<select style="outline: 0; width: 180px; height: 30px; margin-right: 30px; background-color: rgba(87, 95, 118, 1)"
+					name='repo' id="repo" class="form-control"
+					ng-model="selectedRepo"
+					ng-options="repo for repo in repos"
+					ng-change="" required>
+					<option value="" disabled>Select Repository</option>	
+				</select>{{selectedRepo}}	
+			</div>	
+
+		</div>		
+			</div>
+		</div>
+	
+
+
+	<div class="row">
+		<div class=" col-md-12 " ba-panel ba-panel-title="# Releases"
+			style="text-align: Left">
+				<div >
+				<a ng-click="open()" >View more metrics </a> 
+			</div>
+
+		</div>
+
+	</div>
+	</div>
