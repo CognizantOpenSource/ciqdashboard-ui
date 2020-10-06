@@ -1,0 +1,281 @@
+<div class="create-wizard flex-col full">
+  <div class="header flex-row">
+    <div class="title flex-row">
+      <div class="crumb" *ngFor="let nav of navs;let last= last;let index = index;">
+        <span class="page-link" [class.is-link]="!last" (click)="onCrumClick(index)">{{nav}}
+          <span class="value item-source" *ngIf="index===0 && item?.source as source" title="{{source}}">{{source}}</span>
+          <span class="value item-type" *ngIf="index===1 && (item?.type || item?.itemGroup||'') as type"
+            title="{{type}}">{{type}}</span>
+        </span>
+        <clr-icon *ngIf="!last" shape="angle" dir="right"></clr-icon>
+      </div>
+    </div>
+    <div class="options right ">
+      <div class="btn-group btn-outline-primary btn-md btn-icon">
+        <button class="btn" title="Add New DataSource" *ngIf="navs && navs.length==1" (click)="OpenadddataSource()">
+          <clr-icon shape="plus"></clr-icon>
+        </button>
+        <button class="btn" title="Upload Data DataSource" *ngIf="navs && navs.length==1" (click)="openUploadDlg()">
+          <clr-icon shape="upload"></clr-icon>
+        </button>
+        <button class="btn" title="Refresh Preview" (click)="reload()" *ngIf="navs && navs[2]">
+          <clr-icon shape="refresh"></clr-icon>
+        </button>
+        <button class="btn" title="{{item?.id ? 'Update' : 'Save'}}" (click)="updateItem()" *ngIf="navs && navs[2]">
+          <clr-icon shape="floppy"></clr-icon>
+        </button>
+        <button class="btn" title="Cancel" (click)="close()">
+          <clr-icon shape="times"></clr-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="main-content" [ngSwitch]="navs.length">
+    <div class="panel select-data  flex-col clr-col-12" *ngSwitchCase="1">
+      <div class="search flex-row">
+        <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterDataby">
+      </div>
+      <leap-grouped-item class="items datasets full" [items]="datasets | callback:getItemsFilter('filterDataby')"
+        (itemSelect)="selectDataSource($event.name)" [canEdit]="true" [canRemove]="true"
+        (itemRemove)="removeDataSource($event)" (itemEdit)="editDataSource($event)">
+      </leap-grouped-item>
+    </div>
+    <div class="panel select-data  flex-col clr-col-12" *ngSwitchCase="2">
+      <div class="search flex-row">
+        <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterItemby">
+      </div>
+      <leap-grouped-item class="items item-types full" [items]="itemTypes | callback:getItemsFilter('filterItemby')"
+        (itemSelect)="selectType($event.name)">
+      </leap-grouped-item>
+    </div>
+    <div class="panel update-config flex-col full" *ngSwitchCase="3">
+      <div class="head-filter flex-row">
+        <leap-dash-filter-dropdown [data]="newFilterOptions" [options]="filterOptions" (save)="addFilter($event)"
+          (fieldChange)="onFiledSelected($event)">
+        </leap-dash-filter-dropdown>
+        <leap-dash-filter-dropdown *ngFor="let filter of filters;let index=index;" [data]="filter"
+          [options]="filterOptions" [edit]="true" (clone)="addFilter($event)" (save)="saveFilter($event,index)"
+          (select)="setFilter(filter,index,$event)" (remove)="removeFilter(filter,index);"
+          (fieldChange)="onFiledSelected($event)">
+        </leap-dash-filter-dropdown>
+      </div>
+      <div class="main-config flex-row full">
+        <item-data-editor *ngIf="item" class="config" [(item)]="item" [type]="item?.type"
+          (fieldChange)="onFiledSelected($event)" [fields]="filterOptions?.fields" [filterOptions]="filterOptions">
+        </item-data-editor>
+
+        <div class="preview clr-col-12 flex-col">
+          <leap-display-chart *ngIf="previewData else noPreviewTpl" [chartType]="item.type"
+            [dashboardData]="previewData" [dashboardConfig]="item.options"
+            [chartTitle]="item.options?.title || item.name" [item]="item">
+          </leap-display-chart>
+          <ng-template #noPreviewTpl>
+            <button class="btn btn-link" title="Refresh Preview" (click)="reload()"
+              style="margin: auto;color:var(--fg1);">
+              click to fetch preview
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add New Data Soruce View -->
+  <div class="container">
+    <form clrForm>
+      <clr-modal [(clrModalOpen)]="opendtswin" [clrModalSize]="'lg'">
+        <h3 class="modal-title">{{ title }} Data Source</h3>
+        <div class="alert-container" *ngIf="duplicateDatasource.state">
+          <clr-alert clrAlertType="danger" [clrAlertAppLevel]="false" style="width: 100%">
+            <clr-alert-item>
+              <span class="alert-text">
+                Data Source with the name '{{ duplicateDatasource.value }}'
+                already exist, Please select another name!
+              </span>
+            </clr-alert-item>
+          </clr-alert>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex flex-row bd-highlight mb-3">
+            <div class="p-2 flex-shrink-1 bd-highlight">
+              <div class="imagelabel flex-col">
+                <span style="margin: auto; font-weight: bold">Select Image: (Please Upload "PNG" File)</span>
+                <div class="tool-image">
+                  <leap-file-upload [(data)]="icon" type=".png"></leap-file-upload>
+                </div>
+              </div>
+            </div>
+            <div style="width: 70%">
+              <div class="container">
+                <div class="clr-row">
+                  <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+                    <div class="card">
+                      <div class="card-block modal-content">
+                        <div class="card-text">
+                          <table class="container">
+                            <tbody>
+                              <tr>
+                                <td><label>Name</label></td>
+                                <td>
+                                  <input clrInput type="text" name="name" id="name" [(ngModel)]="dtname"
+                                    (blur)="blur(dtname)" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><label>Group</label></td>
+                                <td>
+                                  <input clrInput type="text" name="group" id="group" [(ngModel)]="dtgroup" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><label> CollectionName</label></td>
+                                <td>
+                                  <select clrSelect #mySelect class="use-clr-stylee" name="colname" id="colname"
+                                    [(ngModel)]="selected" (change)="onOptionSelected(mySelect.value)"
+                                    style="color: #000">
+                                    <option value="-1">Select CollectionName</option>
+                                    <option *ngFor="let item of collectionNames" value="{{ item }}"> {{ item }}</option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><label>Description</label></td>
+                                <td>
+                                  <input clrInput type="text" name="desc" id="desc" [(ngModel)]="dtdesc" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><label>ToolName</label></td>
+                                <td>
+                                  <input clrInput type="text" name="toolname" id="toolname" [(ngModel)]="dttoolname" />
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Update Custome label for a Field -->
+              <div class="fieldlist" *ngIf="isSelected">
+                <div class="container">
+                  <form #formRef="ngForm" #aForm>
+                    <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+                      <div class="card">
+                        <div class="card-block modal-content">
+                          <div class="card-text">
+                            <table class="container">
+                              <tbody>
+                                <tr style="text-align: center">
+                                  <td><label>Field Name</label></td>
+                                  <td><label>* Label</label></td>
+                                </tr>
+                                <tr *ngFor="let item of ItemsCol; let i = index">
+                                  <td>
+                                    <label>{{ item.name }}</label>
+                                  </td>
+                                  <td>
+                                    <input clrInput type="text" [(ngModel)]="ItemsCol[i].label" id="customField{{ i }}"
+                                      name="item.name{{ i }}" #field="ngModel"
+                                      (blur)="customFieldblur($event, item.name, i)" />
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="notemsg">
+            <span><span>*</span><label>Append _ to Rename Custom Field in order to skip the field as input for
+                metrics</label></span>
+          </div>
+          <button type="submit" class="btn btn-primary-outline" (click)="updateDataSource()"
+            [disabled]="duplicateDatasource.state" *ngIf="isEdit">
+            Update
+          </button>
+          <button type="submit" class="btn btn-primary-outline" (click)="addNewDataSource()"
+            [disabled]="duplicateDatasource.state" *ngIf="isAdd">
+            Create
+          </button>
+          <button type="button" class="btn btn-warning-outline" (click)="closeDlg()">
+            Cancel
+          </button>
+        </div>
+      </clr-modal>
+
+    </form>
+  </div>
+
+  <!-- Upload External Data -->
+  <div class="container">
+    <form clrForm>
+      <clr-modal [(clrModalOpen)]="openuploadwin">
+        <h3 class="modal-title">Upload External Data</h3>
+        <div class="modal-body">
+          <div class="container">
+            <div class="clr-row">
+              <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+                <table class="container">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label>Update Existing Collection:</label>
+                      </td>
+                      <td style="padding: 0px 40px;">
+                        <input type="checkbox" clrCheckbox name="check" [(ngModel)]="check"
+                          (change)="onCheckboxChange();" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table class="container">
+                  <tbody>
+                    <tr *ngIf="check">
+                      <td style="width:30%;"><label>Collection Name:</label></td>
+                      <td><select clrSelect #mySelect name="colname" id="colname" [(ngModel)]="updatecollectionname"
+                          (change)="oncollnameSelected(mySelect.value)" style="color: #000;">
+                          <option value="-1">Select CollectionName</option>
+                          <option *ngFor="let item of collectionNames" value="{{ item }}"> {{ item }}</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                      <td><label>Select Type:</label></td>
+                      <td style="padding: 0px 70px;">
+                        <clr-dropdown [clrCloseMenuOnItemClick]="true">
+                          <button clrDropdownTrigger class="btn btn-link" style="margin:6px 0;"
+                            aria-label="import tests button">
+                            <clr-icon shape="import" class="is-solid"></clr-icon>Import External Data from
+                            <clr-icon shape="caret down" style="right: .2rem;"></clr-icon>
+                          </button>
+                          <clr-dropdown-menu *clrIfOpen>
+                            <div aria-label="import from json" clrDropdownItem (click)="fileInputJSON.click()">JSON
+                            </div>
+                            <div aria-label="import from csv" clrDropdownItem (click)="fileInputCSV.click()">CSV</div>
+                          </clr-dropdown-menu>
+                        </clr-dropdown>
+                        <input type="file" accept="csv" (change)="importCSV($event)" (click)="resetFileInput($event)"
+                          #fileInputCSV style="display: none;">
+                        <input type="file" accept="json" (change)="importJSON($event)" (click)="resetFileInput($event)"
+                          #fileInputJSON style="display: none;">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </clr-modal>
+    </form>
+  </div>
+</div>

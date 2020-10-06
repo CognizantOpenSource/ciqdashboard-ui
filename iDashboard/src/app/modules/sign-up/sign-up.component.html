@@ -1,0 +1,51 @@
+<div class="container-full">
+  <div class="login-wrapper">
+    <form class="login">
+      <section class="title">
+        <h3 class="welcome">Create a New Account</h3>
+      </section>
+      <div class="login-group">
+        <clr-select-container>
+          <select clrSelect name="type" [(ngModel)]="form.type" disabled>
+            <option value="ldap">LDAP</option>
+            <option value="native">Native</option>
+          </select>
+        </clr-select-container>
+        <clr-input-container>
+          <input type="text" name="firstName" clrInput placeholder="First Name" [(ngModel)]="form.firstName" />
+        </clr-input-container>
+        <clr-input-container>
+          <input type="text" name="lastName" clrInput placeholder="Last Name" [(ngModel)]="form.lastName" />
+        </clr-input-container>
+        <clr-input-container>
+          <input type="email" name="email" clrInput placeholder="Email Id" [(ngModel)]="form.email" />
+        </clr-input-container>
+        <clr-password-container>
+          <input type="password" name="password" minlength="8" clrPassword placeholder="Password"
+            [(ngModel)]="form.password" />
+        </clr-password-container>
+        <input type="password" name="confirmPassword" minlength="8" class="clr-input" placeholder="Confirm Password"
+          [(ngModel)]="form.confirmPassword" required />
+        <div class="error" [class.active]="failedAttempt>0">
+          Invalid user name or password
+        </div>
+        <button (click)="createAccount()" class="btn btn-primary btn-login"
+          [disabled]="!form.email || !form.password || !form.confirmPassword">Create Account</button>
+        <button class="btn btn-primary btn-login-g" (click)="signUpWithGoogle()">
+          <div class="icon">
+            <a class="nav-settings">
+              <app-icon [icon]="{type:'fa-icon',data:'google',desc:'Sign-in with Google'}" [size]="'.8rem'">
+              </app-icon>
+            </a>
+          </div>
+          <div class="text">
+            Sign Up with Google
+          </div>
+        </button>
+        <div class="hidden">
+          <button id="googleBtn" #googleBtn></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

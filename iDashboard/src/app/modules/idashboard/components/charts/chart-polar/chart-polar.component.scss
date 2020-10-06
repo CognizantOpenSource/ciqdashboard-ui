@@ -1,0 +1,41 @@
+.x-chart {
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+    max-width: 100%;
+    &::ng-deep {
+      ngx-charts-chart,
+      .ngx-charts-outer {
+        height: 100%;
+        max-height: 100%;
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+  .x-chart.legend-down {
+    &::ng-deep {
+      .ngx-charts-outer {
+        display: flex;
+        flex-direction: column;
+        //  workaround https://github.com/swimlane/ngx-charts/issues/1248 , https://github.com/swimlane/ngx-charts/issues/1040
+        g.chart > g {
+          transform-origin: center;
+          transform: translateY(-16px);
+        }
+      }
+  
+      .chart-legend {
+        position: absolute;
+        bottom: 4px;
+  
+        .legend-labels {
+          overflow-x: auto;
+          li {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+  

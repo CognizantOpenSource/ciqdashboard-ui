@@ -1,0 +1,40 @@
+<div>  
+  <div class="head">  
+    <h3 class="title">Users</h3>  
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button type="button" class="btn btn-success-outline" (click)="activate($event);">Activate</button>
+      <button type="button" class="btn btn-info-outline" (click)="deactivate($event);">Deactivate</button>
+      <button type="button" class="btn btn-warning-outline" [disabled]="isDisableDelete"
+        (click)="deleteDetails($event);">Delete</button>
+    </div>
+  </div>
+  <clr-datagrid *ngIf="users" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+    (clrDgSelectedChange)="selectionChanged($event)">
+    <clr-dg-column>User ID
+      <clr-dg-string-filter [clrDgStringFilter]="userEmailFilter"></clr-dg-string-filter>
+    </clr-dg-column>
+    <clr-dg-column>Name
+      <clr-dg-string-filter [clrDgStringFilter]="userNameFilter"></clr-dg-string-filter>
+    </clr-dg-column>
+    <clr-dg-column>Role</clr-dg-column>
+    <clr-dg-column>Status</clr-dg-column>
+    <clr-dg-row *clrDgItems="let user of users" [clrDgItem]="user"
+      [(clrDgSelected)]="user.selected">
+      <clr-dg-cell><a clrVerticalNavLink [state]="{ navigateFromRole: false }"
+          [routerLink]="['/admin/users/', user.id, 'edit']">{{ user.email }}</a></clr-dg-cell>
+      <clr-dg-cell>{{ user.firstName }} {{ user.lastName }}</clr-dg-cell>
+      <clr-dg-cell>
+        <a clrVerticalNavLink [state]="{ navigateFromRole: true }" [routerLink]="['/admin/users/', user.id, 'edit']">
+          <span *ngFor="let role of user.account.roles; let i = index;">
+            <span>{{role?.name}}</span>
+            <span *ngIf="i != (user.account.roles.length - 1)">, </span>
+          </span>
+        </a>
+      </clr-dg-cell>
+      <clr-dg-cell> <span *ngIf="user.active" class="label label-success">A</span>
+        <span *ngIf="!user.active" class="label label-warning">D</span>
+      </clr-dg-cell>
+    </clr-dg-row>
+    <clr-dg-footer>{{users.length}} Users</clr-dg-footer>
+  </clr-datagrid>
+</div>

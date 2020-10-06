@@ -1,0 +1,14 @@
+.option.icon.draggable {
+    clr-icon {
+      width: 2rem;
+      height: 2rem;
+      padding: 12px 9px;
+      margin: 0 auto;
+      cursor: move;
+      color:var(--fg1);
+      &:hover {
+        background-color: var(--bg1);
+      }
+    }
+  }
+  

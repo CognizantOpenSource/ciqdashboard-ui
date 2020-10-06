@@ -1,0 +1,75 @@
+.filter-group {
+  padding-left: 1em;
+  float: initial !important;
+  width: 100 !important;
+  margin-top: 0.2rem;
+}
+:host /deep/ .clr-control-inline {
+  flex-wrap: initial !important;
+}
+.filterLabel {
+  margin: 1em 0 0.4em 0;
+  display: block;
+  color: var(--fg1) !important;
+  font-size: 0.541667rem;
+  font-weight: 600;
+  line-height: 0.75rem;
+}
+.duration-input {
+  justify-content: flex-start;
+  height: 1.5rem;
+  width: 100%;
+}
+:host /deep/ .duration-input .clr-form-control {
+  min-width: 2rem;
+  margin-top: 0;
+  margin-right: 8px;
+}
+.duration-input>div{
+  margin-right: 8px;
+}
+:host /deep/ .clr-input {
+  width: 4.6em !important;
+  background: rgba(221, 221, 221, 0.5);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  background-color: var(--bg1);
+  border-color: var(--bg1);
+  color: var(--fg1);
+}
+
+.duration-time-label {
+  font-size: 0.541667rem;
+  color: var(--fg1) !important;
+  font-weight: 400;
+}
+.to-label {
+  margin-right:  8px;
+}
+
+.durationInput-select,
+.durationInput-select:hover,
+section option {
+  background: rgba(221, 221, 221, 0.5);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  background-color: var(--bg1);
+  border-color: var(--bg1);
+  color: var(--fg1);
+  min-width: 2.5rem;
+}
+
+.btn-cancel {
+  float: right;
+  margin-right: 1.5em;
+  width: 3rem;
+  font-size: 10px;
+  padding: 0px;
+  border: 1px solid #2e9dd4;
+  display: flex;
+  justify-content: center;
+  background-color: inherit;
+}
+
+.clr-control-label {
+  color: var(--fg1) !important;
+  margin-right: 0rem;
+}

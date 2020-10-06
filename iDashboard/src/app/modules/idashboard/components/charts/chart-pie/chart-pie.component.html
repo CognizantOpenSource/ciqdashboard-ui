@@ -1,0 +1,12 @@
+<ngx-charts-pie-chart class="x-chart full" [class.legend-down]="chartconfig?.legendPositionDown" 
+[scheme]="colorScheme"
+[results]="data"
+[legend]="chartconfig.legend"
+[legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+[explodeSlices]="chartconfig.explodeSlices"
+[labels]="chartconfig.showLabels"
+[doughnut]="chartconfig.doughnut"
+[gradient]="chartconfig.gradient"
+(select)="onSelect($event)"
+>
+</ngx-charts-pie-chart>

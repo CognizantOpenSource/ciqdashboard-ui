@@ -1,0 +1,22 @@
+clr-icon {
+  position: absolute;
+  margin-top: 10%;
+  margin-left: 50%;
+}
+clr-datagrid::ng-deep {
+  .datagrid {
+    margin-top: 0 !important;
+    background-color: unset;
+    border: none;
+    *:focus{
+        outline:none;
+    }
+  }
+}
+clr-datagrid.no-header {
+  &::ng-deep {
+    .datagrid-header {
+      display: none;
+    }
+  }
+}

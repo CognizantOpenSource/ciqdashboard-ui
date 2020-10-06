@@ -1,0 +1,63 @@
+<ng-container *ngIf="sidebarView else pageView">
+    <div class="links-home scroll-main flex-col" *ngIf="links else loading">
+        <clr-vertical-nav class="full">
+            <clr-vertical-nav-group routerLinkActive="active" *ngFor="let group of links"
+                [(clrVerticalNavGroupExpanded)]="expanded[group.name]">
+                {{group.name}}
+                <clr-vertical-nav-group-children>
+                    <a clrHorizondalNavLink class="is-link flex-col" *ngFor="let link of group.links"
+                        [title]="link.desc || link.name" (click)="onSelectItem(link)" [class.disabled]="link.disabled">
+                        <clr-icon [attr.shape]="link.iconType" size="36"></clr-icon>
+                        <div class="name ellipsis">{{link.name}}</div>
+                        <span *ngIf="canEdit" class="is-link edit" (click)="editItem(link , $event)" title="Edit">
+                            <clr-icon shape="pencil" size="14"></clr-icon>
+                        </span>
+                        <span *ngIf="canRemove" class="is-link remove" (click)="removeItem(link , $event)" title="Delete">
+                            <clr-icon shape="times" size="14"></clr-icon>
+                        </span>
+                    </a>
+                </clr-vertical-nav-group-children>
+            </clr-vertical-nav-group>
+        </clr-vertical-nav>
+    </div>
+</ng-container>
+<ng-template #pageView>
+    <div class="links-home scroll-main flex-col full" *ngIf="links">
+        <div class="flex-col clr-col-12	clr-col-sm-12 view" *ngIf="links.length>0 ;else nolinks">
+            <ng-container *ngFor="let group of links">
+                <div class="group-title title">{{group.name}}</div>
+                <div class="link-group links">
+                    <div class="link-wrapper is-link clr-col-12	clr-col-sm-8 clr-col-md-6 clr-col-lg-4	clr-col-xl-3"
+                        *ngFor="let link of group.links" [title]="link.desc || link.name" (click)="onSelectItem(link)">
+                        <div class="preview">
+                            <div class="link-icon" [attr.data-letters]="!link.image ? getImageText(link.name) : null">
+                                <app-icon *ngIf="link.image" [icon]="getIcon(link)" [round]="true" [size]="'3rem'">
+                                </app-icon>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="link-options title">
+                                <div *ngIf="canEdit">
+                                    <a title="Edit  DataSource" (click)="editItem(link , $event)">
+                                        <clr-icon shape="pencil"></clr-icon>
+                                    </a></div>
+                                <div *ngIf="canRemove">
+                                    <a title="Delete New DataSource" (click)="removeItem(link , $event)">
+                                        <clr-icon shape="trash"></clr-icon>
+                                    </a></div>
+                            </div>
+                            <div class="name" [title]="link.name">{{link.name}}</div>
+                            <div class="desc" [title]="link.desc || link.name">{{link.desc}}</div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<ng-template #nolinks>
+    <div class="no-links">no entries found</div>
+</ng-template>
+<ng-template #loading>
+    <div class="no-links">loading...</div>
+</ng-template>

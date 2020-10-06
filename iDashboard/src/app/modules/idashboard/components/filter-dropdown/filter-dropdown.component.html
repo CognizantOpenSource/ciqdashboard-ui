@@ -1,0 +1,110 @@
+<form clrForm [formGroup]="filterForm" clrLayout="vertical">
+    <clr-dropdown [clrCloseMenuOnItemClick]="false">
+        <div class="filter-toggle" *ngIf="edit" aria-label="Edit Filter">
+            <span class="clickable is-link label flex-row" [class.active]="data?.active">
+                <span class="filter-label" (click)="onSelect()">{{data?.name}}</span>
+                <clr-icon class="filter-toggle" shape="pencil" clrDropdownTrigger></clr-icon>
+                <clr-icon shape="times" (click)="remove.emit();"></clr-icon>
+            </span>
+        </div>
+        <button class="filter-toggle" *ngIf="!edit" clrDropdownTrigger aria-label="Add Filter">
+            <span class="clickable is-link label flex-row" [class.active]="open">
+                <span class="filter-label"> Add Filter</span>
+                <clr-icon shape="filter-grid" class="is-solid"></clr-icon>
+            </span>
+        </button>
+        <ng-template [(clrIfOpen)]="open">
+            <clr-dropdown-menu class="flex-col clr-col-12 clr-col-sm-12 clr-col-md-8 clr-col-lg-6 clr-col-xl-4">
+                <label class="dropdown-header clr-col-8" aria-hidden="true">{{edit?'Edit':'Add'}} Filter</label>
+                <div class="dropdown-divider" role="separator"></div>
+                <div class="filter-configs clr-col-12" aria-label="Filter Config" clrDropdownItem>
+                    <div class="filter-config flex-col" formArrayName="configs"
+                        *ngFor="let config of filterForm.get('configs')['controls']; let index = index;">
+                        <div class="filter-config-form-group flex-row" [formGroupName]="index">
+                            <div class="group-wrapper flex-col">
+                                <div class="top-group flex-row">
+                                    <div class="filter-spec-field">
+                                        <clr-select-container>
+                                            <label [attr.for]="'field'+index" class="clr-control-label">Field</label>
+                                            <select class="use-clr-style" clrSelect placeholder="Filed"
+                                                formControlName="field" name="field"
+                                                (ngModelChange)="onFieldSelect(config, $event)">
+                                                <option [value]="opt.name"
+                                                    *ngFor="let opt of options.fields;let opIndex=index">
+                                                    {{opt.label}}</option>
+                                            </select>
+                                        </clr-select-container>
+                                    </div>
+                                    <div class="filter-spec-op">
+                                        <clr-select-container>
+                                            <label [attr.for]="'op'+index" class="clr-control-label">Operator</label>
+                                            <select class="use-clr-style" clrSelect placeholder="Creteria"
+                                                formControlName="op" name="op">
+                                                <option [value]="opt.name"
+                                                    *ngFor="let opt of options.actions[config.get('field').value]">
+                                                    {{opt.name}}
+                                                </option>
+                                            </select>
+                                        </clr-select-container>
+                                    </div>
+                                </div>
+                                <div class="filter-value">
+                                    <div class="container">
+                                        <label [attr.for]="'value'+index" class="clr-control-label">Value</label>
+
+                                        <ng-container
+                                            *ngIf="options?.types[config.get('field').value] === 'date' else valueTpl">
+                                            <div class="daterangeFilter">
+                                                <leap-date-picker-input
+                                                    [value]="{value:config.get('value')?.value , maxValue:config.get('maxValue')?.value}"
+                                                    (valueChange)="updateDate(config , $event)"
+                                                    [isRange]="config.get('op').value==='between'">
+
+                                                </leap-date-picker-input>
+                                            </div>
+
+                                        </ng-container>
+                                        <ng-template #valueTpl>
+                                            <ng-autocomplete placeHolder="value" formControlName="value"
+                                                [attr.name]="'value'+index" required
+                                                [data]="options.valueMap[config.get('field').value]"
+                                                [itemTemplate]="itemTemplate">
+                                            </ng-autocomplete>
+                                            <ng-template #itemTemplate let-item>
+                                                <a [innerHTML]="item"></a>
+                                            </ng-template>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown-divider" role="separator"></div>
+                <div class="filter-info clr-col-12" aria-label="Filter Label" clrDropdownItem>
+                    <div class="flex-row">
+                        <clr-input-container class="filter-name clr-col-8">
+                            <label for="name" class="clr-control-label">Label</label>
+                            <input class="use-clr-style" clrInput placeholder="Filter Label" name="name"
+                                formControlName="name" />
+                        </clr-input-container>
+                        <clr-select-container class="filter-op clr-col-4">
+                            <label for="filter-op" class="clr-control-label">Operator</label>
+                            <select class="use-clr-style" clrSelect placeholder="Filter Operator"
+                                formControlName="logicalOperator" name="filter-op">
+                                <option value="AND">AND</option>
+                                <option value="OR">OR</option>
+                            </select>
+                        </clr-select-container>
+                    </div>
+                </div>
+                <div class="dropdown-divider" role="separator"></div>
+                <div class="filter-actions flex-row">
+                    <button class="btn btn-info btn-sm" (click)="onSave()">{{edit?'Save':'Add'}}</button>
+                    <button class="btn btn-info btn-sm" *ngIf="edit" (click)="onClone()">Copy</button>
+                    <button class="btn btn-info btn-sm" (click)="reset()">Reset</button>
+                </div>
+            </clr-dropdown-menu>
+        </ng-template>
+    </clr-dropdown>
+</form>

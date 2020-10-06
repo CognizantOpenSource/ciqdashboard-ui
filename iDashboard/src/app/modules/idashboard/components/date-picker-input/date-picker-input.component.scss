@@ -1,0 +1,41 @@
+input {
+  min-height: 1.3rem !important;
+  background: var(--bg3) !important;
+  color: var(--fg1) !important;
+  border: 1px solid #cdd1d3 !important;
+  border-color: var(--bg1-sel) !important;
+}
+:host::ng-deep {
+  .clr-input-group {
+    padding-right: 0px;
+  }
+  .ng-daterangepicker {
+    border-color: var(--bg1-sel) !important;
+    margin-top: 6px;
+    border-radius: 0px !important;
+  }
+  .datepicker {
+    background-color: var(--bg3);
+    background-color: var(--bg3);
+    padding-top: 6px;
+    max-height: 11.5rem;
+    border-color: var(--bg2);
+    .monthpicker-trigger,
+    .yearpicker-trigger {
+      color: var(--fg1);
+    }
+    .calendar-cell,
+    .day-btn {
+      height: 1.25rem;
+      min-height: 1.125rem;
+      line-height: 1.25rem;
+    }
+    button:hover {
+      background: var(--bg2);
+    }
+    .day-btn.is-selected {
+      background: var(--bg1);
+      color: var(--fg1);
+    }
+  }
+}
