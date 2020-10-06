@@ -1,9 +1,0 @@
-<div class="upload-wrapper full" (click)="fileInput.click()" [title]="selectedFile?.name || 'Click to Select File'">
-    <div class="uploader full" [attr.data-file]="selectedFile && data?selectedFile.name:''">
-        <clr-icon shape="image" class="image-icon" *ngIf="!data"></clr-icon>
-        <img [src]="data" *ngIf="data && valid" class="image-icon">
-        <clr-icon *ngIf="!valid" shape="error-standard" class="image-icon-error is-solid"
-            title="Invalid image selection"></clr-icon>
-    </div>
-</div>
-<input type="file" [accept]="type" (change)="onFileChanged($event)" #fileInput style="display: none;">

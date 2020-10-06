@@ -1,9 +1,0 @@
-<clr-dropdown [clrCloseMenuOnItemClick]="true" #dropdown>
-  <button type="button" class="btn btn-primary" clrDropdownTrigger [title]="selected">
-    {{selected}}
-    <clr-icon shape="caret down"></clr-icon>
-  </button>
-  <clr-dropdown-menu *clrIfOpen='openDropDown'>
-    <button type="button" clrDropdownItem  *ngFor="let option of options" (click)="select(option);">{{option}}</button>
-  </clr-dropdown-menu>
-</clr-dropdown>
