@@ -1,0 +1,58 @@
+<div class="info-bar flex-row clr-col-12" *ngIf="stats">
+    <div class="clr-col-12 clr-col-sm-6 clr-col-md-6 clr-col-lg-3 clr-col-xl-3" *ngFor="let stat of stats">
+        <div class="info-card" *ngIf="stat.type=='info' && stat.values.length <2">
+            <div class="left flex-col">
+                <span [class.text-4]="!stat.values[1]" class="text-5">{{stat.values[0].title}}</span>
+                <span class="text-2">{{stat.values[0].value || 0}}</span>
+                <span class="text-6" *ngIf="stat.values[0].subTitle">{{stat.values[0].subTitle}}</span>
+            </div>
+            <div class="right flex-col" *ngIf="stat.values[1]">
+                <span class="text-5">{{stat.values[1].title}}</span>
+                <span class="text-2">{{stat.values[1].value || 0}}</span>
+                <span class="text-6" *ngIf="stat.values[1].subTitle">{{stat.values[1].subTitle}}</span>
+            </div>
+        </div>
+        <div class="info-card bg-blue" *ngIf="stat.type=='info' && stat.values.length>1">
+            <div class="flex-row duration-stat all-duration">
+                <div class="{{getTextClassByLength(stat.values[0].value | appDuration)}} flex-col" style="margin-right: 0;">{{stat.values[0].value| appDuration}}
+                    <span class="text-6">{{stat.values[0].title}}</span>
+                </div>
+                <div class="vl" *ngIf="stat.values[0].sep"></div>
+                <div class="{{getTextClassByLength(stat.values[1].value | appDuration)}} flex-col duration-stat">{{stat.values[1].value| appDuration}}
+                    <span class="text-6">{{stat.values[1].title}}</span>
+                </div>
+                <div class="vl" *ngIf="stat.values[1].sep"></div>
+                <div class="{{getTextClassByLength(stat.values[2].value | appDuration)}} flex-col" style="margin-left: 0;">{{stat.values[2].value| appDuration}}
+                    <span class="text-6">{{stat.values[2].title}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="info-card bg-green" [class.bg-red]="stat.values[0].value <= stat.values[1].value"
+            *ngIf="stat.type=='compare'">
+            <div class="left flex-col">
+                <span class="text-5">{{stat.values[0].title}}</span>
+                <span class="text-2">{{stat.values[0].value|| 0}}</span>
+                <span class="text-6" *ngIf="stat.values[0].subTitle">{{stat.values[0].subTitle}}</span>
+            </div>
+            <div class="right flex-col">
+                <span class="text-5">{{stat.values[1].title}}</span>
+                <span class="text-2">{{stat.values[1].value || 0}}</span>
+                <span class="text-6" *ngIf="stat.values[1].subTitle">{{stat.values[1].subTitle}}</span>
+            </div>
+        </div>
+        <div class="info-card bg-green" [class.bg-red]="stat.diff && stat.diff > 0" *ngIf="stat.type=='diff'">
+            <div class="left flex-col">
+                <span class="text-4">{{stat.values[0].title}}</span>
+                <span class="text-3 {{getTextClassByLength(stat.values[0].value | appDuration)}}"
+                    [attr.title]="stat.values[0].value | appDuration">{{stat.values[0].value | appDuration}}</span>
+                <span class="text-5">{{stat.values[0].subTitle}}</span>
+            </div>
+            <div class="right flex-col duration-stat">
+                <div class="text-4">
+                    <clr-icon shape="arrow" [dir]="stat.diff > 0 ? 'up' :'down'" size="32"></clr-icon>
+                    {{abs(stat.diff)| appDuration}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

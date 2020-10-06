@@ -1,0 +1,33 @@
+<div>
+  <div class="dropdown-divider" role="separator"></div>
+  <form class="filterForm">
+    <clr-checkbox-container clrInline class="filter-group">
+      <label class="filterLabel">Status</label>
+      <clr-checkbox-wrapper *ngFor="let statusObject of filterObject.statusList">
+        <label>{{statusObject.status}}</label>
+        <input type="checkbox" [value]="statusObject.status" clrCheckbox [checked]="statusObject.checked"
+          (change)="onCheckboxChange(statusObject,$event)" />
+      </clr-checkbox-wrapper>
+    </clr-checkbox-container>
+    <div class="filter-group flex-col">
+      <div class="filterLabel">Duration</div>
+      <div class="flex-row duration-input">
+        <select clrSelect name="rangeSelect" class="durationInput-select" [(ngModel)]="filterObject.rangeSelect"
+          (change)="onChange($event.target.value)">
+          <option value="gt">GT</option>
+          <option value="lt">LT</option>
+          <option value="btw">BTW</option>
+        </select>
+        <input class="durationInput-from" type="number" min="0" name="durationFrom" clrInput
+          [(ngModel)]="filterObject.durationFrom" />
+        <div *ngIf="isToDuration" class="flex-row">
+          <div class="duration-time-label to-label">To</div>
+          <input class="durationInput-to" type="number" min="0" name="durationTo" clrInput
+            [(ngModel)]="filterObject.durationTo" />
+        </div>
+        <div class="duration-time-label toLabel">Minutes</div>
+      </div>
+    </div>
+    <button (click)="onReset()" class="btn btn-primary-outline btn-cancel">Reset</button>
+  </form>
+</div>

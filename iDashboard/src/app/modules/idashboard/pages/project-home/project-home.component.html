@@ -1,0 +1,36 @@
+<app-container>
+  <div class="flex-col contents clr-col clr-col-xl-9 clr-col-sm-12">
+    <div class="head flex-row">
+      <div class="title">
+        <h3>Projects</h3>
+      </div>
+      <div class="options">
+        <div>
+          <button class="btn btn-link" [routerLink]="['./','new']">
+            <clr-icon shape="add-text"></clr-icon>New Project</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-content projects clr-row" *ngIf="projects$|async as projects">
+      <div class="clr-col-lg-5 clr-col-md-8 clr-col-12" *ngFor="let project of projects">
+        <div class="card">
+          <div class="card-header">
+            {{project.name}}
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              {{project.description}}
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm btn-link" [routerLink]="['../' , project.id , 'dashboards']">DashBoard</button>
+            <button class="btn btn-sm btn-link" (click)="showSettings(project)">Settings</button>
+            <button class="btn btn-sm btn-link btn-warning" (click)="delete(project)">Delete</button>
+            <!-- <clr-icon shape="file-settings"></clr-icon> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</app-container>

@@ -1,0 +1,31 @@
+<div>
+  
+  <div class="head">
+      <h3 class="title">Roles</h3>
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button type="button" class="btn btn-success-outline" (click)="addRole($event);">Add New</button>
+      <button type="button" class="btn btn-warning-outline" (click)="deleteRole($event);">Delete</button>
+    </div>
+  </div>
+  <clr-datagrid *ngIf="roles" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+    (clrDgSelectedChange)="selectionChanged($event)">
+    <clr-dg-column>Roles
+      <clr-dg-string-filter [clrDgStringFilter]="roleNameFilter"></clr-dg-string-filter>
+    </clr-dg-column>
+    <clr-dg-column>Description</clr-dg-column>
+    <clr-dg-column>Permission</clr-dg-column>
+    <clr-dg-row *clrDgItems="let role of roles" [clrDgItem]="role"
+      [(clrDgSelected)]="role.selected">
+      <clr-dg-cell><a clrVerticalNavLink [routerLink]="['/admin/roles/', role.name, 'edit']">{{ role.name }}</a>
+      </clr-dg-cell>
+      <clr-dg-cell>{{ role.desc }}</clr-dg-cell>
+      <clr-dg-cell>
+        <span *ngFor="let permission of role.permissions; let last=last;">
+          <span>{{permission.name}}</span>
+          <span *ngIf="!last">, </span>
+        </span>
+      </clr-dg-cell>
+    </clr-dg-row>
+    <clr-dg-footer>{{roles.length}} Roles</clr-dg-footer>
+  </clr-datagrid>
+</div>

@@ -1,0 +1,95 @@
+.project-report {
+  display: flex;
+  margin-top: 8px;
+  flex-direction: column;
+  min-height: calc(100vh - 7rem);
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+}
+
+.report-content {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--fg1);
+  margin-bottom: 8px;
+  box-shadow: var(--main-box-shadow-md2);
+  max-height: 72px;
+  min-height: 72px;
+}
+
+.report-content > div {
+  display: flex;
+  align-self: flex-start;
+  padding: 0.5rem;
+  margin: auto;
+}
+
+.report-content > .quick-bar {
+  width: 1rem;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  height: 100%;
+  min-height: 72px;
+  margin: 0;
+}
+
+.report-content > .name {
+  width: 30%;
+  font-size: 1rem;
+  flex-grow: 1;
+}
+
+.report-content > .status {
+  justify-content: center;
+  width: 20%;
+  text-transform: capitalize;
+  flex-direction: column;
+}
+
+.status .label-status {
+  font-weight: 700;
+  font-size: 0.725rem;
+}
+
+.col-title {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--fg1);
+  opacity: 0.6;
+}
+
+.report-content > .stats {
+  flex-grow: 1;
+  justify-content: center;
+  width: 20%;
+  flex-direction: column;
+  min-width: 148px;
+}
+
+.report-content > .history {
+  justify-content: flex-start;
+  width: 8rem;
+  margin-right: 0;
+  padding: 0;
+  margin-top: 2px;
+}
+
+span.label {
+  padding-top: 2px;
+}
+.scroll-main {
+  padding-right: 12px;
+}
+.analysis-icon {
+  cursor: pointer;
+}
+a.name-link {
+  color: var(--fg1);
+  margin-left: 0.125rem;
+}
+.name .name-link:last-child {
+  margin-left: 0.25rem;
+}

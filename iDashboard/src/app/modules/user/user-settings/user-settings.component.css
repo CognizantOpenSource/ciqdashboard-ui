@@ -1,0 +1,42 @@
+.clr-vertical-nav .nav-link.active {  
+  font-weight: bold;
+}
+.clr-vertical-nav .nav-link {
+  font-weight: bold;
+}
+.content-area-class {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: var(--main-theme-background-color);
+}
+.main-container-class {
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+  height: calc(-60px + 100vh);
+}
+.nav-text {
+  justify-content: flex-start;
+}
+.nav-icon {
+  margin-top: -4px;
+}
+.sub-nav-menu {
+  padding-left: 4em;
+  margin-top: 0.2em;
+  font-size: 13px;
+}
+
+.vertical-nav {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-min-width);
+}
+
+.nav-menu {
+  font-size: 16px;
+  cursor: default;
+}
+.nav-header {
+  font-size: 14px;
+}

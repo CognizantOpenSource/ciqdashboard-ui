@@ -1,0 +1,32 @@
+<gridster [options]="options" class="scroll-main" [class.no-margin]="options?.margin<=0">
+  <ng-container *ngFor="let item of items; let index = index">
+    <gridster-item [item]="item" *ngIf="item" [class.active]="selected == index">
+      <div class="content flex-col full" (click)="selectItem(item,index)">
+        <span class="is-link remove" (click)="removeItem($event, index)" [class.is-chart]="!!item.id">
+          <clr-icon shape="times" size="20"></clr-icon>
+        </span>
+        <ng-container *ngIf="item.id else newItemTpl">
+          <ng-container [ngSwitch]="item.itemGroup || 'datachart'">           
+            <leap-display-label *ngSwitchCase="'datalabel'" [labelConfig]="item.options"></leap-display-label>
+            <leap-display-chart *ngSwitchCase="'datachart'" [chartType]="item.type" [dashboardData]="item.data"
+              [dashboardConfig]="item.options" [chartTitle]="item.options?.title || item.name" [item]="item">
+            </leap-display-chart>
+            <leap-display-chart *ngSwitchCase="'datatable'" [chartType]="item.type" [dashboardData]="item.data"
+            [dashboardConfig]="item.options" [chartTitle]="item.options?.title || item.name" [item]="item">
+          </leap-display-chart>
+           <leap-display-image *ngSwitchCase="'dataimg'" [imageConfig]="item.options"></leap-display-image>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <ng-template #newItemTpl>
+        <span [ngSwitch]="item.itemGroup || item.type" style="margin: auto;">
+          <clr-icon shape="bar-chart" size="48" *ngSwitchCase="'datachart'"></clr-icon>
+          <clr-icon shape="table" size="48" *ngSwitchCase="'datatable'"></clr-icon>
+          <clr-icon shape="image" size="48" *ngSwitchCase="'dataimg'"> </clr-icon>
+          <clr-icon shape="text" size="48" *ngSwitchCase="'datalabel'"> </clr-icon>
+        </span>
+      </ng-template>
+    </gridster-item>
+  </ng-container>
+</gridster>

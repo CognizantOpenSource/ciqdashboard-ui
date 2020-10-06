@@ -1,0 +1,6 @@
+<ngx-charts-line-chart class="x-chart" [scheme]="colorScheme" [results]="data" [gradient]="chartconfig.gradient"
+  [xAxis]="chartconfig.xAxis" [yAxis]="chartconfig.xAxis" [legend]="chartconfig.legend"
+  [showXAxisLabel]="chartconfig.showXAxisLabel" [showYAxisLabel]="chartconfig.showYAxisLabel"
+  [xAxisLabel]="chartconfig.xAxisLabel" [yAxisLabel]="chartconfig.yAxisLabel" [autoScale]="chartconfig.autoScale"
+  (select)="onSelect($event)"  [legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+  [class.legend-down]="chartconfig?.legendPositionDown"></ngx-charts-line-chart>

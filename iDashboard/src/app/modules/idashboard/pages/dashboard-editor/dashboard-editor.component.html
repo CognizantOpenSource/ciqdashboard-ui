@@ -1,0 +1,95 @@
+<div class="dashboard-panel flex-col full" *ngIf="dashboard" [attr.data-theme]="theme$ | async">
+    <div class="dashbaord-header">
+        <div class="title">
+            <clr-icon shape="pencil" size="20" style="margin-right: 6px;"></clr-icon>
+            <span [(text)]="dashboard.name" appEditable>Name</span>
+        </div>
+        <div class="options right ">
+            <div class="btn-group btn-outline-primary btn-md btn-icon">
+                <button class="btn" title="Preview Dashboard" (click)="togglePreview();" [class.active]="preview">
+                    <clr-icon shape="eye"></clr-icon>
+                </button>
+                <button class="btn" title="Save Dashboard" (click)="saveDashboard($event)">
+                    <clr-icon shape="floppy"></clr-icon>
+                </button>
+                <button class="btn" title="Cancel" [routerLink]="['../../']">
+                    <clr-icon shape="times"></clr-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-editor-panel flex-col full">
+        <div class="dashboard-editor flex-row full" *ngIf="!preview else previewTpl">
+            <div class="sidebar left flex-col">
+                <leap-sidebar-left></leap-sidebar-left>
+            </div>
+            <div class="dashbaord-items-editor flex-row full" style="justify-content: space-evenly;">
+                <ng-container *ngTemplateOutlet="editorTpl"></ng-container>
+            </div>
+            <div class="sidebar right flex-col clr-col-2" [class.collapsed]="rigntSidebarCollapsed">
+                <leap-sidebar-right *ngIf="!rigntSidebarCollapsed && currentGrid" [tab]="rtab" [charts]="allItems$ | async"
+                    (itemSelect)="updateSelectedItem($event , true)" (itemRemove)="removeItem($event)" [(data)]="selected"
+                    (dataChange)="onItemOptionsChange($event)" [(gridConfig)]="currentGrid.gridConfig"
+                    (gridConfigChange)="onGridConfigChange($event)">
+                </leap-sidebar-right>
+                <div class="sidebar-state-control is-link" (click)="toggleRightSidebarState()">
+                    <clr-icon shape="angle" dir="{{rigntSidebarCollapsed?'left': 'right'}}"></clr-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #previewTpl>
+        <leap-dashboard-view [dashboard]="dashboard" [page]="activePageIndex" [update]="loadedItem"
+            class="flex-col full"></leap-dashboard-view>
+    </ng-template>
+</div>
+<leap-dashboard-modal [(open)]="showModal" [native]="true" (openChange)="onModalClosed()">
+    <div class="modal-content full">
+        <router-outlet></router-outlet>
+    </div>
+</leap-dashboard-modal>
+<ng-template #editorTpl>
+    <clr-tabs class="full pages">
+        <clr-tab *ngFor="let page of dashboard.pages;let index = index" class="page page-tab">
+            <div clrTabLink [clrTabLinkInOverflow]="!page.pinned && index >= 6" class="page-tab-link">
+                <button (click)="changeActivePage(page);" [(text)]="page.name" appEditable
+                    class="page-tab-btn">default</button>
+                <ng-container>
+                    <ng-container *ngTemplateOutlet="pageDDTpl; context: {page:page,pages:dashboard.pages}">
+                    </ng-container>
+                </ng-container>
+            </div>
+            <ng-template [(clrIfActive)]="page.active">
+                <clr-tab-content>
+                    <div class="dashbaord-item-panel flex-col full">
+                        <leap-dashboard-grid class="scroll-main" [class.full-view]="rigntSidebarCollapsed"
+                            [(items)]="page.items" [selected]="selected" (selectedChange)="selectItem($event);"
+                            [config]="page.gridConfig" [update]="loadedItem" [pageIndex]="index">
+                        </leap-dashboard-grid>
+                    </div>
+                </clr-tab-content>
+            </ng-template>
+        </clr-tab>
+        <clr-tab class="new-tab">
+            <button class="btn btn-icon" clrTabLink [clrTabLinkInOverflow]="false" title="Create Page"
+                (click)="createNewPage()">
+                <clr-icon shape="plus" size="24"></clr-icon>
+            </button>
+            <ng-template [clrIfActive]="false">
+                <clr-tab-content>
+                </clr-tab-content>
+            </ng-template>
+        </clr-tab>
+    </clr-tabs>
+</ng-template> 
+<ng-template #pageDDTpl let-page="page" let-pages="pages">
+    <clr-dropdown class="page-actions" style="width: 16px;">
+        <button clrDropdownTrigger aria-label="page actions" class="no-focus">
+            <clr-icon shape="caret"  dir="down" size="20"></clr-icon>
+        </button>
+        <clr-dropdown-menu *clrIfOpen>
+            <div aria-label="Clone Page" clrDropdownItem (click)="clonePage(page,pages)">Clone</div>
+            <div aria-label="Delete Page" clrDropdownItem (click)="deletePage(page,pages)">Delete</div>
+        </clr-dropdown-menu>
+    </clr-dropdown>
+</ng-template>

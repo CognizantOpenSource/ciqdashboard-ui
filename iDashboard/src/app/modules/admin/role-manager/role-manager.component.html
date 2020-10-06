@@ -1,0 +1,50 @@
+<div>
+  <div class="head">
+    <h3 class="title">Manage Roles</h3>
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button *ngIf="!isAddRole" type="button" class="btn btn-success-outline"
+        (click)="updateRole($event);">Update</button>
+      <button *ngIf="isAddRole" type="button" class="btn btn-info-outline" (click)="addRole($event);">Add New</button>
+      <button type="button" class="btn btn-warning-outline" (click)="close($event);">Cancel</button>
+    </div>
+  </div>
+  <div class="parent">
+    <clr-tabs>
+      <clr-tab>
+        <button clrTabLink>Basic Details</button>
+        <clr-tab-content>
+          <form clrForm *ngIf="role" class="login" (ngSubmit)="updateRole($event)">
+            <clr-input-container>
+              <label>Role Name</label>
+              <input type="text" name="name" clrInput placeholder="Role Name" [(ngModel)]="role.name"
+                [disabled]="!isAddRole" />
+            </clr-input-container>
+            <clr-input-container>
+              <label>Description</label>
+              <input type="text" name="description" clrInput placeholder="Description"
+                [(ngModel)]="role.desc" />
+            </clr-input-container>
+          </form>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Permissions</button>
+        <clr-tab-content>
+          <clr-datagrid *ngIf="permissions" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+            (clrDgSelectedChange)="permissionSelectionChanged($event)">
+            <clr-dg-column>Permission
+              <clr-dg-string-filter [clrDgStringFilter]="permissionNameFilter"></clr-dg-string-filter>
+            </clr-dg-column>
+            <clr-dg-column>Description</clr-dg-column>
+            <clr-dg-row *clrDgItems="let permission of permissions" [clrDgItem]="permission"
+              [(clrDgSelected)]="permission.selected">
+              <clr-dg-cell>{{ permission.name }}</clr-dg-cell>
+              <clr-dg-cell>{{ permission.description }}</clr-dg-cell>
+            </clr-dg-row>
+            <clr-dg-footer>{{permissions.length}} Permissions</clr-dg-footer>
+          </clr-datagrid>
+        </clr-tab-content>
+      </clr-tab>
+    </clr-tabs>
+  </div>
+</div>

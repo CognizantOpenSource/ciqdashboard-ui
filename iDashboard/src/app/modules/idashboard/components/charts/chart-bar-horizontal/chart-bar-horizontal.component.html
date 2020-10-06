@@ -1,0 +1,17 @@
+<ngx-charts-bar-horizontal
+class="x-chart"
+  [scheme]="colorScheme"
+  [results]="data"
+  [gradient]="chartconfig.gradient"
+  [xAxis]="chartconfig.xAxis"
+  [yAxis]="chartconfig.yAxis"
+  [legend]="chartconfig.legend"
+  [showXAxisLabel]="chartconfig.showXAxisLabel"
+  [showYAxisLabel]="chartconfig.showYAxisLabel"
+  [xAxisLabel]="chartconfig.xAxisLabel"
+  [yAxisLabel]="chartconfig.yAxisLabel"
+  (select)="onSelect($event)"
+  [legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+  [class.legend-down]="chartconfig?.legendPositionDown"
+>
+</ngx-charts-bar-horizontal>

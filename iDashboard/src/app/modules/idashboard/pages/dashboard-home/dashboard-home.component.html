@@ -1,0 +1,69 @@
+<div class="page-content full" [attr.data-theme]="theme$ | async">
+    <clr-tabs *ngIf="dashboards" class="full">
+        <clr-tab *ngFor="let dashboard of dashboards;let index = index">
+            <button clrTabLink [clrTabLinkInOverflow]="!dashboard.pinned && index >= 2"
+                [routerLink]="['../',dashboard.id]">{{dashboard.name}}</button>
+            <ng-template [(clrIfActive)]="dashboard.active">
+                <clr-tab-content>
+                    <div class="dashboard-panel flex-col full">
+                        <div class="dashbaord-header">
+                            <span class="title" *ngIf="dashboard.pages[activePage] as page">{{page.name}}</span>
+                            <div class="options right ">
+                                <div class="btn-group btn-outline-primary btn-md btn-icon">
+
+                                    <clr-dropdown class="btn">
+                                        <button clrDropdownTrigger class="no-focus" title="Select Page"
+                                            aria-label="select page button">
+                                            <clr-icon shape="file-group" size="20"></clr-icon>
+                                            <clr-icon shape="caret down" size="12" style="color:var(--fg1);"></clr-icon>
+                                        </button>
+                                        <clr-dropdown-menu *clrIfOpen>
+                                            <label class="dropdown-header" aria-hidden="true">select page</label>
+                                            <div clrDropdownItem *ngFor="let page of dashboard.pages;let index=index;"
+                                                (click)="selectPage(index , dashboard)">{{page.name}}
+                                            </div>
+                                        </clr-dropdown-menu>
+                                    </clr-dropdown>
+                                    <button class="btn" title="Pin Dashboard" [class.active]="dashboard.pinned"
+                                        (click)="dashboard.pinned = !dashboard.pinned;">
+                                        <clr-icon shape="pin"></clr-icon>
+                                    </button>
+                                    <button class="btn" title="Edit Dashboard"
+                                        [routerLink]="['./../' ,dashboard.id,'edit' ,'0' , {page:activePage}]">
+                                        <clr-icon shape="pencil"></clr-icon>
+                                    </button>
+                                    <button class="btn" title="Save Dashboard" (click)="saveDashboard(dashboard)">
+                                        <clr-icon shape="floppy"></clr-icon>
+                                    </button>
+                                    <button class="btn" title="Delete Dashboard" (click)="deleteDashboard(dashboard)">
+                                        <clr-icon shape="trash"></clr-icon>
+                                    </button>
+                                    <button class="btn" title="Export as PDF" (click)="exportAs('pdf', 'portrait')">
+                                        <clr-icon shape="download"></clr-icon>
+                                    </button>
+                                    <button class="btn" title="Slide Show"
+                                        [routerLink]="['./../' ,dashboard.id,'slideshow' , {page:activePage}]">
+                                        <clr-icon shape="video-gallery"></clr-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <leap-dashboard-view [dashboard]="dashboard" [page]="activePage" [update]="loadedItem"
+                            class="flex-col full">
+                        </leap-dashboard-view>
+                    </div>
+                </clr-tab-content>
+            </ng-template>
+        </clr-tab>
+        <clr-tab class="new-tab">
+            <button class="btn btn-icon" clrTabLink [clrTabLinkInOverflow]="false" title="Create Dashboard"
+                (click)="onCreateNewDash();">
+                <clr-icon shape="plus" size="24"></clr-icon>
+            </button>
+            <ng-template [clrIfActive]="false">
+                <clr-tab-content>
+                </clr-tab-content>
+            </ng-template>
+        </clr-tab>
+    </clr-tabs>
+</div>

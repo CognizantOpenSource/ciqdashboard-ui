@@ -1,0 +1,7 @@
+<ngx-charts-area-chart class="x-chart" [scheme]="colorScheme" [legend]="chartconfig.legend"
+    [showXAxisLabel]="chartconfig.showXAxisLabel" [showYAxisLabel]="chartconfig.showYAxisLabel"
+    [xAxis]="chartconfig.xAxis" [yAxis]="chartconfig.yAxis" [xAxisLabel]="chartconfig.xAxisLabel"
+    [yAxisLabel]="chartconfig.yAxisLabel" [timeline]="chartconfig.timeline" [results]="data" (select)="onSelect($event)"
+    [legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+    [class.legend-down]="chartconfig?.legendPositionDown">
+</ngx-charts-area-chart>
