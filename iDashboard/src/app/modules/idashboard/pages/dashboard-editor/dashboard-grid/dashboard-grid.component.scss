@@ -39,7 +39,11 @@ gridster {
   &::ng-deep {
     .chart-card .analysis-title {
       padding-right: 20px;
-      .tool-link,leap-item-filters{
+      .filler {
+        cursor: move;
+      }
+      .tool-link,
+      leap-item-filters {
         display: none;
       }
     }

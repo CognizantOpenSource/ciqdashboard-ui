@@ -1,19 +1,13 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DashboardService } from '../../services/idashboard.service';
 import { FilterOps } from '../../services/filter-ops';
-import { FilterableDashboardComponent } from '../../components/filterable-dash-component';
-import { FormGroup, Validators, FormBuilder, FormArray, FormControl, Form } from '@angular/forms';
-import { DashboardItemsService, getItemFields, getItemGroupBy, clean } from '../../services/idashboard-items.service';
+import { DashboardItemsService, clean } from '../../services/idashboard-items.service';
 import { ToastrService } from 'ngx-toastr';
 import { parseApiError } from 'src/app/components/util/error.util';
-import { StageParams, FieldType } from 'src/app/components/form/dynamic-field/dynamic-field.component';
 import { DashboardDataSourceService } from "../../services/idashboard-datasource.service";
 import { BaseItemEditor, pages } from './base-item-editor';
 import * as csv from 'csvtojson';
-
-
-
+import { take } from 'rxjs/operators';
 
 interface DataSoure {
   id: string;
@@ -84,7 +78,6 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
 
   constructor(
     route: ActivatedRoute, router: Router, spec: FilterOps, toastr: ToastrService,
-    private formBuilder: FormBuilder,
     private dashItemService: DashboardItemsService, private datasoruceService: DashboardDataSourceService
   ) {
     super(route, router, spec, toastr);
@@ -96,9 +89,13 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
     super.setOptions(this.options);
     this.loadDataSources();
     this.loadCollectionsName();
+    const pageNames = Object.keys(pages).map(k => pages[k]);
     this.dashItemService.getItemTypes().subscribe(it => this.itemTypes = it.map(it => ({ ...it, desc: it.name + ' chart item', })));
     this.managed(this.route.queryParams).subscribe(q => {
-      const pageNames = Object.keys(pages).map(k => pages[k]);
+      const nav = q.navs || pages.selectSource;
+      this.navs = (nav instanceof Array ? nav : [nav]).filter(p => !!pageNames.includes(p));
+    });
+    this.managed(this.route.queryParams).pipe(take(1)).subscribe(q => {
       const nav = q.navs || pages.selectSource;
       this.navs = (nav instanceof Array ? nav : [nav]).filter(p => !!pageNames.includes(p));
       this.createMode = !q.itemId;
@@ -111,9 +108,10 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
         this.loadSourceInfo(this.item.source);
         this.processTypeUpdate(this.item.type);
       } else {
+        
         this.dashItemService.getItem(q.itemId).subscribe(item => {
           this.item = { ...item };
-          this.filters = item.filters||[];
+          this.filters = item.filters || [];
           this.loadSourceInfo(this.item.source);
           this.processTypeUpdate(this.item.type);
           this.reload();
@@ -155,35 +153,35 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
     navs.splice(index + 1);
     this.updateRouteQueryParam({ navs });
   }
-  private selectAggregationType() {
-    if ((!this.item.activeData || this.item.activeData.groupBy || !this.item.activeData.aggregate) && this.item.groupBy) {
-      this.item.aggregate = null;
+  private selectAggregationType(item) {
+    if ((!item.activeData || item.activeData.groupBy || !item.activeData.aggregate) && item.groupBy) {
+      delete item.aggregate;
     } else {
-      this.item.groupBy = null;
+      delete item.groupBy;
     }
+    return item;
   }
   reload() {
     this.item.options = this.item.options || {};
     clean(this.item.options);
     this.item.filters = this.filters;
-    this.selectAggregationType();
-    this.dashItemService.previewChartItem(this.item).subscribe(item => {
+    this.dashItemService.previewChartItem(this.selectAggregationType({ ...this.item })).subscribe(item => {
       this.previewData = item.data;
+      this.item._data = item._data || item.data;
     }, error => {
       const parsedError = parseApiError(error, 'error while loading chart data!');
       this.toastr.error(parsedError.message, parsedError.title);
     });
   }
   updateItem() {
-    this.selectAggregationType();
     if (this.createMode)
-      this.dashItemService.createItem(this.item).subscribe(() => this.close()
+      this.dashItemService.createItem(this.selectAggregationType({ ...this.item })).subscribe(() => this.close()
         , error => {
           const parsedError = parseApiError(error, 'error while saving item!');
           this.toastr.error(parsedError.message, parsedError.title);
         });
     else {
-      this.dashItemService.saveItem(this.item).subscribe(() => {
+      this.dashItemService.saveItem(this.selectAggregationType({ ...this.item })).subscribe(() => {
         this.toastr.success(`'${this.item.name || 'Item'}' saved successfully`)
       }, error => {
         const parsedError = parseApiError(error, 'error while saving data!');
@@ -408,7 +406,7 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
 
   removeDataSource(item) {
     if (confirm(`Are you sure to delete data source -` + item.name)) {
-      this.datasoruceService.deleteDataSource(item.id).subscribe((datasource) => {
+      this.datasoruceService.deleteDataSource(item.id).subscribe(() => {
         this.toastr.success("Data source Deleted sucessfully");
         this.loadDataSources();
       },
@@ -534,14 +532,10 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
       reader.readAsText(file);
       reader.onload = async (fevent: any) => {
         try {
-
           const data: string = fevent.target.result;
-
           collectionname = collectionname.split(".", -1);
           collectionname = "source_CSV_" + collectionname[0];
-
-          let jsondata = await csv().fromString(data).subscribe(function (json) { });
-
+          let jsondata = await csv().fromString(data).subscribe(function () { });
           if (!this.check) {
             this.addExternalData(JSON.stringify(jsondata), collectionname);
           }
@@ -577,7 +571,7 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
 
   addExternalData(data: any, CollectionName: string) {
 
-    this.datasoruceService.addExternalData(data, CollectionName).subscribe((datasource) => {
+    this.datasoruceService.addExternalData(data, CollectionName).subscribe(() => {
       this.toastr.success("Data imported successfuly");
       this.loadDataSources();
       this.openuploadwin = false;
@@ -590,7 +584,7 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
 
   updateExternalData(data: any, CollectionName: string) {
 
-    this.datasoruceService.UpdateExternalData(data, CollectionName).subscribe((datasource) => {
+    this.datasoruceService.UpdateExternalData(data, CollectionName).subscribe(() => {
       this.toastr.success("Data updated successfuly");
       this.loadDataSources();
       this.openuploadwin = false;

@@ -9,9 +9,8 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })
-export class SignUpComponent extends UnSubscribable implements OnInit, AfterViewInit {
+export class SignUpComponent extends UnSubscribable implements OnInit {
 
-  @ViewChild('googleBtn', { static: true }) googleSignin: ElementRef;
   form: any = {
     firstName: '',
     lastName: '',
@@ -21,26 +20,15 @@ export class SignUpComponent extends UnSubscribable implements OnInit, AfterView
     org: 'Leap',
     type: 'native',
   };
-  returnUrl = '';
-  failedAttempt = 0;
-
+  returnUrl = ''
   constructor(
-    private authService: AuthenticationService, private router: Router, private route: ActivatedRoute,
-    private ngZone: NgZone, private toastr: ToastrService) {
+    private authService: AuthenticationService, private router: Router, private toastr: ToastrService) {
     super();
   }
-
-  ngOnInit() {
-    this.managed(this.route.queryParams)
-      .subscribe(params => this.returnUrl = params.returnUrl || '/home');
-    this.managed(this.authService.user$).subscribe(this.success.bind(this));
+  ngOnInit(): void {
+   
   }
-  ngAfterViewInit() {
-
-  }
-  signUpWithGoogle() {
-    this.authService.logInWithGoogle();
-  }
+ 
   createAccount() {
     if (!this.form.password || this.form.password !== this.form.confirmPassword) {
       this.toastr.warning('please provide valid inputs');
@@ -51,9 +39,5 @@ export class SignUpComponent extends UnSubscribable implements OnInit, AfterView
   success(user: any) {
     this.toastr.success(`logged in as '${user.username}'`);
     this.router.navigateByUrl(this.returnUrl);
-  }
-  failure(resp: any) {
-    this.failedAttempt++;
-    this.toastr.error('login error', `${resp.error}`);
   }
 }

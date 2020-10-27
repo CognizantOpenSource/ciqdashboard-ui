@@ -3,18 +3,20 @@ import { LocalStorage } from 'src/app/services/local-storage.service';
 import { IFieldDef } from '../model/data.model';
 
 interface IOpDef {
+    label?: string;
     type: string;
     fn: (data: any, filterVal: any, ...arg: any) => boolean
 }
 interface IOps {
     [name: string]: IOpDef
 }
+export const datePeriodNames = ['lastNYear', 'lastNMonth', 'lastNWeek', 'lastNDay'].reverse();
 @Injectable({
     providedIn: 'root'
 })
 export class FilterOps {
 
-    private opsMap: { [type: string]: Array<{ name: string, type: string }> } = {};
+    private opsMap: { [type: string]: Array<{ name: string, type: string, label: string; }> } = {};
 
     constructor(private db: LocalStorage) {
         ['string', 'number', 'boolean', 'date'].forEach(type => {
@@ -24,7 +26,8 @@ export class FilterOps {
                     // current action supports the data type
                     this.opsMap[type].push({
                         type: this.ops[action].type,
-                        name: action
+                        name: action,
+                        label: this.ops[action].label || action
                     })
                 }
             });
@@ -118,6 +121,11 @@ export class FilterOps {
             type: 'number|date',
             fn: (data: any, filterVal: any, def: IFieldDef) => true
         },
+        thisYear: { type: 'date', fn: () => true },
+        thisMonth: { type: 'date', fn: () => true },
+        thisWeek: { type: 'date', fn: () => true },
+        thisDay: { type: 'date', fn: () => true },
+        last: { type: 'date', fn: () => true }
     };
 
 

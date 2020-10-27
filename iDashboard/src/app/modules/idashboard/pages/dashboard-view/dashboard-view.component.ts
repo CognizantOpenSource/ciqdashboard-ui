@@ -16,8 +16,8 @@ export class DashboardViewComponent implements OnInit {
   page: number = 0;
 
   openFiltersPopup: boolean = false;
-  lastFilterItem:any;
-  lastFilterDashItem:any;
+  lastFilterItem: any;
+  lastFilterDashItem: any;
   @Input('page') set setPage(page) {
     this.page = page;
     this.update(this.page, this.dashboard);
@@ -27,16 +27,10 @@ export class DashboardViewComponent implements OnInit {
     this.update(this.page, this.dashboard);
   }
   @Input('update') set setItemUpdate(spec) {
-    if (spec && spec.page && spec.item && this.dashboard) {
-      console.log(spec);
-     // const page = this.dashboard.pages[spec.page];
-      // if (page)
-      //   page.items[spec.item] = { ...spec.value || page.items[spec.item] };
-    }
+   
   }
 
   private update(pageIndex, dashboard) {
-    console.log(pageIndex , dashboard);
     if (pageIndex >= 0 && dashboard) {
       const page = dashboard.pages[pageIndex] || dashboard.pages[0];
       this.config = this.getOptions(page.gridConfig);
@@ -63,11 +57,11 @@ export class DashboardViewComponent implements OnInit {
   };
   activeItem = -1;
   constructor() {
-    
+
   }
 
   ngOnInit() {
-  
+
   }
-  
+
 }

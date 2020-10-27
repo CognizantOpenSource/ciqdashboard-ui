@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-
+import { Observable, of } from 'rxjs'; 
 import { environment } from 'src/environments/environment';
 import { IDashboardAPI } from './api';
-import { Observable, of } from 'rxjs';
+import { itemTypes } from './items.data'; 
 
-import { projects, dashboards, datasets, sourceInfos, users, previewItemData, items } from 'src/assets/mock-data.js'
-import { itemTypes } from './items.data';
-import { map } from 'rxjs/operators';
-
-export const id = () => (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
 @Injectable({
   providedIn: 'root'
 })
 export class IDashBoardApiService {
 
+  getProjectMapping(projectId):Observable<any>{
+    return this.http.get(this.api.getProjectMapping(projectId));
+  }
+  getTeamsProjects(teamId):Observable<any>{
+    return this.http.get(this.api.getTeam(teamId));
+  }
+  updateTeamsProjects(teamId , projectIds:string[]):Observable<any>{
+    return this.http.put(this.api.getTeam(teamId) , projectIds);
+  }
+  deleteTeamsProject(teamId , projectId):Observable<any>{
+    return this.http.delete(this.api.getTeamsProject(teamId , projectId));
+  }
   getDashboardsItems(): Observable<any> {
     return this.http.get(this.api.items);
   }
@@ -102,11 +109,6 @@ export class IDashBoardApiService {
   reloadWhitelist(): Observable<any> {
     return this.http.post(this.api.reloadWhitelist, null);
   }
-
-  getUsers(id: string): Observable<any> {
-    return of(users.find(d => d.id === id) || users[0]);
-  }
-
 
   // Data Source Module Releated Services
 

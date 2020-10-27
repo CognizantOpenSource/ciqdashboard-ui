@@ -46,45 +46,45 @@ export class IDashboardAPI {
     getSourceInfo(name) {
         return `${this.dataSources}search?name=${name}`;
     }
-    get items(){
-        return `${this.base}items/`; 
+    get items() {
+        return `${this.base}items/`;
     }
-    getItem(id){
+    getItem(id) {
         return `${this.items}${id}/`;
     }
-    getItemData(id){
+    getItemData(id) {
         return `${this.getItem(id)}chart-data/`;
     }
-    get previewItem(){
+    get previewItem() {
         return `${this.items}preview/`;
     }
-    searchItems(keywords){
+    searchItems(keywords) {
         return `${this.items}search?searchString=${keywords}`;
     }
-    getFieldValues(source,field){
+    getFieldValues(source, field) {
         return `${this.base}collector/distinct-values-by-field?source-name=${source}&field-name=${field}`;
     }
 
     //Data Source Releated Services
 
     getDataSource(id): string {
-    return `${this.base}data-sources/${id}`;
+        return `${this.base}data-sources/${id}`;
     }
 
     getFieldsTypes(name: string) {
-    return `${this.base}/collector/fields-types?collection-name=${name}`;
+        return `${this.base}/collector/fields-types?collection-name=${name}`;
     }
 
     detDataSourceByid(id): string {
-    return `${this.base}data-sources/${id}`;
+        return `${this.base}data-sources/${id}`;
     }
 
-    getcollectionName(){
-    return `${this.base}collector/collection-names`;
+    getcollectionName() {
+        return `${this.base}collector/collection-names`;
     }
 
     searchDatasource(name): string {
-    return `${this.base}data-sources/search?name=${name}`;
+        return `${this.base}data-sources/search?name=${name}`;
     }
 
     get addExtdata() {
@@ -93,5 +93,23 @@ export class IDashboardAPI {
 
     get updateExtdata() {
         return `${this.base}collector/update-collection`;
+    }
+    get resourceMapping(){
+        return `${this.base}project-mapping/`;
+    }
+    get projectMapping(){
+        return `${this.resourceMapping}projects/`;
+    }
+    get teamsMapping(){
+        return `${this.resourceMapping}teams/`;
+    }
+    getTeamsProject(teamId: any, projectId: any): string {
+        return `${this.getTeam(teamId)}projects/${projectId}/`;
+    }
+    getTeam(teamId: any): string {
+        return `${this.teamsMapping}${teamId}/`;
+    }
+    getProjectMapping(projectId): string {
+        return `${this.projectMapping}${projectId}/`;
     }
 }

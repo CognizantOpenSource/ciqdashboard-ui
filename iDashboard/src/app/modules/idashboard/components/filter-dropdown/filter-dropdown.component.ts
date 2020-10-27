@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { config } from 'process';
+import { ClrDropdownMenu } from '@clr/angular';
 import { IFilterData, IFilterConfig } from '../../model/data.model';
+import { datePeriodNames } from '../../services/filter-ops';
 
 @Component({
   selector: 'leap-dash-filter-dropdown',
@@ -14,14 +15,17 @@ export class FilterDropdownComponent implements OnInit {
 
   @Input() edit = false;
 
+  @ViewChild(ClrDropdownMenu, { static: false }) set datePicker(dp: any) {
+    if (dp) {
+      const element = dp.el.nativeElement;
+      element.eventListeners().map(ev => element.removeEventListener('keydown', ev))
+    }
+  };
   options;
   @Input('options') set setOptions(options: any) {
     if (options && options.fields && options.typeMap) {
-      options.actions = {};
       options.types = {};
       options.fields.forEach(field => {
-        field.actions = this.getActions(field.type, options.typeMap);
-        options.actions[field.name] = field.actions;
         options.types[field.name] = field.type;
       });
     }
@@ -34,15 +38,15 @@ export class FilterDropdownComponent implements OnInit {
   @Output() select = new EventEmitter<boolean>();
 
   @Output() fieldChange = new EventEmitter<string>();
-
+  datePeriods = datePeriodNames.map(name => ({ name, label: name.split('lastN')[1] }));
   open = false;
   filterForm: FormGroup;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    let configs ;
+    let configs;
     if (this.data.configs && this.data.configs.length > 0) {
-      configs =  this.fb.array(this.data.configs.map(c => this.createConfigGroup(c)));
+      configs = this.fb.array(this.data.configs.map(c => this.createConfigGroup(c)));
     } else {
       configs = this.fb.array([this.createConfigGroup({} as IFilterConfig)]);
     }
@@ -53,12 +57,14 @@ export class FilterDropdownComponent implements OnInit {
     });
 
   }
+
   createConfigGroup(c: IFilterConfig): FormGroup {
     return this.fb.group({
       field: [c.field || '', Validators.required],
-      op: [c.op || '', Validators.required],
+      op: [(datePeriodNames.includes(c.op) ? 'last' : (c.op || '')), Validators.required],
       value: [c.value, Validators.required],
       maxValue: [c.maxValue, Validators.required],
+      period: [c.period || c.op, Validators.required],
     });
   }
   addConfig(index) {
@@ -79,11 +85,19 @@ export class FilterDropdownComponent implements OnInit {
     cloned.name = cloned.name + '-copy';
     this.clone.emit(cloned);
   }
+  private processed(fd: IFilterData) {
+    fd.configs.forEach(c => {
+      if (c.op == 'last') {
+        c.op = c.period;
+      }
+    });
+    return fd;
+  }
   getFormData(): IFilterData {
-    return {
+    return this.processed({
       ...this.data,
       ...this.filterForm.getRawValue()
-    }
+    });
   }
   onSelect() {
     if (this.data) {
@@ -94,10 +108,22 @@ export class FilterDropdownComponent implements OnInit {
   reset() {
     this.filterForm.reset();
   }
-  onFieldSelect(config: FormControl,value ) {
+  onFieldSelect(config: FormControl, value) {
     this.fieldChange.emit(value);
     config.get('value').setValue('');
     config.get('maxValue').setValue('');
+  }
+  onOperatorSelect(config: FormControl, op: string, field: string) {
+    if (this.options.types[field] === 'date') {
+      if (op && op.startsWith('this')) {
+        config.get('value').setValue(0);
+        config.get('maxValue').setValue('');
+      }
+      if (op === 'last') {
+        config.get('value').setValue(1);
+        config.get('period').setValue(datePeriodNames[0]);
+      }
+    }
   }
   updateDate(config: FormControl, event) {
     config.get('value').setValue(event.value);

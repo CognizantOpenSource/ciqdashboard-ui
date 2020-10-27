@@ -1,4 +1,4 @@
-<ngx-charts-bubble-chart class="x-chart" [class.legend-down]="chartconfig?.legendPositionDown" [scheme]="colorScheme"
+<ngx-charts-bubble-chart class="x-chart" [class.legend-down]="chartconfig?.legend && chartconfig.legendPositionDown" [scheme]="colorScheme"
   [results]="data" [xAxis]="chartconfig.xAxis" [yAxis]="chartconfig.yAxis" [legend]="chartconfig.legend"
   [showXAxisLabel]="chartconfig.showXAxisLabel" [showYAxisLabel]="chartconfig.showYAxisLabel"
   [xAxisLabel]="chartconfig.xAxisLabel" [yAxisLabel]="chartconfig.yAxisLabel" [xScaleMin]="chartconfig.xScaleMin"

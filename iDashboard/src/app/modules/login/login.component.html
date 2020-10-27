@@ -35,17 +35,6 @@
         </div>
         <button type="submit" class="btn btn-primary btn-login" (click)="login()"
           [disabled]="!form.username || !form.password">Login</button>
-        <button type="submit" class="btn btn-primary btn-login-g" (click)="loginWithGoogle()" *ngIf="!prod">
-          <div class="icon">
-            <a class="nav-settings">
-              <app-icon [icon]="{type:'fa-icon',data:'google',desc:'Sign-in with Google'}" [size]="'.8rem'">
-              </app-icon>
-            </a>
-          </div>
-          <div class="text">
-            Login with Google
-          </div>
-        </button>
       </div>
     </form>
   </div>

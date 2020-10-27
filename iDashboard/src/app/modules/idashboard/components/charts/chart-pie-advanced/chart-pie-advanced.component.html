@@ -1,7 +1,9 @@
 <ngx-charts-advanced-pie-chart class="x-chart"
 [scheme]="colorScheme"
 [results]="data"
+[tooltipDisabled]="chartconfig.tooltipDisabled"
 [gradient]="chartconfig.gradient"
+[label]="chartconfig.label"
 (select)="onSelect($event)"
 >
 </ngx-charts-advanced-pie-chart>

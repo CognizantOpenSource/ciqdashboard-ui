@@ -37,25 +37,22 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
     this.charts = (charts || []).map(this.updateIcons.bind(this)).map(it => ({ ...it, group: it.sourceGroup }));
     this.setFilteredCharts();
   }
-  formOptions;
   gridConfigForm: FormGroup;
   gridConfigParams = [{ name: 'rows', label: 'Rows' }, { name: 'columns', label: 'Columns' }];
   params = {
     options: []
   };
+
+  filterItemBy =  (item) => (item.name || '') + (item.options && item.options.title || '')
   constructor(
     private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
     super();
   }
 
   ngOnInit() {
-    this.formOptions = this.formBuilder.group({
-      options: [this.data && this.data.options || {}, [Validators.required]]
-    });
+
   }
-  getChartItemsFilter() {
-    return this.getItemsFilter('filterChartItemsBy');
-  }
+
   getItemGroupFilter() {
     const context = this;
     return (item: any) => (!context.data.itemGroup && item.itemGroup == 'datachart') || item.itemGroup == context.data.itemGroup;
@@ -65,10 +62,7 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
       this.filteredCharts = this.charts.filter(this.getItemGroupFilter());
     }
   }
-  getItemsFilter(searchBy) {
-    const context = this;
-    return (item: any) => !context[searchBy] ? true : item.name.includes(context[searchBy]);
-  }
+  
   updateIcons(item) {
     return { ...item, iconType: getIconType(item.type) }
   }
@@ -94,12 +88,12 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
   editItem(item) {
     this.itemEdit.emit(item);
     const { itemGroup, type, source } = item;
-    const { projectId } = this.route.snapshot.params; 
+    const { projectId } = this.route.snapshot.params;
     const queryParams = {
       itemId: item.id, itemGroup, type, source, navs: ['Data Source', 'Item Type', 'Item Options']
       , returnUrl: this.router.routerState.snapshot.url
     }
-    if (projectId) { 
+    if (projectId) {
       this.router.navigate(['idashboard', projectId, 'edit-chart'], { queryParams });
     } else
       this.router.navigate(['edit-chart'], { relativeTo: this.route, queryParams });

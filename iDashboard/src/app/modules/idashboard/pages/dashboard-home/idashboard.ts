@@ -8,10 +8,10 @@ export class IDashBoard extends UnSubscribable {
         setTimeout(() => this.dashItemService.loadItems(), 100);
     }
 
-    updateDashBoardData(dash: any) {
+    updateDashBoardData(dash: any, force = false) {
         //update dashboardData
         dash.pages.forEach((page, pi) => {
-            page.items.filter(it => it && !it.data && it.id).forEach((it, i) => this.updateItemData(it, pi, i));
+            page.items.filter(it => it && (!it.data || force) && it.id).forEach((it, i) => this.updateItemData(it, pi, i));
         });
         setTimeout(_ => {
             window.dispatchEvent(new Event('resize'));
@@ -20,20 +20,20 @@ export class IDashBoard extends UnSubscribable {
 
     updateItemData(it, page, item) {
         const filters = (it.filters || []).filter(f => f.active);
-        if(it.itemGroup == 'datalabel' || it.type == 'label' || it.itemGroup == 'dataimg' || it.type == 'img'){
+        if (it.itemGroup == 'datalabel' || it.type == 'label' || it.itemGroup == 'dataimg' || it.type == 'img') {
             this.dashItemService.getItem(it.id).subscribe(itd => {
                 it.data = itd.data;
                 it.options = { ...itd.options, ...(it.options || {}) };
                 this.loadedItem = { page, item, value: it };
             });
-        }else
-        this.dashItemService.getItemData(it, filters).subscribe(itd => {
-            it.data = itd.data;
-            if(it.type === 'table'){
-                it.projection = itd.projection;
-            }
-            it.options = { ...itd.options, ...(it.options || {}) };
-            this.loadedItem = { page, item, value: it };
-        });
+        } else
+            this.dashItemService.getItemData(it, filters).subscribe(itd => {
+                it.data = itd.data;
+                if (it.type === 'table') {
+                    it.projection = itd.projection;
+                }
+                it.options = { ...itd.options, ...(it.options || {}) };
+                this.loadedItem = { page, item, value: it };
+            });
     }
 }

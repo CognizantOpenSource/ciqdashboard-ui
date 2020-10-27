@@ -8,8 +8,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './modules/shared.module';
-import { AuthService, AuthServiceConfig } from 'angularx-social-login';
-import { getConfig } from './services/auth/authentication.service';
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -63,10 +61,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     ExportAsModule,
   ],
   providers: [
-    AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     // { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: AuthServiceConfig, useFactory: getConfig },
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig, }
   ],
   bootstrap: [AppComponent]

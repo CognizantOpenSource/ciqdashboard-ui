@@ -97,22 +97,24 @@ button.is-editing {
     }
   }
 }
-.page-tab-link{
-  padding: 0; 
+.page-tab-link {
+  padding: 0;
 }
-.page-tab-btn{
-  border:none;
+.page-tab-btn {
+  border: none;
   background: none;
-  color:var(--fg1);
+  color: var(--fg1);
+  min-width: 2rem;
+  min-height: 1rem;
   cursor: pointer;
-  &:focus{
+  &:focus {
     outline: none;
   }
- }
- .page-actions{
-  color:var(--fg1);
-  clr-icon{
-    color:var(--fg1);
+}
+.page-actions {
+  color: var(--fg1);
+  clr-icon {
+    color: var(--fg1);
     padding-bottom: 6px;
   }
- }
+}

@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { Router } from '@angular/router';
 import { UnSubscribable } from 'src/app/components/unsub';
-import { SocialUser } from 'angularx-social-login';
 import { Theme } from 'src/app/model/types.model';
 import { UserConfigService } from '../../idashboard/services/user-config.service';
 @Component({
@@ -34,7 +33,7 @@ export class UserMenuComponent extends UnSubscribable implements OnInit {
   getDisplayName(user: any) {
     return `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}`;
   }
-  getIcon(user: SocialUser | any): any {
+  getIcon(user: any): any {
     return { type: 'image', name: user.name, data: this.getImage(user), desc: user.email };
   }
   getImage(user: any) {

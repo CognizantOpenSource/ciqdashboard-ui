@@ -1,5 +1,6 @@
-.create-wizard{
+.create-wizard {
   background: var(--bg3);
+  overflow: hidden;
 }
 .header {
   max-height: 2rem;
@@ -22,7 +23,7 @@
           text-transform: capitalize;
           color: var(--fg1);
           font-size: 0.5rem;
-          opacity: .6;
+          opacity: 0.6;
           display: inline;
         }
       }
@@ -85,7 +86,8 @@
     }
     .preview {
       width: 100%;
-      max-width: calc(100% - 320px);
+      max-width: calc(100% - 324px);
+      overflow: hidden;
       padding: 4px 4px;
       flex-grow: 1;
       border-left: 2px solid grey;
@@ -178,9 +180,16 @@ select {
   }
 }
 .card-groupby {
+  div {
+    overflow-x: hidden;
+    min-height: 2rem;
+  }
   clr-icon {
-    margin: auto 0 14px 4px;
+    margin: 24px 2px 0 4px;
     min-width: 0.667rem;
+    &:hover {
+      transform: none !important;
+    }
   }
 }
 
@@ -241,7 +250,12 @@ select {
   display: flex;
   align-items: baseline;
   width: 100%;
-  min-height: 1.3rem !important;
+  min-height: 1px !important;
+  ::ng-deep{
+    .no-label .clr-control-label{
+      display:none;
+    }
+  }
 }
 
 .container label {

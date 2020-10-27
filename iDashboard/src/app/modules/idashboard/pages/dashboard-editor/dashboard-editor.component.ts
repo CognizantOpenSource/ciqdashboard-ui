@@ -1,15 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { DashboardService } from '../../services/idashboard.service';
-import { UnSubscribable } from 'src/app/components/unsub';
+import { DashboardService } from '../../services/idashboard.service'; 
 import { ActivatedRoute, Router, ActivationEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { filter, map, distinctUntilChanged, take, tap } from 'rxjs/operators';
 import { UserConfigService } from '../../services/user-config.service';
 import { IGridConfig, IDashboard } from '../../model/data.model';
-import { CreateItemComponent } from '../create-item/create-item.component';
-import { DashboardGridComponent } from '../dashboard-editor/dashboard-grid/dashboard-grid.component';
+import { CreateItemComponent } from '../create-item/create-item.component'; 
 import { DashboardItemsService } from '../../services/idashboard-items.service';
-import { DashboardProjectService } from '../../services/idashboard-project.service';
-import { combineLatest } from 'rxjs';
+import { DashboardProjectService } from '../../services/idashboard-project.service'; 
 import { ToastrService } from 'ngx-toastr';
 import { cloneDeep } from 'lodash';
 import { IDashBoard } from '../dashboard-home/idashboard';
@@ -52,9 +49,8 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   ngOnInit() {
     this.allItems$ = this.dashItemService.items$;
     this.theme$ = this.config.theme$;
-    this.managed(this.route.params.pipe(map(params => params.dashboardId), distinctUntilChanged(), tap(console.log)))
-      .subscribe(id => {
-        const dashboardId = id;
+    this.managed(this.route.params.pipe(map(params => params.dashboardId), distinctUntilChanged()))
+      .subscribe(dashboardId => {
         if (dashboardId) {
           if (!this.dashboard || this.dashboard.id !== dashboardId) {
             this.dashboardService.loadDashboard(dashboardId);
@@ -62,9 +58,11 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
         }
         this.params = this.route.snapshot.params;
         this.updateModal(this.route.snapshot.children);
-        console.log({ ...this.params })
       });
-    this.managed(this.route.params).pipe(map(params => params.page), distinctUntilChanged()).subscribe(page => this.activePageIndex = +page);
+    this.managed(this.route.queryParams).pipe(map(params => params.page), filter(it => !!it), distinctUntilChanged())
+      .subscribe(page => this.activePageIndex = +page);
+    this.managed(this.route.params).pipe(map(params => params.page), filter(it => !!it), distinctUntilChanged())
+      .subscribe(page => this.changePageQueryParam(page , true));
 
     this.managed(this.dashboardService.dashboard$)
       .pipe(filter(d => d.id === this.params.dashboardId), distinctUntilChanged())
@@ -105,21 +103,21 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   private updateGrid() {
     // trigger update grid
     setTimeout(() => {
-      console.log('updating grid', this.currentGrid.gridConfig);
       this.currentGrid.gridConfig = { ...this.currentGrid.gridConfig };
     }, 50);
   }
   selectItem(item) {
     this.selected = item;
+    const queryParams = { page: this.activePageIndex };
     if (item) {
       this.rtab = item.id ? 'edit' : 'new';
       const paramItem = this.route.snapshot.params.item;
       if (paramItem === '' || +paramItem !== item.index) {
-        this.router.navigate(['../', item.index], { relativeTo: this.route });
+        this.router.navigate(['../', item.index,], { relativeTo: this.route, queryParams });
       }
     } else {
       // unselect
-      this.router.navigate(['../'], { relativeTo: this.route });
+      this.router.navigate(['../'], { relativeTo: this.route, queryParams });
     }
 
   }
@@ -146,7 +144,6 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
     }, error => this.toastr.error('error while saving dashboard'));
   }
   onItemOptionsChange(item) {
-    console.log('opt change', item.options)
     if (item.options) {
       item.name = item.options.name;
       item.description = item.options.description;
@@ -162,6 +159,11 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   onModalClosed() {
     this.router.navigate(['./'], { relativeTo: this.route });
   }
+
+  private changePageQueryParam(page: number , removeParam = false) {
+    // use 'remove' param to remove existing page param in route
+    this.router.navigate(removeParam ? [{}]:[], { relativeTo: this.route, queryParams: { page }, queryParamsHandling: 'merge' });
+  }
   changeActivePage(page) {
     if (this.activePage !== page) {
       if (this.activePage) {
@@ -169,7 +171,7 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
       }
       page.active = true;
       this.activePage = page;
-      this.activePageIndex = this.dashboard.pages.indexOf(page);
+      this.changePageQueryParam(this.dashboard.pages.indexOf(page));
     }
   }
   createNewPage() {

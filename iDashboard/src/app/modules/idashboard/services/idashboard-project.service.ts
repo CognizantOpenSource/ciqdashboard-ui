@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, merge } from 'rxjs';
+import { Observable, ReplaySubject, merge, forkJoin } from 'rxjs';
 import { IDashBoardApiService } from './idashboard-api.service';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from 'src/app/services/local-storage.service';
@@ -78,5 +78,20 @@ export class DashboardProjectService {
   }
   searchProject(name: string): Observable<any> {
     return this.api.getProjectByName(name);
+  }
+  getProjectMapping(projectId: string): Observable<any> {
+    return this.api.getProjectMapping(projectId);
+  }
+  getTeamsProjects(teamId): Observable<any[]> {
+    return this.api.getTeamsProjects(teamId);
+  }
+  updateTeamsProjects(teamId, projectIds: string[]): Observable<any> {
+    return this.api.updateTeamsProjects(teamId, projectIds);
+  }
+  deleteTeamsProject(teamId, projectId): Observable<any> {
+    return this.api.deleteTeamsProject(teamId, projectId);
+  }
+  deleteTeamsProjects(teamId, projectIds: string[] = []): Observable<any> {
+    return forkJoin(projectIds.map(id => this.deleteTeamsProject(teamId, id)));
   }
 }

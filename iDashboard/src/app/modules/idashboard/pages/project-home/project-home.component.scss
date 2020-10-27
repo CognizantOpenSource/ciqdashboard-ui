@@ -24,25 +24,43 @@
     border-bottom-color: var(--bg1);
     .title {
       * {
-        margin: 2px;
-        padding-top: 6px;
+        margin-top: 1rem;
       }
     }
     .options {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
+      .dropdown {
+        margin: auto 0;
+      }
+      .search {
+        padding-top: 4px;
+        flex-grow: 1;
+        width: 100%;
+        max-width: 20rem;
+        justify-self: flex-end;
+        clr-input-container {
+          width: 100%;
+          &::ng-deep {
+            .clr-control-container {
+              width: 100%;
+            }
+          }
+        }
+      }
     }
 
     .options div {
+      margin: 0.25rem;
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
 
       h3 {
         margin-top: 0.6rem;
       }
     }
   }
-
   .main-content {
     align-content: baseline;
     flex-grow: 1;
@@ -78,5 +96,19 @@
 
   clr-icon {
     margin-right: 4px;
+  }
+}
+
+:host::ng-deep {
+  .modal-content {
+    background: var(--bg3);
+    box-shadow: none;
+    color: var(--fg1) !important;
+    .modal-title {
+      color: var(--fg1) !important;
+    }
+  }
+  .datagrid {
+    border-color: var(--border-color) !important;
   }
 }

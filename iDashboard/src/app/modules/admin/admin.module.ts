@@ -6,6 +6,8 @@ import { UserManagerComponent } from './user-manager/user-manager.component';
 import { AdminRolesComponent } from './admin-roles/admin-roles.component';
 import { RoleManagerComponent } from './role-manager/role-manager.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { AdminTeamsComponent } from './teams/teams.component';
+import { TeamEditorComponent } from './teams/team-editor/team-editor.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +16,8 @@ import { AdminSettingsComponent } from './admin-settings/admin-settings.componen
     AdminRolesComponent,
     RoleManagerComponent,
     AdminSettingsComponent,
+    AdminTeamsComponent,
+    TeamEditorComponent
   ],
   imports: [
     SharedModule,

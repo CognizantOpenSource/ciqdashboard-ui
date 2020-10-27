@@ -21,14 +21,14 @@ export class GroupedItemComponent extends UnSubscribable implements OnInit {
     if (this.data) {
       if (val && val !== '') {
         this.updateLinks(this.data.filter(link =>
-          (link[this.filterKey || 'name'] || '').toLowerCase().includes(val.toLowerCase())
+          ((this.filterBy ? this.filterBy(link) : link.name) || '').toLowerCase().includes(val.toLowerCase())
         ));
       } else {
         this.updateLinks(this.data);
       }
     }
   }
-  @Input('filterBy') filterKey;
+  @Input('filterBy') filterBy: Function;
   @Input('groupBy') groupbyKey;
   @Input() sidebarView = false;
 
@@ -66,15 +66,15 @@ export class GroupedItemComponent extends UnSubscribable implements OnInit {
     //TODO: fix first click issue when search is active
     this.itemSelect.emit(item);
   }
-  removeItem(item , event) {
+  removeItem(item, event) {
     this.itemRemove.emit(item);
-    if(event){
+    if (event) {
       super.consume(event);
     }
   }
-  editItem(item , event) {
+  editItem(item, event) {
     this.itemEdit.emit(item);
-    if(event){
+    if (event) {
       super.consume(event);
     }
   }

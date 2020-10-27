@@ -39,30 +39,47 @@
                                         <clr-select-container>
                                             <label [attr.for]="'op'+index" class="clr-control-label">Operator</label>
                                             <select class="use-clr-style" clrSelect placeholder="Creteria"
-                                                formControlName="op" name="op">
+                                                formControlName="op" name="op"
+                                                (ngModelChange)="onOperatorSelect( config, $event, config.get('field').value)">
                                                 <option [value]="opt.name"
-                                                    *ngFor="let opt of options.actions[config.get('field').value]">
+                                                    *ngFor="let opt of options.typeMap[options.types[config.get('field').value]]">
                                                     {{opt.name}}
-                                                </option>
                                             </select>
                                         </clr-select-container>
                                     </div>
                                 </div>
                                 <div class="filter-value">
-                                    <div class="container">
-                                        <label [attr.for]="'value'+index" class="clr-control-label">Value</label>
-
+                                    <div class="container" *ngIf="config.get('op').value as opValue">
+                                        <label class="clr-control-label"
+                                            *ngIf="!(options?.types[config.get('field').value] === 'date' && opValue.startsWith('this')) ">Value</label>
                                         <ng-container
                                             *ngIf="options?.types[config.get('field').value] === 'date' else valueTpl">
-                                            <div class="daterangeFilter">
-                                                <leap-date-picker-input
-                                                    [value]="{value:config.get('value')?.value , maxValue:config.get('maxValue')?.value}"
-                                                    (valueChange)="updateDate(config , $event)"
-                                                    [isRange]="config.get('op').value==='between'">
-
-                                                </leap-date-picker-input>
-                                            </div>
-
+                                            <ng-container
+                                                *ngIf="(opValue.startsWith('this') || opValue == 'last') else dateSelectorTpl">
+                                                <!-- ignore this* operators as no value is needed -->
+                                                <span class="last-date-op flex-row" *ngIf="opValue == 'last'">
+                                                    <div class="value">
+                                                        <input class="use-clr-style" clrInput type="number" min="1"
+                                                            name="value" formControlName="value" />
+                                                    </div>
+                                                    <div class="type">
+                                                        <select class="use-clr-style" clrSelect formControlName="period"
+                                                            name="period">
+                                                            <option [value]="opt.name" *ngFor="let opt of datePeriods">
+                                                                {{opt.label+(config.get('value').value>1?'s':'')}}
+                                                        </select>
+                                                    </div>
+                                                </span>
+                                            </ng-container>
+                                            <ng-template #dateSelectorTpl>
+                                                <div class="daterangeFilter">
+                                                    <leap-date-picker-input
+                                                        [value]="{value:config.get('value')?.value , maxValue:config.get('maxValue')?.value}"
+                                                        (valueChange)="updateDate(config , $event)"
+                                                        [isRange]="opValue==='between'">
+                                                    </leap-date-picker-input>
+                                                </div>
+                                            </ng-template>
                                         </ng-container>
                                         <ng-template #valueTpl>
                                             <ng-autocomplete placeHolder="value" formControlName="value"

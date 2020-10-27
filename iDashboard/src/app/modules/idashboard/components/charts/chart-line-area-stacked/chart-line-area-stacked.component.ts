@@ -4,7 +4,7 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "leap-chart-line-area-stacked",
   templateUrl: "./chart-line-area-stacked.component.html",
-  styleUrls: ["./chart-line-area-stacked.component.scss"],
+  styleUrls: ["../base-chart.scss" , "./chart-line-area-stacked.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartLineAreaStackedComponent extends BaseChart implements OnInit {

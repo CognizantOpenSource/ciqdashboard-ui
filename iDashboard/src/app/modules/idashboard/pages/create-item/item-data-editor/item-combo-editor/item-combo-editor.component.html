@@ -1,0 +1,32 @@
+<div class="aggregate flex-col" *ngIf="groups && configs">
+    <ng-container *ngFor="let groupName of groups; let gi = index;">
+        <div class="group flex-col" *ngIf="data[groupName] as group">
+            <div class="title flex-row is-link"  (click)="groupState[gi]=!groupState[gi]">
+                <clr-icon class="clr-accordion-angle" [class.close]="!groupState[gi]" dir="right" shape="angle" role="none"></clr-icon>
+                <span class="name">{{groupName}}</span>
+                <span class="option">
+                    <leap-item-filters [(filters)]="group.filters" 
+                    [options]="filterOptions" (fieldChange)="onFiledSelected($event)">
+                  </leap-item-filters>
+                </span>
+            </div>
+            <div class="agg-fields" *ngIf="configs[gi] as config" [hidden]="!groupState[gi]">           
+                <div class="flex-row" *ngFor="let field of config.fields; index as i">
+                    <clr-select-container *ngIf="config?.fields[i] as gField">
+                        <label [attr.for]="'field'+i" class="clr-control-label">{{gField.name}}
+                            <span *ngIf="gField.required">*</span></label>
+                        <select class="use-clr-stylee" clrSelect placeholder="GroupBy"
+                            *ngIf="{index:(gField.gIndex == null?i:gField.gIndex)} as fConfig"
+                             name="item-groupby-{{fConfig.index}}"
+                            [attr.required]="gField.required" [(ngModel)]="group.groupBy[fConfig.index]" 
+                            (ngModelChange)="onChange()">
+                            <option [value]="opt.name" *ngFor="let opt of fields;let opIndex=i">
+                                {{opt.label}}</option>
+                        </select>
+                    </clr-select-container>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+   
+</div>

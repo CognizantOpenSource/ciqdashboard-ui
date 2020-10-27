@@ -4,7 +4,7 @@
       <div class="crumb" *ngFor="let nav of navs;let last= last;let index = index;">
         <span class="page-link" [class.is-link]="!last" (click)="onCrumClick(index)">{{nav}}
           <span class="value item-source" *ngIf="index===0 && item?.source as source" title="{{source}}">{{source}}</span>
-          <span class="value item-type" *ngIf="index===1 && (item?.type || item?.itemGroup||'') as type"
+          <span class="value item-type" *ngIf="index===1 && navs[2] && (item?.type || item?.itemGroup||'') as type"
             title="{{type}}">{{type}}</span>
         </span>
         <clr-icon *ngIf="!last" shape="angle" dir="right"></clr-icon>
@@ -228,10 +228,10 @@
                 <table class="container">
                   <tbody>
                     <tr>
-                      <td>
+                      <td style="min-width: 7rem;text-align: end;">
                         <label>Update Existing Collection:</label>
                       </td>
-                      <td style="padding: 0px 40px;">
+                      <td style="padding: 0 16px;">
                         <input type="checkbox" clrCheckbox name="check" [(ngModel)]="check"
                           (change)="onCheckboxChange();" />
                       </td>
@@ -241,18 +241,18 @@
                 <table class="container">
                   <tbody>
                     <tr *ngIf="check">
-                      <td style="width:30%;"><label>Collection Name:</label></td>
-                      <td><select clrSelect #mySelect name="colname" id="colname" [(ngModel)]="updatecollectionname"
+                      <td style="min-width: 7rem;text-align: end;"><label>Collection Name:</label></td>
+                      <td  class="no-label"><select clrSelect #mySelect name="colname" id="colname" [(ngModel)]="updatecollectionname"
                           (change)="oncollnameSelected(mySelect.value)" style="color: #000;">
                           <option value="-1">Select CollectionName</option>
                           <option *ngFor="let item of collectionNames" value="{{ item }}"> {{ item }}</option>
                         </select></td>
                     </tr>
                     <tr>
-                      <td><label>Select Type:</label></td>
-                      <td style="padding: 0px 70px;">
+                      <td style="min-width: 7rem;text-align: end;"><label>Select Type:</label></td>
+                      <td style="padding: 0;">
                         <clr-dropdown [clrCloseMenuOnItemClick]="true">
-                          <button clrDropdownTrigger class="btn btn-link" style="margin:6px 0;"
+                          <button clrDropdownTrigger class="btn btn-link" style="margin:6px 0;color: var(--fg1);"
                             aria-label="import tests button">
                             <clr-icon shape="import" class="is-solid"></clr-icon>Import External Data from
                             <clr-icon shape="caret down" style="right: .2rem;"></clr-icon>

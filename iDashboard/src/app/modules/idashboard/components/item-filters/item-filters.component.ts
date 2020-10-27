@@ -1,6 +1,9 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { ClrDropdownMenu } from '@clr/angular';
 import { IFilterData, IFilterConfig } from '../../model/data.model';
+import { datePeriodNames } from '../../services/filter-ops';
 
 @Component({
   selector: 'leap-item-filters',
@@ -28,11 +31,19 @@ export class ItemFiltersComponent implements OnInit {
   @Output() fieldChange = new EventEmitter<string>();
   @Output() filtersChange = new EventEmitter<any[]>();
 
+  @ViewChild(ClrDropdownMenu, { static: false }) set datePicker(dp: any) {
+    if (dp) {
+      const element = dp.el.nativeElement;
+      element.eventListeners().map(ev => element.removeEventListener('keydown', ev))
+    }
+  };
   open = false;
   filterForm: FormGroup;
   selectedFilter = -1;
   dropdownSide = 'bottom-left';
 
+  datePeriods = datePeriodNames.map(name => ({ name, label: name.split('lastN')[1] }));
+  
   constructor(private fb: FormBuilder) { }
 
   get newFilter() {
@@ -68,6 +79,18 @@ export class ItemFiltersComponent implements OnInit {
     }
     this.filtersChange.emit(this.filters);
   }
+  onOperatorSelect(config: FormControl, op: string, field: string) {
+    if (this.options.types[field] === 'date') {
+      if (op && op.startsWith('this')) {
+        config.get('value').setValue(0);
+        config.get('maxValue').setValue('');
+      }
+      if (op === 'last') {
+        config.get('value').setValue(1);
+        config.get('period').setValue(datePeriodNames[0]);
+      }
+    }
+  }
   setSelectedFilter(filter = {} as any) {
     let configs ;
     if (filter.configs && filter.configs.length > 0) {
@@ -81,12 +104,14 @@ export class ItemFiltersComponent implements OnInit {
       logicalOperator: new FormControl(filter.logicalOperator || 'AND', Validators.required),
     });
   }
+
   createConfigGroup(c: IFilterConfig): FormGroup {
     return this.fb.group({
       field: [c.field || '', Validators.required],
-      op: [c.op || '', Validators.required],
+      op: [(datePeriodNames.includes(c.op) ? 'last' : (c.op || '')), Validators.required],
       value: [c.value, Validators.required],
       maxValue: [c.maxValue, Validators.required],
+      period: [c.period || c.op, Validators.required],
     });
   }
   addConfig(index) {
@@ -111,10 +136,18 @@ export class ItemFiltersComponent implements OnInit {
     this.filters.push(cloned);
     this.filtersChange.emit(this.filters);
   }
+  private processed(fd: IFilterData) {
+    fd.configs.forEach(c => {
+      if (c.op == 'last') {
+        c.op = c.period;
+      }
+    });
+    return fd;
+  }
   getFormData(): IFilterData {
-    return {
+    return this.processed({
       ...this.filterForm.getRawValue()
-    }
+    });
   }
   clear() {
     this.filters.splice(0, this.filters.length);

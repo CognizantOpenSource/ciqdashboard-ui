@@ -3,7 +3,6 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { map, take, filter, tap, catchError } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from 'src/app/services/local-storage.service';
-import { IDashboardConfig } from 'src/app/model/report.model';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { Theme } from 'src/app/model/types.model';
@@ -63,7 +62,7 @@ export class UserConfigService {
   private setSettings(config: IUserConfig): void {
     this.storage.setItem('user.settings', config).subscribe();
   }
-  getDefaultDashBoardConfig(): Observable<IDashboardConfig> {
+  getDefaultDashBoardConfig(): Observable<any> {
     return this.systemSettings$.pipe(take(1), map(config => config.dashboard));
   }
   setTheme(theme: Theme) {

@@ -4,7 +4,7 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "leap-chart-bar-vertical",
   templateUrl: "./chart-bar-vertical.component.html",
-  styleUrls: ["./chart-bar-vertical.component.scss"],
+  styleUrls: ["../base-chart.scss" , "./chart-bar-vertical.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartBarVerticalComponent extends BaseChart implements OnInit {

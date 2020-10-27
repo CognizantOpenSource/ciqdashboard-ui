@@ -12,6 +12,7 @@ import { DashboardItemsService } from '../../services/idashboard-items.service';
 import { getEmptyPage } from '../dashboard-editor/dashboard-editor.component';
 import { ToastrService } from 'ngx-toastr';
 import { IDashBoard } from './idashboard';
+import { parseApiError } from 'src/app/components/util/error.util';
 
 @Component({
   templateUrl: './dashboard-home.component.html',
@@ -38,7 +39,7 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
   constructor(
     private route: ActivatedRoute, private router: Router, private config: UserConfigService,
     private projectService: DashboardProjectService, dashItemService: DashboardItemsService,
-    private dashboardService: DashboardService, private exportAsService: ExportAsService,private toastr:ToastrService
+    private dashboardService: DashboardService, private exportAsService: ExportAsService, private toastr: ToastrService
   ) {
     super(dashItemService);
   }
@@ -63,7 +64,7 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
           } else {
             const dash = dashboards.find(d => d.id === dashboardId) || dashboards.find(d => d.active) || dashboards[0];
             if (dash.id === dashboardId) {
-              const page = this.activePage >=0 && dash.pages[this.activePage] ? this.activePage
+              const page = this.activePage >= 0 && dash.pages[this.activePage] ? this.activePage
                 : dash.pages.indexOf(dash.pages.find(p => p.active) || dash.pages[0]);
               this.selectPage(page, dash);
               this.updateDashBoardData(dash);
@@ -92,17 +93,24 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
       })
     }));
   }
+  toggleLock(dashboard) {
+    dashboard.openAccess = !dashboard.openAccess;
+    const action = dashboard.openAccess ? 'unlock' : 'lock';
+    this.dashboardService.save(dashboard).subscribe(res => {
+      if (res) {
+        this.toastr.success(`dashboard ${action}ed successfully`);
+      } else {
+        this.toastr.error( `error while ${action}ing dashboard!`);
+      }
+    },
+      error => {
+        const parsedError = parseApiError(error, `error while ${action}ing dashboard!`);
+        this.toastr.error(parsedError.message, parsedError.title);
+      });
+  }
 
-
-  exportAs(type: SupportedExtensions, opt?: string) {
-    this.exportconfig.type = type;
-    if (opt) {
-      this.exportconfig.options.jsPDF.orientation = opt;
-    }
-    this.exportAsService.save(this.exportconfig, 'dashboardview').subscribe(() => {
-
-    });
-  
+  exportAs(dashboard) {
+    this.exportAsService.save(this.exportconfig, dashboard.name).subscribe();
   }
 
   pdfCallbackFn(pdf: any) {
@@ -113,11 +121,13 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
       pdf.text('Page ' + i + ' of ' + noOfPages, pdf.internal.pageSize.getWidth() - 100, pdf.internal.pageSize.getHeight() - 30);
     }
   }
-
+  reloadDashBoard(dashboard) {
+    this.updateDashBoardData(dashboard, true);
+  }
   deleteDashboard(dashboard) {
     this.dashboardService.removeDashboard(dashboard);
   }
-  saveDashboard(dashboard){
+  saveDashboard(dashboard) {
     this.dashboardService.save(dashboard).subscribe(res => {
       this.toastr.success('dashboard saved successfully');
     }, error => this.toastr.error('error while saving dashboard'));

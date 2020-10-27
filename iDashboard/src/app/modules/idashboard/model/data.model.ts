@@ -12,6 +12,7 @@ export interface IFieldDef {
 }
 export interface IFilterConfig {
     maxValue: any;
+    period:string;
     field: string;
     op: string;
     value: string;

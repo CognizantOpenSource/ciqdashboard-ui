@@ -30,6 +30,9 @@ export class BaseItemEditor extends FilterableDashboardComponent<any> {
     processTypeUpdate(type) {
         this.previewData = null;
         this.item.type = type;
+        if (!this.item.name || ['New Item', 'New Chart', ''].includes(this.item.name)) {
+            this.item.name = type === 'table' ? 'New Table' : 'New Chart';
+        }
     }
     close() {
         if (this.route.snapshot.queryParams.returnUrl) {

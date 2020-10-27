@@ -4,9 +4,8 @@ import { IDashBoardApiService } from './idashboard-api.service';
 import { LocalStorage } from 'src/app/services/local-storage.service';
 import { tap, map } from 'rxjs/operators';
 import { createCachableResource } from './idashboard-project.service';
-import { fieldTypes, itemTypes } from './items.data';
-import { orderBy } from 'lodash';
-import * as moment from 'moment';
+import { getItemFieldsConfig, getItemGroupByConfig , getItemAggregateConfig } from './items.data';
+import { transFormData } from './transform-data';
 
 interface ItemWizardEvent {
   type: 'created' | 'updated';
@@ -31,7 +30,9 @@ export class DashboardItemsService {
   private cachableDashboardItem = createCachableResource(this.db, 'dashboardItem');
   constructor(
     private api: IDashBoardApiService, private db: LocalStorage) {
-
+    setTimeout(() => {
+      this.loadItems();
+    }, 50);
   }
 
   public loadItems() {
@@ -63,7 +64,6 @@ export class DashboardItemsService {
     return this.api.searchItem(keywords);
   }
 
-
   public getItem(id) {
     return this.api.getItem(id);
   }
@@ -77,7 +77,10 @@ export class DashboardItemsService {
     return this.cachableDataSources('all', this.api.getDataSources());
   }
   getSourceInfo(source: any) {
-    return this.cachableDataSources(source, this.api.getSourceInfo(source));
+    return this.cachableDataSources(source, this.api.getSourceInfo(source)).pipe(map(src => {
+      (src.fields as any[]).sort((a, b) => a.name.localeCompare(b.name));
+      return src;
+    }));
   }
   getFieldValues(source, field): Observable<any> {
     return this.cachableDataSources(`fields.${source}.${field}`, this.api.getFieldValues(source, field));
@@ -86,54 +89,44 @@ export class DashboardItemsService {
     return this.api.previewItem(item).pipe(map(fixNullChartData));
   }
   getItemData(item: any, options = []): Observable<any> {
-    return this.api.getItemData(item.id, options).pipe(map(fixNullChartData), this.transFormSeries, this.sortItemByDate);
-  }
-  private get transFormSeries() {
-    return map((item: any) => {
-      if (item && item.options && item.options.dateSeries) {
-        item.data = transFormSeries(item.data, true);
-      }
-      return item;
-    });
-  }
-  private get sortItemByDate() {
-    return map((item: any) => {
-      if (item.options && item.options.dateSeries)
-        item.data = sortSeries(item.data, item.options && item.options.sortSeries);
-      return item;
-    });
+    return this.api.getItemData(item.id, options).pipe(map(fixNullChartData),map(sortNonSeries));
   }
 
 }
-export function transFormSeries(data, dateSeries = false) {
-  const toDate = (s): any => moment(s, ['ddd MMM DD  hh:mm:ss z YYYY']);
-  data && data.forEach(e => {
-    e.series = e.series && e.series.map(es => {
-      if (dateSeries) {
-        return { ...es, _name: es._name || es.name, name: es.name instanceof Date ? es.name : toDate(es.name).toDate() };
-      } else {
-        return { ...es, name: es._name || es.name };
-      }
-    });
-  });
-  return data;
-}
-export function sortSeries(data: any[], sortOpt = 'none') {
-  if (sortOpt === 'asc' || sortOpt === 'desc') {
-    const compareStr = (a, b) => a.name - b.name;
-    data && data.forEach(e => {
-      e.series.sort((a, b) => {
-        return sortOpt === 'asc' ? compareStr(a, b) : compareStr(b, a);
-      });
-    });
+
+export function sortNonSeries(item){
+  const sortData = (data) => { 
+    if(data && data instanceof Array){
+      data.sort((a,b) => a.name && a.name.localeCompare(b.name));
+      data.forEach(d => sortData(d.children));
+    }
+  };
+  if(!item.data.some(d => d.series)){
+    sortData(item.data);
   }
-  return data;
+  return item;
 }
 export const fixNullChartData = (item) => {
-  if (item.itemGroup == 'datachart' || !item.itemGroup) {
-    item.data.forEach(e => {
-      e.name = e.name || 'unknown';
+  const fixNullName = (array, name) => {
+    array && array.forEach(e => {
+      if (!e.name && e.name !== 0) {
+        e.name = name;
+      }
+      if (e.series === null) {
+        delete e.series;
+      }
+      if (e.children == null) {
+        delete e.children;
+      }
+      if (e.value === 0 && e.series) {
+        e.value = e.series.reduce((a, e) => a + e.value, 0)
+      }
+      fixNullName(e.children, name);
+      fixNullName(e.series, name);
     });
+  };
+  if (item.itemGroup == 'datachart' || !item.itemGroup) {
+    fixNullName(item.data, 'unknown');
   }
   return item;
 };
@@ -141,11 +134,11 @@ export function clean(val) {
   return val && val.deepOmitBy((e) => e === undefined || e === null || e === "");
 }
 export function getItemGroupBy(type) {
-  const map = itemTypes.find(f => f.name == type);
-  return map && map.groupBy;
+  return getItemGroupByConfig(type);
+}
+export function getItemAggregate(type) {
+  return getItemAggregateConfig(type);
 }
 export function getItemFields(type) {
-  const map = itemTypes.find(f => f.name == type);
-  const params = map && map.fields ? fieldTypes.filter(ft => map.fields.includes(ft.name)) : fieldTypes;
-  return params;
+  return getItemFieldsConfig(type);
 }

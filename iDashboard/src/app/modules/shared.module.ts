@@ -21,8 +21,7 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { ActiveFabComponent } from 'src/app/components/active-fab/active-fab.component';
 import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
 import { ContainerComponent } from 'src/app/components/container/container.component';
-import { AppDurationPipe } from '../pipes/duration.pipe';
-import { AdvancedFilterComponent } from 'src/app/components/filter/advanced-filter/advanced-filter.component';
+import { AppDurationPipe } from '../pipes/duration.pipe'; 
 import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
@@ -44,7 +43,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
     IconComponent,
     FileUploadComponent,
     ContainerComponent,
-    AdvancedFilterComponent
   ],
   imports: [
     HttpClientModule,

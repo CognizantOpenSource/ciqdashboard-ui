@@ -10,7 +10,7 @@ span {
       max-width: 5rem;
       margin-top: 12px;
       .filter-label {
-        width: 100%;
+        flex-grow: 1;
         height: 100%;
         display: flex;
         align-items: center;
@@ -125,7 +125,7 @@ clr-dropdown-menu {
       clr-input-container {
         margin-top: 0.5rem;
       }
-    } 
+    }
   }
 
   .filter-configs {
@@ -197,6 +197,9 @@ select {
   margin-left: -24px;
 }
 :host::ng-deep {
+  .dropdown-menu .dropdown-item clr-icon {
+    color: var(--white) !important;
+  }
   .clr-control-label {
     font-weight: 400;
   }
@@ -230,11 +233,11 @@ select {
     left: 10rem !important;
     transform: none !important;
   }
-  .ng-daterangepicker .calendar{
-    position: fixed!important;
+  .ng-daterangepicker .calendar {
+    position: fixed !important;
     z-index: 1000;
-    top: unset!important;
-    left: unset!important;
+    top: unset !important;
+    left: unset !important;
     margin-top: 2rem;
   }
 }

@@ -3,6 +3,7 @@ import { DashboardProjectService } from '../../services/idashboard-project.servi
 import { Router, ActivatedRoute } from '@angular/router';
 import { take, distinctUntilChanged, map } from 'rxjs/operators';
 import { UnSubscribable } from 'src/app/components/unsub';
+import { DashboardItemsService } from '../../services/idashboard-items.service';
 
 @Component({
   selector: 'leap-wrapper',
@@ -13,7 +14,7 @@ import { UnSubscribable } from 'src/app/components/unsub';
 export class WrapperComponent extends UnSubscribable implements OnInit {
 
   constructor(
-    private projectService: DashboardProjectService, private router: Router,
+    private projectService: DashboardProjectService, private dashItemService: DashboardItemsService, private router: Router,
     private route: ActivatedRoute) {
     super();
   }

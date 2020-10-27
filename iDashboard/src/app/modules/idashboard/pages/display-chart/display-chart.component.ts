@@ -3,10 +3,11 @@ import DOM_TO_IMAGE from "dom-to-image";
 import { saveAs } from "file-saver";
 import { ToastrService } from 'ngx-toastr';
 import { ExportToCsv } from 'export-to-csv';
-import { DashboardItemsService, transFormSeries } from '../../services/idashboard-items.service';
+import { DashboardItemsService } from '../../services/idashboard-items.service';
 import { FilterableDashboardComponent } from '../../components/filterable-dash-component';
 import { FilterOps } from '../../services/filter-ops';
 import { omit } from 'lodash';
+import { transFormData } from '../../services/transform-data';
 
 
 export enum KEY_CODE {
@@ -45,18 +46,12 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
   itemData: any;
   itemColumns: any[];
   @Input('dashboardData') set setData(data) {
-    if (data) {
-      data = data.deepOmitBy(e => e == null);
-    }
     this.itemData = data;
     this.doUpdateData(this.itemData, this.itemConfig);
   }
   itemConfig: any;
   @Input('dashboardConfig') set config(config) {
     this.itemConfig = config;
-    if (this.item && this.isDataTable(this.item)) {
-      this.itemColumns = this.getItemColums(this.item.projection, this.item);
-    }
     this.doUpdateData(this.itemData, this.itemConfig);
   }
   @Input('chartTitle') chartTitle: any;
@@ -67,9 +62,7 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
   item: any;
   @Input('item') set setItem(item) {
     this.item = item;
-    if (this.item && this.isDataTable(this.item)) {
-      this.itemColumns = this.getItemColums(this.item.projection, this.item);
-    }
+    this.checkAndUpdateDataTable();
   }
   @Output() filtersChange = new EventEmitter<any>();
   options = { filters: [], columns: [], valueMap: {} };
@@ -83,9 +76,16 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
     super.setOptions(this.options);
     this.managed(this.dashItemService.items$).subscribe(items => this.rawItems = items);
   }
-  private doUpdateData(data, config) {
-    if (data && config) {
-      this.itemData = [...transFormSeries(data, config.dateSeries)];
+  private doUpdateData(data, options) {
+    if (data && options) {
+      const dataItem = { ...(this.item || { type: this.chartType }) };
+      this.itemData = [...transFormData({...dataItem , data , options}).data];
+    }
+    this.checkAndUpdateDataTable();
+  }
+  private checkAndUpdateDataTable() {
+    if (this.item && this.isDataTable(this.item)) {
+      this.itemColumns = this.getItemColums(this.item.projection, this.item);
     }
   }
 
@@ -114,7 +114,7 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
     this.paths.splice(index + 1);
     this.paths = [...this.paths];
   }
-  pathClear() {
+  clearPaths() {
     this.paths = [];
   }
   onFiledSelected(field) {
@@ -126,15 +126,16 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
     }
   }
   updateFilterConfig() {
-    const itemDetails = this.rawItems.find(it => it.id === this.item.id);
-    if (itemDetails && itemDetails.source) {
-      this.dashItemService.getSourceInfo(itemDetails.source).subscribe(info => {
+    const itemDetail = this.rawItems.find(it => it.id === this.item.id);
+    if (itemDetail && itemDetail.source) {
+      this.dashItemService.getSourceInfo(itemDetail.source).subscribe(info => {
         this.options.columns = info.fields.filter(f => f.name[0] !== '_').
           map(f => ({ ...f, label: f.label || f.name }));
         this.options.valueMap = this.options.valueMap || {};
         this.item.filters = this.item.filters || [];
         this.options.filters = this.item.filters;
         super.setOptions(this.options);
+        console.log(this.options)
       });
     }
   }

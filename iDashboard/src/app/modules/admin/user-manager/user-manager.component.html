@@ -2,7 +2,10 @@
   <div class="head">
     <h3 class="title">Manage Users</h3>
     <div class="action-buttons" [class.scroll-active]="false" style="float: right;">
-      <button type="button" class="btn btn-primary-outline" (click)="updateDetails(user);">Update</button>
+      <button *ngIf="isResetCredActive" [disabled]="!(newPassword && newPassword.length>8)" type="button"
+        class="btn btn-primary-outline" (click)="resetCred(user);">Change Password</button>
+      <button type="button" class="btn btn-primary-outline" [disabled]="isResetCredActive"
+        (click)="updateDetails(user);">Update</button>
       <button type="button" class="btn btn-warning-outline" (click)="close($event);">Cancel</button>
     </div>
   </div>
@@ -14,8 +17,8 @@
           <form clrForm *ngIf="user" class="login" (ngSubmit)="updateDetails(user)">
             <clr-input-container>
               <label class="userLabel">Email Id</label>
-              <input class="userInput" type="text" name="email" clrInput placeholder="Email Id"
-                [(ngModel)]="user.email" disabled/>
+              <input class="userInput" type="text" name="email" clrInput placeholder="Email Id" [(ngModel)]="user.email"
+                disabled />
             </clr-input-container>
             <clr-input-container>
               <label class="userLabel">First Name</label>
@@ -47,8 +50,7 @@
             <clr-dg-column>Permission
               <clr-dg-string-filter [clrDgStringFilter]="rolePermissionsFilter"></clr-dg-string-filter>
             </clr-dg-column>
-            <clr-dg-row *clrDgItems="let role of roles" [clrDgItem]="role"
-              [(clrDgSelected)]="role.selected">
+            <clr-dg-row *clrDgItems="let role of roles" [clrDgItem]="role" [(clrDgSelected)]="role.selected">
               <clr-dg-cell>{{ role.name }}</clr-dg-cell>
               <clr-dg-cell>{{ role.desc }}</clr-dg-cell>
               <clr-dg-cell>
@@ -81,6 +83,22 @@
             <clr-dg-footer>{{projects.length}} Projects</clr-dg-footer>
           </clr-datagrid>
         </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Reset Credentials</button>
+        <ng-template  [(clrIfActive)]="isResetCredActive" (clrIfActiveChange)="refreshPassword()">
+          <clr-tab-content>
+            <div class="change-cred flex-row">
+              <clr-input-container style="flex-grow: 1;">
+                <label class="userLabel">New Password</label>
+                <input class="userInput" type="text" name="new-password" clrInput placeholder="New Password"
+                  [(ngModel)]="newPassword" />
+              </clr-input-container>
+              <span *ngIf="hasCrypto" class="refresh is-link" (click)="refreshPassword()"><clr-icon shape="sync"></clr-icon></span>
+            </div>
+          </clr-tab-content>
+      </ng-template>
+       
       </clr-tab>
     </clr-tabs>
   </div>

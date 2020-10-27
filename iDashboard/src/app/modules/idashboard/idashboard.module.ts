@@ -52,6 +52,12 @@ import { SearchChartComponent } from './pages/search-chart/search-chart.componen
 import { ItemAggregateEditorComponent } from './pages/create-item/item-data-editor/item-aggregate-editor/item-aggregate-editor.component';
 import { NgDateRangePickerModule } from 'ng-daterangepicker';
 import { DatePickerInputComponent } from './components/date-picker-input/date-picker-input.component';
+import { ItemComboEditorComponent } from './pages/create-item/item-data-editor/item-combo-editor/item-combo-editor.component';
+import { ComboChartComponent, ComboSeriesVerticalComponent } from './components/charts/combo-chart';
+import { ChartComboChartComponent } from './components/charts/chart-combo-chart/chart-combo-chart.component'; 
+import { CustomChartsModule } from './components/charts/custom/custom-charts.module';
+import { ChartBarVerticalGroupGaugeComponent } from './components/charts/chart-bar-vertical-group-gauge/chart-bar-vertical-group-gauge.component';
+import { ChartBarVerticalGaugeComponent } from './components/charts/chart-bar-vertical-gauge/chart-bar-vertical-gauge.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +107,13 @@ import { DatePickerInputComponent } from './components/date-picker-input/date-pi
     ItemDataEditorComponent,
     SearchChartComponent,
     ItemAggregateEditorComponent,
-    DatePickerInputComponent
+    DatePickerInputComponent,
+    ItemComboEditorComponent,
+    ComboChartComponent,
+    ComboSeriesVerticalComponent,
+    ChartComboChartComponent,
+    ChartBarVerticalGroupGaugeComponent,
+    ChartBarVerticalGaugeComponent,
   ],
   imports: [
     CommonModule,
@@ -109,7 +121,8 @@ import { DatePickerInputComponent } from './components/date-picker-input/date-pi
     SharedModule,
     GridsterModule,
     NgxChartsModule,
-    NgDateRangePickerModule
+    NgDateRangePickerModule,
+    CustomChartsModule
   ],
   entryComponents: [DashboardGridComponent]
 })

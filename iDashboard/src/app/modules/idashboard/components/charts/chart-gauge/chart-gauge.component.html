@@ -1,4 +1,16 @@
-<ngx-charts-gauge class="x-chart" [scheme]="colorScheme" [results]="data" [legend]="chartconfig?.legend"
-  [legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
-  [class.legend-down]="chartconfig?.legendPositionDown" (select)="onSelect($event)">
+<ngx-charts-gauge class="x-chart" [scheme]="colorScheme" [results]="data"
+ [legend]="chartconfig?.legend" [legendTitle]="chartconfig.legendTitle" [animations]="chartconfig.animations"
+ [min]="chartconfig.min" [max]="chartconfig.max"
+ [units]="chartconfig.units"
+ [bigSegments]="chartconfig.bigSegments"
+ [smallSegments]="chartconfig.smallSegments"
+ [showAxis]="chartconfig.showAxis"
+ [tooltipDisabled]="chartconfig.tooltipDisabled"
+ [showText]="chartconfig.showText"
+ [legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+ [class.legend-down]="chartconfig?.legend && chartconfig.legendPositionDown" (select)="onSelect($event)">
 </ngx-charts-gauge>
+
+
+<!-- [angleSpan]="chartconfig.angleSpan"
+ [startAngle]="chartconfig.startAngle" -->

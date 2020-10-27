@@ -18,7 +18,7 @@
 
     <div class="chart-wrapper full flex-col item-{{chartType}}">
       <div class="crumb-header" *ngIf="paths?.length > 0">
-        <button class="btn btn-link" (click)="pathClear($event)" title="Clear View">
+        <button class="btn btn-link" (click)="clearPaths()" title="Clear View">
           <clr-icon shape="times" size="20"></clr-icon>
         </button>
         <ng-container *ngFor="let item of paths; let last = last;">
@@ -54,6 +54,11 @@
           [config]="itemConfig"></leap-charts-bar-horizontal-group>
         <leap-charts-bar-vertical-group *ngSwitchCase="'bar-vertical-group'" [data]="itemData" [config]="itemConfig">
         </leap-charts-bar-vertical-group>
+        <leap-chart-bar-vertical-gauge *ngSwitchCase="'bar-chart-vertical-gauge'" [data]="itemData" [config]="itemConfig">
+        </leap-chart-bar-vertical-gauge>
+       
+        <leap-chart-bar-vertical-group-gauge *ngSwitchCase="'bar-vertical-group-gauge'" [data]="itemData" [config]="itemConfig">
+        </leap-chart-bar-vertical-group-gauge>
 
         <!--  \\line Chart\\  -->
         <leap-chart-line-series *ngSwitchCase="'line-chart-series'" [data]="itemData" [config]="itemConfig">
@@ -91,6 +96,9 @@
 
         <leap-data-table *ngSwitchCase="'table'" [data]="itemData" [config]="itemConfig" [columns]="itemColumns">
         </leap-data-table>
+
+        <leap-chart-combo-chart *ngSwitchCase="'combo'" [data]="itemData" [config]="itemConfig">
+        </leap-chart-combo-chart>
         </ng-container>
       </div>
     </div>

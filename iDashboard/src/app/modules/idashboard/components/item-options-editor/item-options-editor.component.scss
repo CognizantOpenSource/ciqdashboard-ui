@@ -7,6 +7,13 @@
   max-height: calc(100% - 42px);
   height: 100%;
   overflow-y: auto;
+  .disabled{
+    opacity: .5;
+    cursor: not-allowed;
+    *{
+      cursor: not-allowed;   
+    }
+  }
   &::ng-deep {
     .clr-control-container {
       width: 100%;

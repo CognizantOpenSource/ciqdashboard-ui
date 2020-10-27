@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { GridsterConfig, DisplayGrid, GridType, CompactType } from 'angular-gridster2';
 import { IGridConfig } from '../../../model/data.model';
-import { IDashBoardItem } from 'src/app/model/report.model';
 import { UnSubscribable } from 'src/app/components/unsub';
-
+interface IDashBoardItem{
+  [key:string]:any;
+}
 @Component({
   selector: 'leap-dashboard-grid',
   templateUrl: './dashboard-grid.component.html',
@@ -121,4 +122,3 @@ export class DashboardGridComponent extends UnSubscribable implements OnInit {
     return { index, item: { id, type, source }, options };
   }
 }
-export const id = () => (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();

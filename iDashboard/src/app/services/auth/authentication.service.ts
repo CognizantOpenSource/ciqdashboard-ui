@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, combineLatest } from 'rxjs';
+import { Observable, ReplaySubject, combineLatest, forkJoin } from 'rxjs';
 import { map, filter, tap, switchMap } from 'rxjs/operators';
 import { LocalStorage } from '../local-storage.service';
-import { AuthServiceConfig, AuthService, SocialUser } from 'angularx-social-login';
-import { GoogleLoginProvider } from 'angularx-social-login';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { AuthRestAPIService } from './auth-rest-api.service';
-import { environment } from 'src/environments/environment';
 function parseQuery(queryString): any {
   const query = {};
   const pairs: Array<string> = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
@@ -18,13 +15,6 @@ function parseQuery(queryString): any {
   return query;
 }
 const LOGGED_OUT = '__logout__';
-const getGoogleAppId = () => {
-  return environment['googleAppId'];
-}
-const config = new AuthServiceConfig(getGoogleAppId() ?
-  [{ id: GoogleLoginProvider.PROVIDER_ID, provider: new GoogleLoginProvider(getGoogleAppId(), { scope: 'openid' }) }] : []);
-export const getConfig = () => config;
-
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +26,7 @@ export class AuthenticationService {
   touched = false;
 
   constructor(
-    private storageService: LocalStorage, private authService: AuthService,
+    private storageService: LocalStorage,
     private toastr: ToastrService, private restApi: AuthRestAPIService,
     private router: Router) {
     this._auth = this._authSource.asObservable();
@@ -51,11 +41,11 @@ export class AuthenticationService {
     }
   }
   private isValid(): Observable<boolean> {
-    return combineLatest(this.storageService.getItem('auth_token'), this.storageService.getItem('expires_at'))
+    return forkJoin(this.storageService.getItem('auth_token'), this.storageService.getItem('expires_at'))
       .pipe(map(([token, expiresAt]) => {
         const expiry: number = new Date(expiresAt).getTime();
         return token && expiry
-          && moment(expiry).isAfter(moment().add(10, 'minutes'));
+          && moment(expiry).isAfter(moment().add(60, 'minutes'));
       }));
   }
   validateToken() {
@@ -68,16 +58,11 @@ export class AuthenticationService {
   get state$(): Observable<boolean> {
     return this._auth.pipe(map(auth => auth && (auth === true || auth.email) ? true : false));
   }
-  get user$(): Observable<SocialUser | any> {
+  get user$(): Observable<any> {
     return this._auth.pipe(filter(auth => auth && auth.email));
   }
   get permissions$(): Observable<Array<string>> {
     return this.user$.pipe(map(user => user.account.roles.flatMap(it => it.permissions).map(it => it.id)));
-  }
-  public logInWithGoogle(type = 'oauth2', provider = 'google'): void {
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(user => {
-      return this.authenticate({ type, provider, idToken: user.idToken });
-    });
   }
   public login(username: string, password: string, type = 'native') {
     return this.authenticate({ type, username, password });
@@ -124,6 +109,15 @@ export class AuthenticationService {
       if (res.status === 200) {
         this.toastr.success('password changed successfully');
         this.router.navigate(['/user/profile']);
+      } else {
+        this.toastr.error('error while updating password');
+      }
+    }, error => this.toastr.error(error.error.message));
+  }
+  public resetPassword(userEmailId, password) {
+    return this.restApi.resetPassword({ userEmailId, password }).subscribe(res => {
+      if (res.status === 200) {
+        this.toastr.success('password changed successfully');
       } else {
         this.toastr.error('error while updating password');
       }

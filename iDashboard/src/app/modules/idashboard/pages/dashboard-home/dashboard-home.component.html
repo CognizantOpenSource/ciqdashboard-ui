@@ -10,7 +10,6 @@
                             <span class="title" *ngIf="dashboard.pages[activePage] as page">{{page.name}}</span>
                             <div class="options right ">
                                 <div class="btn-group btn-outline-primary btn-md btn-icon">
-
                                     <clr-dropdown class="btn">
                                         <button clrDropdownTrigger class="no-focus" title="Select Page"
                                             aria-label="select page button">
@@ -24,10 +23,19 @@
                                             </div>
                                         </clr-dropdown-menu>
                                     </clr-dropdown>
+                                    <button class="btn" title="Refresh Dashboard" (click)="reloadDashBoard(dashboard)">
+                                        <clr-icon shape="sync"></clr-icon>
+                                    </button>
                                     <button class="btn" title="Pin Dashboard" [class.active]="dashboard.pinned"
                                         (click)="dashboard.pinned = !dashboard.pinned;">
                                         <clr-icon shape="pin"></clr-icon>
                                     </button>
+                                    <button class="btn"
+                                        [attr.title]="'Click to ' + (dashboard.openAccess ? 'Lock':'Unlock')"
+                                        (click)="toggleLock(dashboard)">
+                                        <clr-icon [attr.shape]="dashboard.openAccess ? 'unlock':'lock'"></clr-icon>
+                                    </button>
+
                                     <button class="btn" title="Edit Dashboard"
                                         [routerLink]="['./../' ,dashboard.id,'edit' ,'0' , {page:activePage}]">
                                         <clr-icon shape="pencil"></clr-icon>
@@ -38,9 +46,9 @@
                                     <button class="btn" title="Delete Dashboard" (click)="deleteDashboard(dashboard)">
                                         <clr-icon shape="trash"></clr-icon>
                                     </button>
-                                    <button class="btn" title="Export as PDF" (click)="exportAs('pdf', 'portrait')">
+                                    <!-- <button class="btn" ngIf="false" title="Export as PDF" (click)="exportAs(dashboard)">
                                         <clr-icon shape="download"></clr-icon>
-                                    </button>
+                                    </button> -->
                                     <button class="btn" title="Slide Show"
                                         [routerLink]="['./../' ,dashboard.id,'slideshow' , {page:activePage}]">
                                         <clr-icon shape="video-gallery"></clr-icon>

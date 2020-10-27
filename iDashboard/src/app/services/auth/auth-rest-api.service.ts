@@ -8,6 +8,21 @@ import { API as AuthAPI } from './auth-api';
   providedIn: 'root'
 })
 export class AuthRestAPIService {
+  deleteTeam(id: any): Observable<any> {
+    return this.http.delete(this.api.getTeam(id));
+  }
+  getTeam(id: string): Observable<any> {
+    return this.http.get(this.api.getTeam(id));
+  }
+  addTeam(team: any): Observable<any> {
+    return this.http.post(this.api.teams, team);
+  }
+  updateTeam(team: any): Observable<any> {
+    return this.http.put(this.api.teams, team);
+  }
+  getTeams(): Observable<any> {
+    return this.http.get(this.api.teams);
+  }
   api: AuthAPI;
   constructor(private http: HttpClient) {
     this.api = new AuthAPI(environment.api.auth);
@@ -35,15 +50,13 @@ export class AuthRestAPIService {
     return this.http.put(this.api.updateUser(user.id), user);
   }
   getProfile() {
-    //return this.http.get(this.api.profile);
-    //mock
-    return of({
-      id: '101', firstName: 'admin', email: 'admin@leap.com',
-      account: { roles: [{ permissions: [{id:'leap.permission.admin'}] }] }
-    })
+    return this.http.get(this.api.profile);
   }
   updatePassword(params: any): Observable<any> {
     return this.http.post(this.api.updatePassword(params), null);
+  }
+  resetPassword(params: any): Observable<any> {
+    return this.http.post(this.api.resetPassword(params), null);
   }
   // Roles
   getAllRoles(): Observable<any> {

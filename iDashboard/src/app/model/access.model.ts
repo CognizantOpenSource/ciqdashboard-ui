@@ -1,4 +1,3 @@
-import { IDashboardConfig } from './report.model';
 
 type ObjectId = string;
 
@@ -33,16 +32,7 @@ export interface IExternalAppConfigEntry {
     usrename: string;
     token: string;
 }
-interface IExternalApps {
-    logAnalysis: IExternalAppConfigEntry;
-}
 export interface IUserConfig {
-    dashboard: IDashboardConfig;
-    jenkins: any;
-    gitbub: any;
-    gitlab: any;
-    bitbucket: any;
-    externalApps: IExternalApps;
-    [key: string]: any;
+     [key: string]: any;
 }
 

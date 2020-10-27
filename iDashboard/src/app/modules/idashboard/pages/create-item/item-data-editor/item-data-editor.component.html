@@ -10,25 +10,44 @@
             <button clrTabLink>Data</button>
             <clr-tab-content *clrIfActive>
                 <clr-accordion style="margin-top: 6px;" [clrAccordionMultiPanel]="false">
-                    <clr-accordion-panel *ngIf="item.type !== types?.item?.table">
-                        <clr-accordion-title><span>GroupBy</span></clr-accordion-title>
-                        <clr-accordion-content [(clrIfExpanded)]="dataOpen.groupBy" >
-                            <ng-container *ngTemplateOutlet="dataGroupByTpl"></ng-container>
-                        </clr-accordion-content>
-                    </clr-accordion-panel>
-                    <clr-accordion-panel *ngIf="item.type !== types?.item?.table">
-                        <clr-accordion-title><span>Aggregate</span></clr-accordion-title>
-                        <clr-accordion-content class="aggregate-editor" [(clrIfExpanded)]="dataOpen.aggregate">
-                            <item-aggregate-editor [(data)]="item.aggregate" [fields]="fields"
-                                [filterOptions]="filterOptions" (fieldChange)="fieldChange.emit($event)"></item-aggregate-editor>
-                        </clr-accordion-content>
-                    </clr-accordion-panel>
-                    <clr-accordion-panel [clrAccordionPanelOpen]="true" *ngIf="item.type === types?.item?.table">
-                        <clr-accordion-title>Columns</clr-accordion-title>
-                        <clr-accordion-content>
-                            <ng-container *ngTemplateOutlet="dataProjectionTpl"></ng-container>
-                        </clr-accordion-content>
-                    </clr-accordion-panel>
+                    <ng-container [ngSwitch]="item.type">
+                        <clr-accordion-panel [clrAccordionPanelOpen]="true" *ngSwitchCase="types?.item?.comboChart">
+                            <clr-accordion-title>Combo Config</clr-accordion-title>
+                            <clr-accordion-content>
+                                <item-combo-editor [(data)]="item.comboGroupBy" [fields]="fields"
+                                    [configs]="groupByConfigs" [filterOptions]="filterOptions"
+                                    (fieldChange)="fieldChange.emit($event)">
+                                </item-combo-editor>
+                            </clr-accordion-content>
+                        </clr-accordion-panel>
+                        <clr-accordion-panel [clrAccordionPanelOpen]="true" *ngSwitchCase="types?.item?.table">
+                            <clr-accordion-title>Columns</clr-accordion-title>
+                            <clr-accordion-content>
+                                <ng-container *ngTemplateOutlet="dataProjectionTpl"></ng-container>
+                            </clr-accordion-content>
+                        </clr-accordion-panel>
+                        <ng-container *ngSwitchDefault>
+                            <clr-accordion-panel *ngIf="groupByConfigs.length">
+                                <clr-accordion-title><span>GroupBy</span></clr-accordion-title>
+                                <clr-accordion-content [(clrIfExpanded)]="dataOpen.groupBy">
+                                    <ng-container *ngTemplateOutlet="dataGroupByTpl"></ng-container>
+                                </clr-accordion-content>
+                            </clr-accordion-panel>
+                            <clr-accordion-panel *ngIf="hasAggregate">
+                                <clr-accordion-title><span>Aggregate</span></clr-accordion-title>
+                                <clr-accordion-content class="aggregate-editor" [(clrIfExpanded)]="dataOpen.aggregate">
+                                    <item-aggregate-editor [(data)]="item.aggregate" [fields]="fields"
+                                        [filterOptions]="filterOptions" (fieldChange)="fieldChange.emit($event)">
+                                    </item-aggregate-editor>
+                                </clr-accordion-content>
+                            </clr-accordion-panel>
+                            <clr-accordion-panel *ngIf="!groupByConfigs.length && !hasAggregate" [clrAccordionPanelDisabled]="true">
+                                <clr-accordion-title><span style="opacity: .5;">Default</span></clr-accordion-title>
+                                <clr-accordion-content [clrIfExpanded]="false">
+                                </clr-accordion-content>
+                            </clr-accordion-panel>
+                        </ng-container>
+                    </ng-container>
                 </clr-accordion>
             </clr-tab-content>
         </clr-tab>
@@ -36,7 +55,7 @@
             <button clrTabLink>Options</button>
             <clr-tab-content *clrIfActive>
                 <leap-item-options-editor class="flex-col" formControlName="options" [params]="params.options"
-                    (dataChange)="updated('options' , $event)">
+                    (dataChange)="updated('options' , $event)" [disabledOptions]="disabledOptions">
                 </leap-item-options-editor>
             </clr-tab-content>
         </clr-tab>
@@ -60,7 +79,7 @@
                     <select class="use-clr-stylee" clrSelect placeholder="GroupBy"
                         *ngIf="{index:(gField.gIndex == null?i:gField.gIndex)} as fConfig"
                         [formControlName]="fConfig.index" name="item-groupby-{{fConfig.index}}"
-                        [attr.required]="gField.required" (ngModelChange)="updated('groupBy' , $event)">
+                        [attr.required]="gField.required" (ngModelChange)="groupByChange($event , i , groupByConfig)">
                         <option [value]="opt.name" *ngFor="let opt of fields;let opIndex=i">
                             {{opt.label}}</option>
                     </select>
@@ -83,7 +102,7 @@
         </div>
     </ng-template>
     <ng-template #dataProjectionTpl>
-        <div class="card-groupby flex-col full" [formArrayName]="'projection'">
+        <div class="card-groupby card-projection flex-col full" [formArrayName]="'projection'">
             <div class="flex-row" *ngFor="let field of projectionControls; let i = index;">
                 <clr-select-container>
                     <label [attr.for]="'field'+i" class="clr-control-label">Field {{i+1}}</label>

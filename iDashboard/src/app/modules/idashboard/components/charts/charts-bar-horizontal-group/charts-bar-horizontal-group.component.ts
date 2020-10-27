@@ -4,7 +4,7 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "leap-charts-bar-horizontal-group",
   templateUrl: "./charts-bar-horizontal-group.component.html",
-  styleUrls: ["./charts-bar-horizontal-group.component.scss"],
+  styleUrls: ["../base-chart.scss" , "./charts-bar-horizontal-group.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartsBarHorizontalGroupComponent extends BaseChart implements OnInit {

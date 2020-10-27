@@ -5,7 +5,7 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "leap-chart-area-normalized",
   templateUrl: "./chart-area-normalized.component.html",
-  styleUrls: ["./chart-area-normalized.component.scss"],
+  styleUrls: ["../base-chart.scss" , "./chart-area-normalized.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartAreaNormalizedComponent extends BaseChart implements OnInit {

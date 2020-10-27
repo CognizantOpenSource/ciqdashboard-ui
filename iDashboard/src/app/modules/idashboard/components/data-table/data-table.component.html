@@ -1,4 +1,4 @@
-<clr-datagrid *ngIf="columns" class="full" [class.datagrid-compact]="options?.compact"
+<clr-datagrid *ngIf="gridDataLoaded" class="full" [class.datagrid-compact]="options?.compact"
   [class.no-header]="options?.hideHeader">
   <clr-dg-placeholder>No data found</clr-dg-placeholder>
 

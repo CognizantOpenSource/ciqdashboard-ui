@@ -18,13 +18,14 @@ export class UserManagerComponent extends UnSubscribable implements OnInit {
   projects = [];
   roles = [];
   isNavigateFromRole = false;
-
+  isResetCredActive = false;
+  newPassword;
   roleNameFilter = new EntityFilter('name');
   rolePermissionsFilter = new EntityCallBackFilter(role => role.permissions.map(it => it.name).join(','));
   projectNameFilter = new EntityFilter('name');
-
+  hasCrypto = crypto && crypto.getRandomValues
   constructor(
-    private userManagerService: UserManagerService,private projectService: DashboardProjectService, private auth: AuthenticationService,
+    private userManagerService: UserManagerService, private projectService: DashboardProjectService, private auth: AuthenticationService,
     private router: Router, private route: ActivatedRoute, private toastr: ToastrService, private location: Location) {
     super();
   }
@@ -83,6 +84,17 @@ export class UserManagerComponent extends UnSubscribable implements OnInit {
   }
   projectSelectionChanged($event) {
     this.projectSelected = $event;
+  }
+
+  refreshPassword() {
+    if (this.hasCrypto)
+      this.newPassword = Array(16)
+        .fill('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$')
+        .map(x => x[Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1) * x.length)])
+        .join('');
+  }
+  resetCred(user) {
+    this.auth.resetPassword(user.email, this.newPassword);
   }
 }
 function getRoleIds(rolesList: any[]) {

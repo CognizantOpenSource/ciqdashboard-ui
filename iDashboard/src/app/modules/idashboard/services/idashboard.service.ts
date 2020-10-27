@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, merge, of } from 'rxjs';
+import { Observable, ReplaySubject, of } from 'rxjs';
 import { IDashBoardApiService } from './idashboard-api.service';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from 'src/app/services/local-storage.service';
-import { map, tap, take, switchMap } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 import { createCachableResource, createUpdateCachableResource } from './idashboard-project.service';
 import { IDashboardProjet, IDashboard } from '../model/data.model';
-import { IDashboardConfig } from 'src/app/model/report.model';
 
-interface ItemWizardEvent {
-  type: 'created' | 'updated';
-  template?: 'new';
-  data: any;
-}
 @Injectable({
   providedIn: 'root'
 })
@@ -35,7 +29,7 @@ export class DashboardService {
   }
   public loadDashboards(projectId) {
     this.api.getDashboards(projectId).subscribe(dashboards => this.emit(projectId, dashboards),
-      error => this.emit(projectId, []));
+      () => this.emit(projectId, []));
   }
   public loadDashboard(id: string) {
     this.getDashboard(id).subscribe(dashboard => this._dashboardSource.next(dashboard));
@@ -50,12 +44,12 @@ export class DashboardService {
     return this._dashboards$;
   } 
   removeDashboard(dashboard: IDashboardProjet,) {
-    this.api.deleteDashboard(dashboard.id).subscribe(res => {
+    this.api.deleteDashboard(dashboard.id).subscribe(() => {
       this.toastr.success('dashboard deleted successfully');
       this._dashboards$.pipe(take(1)).subscribe(ds => {
         this.emit(ds.project, ds.data.filter(d => d.id !== dashboard.id));
       });
-    }, error => this.toastr.error('error while deleting dashboard'));
+    }, () => this.toastr.error('error while deleting dashboard'));
   }
   createDashboard(dashboard: IDashboard): Observable<any> {
     return this.api.postDashboard(dashboard).pipe(tap(dash => {

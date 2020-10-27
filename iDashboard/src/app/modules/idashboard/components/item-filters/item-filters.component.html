@@ -1,6 +1,7 @@
 <form clrForm [formGroup]="filterForm" clrLayout="vertical" style="padding:0">
     <clr-dropdown [clrCloseMenuOnItemClick]="false">
-        <button class="filter-toggle" clrDropdownTrigger #trigger aria-label="Open Filters" (click)="openFilter(trigger)">
+        <button class="filter-toggle" clrDropdownTrigger #trigger aria-label="Open Filters"
+            (click)="openFilter(trigger)">
             <span class="clickable is-link">
                 <clr-icon shape="filter-grid" [class.is-solid]="hasActiveFilter(filters)" size="20"></clr-icon>
             </span>
@@ -52,9 +53,10 @@
                                                     <label [attr.for]="'op'+index"
                                                         class="clr-control-label">Operator</label>
                                                     <select class="use-clr-style" clrSelect placeholder="Creteria"
-                                                        formControlName="op" name="op">
+                                                        formControlName="op" name="op"
+                                                        (ngModelChange)="onOperatorSelect( config, $event, config.get('field').value)">
                                                         <option [value]="opt.name"
-                                                            *ngFor="let opt of options.actions[config.get('field').value]">
+                                                            *ngFor="let opt of options.typeMap[options.types[config.get('field').value]]">
                                                             {{opt.name}}
                                                         </option>
                                                     </select>
@@ -62,20 +64,39 @@
                                             </div>
                                         </div>
                                         <div class="filter-value">
-                                            <div class="container">
-                                                <label [attr.for]="'value'+index" class="clr-control-label">Value</label>
-        
+                                            <div class="container" *ngIf="config.get('op').value as opValue">
+                                                <label class="clr-control-label"
+                                                    *ngIf="!(options?.types[config.get('field').value] === 'date' && opValue.startsWith('this')) ">Value</label>
+
                                                 <ng-container
                                                     *ngIf="options?.types[config.get('field').value] === 'date' else valueTpl">
-                                                    <div class="daterangeFilter">
-                                                        <leap-date-picker-input
-                                                            [value]="{value:config.get('value')?.value , maxValue:config.get('maxValue')?.value}"
-                                                            (valueChange)="updateDate(config , $event)"
-                                                            [isRange]="config.get('op').value==='between'">
-        
-                                                        </leap-date-picker-input>
-                                                    </div>
-        
+                                                    <ng-container
+                                                        *ngIf="(opValue.startsWith('this') || opValue == 'last') else dateSelectorTpl">
+                                                        <!-- ignore this* operators as no value is needed -->
+                                                        <span class="last-date-op flex-row" *ngIf="opValue == 'last'">
+                                                            <div class="value">
+                                                                <input class="use-clr-style" clrInput type="number"
+                                                                    min="1" name="value" formControlName="value" />
+                                                            </div>
+                                                            <div class="type">
+                                                                <select class="use-clr-style" clrSelect
+                                                                    formControlName="period" name="period">
+                                                                    <option [value]="opt.name"
+                                                                        *ngFor="let opt of datePeriods">
+                                                                        {{opt.label+(config.get('value').value>1?'s':'')}}
+                                                                </select>
+                                                            </div>
+                                                        </span>
+                                                    </ng-container>
+                                                    <ng-template #dateSelectorTpl>
+                                                        <div class="daterangeFilter">
+                                                            <leap-date-picker-input
+                                                                [value]="{value:config.get('value')?.value , maxValue:config.get('maxValue')?.value}"
+                                                                (valueChange)="updateDate(config , $event)"
+                                                                [isRange]="opValue==='between'">
+                                                            </leap-date-picker-input>
+                                                        </div>
+                                                    </ng-template>
                                                 </ng-container>
                                                 <ng-template #valueTpl>
                                                     <ng-autocomplete placeHolder="value" formControlName="value"
@@ -115,7 +136,7 @@
                     <div class="filter-list flex-col">
                         <span class="clickable is-link label flex-row" *ngFor="let filter of filters; let index = index"
                             [class.active]="filter?.active">
-                            <span class="filter-label"
+                            <span class="filter-label ellipsis"
                                 (click)="onFilterSelect(index,filter)">{{(selectedFilter == index ? '*' : '')+filter?.name}}</span>
                             <clr-icon shape="times" (click)="remove(index,filter)"></clr-icon>
                         </span>

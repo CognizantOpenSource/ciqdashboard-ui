@@ -26,3 +26,12 @@
     justify-content: center;
     background: none;
 }
+clr-control-error{
+    margin-top: 10px;
+}
+input::ng-deep.ng-invalid.ng-dirty + button {
+    margin-left: 0px  !important;
+}
+.clr-error::ng-deep .clr-validate-icon {
+ display: inline-block;
+}

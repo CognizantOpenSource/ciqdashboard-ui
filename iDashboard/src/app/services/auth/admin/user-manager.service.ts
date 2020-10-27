@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import { IUser } from 'src/app/model/access.model';
 import { AuthRestAPIService } from '../auth-rest-api.service';
@@ -9,30 +9,12 @@ import { AuthRestAPIService } from '../auth-rest-api.service';
   providedIn: 'root'
 })
 export class UserManagerService {
-  private _usersSource: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
-  private _rolesSource: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
-  private _permissionsSource: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
-  private _users$: Observable<any[]>;
-  private _roles$: Observable<any[]>;
-  private _permissions$: Observable<any[]>;
-
+ 
   constructor(
     private restApi: AuthRestAPIService,
-     private toastr: ToastrService, private location: Location) {
-    this._users$ = this._usersSource.asObservable();
-    this._roles$ = this._rolesSource.asObservable();
-    this._permissions$ = this._permissionsSource.asObservable();
+     private toastr: ToastrService, private location: Location) { 
   }
-  get users$() {
-    return this._users$;
-  }
-  get roles$() {
-    return this._roles$;
-  }
-  get permissions$() {
-    return this._permissions$;
-  }
-
+ 
   public loadUsers(): Observable<any> {
     return this.restApi.getAllUsers();
   }
@@ -92,6 +74,25 @@ export class UserManagerService {
 
   public deleteUsers(userIds: any[]): Observable<any> {
     return this.restApi.deleteUsers(userIds);
+  }
+  deleteTeams(teamIds: any[]) {
+    return forkJoin(teamIds.map(id => this.restApi.deleteTeam(id)));
+  }
+ 
+  public getTeams(): Observable<any> {
+    return this.restApi.getTeams();
+  }
+
+  public getTeam(teamId): Observable<any> {
+    return this.restApi.getTeam(teamId);
+  }
+
+  public addTeam(team) {
+    return this.restApi.addTeam(team);
+  }
+
+  public updateTeam(team) {
+    return this.restApi.updateTeam(team);
   }
 
 }

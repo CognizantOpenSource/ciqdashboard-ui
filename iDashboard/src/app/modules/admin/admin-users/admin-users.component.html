@@ -8,7 +8,7 @@
         (click)="deleteDetails($event);">Delete</button>
     </div>
   </div>
-  <clr-datagrid *ngIf="users" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+  <clr-datagrid *ngIf="users" class="data-grid" [(clrDgSelected)]="selected" [clrDgRowSelection]="true"
     (clrDgSelectedChange)="selectionChanged($event)">
     <clr-dg-column>User ID
       <clr-dg-string-filter [clrDgStringFilter]="userEmailFilter"></clr-dg-string-filter>

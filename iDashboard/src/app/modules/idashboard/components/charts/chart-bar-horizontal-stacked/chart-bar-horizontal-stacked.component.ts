@@ -4,7 +4,7 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "leap-chart-bar-horizontal-stacked",
   templateUrl: "./chart-bar-horizontal-stacked.component.html",
-  styleUrls: ["./chart-bar-horizontal-stacked.component.scss"],
+  styleUrls: ["../base-chart.scss" , "./chart-bar-horizontal-stacked.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartBarHorizontalStackedComponent extends BaseChart implements OnInit {

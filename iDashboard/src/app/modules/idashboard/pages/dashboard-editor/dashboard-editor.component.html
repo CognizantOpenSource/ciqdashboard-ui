@@ -9,7 +9,7 @@
                 <button class="btn" title="Preview Dashboard" (click)="togglePreview();" [class.active]="preview">
                     <clr-icon shape="eye"></clr-icon>
                 </button>
-                <button class="btn" title="Save Dashboard" (click)="saveDashboard($event)">
+                <button class="btn" title="Save Dashboard" (click)="saveDashboard()">
                     <clr-icon shape="floppy"></clr-icon>
                 </button>
                 <button class="btn" title="Cancel" [routerLink]="['../../']">
@@ -27,10 +27,10 @@
                 <ng-container *ngTemplateOutlet="editorTpl"></ng-container>
             </div>
             <div class="sidebar right flex-col clr-col-2" [class.collapsed]="rigntSidebarCollapsed">
-                <leap-sidebar-right *ngIf="!rigntSidebarCollapsed && currentGrid" [tab]="rtab" [charts]="allItems$ | async"
-                    (itemSelect)="updateSelectedItem($event , true)" (itemRemove)="removeItem($event)" [(data)]="selected"
-                    (dataChange)="onItemOptionsChange($event)" [(gridConfig)]="currentGrid.gridConfig"
-                    (gridConfigChange)="onGridConfigChange($event)">
+                <leap-sidebar-right *ngIf="!rigntSidebarCollapsed && currentGrid" [tab]="rtab"
+                    [charts]="allItems$ | async" (itemSelect)="updateSelectedItem($event , true)"
+                    (itemRemove)="removeItem($event)" [(data)]="selected" (dataChange)="onItemOptionsChange($event)"
+                    [(gridConfig)]="currentGrid.gridConfig" (gridConfigChange)="onGridConfigChange($event)">
                 </leap-sidebar-right>
                 <div class="sidebar-state-control is-link" (click)="toggleRightSidebarState()">
                     <clr-icon shape="angle" dir="{{rigntSidebarCollapsed?'left': 'right'}}"></clr-icon>
@@ -52,7 +52,8 @@
     <clr-tabs class="full pages">
         <clr-tab *ngFor="let page of dashboard.pages;let index = index" class="page page-tab">
             <div clrTabLink [clrTabLinkInOverflow]="!page.pinned && index >= 6" class="page-tab-link">
-                <button (click)="changeActivePage(page);" [(text)]="page.name" appEditable
+                <button (click)="changeActivePage(page);" [(text)]="page.name"
+                    (textChange)="(!$event || $event == '') && page.name = 'page-'+(index+1)" appEditable
                     class="page-tab-btn">default</button>
                 <ng-container>
                     <ng-container *ngTemplateOutlet="pageDDTpl; context: {page:page,pages:dashboard.pages}">
@@ -81,11 +82,11 @@
             </ng-template>
         </clr-tab>
     </clr-tabs>
-</ng-template> 
+</ng-template>
 <ng-template #pageDDTpl let-page="page" let-pages="pages">
     <clr-dropdown class="page-actions" style="width: 16px;">
         <button clrDropdownTrigger aria-label="page actions" class="no-focus">
-            <clr-icon shape="caret"  dir="down" size="20"></clr-icon>
+            <clr-icon shape="caret" dir="down" size="20"></clr-icon>
         </button>
         <clr-dropdown-menu *clrIfOpen>
             <div aria-label="Clone Page" clrDropdownItem (click)="clonePage(page,pages)">Clone</div>

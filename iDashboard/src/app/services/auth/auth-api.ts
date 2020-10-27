@@ -1,5 +1,11 @@
 
 export class API {
+    getTeam(id: any): string {
+        return `${this.teams}${id}`;
+    }
+    get teams(): string {
+        return `${this.base}teams/`;
+    }
     private base: string;
     constructor(base: string) {
         this.base = base;
@@ -26,8 +32,12 @@ export class API {
     updatePassword(params: any) {
         return `${this.base}/users/password/update?${this.getParams(params)}`;
     }
+    resetPassword(params: any) {
+        return `${this.base}/users/password/reset?${this.getParams(params)}`;
+    }
     private getParams(params: any): string {
-        return Object.keys(params || {}).filter(key => !!params[key]).map(key => key + '=' + params[key]).join('&');
+        return Object.keys(params || {}).filter(key => !!params[key])
+            .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key])).join('&');
     }
     getUserById(id: string): string {
         return `${this.base}users/${id}`;

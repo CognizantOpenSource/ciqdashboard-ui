@@ -1,3 +1,6 @@
+import { chartColors, htmlColorNames, suffledColors } from '../../services/items.data';
+import { formatDate } from '../../services/transform-data';
+
 export class BaseChart {
     static customColors = [
         { name: 'passed', value: 'var(--green)' },
@@ -6,54 +9,7 @@ export class BaseChart {
         { name: 'aborted', value: 'var(--orange)' }
     ];
     static colorScheme = {
-        domain: [
-            '#C44136',
-            '#C46536',
-            '#C48836',
-            '#C4AB36',
-            '#69D791',
-            '#82DDA3',
-            '#369AC4',
-            '#36C4A7',
-            '#36C484',
-            '#36BDC4',
-            '#365EC4',
-            '#36C4C0',
-            '#366DC4',
-            '#364AC4',
-            '#C43667',
-            '#C44C36',
-            '#D06250',
-            '#C47036',
-            '#C43644',
-            '#C43668',
-            '#C49236',
-            '#C38849',
-            '#7F36C4',
-            '#5B36C4',
-            '#63CC98',
-            '#C95837',
-            '#D0505B',
-            '#A369D7',
-            '#B282DD',
-            '#D76973',
-            '#91949C',
-            '#4B505B',
-            '#2A69E6',
-            '#4F4E73',
-            '#DE5076',
-            '#BD572F',
-            '#47C99E',
-            '#4B573F',
-            '#57332C',
-            '#4E3C25',
-            '#3D2B57',
-            '#C7BC97',
-            '#573345',
-            '#573B30',
-            '#313A57'
-
-        ]
+        domain: chartColors()
     };
 
     get customColors() {
@@ -65,21 +21,42 @@ export class BaseChart {
     setConfig(config: any) {
         this.chartconfig = config || {};
         if (config) {
-            this.colorScheme = { domain: this.shuffleArray([...(config.domain || BaseChart.colorScheme.domain)]) };
+            let domain = config.colors && config.colors.split(',').filter(BaseChart.isColor); 
+            domain = (domain && domain.length && domain) || this.getCachedColors(config.title);
+            this.colorScheme = { domain };
         }
     }
 
     constructor() {
 
     }
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+
+    private getCachedColors(title) {
+        const key = `idashboard.${this.constructor.name}.${title}.colors`;
+        if (localStorage.getItem(key)) {
+            return JSON.parse(localStorage.getItem(key))
         }
-        return array;
+        let colors = suffledColors();
+        localStorage.setItem(key, JSON.stringify(colors))
+        return colors;
     }
+    static isColor(strColor:string) {
+        if(htmlColorNames.includes(strColor.toLowerCase())) return true;
+        const match = strColor && strColor.toLowerCase().match(/(#([\da-f]{3}){1,2}|(rgb|hsl)a\((\d{1,3}%?,\s?){3}(1|0?\.\d+)\)|(rgb|hsl)\(\d{1,3}%?(,\s?\d{1,3}%?){2}\))/);
+        return match && match[0] == strColor.toLowerCase();
+    }
+
+
     ngAfterViewInit(): void {
-      
+
     }
+
+
+    private formatter(data) {
+        if (this.chartconfig && this.chartconfig.dateSeries) {
+            return formatDate(new Date(data), this.chartconfig.dateFormat || 'ddd Do MMM, YYYY')
+        }
+        return data;
+    };
+    public seriesFormatter = this.formatter.bind(this);
 }

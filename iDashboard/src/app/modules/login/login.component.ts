@@ -12,8 +12,6 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginComponent extends UnSubscribable implements OnInit, AfterViewInit {
 
-  @ViewChild('googleBtn', { static: true }) googleSignin: ElementRef;
-
   form: any = {
     type: 'local',
     username: '',
@@ -52,9 +50,6 @@ export class LoginComponent extends UnSubscribable implements OnInit, AfterViewI
       return;
     }
     this.authService.login(this.form.username, this.form.password);
-  }
-  loginWithGoogle() {
-    this.authService.logInWithGoogle();
   }
   success(user: any) {
     this.toastr.success(`logged in as '${user.name || user.firstName}'`);

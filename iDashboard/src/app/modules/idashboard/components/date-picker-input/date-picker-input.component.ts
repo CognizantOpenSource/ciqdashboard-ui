@@ -52,12 +52,12 @@ export class DatePickerInputComponent implements OnInit, ControlValueAccessor {
     setTimeout(() => {
       if (this._datePicker && this.value) {
         const values = this.value.split('-');
-        this._datePicker.date = new Date(values[0]);
-        this._datePicker.dateFrom = new Date(values[0]);
-        this._datePicker.dateTo = new Date(values[1]);
+        this._datePicker.date = values[0] && values[0] !== '' ? new Date(values[0]) : new Date();
+        this._datePicker.dateFrom = this._datePicker.date;
+        this._datePicker.dateTo = values[1] && values[1] !== '' ? new Date(values[1]) : this._datePicker.dateFrom;
         this._datePicker.generateCalendar();
       }
-     });
+    });
   }
   private toDateStr(dateValue) {
     if (dateValue) {
@@ -65,7 +65,7 @@ export class DatePickerInputComponent implements OnInit, ControlValueAccessor {
       return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     }
   }
-  writeValue(obj: any): void { 
+  writeValue(obj: any): void {
   }
   registerOnChange(fn: any): void {
     this.onFormChange = fn;
@@ -74,23 +74,29 @@ export class DatePickerInputComponent implements OnInit, ControlValueAccessor {
   setDisabledState?(isDisabled: boolean): void { }
 
   private onChange(value) {
-    this.valueChange.emit(value); 
+    this.valueChange.emit(value);
   }
-  public onRangeValueChange(value: string) { 
+  public onRangeValueChange(value: string) {
     if (value) {
       const values = value.split('-');
-      const date = new Date(values[0]);
-      const maxDate = new Date(values[1]);
-      if (isValidDate(date) && isValidDate(maxDate))
-        this.onChange({ value: date.toISOString(), maxValue: maxDate.toISOString() });
+      const date = new Date(values[0] + ' 12:00:00');
+      const maxDate = new Date(values[1] + ' 12:00:00');
+      if (isValidDate(date) && isValidDate(maxDate)) {
+        this.onChange({ value: toISOString(date), maxValue: toISOString(maxDate) });
+      }
     }
   }
   public onValueChange(value) {
     if (value) {
-      const date = new Date(value);
-      this.onChange({ value: date.toISOString() });
+      const date = new Date(value + ' 12:00:00');
+      this.onChange({ value: toISOString(date) });
     }
   }
+}
+function toISOString(date) {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  return `${date.getFullYear()}-${month > 9 ? month : '0' + month}-${day > 9 ? day : '0' + day}T00:00:00.000Z`
 }
 function isValidDate(d: any) {
   return d instanceof Date && !isNaN(d as unknown as number);

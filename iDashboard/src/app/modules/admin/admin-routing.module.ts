@@ -5,6 +5,8 @@ import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { AdminRolesComponent } from './admin-roles/admin-roles.component';
 import { RoleManagerComponent } from './role-manager/role-manager.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { AdminTeamsComponent } from './teams/teams.component';
+import { TeamEditorComponent } from './teams/team-editor/team-editor.component';
 
 const routes: Routes = [
     {
@@ -14,6 +16,8 @@ const routes: Routes = [
             { path: 'users/:userId/edit', component: UserManagerComponent },
             { path: 'roles', component: AdminRolesComponent },
             { path: 'roles/:roleId/edit', component: RoleManagerComponent },
+            { path: 'teams', component: AdminTeamsComponent },
+            { path: 'teams/:teamId/edit', component: TeamEditorComponent },
         ]
     }
 ];

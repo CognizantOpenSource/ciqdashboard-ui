@@ -2,11 +2,15 @@
   <div class="content-container">
     <clr-vertical-nav class="vertical-nav">
       <a clrVerticalNavLink [routerLink]="['/admin/users']" routerLinkActive="active">
-        <clr-icon shape="users" class="is-solid"></clr-icon>Users
+        <clr-icon shape="user" class="is-solid"></clr-icon>Users
       </a>
       <div class="nav-divider"></div>
       <a clrVerticalNavLink [routerLink]="['/admin/roles']" routerLinkActive="active">
         <clr-icon shape="id-badge" class="is-solid"></clr-icon>Roles
+      </a>
+      <div class="nav-divider"></div>
+      <a clrVerticalNavLink [routerLink]="['/admin/teams']" routerLinkActive="active">
+        <clr-icon shape="users" class="is-solid"></clr-icon>Teams
       </a>
       <div class="nav-divider"></div>
       <a clrVerticalNavLink (click)="reloadWhitelist()" routerLinkActive="active">

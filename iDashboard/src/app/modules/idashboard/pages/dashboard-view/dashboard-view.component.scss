@@ -23,20 +23,24 @@ gridster {
         border-color: var(--chart-card-border-color);
       }
     }
-    &.focused{
+    &.focused {
       z-index: 10;
     }
   }
 }
 :host::ng-deep {
+  .gridster-column,
+  .gridster-row {
+    display: none!important;
+  }
   .modal-dialog {
     height: 100%;
-    .modal-title{
-      color:var(--fg1);
+    .modal-title {
+      color: var(--fg1);
     }
     .modal-content {
       background-color: var(--bg3);
-      color:var(--fg1);
+      color: var(--fg1);
     }
   }
   leap-dash-filter-dropdown {
