@@ -92,6 +92,11 @@
       flex-grow: 1;
       border-left: 2px solid grey;
       border-left-color: var(--bg2);
+      &::ng-deep{
+        app-item-filters{
+          display:none;
+        }
+      }
     }
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: "leap-chart-combo-chart",
+  selector: "app-chart-combo-chart",
   templateUrl: "./chart-combo-chart.component.html",
   styleUrls: ["./chart-combo-chart.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default

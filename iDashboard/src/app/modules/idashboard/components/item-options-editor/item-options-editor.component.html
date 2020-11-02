@@ -21,8 +21,8 @@
                 <div class="imagelabel flex-col">
                     <label>{{param.label}}</label>
                     <div class="tool-image">
-                        <leap-file-upload [(data)]="data[param.name]" type=".png"
-                            (dataChange)="onImageChange(param,$event)"></leap-file-upload>
+                        <app-image-upload [(data)]="data[param.name]" type=".png"
+                            (dataChange)="onImageChange(param,$event)"></app-image-upload>
                     </div>
                     <span style="margin: auto;font-weight: 200;">Select Image: (Please Upload "PNG" File)</span>
                 </div>

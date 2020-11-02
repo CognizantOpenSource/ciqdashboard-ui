@@ -54,9 +54,9 @@
         <clr-tab>
             <button clrTabLink>Options</button>
             <clr-tab-content *clrIfActive>
-                <leap-item-options-editor class="flex-col" formControlName="options" [params]="params.options"
+                <app-item-options-editor class="flex-col" formControlName="options" [params]="params.options"
                     (dataChange)="updated('options' , $event)" [disabledOptions]="disabledOptions">
-                </leap-item-options-editor>
+                </app-item-options-editor>
             </clr-tab-content>
         </clr-tab>
     </clr-tabs>

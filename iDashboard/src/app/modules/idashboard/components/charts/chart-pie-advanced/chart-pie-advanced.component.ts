@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: 'leap-chart-pie-advanced',
+  selector: 'app-chart-pie-advanced',
   templateUrl: './chart-pie-advanced.component.html',
   styleUrls: ['./chart-pie-advanced.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default

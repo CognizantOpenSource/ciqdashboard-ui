@@ -8,7 +8,7 @@
     height: 100%;
     &::ng-deep {
       > div:not(.analysis-title):not(.crumb-header),
-      > div > leap-chart {
+      > div > app-chart {
         display: block;
         width: 100%;
         height: 100%;

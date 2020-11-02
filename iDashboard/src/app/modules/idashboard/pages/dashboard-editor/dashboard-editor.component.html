@@ -21,17 +21,17 @@
     <div class="dashboard-editor-panel flex-col full">
         <div class="dashboard-editor flex-row full" *ngIf="!preview else previewTpl">
             <div class="sidebar left flex-col">
-                <leap-sidebar-left></leap-sidebar-left>
+                <app-sidebar-left></app-sidebar-left>
             </div>
             <div class="dashbaord-items-editor flex-row full" style="justify-content: space-evenly;">
                 <ng-container *ngTemplateOutlet="editorTpl"></ng-container>
             </div>
             <div class="sidebar right flex-col clr-col-2" [class.collapsed]="rigntSidebarCollapsed">
-                <leap-sidebar-right *ngIf="!rigntSidebarCollapsed && currentGrid" [tab]="rtab"
+                <app-sidebar-right *ngIf="!rigntSidebarCollapsed && currentGrid" [tab]="rtab"
                     [charts]="allItems$ | async" (itemSelect)="updateSelectedItem($event , true)"
                     (itemRemove)="removeItem($event)" [(data)]="selected" (dataChange)="onItemOptionsChange($event)"
                     [(gridConfig)]="currentGrid.gridConfig" (gridConfigChange)="onGridConfigChange($event)">
-                </leap-sidebar-right>
+                </app-sidebar-right>
                 <div class="sidebar-state-control is-link" (click)="toggleRightSidebarState()">
                     <clr-icon shape="angle" dir="{{rigntSidebarCollapsed?'left': 'right'}}"></clr-icon>
                 </div>
@@ -39,15 +39,15 @@
         </div>
     </div>
     <ng-template #previewTpl>
-        <leap-dashboard-view [dashboard]="dashboard" [page]="activePageIndex" [update]="loadedItem"
-            class="flex-col full"></leap-dashboard-view>
+        <app-dashboard-view [dashboard]="dashboard" [page]="activePageIndex" [update]="loadedItem"
+            class="flex-col full"></app-dashboard-view>
     </ng-template>
 </div>
-<leap-dashboard-modal [(open)]="showModal" [native]="true" (openChange)="onModalClosed()">
+<app-dashboard-modal [(open)]="showModal" [native]="true" (openChange)="onModalClosed()">
     <div class="modal-content full">
         <router-outlet></router-outlet>
     </div>
-</leap-dashboard-modal>
+</app-dashboard-modal>
 <ng-template #editorTpl>
     <clr-tabs class="full pages">
         <clr-tab *ngFor="let page of dashboard.pages;let index = index" class="page page-tab">
@@ -63,10 +63,10 @@
             <ng-template [(clrIfActive)]="page.active">
                 <clr-tab-content>
                     <div class="dashbaord-item-panel flex-col full">
-                        <leap-dashboard-grid class="scroll-main" [class.full-view]="rigntSidebarCollapsed"
+                        <app-dashboard-grid class="scroll-main" [class.full-view]="rigntSidebarCollapsed"
                             [(items)]="page.items" [selected]="selected" (selectedChange)="selectItem($event);"
                             [config]="page.gridConfig" [update]="loadedItem" [pageIndex]="index">
-                        </leap-dashboard-grid>
+                        </app-dashboard-grid>
                     </div>
                 </clr-tab-content>
             </ng-template>

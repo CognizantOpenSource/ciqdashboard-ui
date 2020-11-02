@@ -14,9 +14,9 @@
     </div>
     <div class="carousel">
         <ng-container *ngFor="let item of slides; let index = index">
-            <leap-display-chart class="slidechart" [@slideAnimation]="animationType" *ngIf="index === currentSlide"
+            <app-display-chart class="slidechart" [@slideAnimation]="animationType" *ngIf="index === currentSlide"
                 [chartType]="item.type" [dashboardData]="item.data" [dashboardConfig]="item.options"
-                [chartTitle]="item.options?.title || item.name" [item]="item"></leap-display-chart>
+                [chartTitle]="item.options?.title || item.name" [item]="item"></app-display-chart>
         </ng-container>
         <button class="control prev" (click)="onPreviousClick()">
             <span class="arrow left"></span>

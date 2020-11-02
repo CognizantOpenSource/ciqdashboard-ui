@@ -5,7 +5,7 @@ import { IFilterData, IFilterConfig } from '../../model/data.model';
 import { datePeriodNames } from '../../services/filter-ops';
 
 @Component({
-  selector: 'leap-dash-filter-dropdown',
+  selector: 'app-dash-filter-dropdown',
   templateUrl: './filter-dropdown.component.html',
   styleUrls: ['./filter-dropdown.component.scss']
 })
@@ -26,7 +26,7 @@ export class FilterDropdownComponent implements OnInit {
     if (options && options.fields && options.typeMap) {
       options.types = {};
       options.fields.forEach(field => {
-        options.types[field.name] = field.type;
+        options.types[field.name] = getType(field.type);
       });
     }
     this.options = options;
@@ -129,20 +129,21 @@ export class FilterDropdownComponent implements OnInit {
     config.get('value').setValue(event.value);
     config.get('maxValue').setValue(event.maxValue);
   }
-  private getActions(type = 'string', map) {
-    switch (type.toLowerCase()) {
-      case 'integer':
-      case 'int':
-      case 'float':
-      case 'double':
-        return map.number;
-      case 'date':
-      case 'time':
-        return map.date;
-      case 'boolean':
-        return map.boolean;
-      default:
-        return map.string;
-    }
+ 
+}
+export function getType(type = 'string') {
+  switch (type.toLowerCase()) {
+    case 'integer':
+    case 'int':
+    case 'float':
+    case 'double':
+      return 'number';
+    case 'date':
+    case 'time':
+      return 'date';
+    case 'boolean':
+      return 'boolean';
+    default:
+      return 'string';
   }
 }

@@ -33,15 +33,17 @@ const routes: Routes = [
         path: 'dashboards',
         children: [
           { path: '', component: DashboardHomeComponent, data: { title: 'DashBoards' }, },
-          { path: ':dashboardId', component: DashboardHomeComponent, data: { title: 'DashBoards' } },          
+          { path: ':dashboardId', component: DashboardHomeComponent, data: { title: 'DashBoards' } },
           { path: ':dashboardId/slideshow', component: DashboardSlideshowComponent, data: { title: 'Slide-Show' } },
           {
             path: ':dashboardId/edit/:item', component: DashboardEditorComponent, data: { title: 'Edit DashBoard Item' },
             children: [
               { path: 'create-chart', component: CreateItemComponent, data: { title: 'New Item' }, },
-              { path: 'create-label', component: CreateLabelComponent, data: { title: 'New Item' }, },
-              { path: 'create-img', component: CreateImageComponent, data: { title: 'New Item' }, },  
-              { path: 'edit-chart', component: CreateItemComponent, data: { title: 'Edit Item' }, }, 
+              { path: 'create-label', component: CreateLabelComponent, data: { title: 'New Label' }, },
+              { path: 'create-img', component: CreateImageComponent, data: { title: 'New Image' }, },
+              { path: 'edit-chart', component: CreateItemComponent, data: { title: 'Edit Item' }, },
+              { path: 'edit-label', component: CreateLabelComponent, data: { title: 'Edit Label' }, },
+              { path: 'edit-img', component: CreateImageComponent, data: { title: 'Edit Image' }, },
             ],
           },
           {
@@ -51,6 +53,9 @@ const routes: Routes = [
       },
       { path: 'create-chart', component: CreateItemComponent, data: { title: 'Create Item' }, },
       { path: 'edit-chart', component: CreateItemComponent, data: { title: 'Edit Item' }, },
+      { path: 'edit-label', component: CreateLabelComponent, data: { title: 'Edit Label' }, },
+      { path: 'edit-img', component: CreateImageComponent, data: { title: 'Edit Image' }, },
+      
     ]
   },
 

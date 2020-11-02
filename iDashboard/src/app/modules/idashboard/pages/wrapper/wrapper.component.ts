@@ -6,7 +6,7 @@ import { UnSubscribable } from 'src/app/components/unsub';
 import { DashboardItemsService } from '../../services/idashboard-items.service';
 
 @Component({
-  selector: 'leap-wrapper',
+  selector: 'app-wrapper',
   template: `<router-outlet></router-outlet>
   <router-outlet name="modal"></router-outlet>`,
   styles: []

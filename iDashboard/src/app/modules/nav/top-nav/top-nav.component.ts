@@ -27,8 +27,7 @@ export class TopNavComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.auth.state$.pipe(filter(auth => !!auth), take(1), tap(() => this.loggedIn = true)).
-      subscribe(() => this.projectService.loadProjects());
+    this.auth.state$.pipe(filter(auth => !!auth), tap(() => this.loggedIn = true)).subscribe(() => this.projectService.loadProjects());
     this.theme$ = this.config.userSettings$.pipe(map(it => (it.theme) || Theme.default));
     this.projectService.project$.subscribe(project => {
       this.project = project;

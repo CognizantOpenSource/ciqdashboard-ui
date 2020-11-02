@@ -6,7 +6,7 @@ import { UnSubscribable } from 'src/app/components/unsub';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'leap-sidebar-right',
+  selector: 'app-sidebar-right',
   templateUrl: './sidebar-right.component.html',
   styleUrls: ['./../../create-item/create-item.component.scss', './sidebar-right.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -93,10 +93,11 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
       itemId: item.id, itemGroup, type, source, navs: ['Data Source', 'Item Type', 'Item Options']
       , returnUrl: this.router.routerState.snapshot.url
     }
+    const component = itemGroup === 'dataimg' ? 'edit-img' : (itemGroup === 'datalabel' ? 'edit-label' : 'edit-chart');
     if (projectId) {
-      this.router.navigate(['idashboard', projectId, 'edit-chart'], { queryParams });
+      this.router.navigate(['idashboard', projectId, component], { queryParams });
     } else
-      this.router.navigate(['edit-chart'], { relativeTo: this.route, queryParams });
+      this.router.navigate([component], { relativeTo: this.route, queryParams });
   }
 }
 function getIconType(type: string) {

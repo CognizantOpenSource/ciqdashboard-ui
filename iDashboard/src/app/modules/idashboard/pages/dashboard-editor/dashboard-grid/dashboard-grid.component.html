@@ -7,14 +7,14 @@
         </span>
         <ng-container *ngIf="item.id else newItemTpl">
           <ng-container [ngSwitch]="item.itemGroup || 'datachart'">           
-            <leap-display-label *ngSwitchCase="'datalabel'" [labelConfig]="item.options"></leap-display-label>
-            <leap-display-chart *ngSwitchCase="'datachart'" [chartType]="item.type" [dashboardData]="item.data"
+            <app-display-label *ngSwitchCase="'datalabel'" [labelConfig]="item.options"></app-display-label>
+            <app-display-chart *ngSwitchCase="'datachart'" [chartType]="item.type" [dashboardData]="item.data"
               [dashboardConfig]="item.options" [chartTitle]="item.options?.title || item.name" [item]="item">
-            </leap-display-chart>
-            <leap-display-chart *ngSwitchCase="'datatable'" [chartType]="item.type" [dashboardData]="item.data"
+            </app-display-chart>
+            <app-display-chart *ngSwitchCase="'datatable'" [chartType]="item.type" [dashboardData]="item.data"
             [dashboardConfig]="item.options" [chartTitle]="item.options?.title || item.name" [item]="item">
-          </leap-display-chart>
-           <leap-display-image *ngSwitchCase="'dataimg'" [imageConfig]="item.options"></leap-display-image>
+          </app-display-chart>
+           <app-display-image *ngSwitchCase="'dataimg'" [imageConfig]="item.options"></app-display-image>
           </ng-container>
         </ng-container>
       </div>

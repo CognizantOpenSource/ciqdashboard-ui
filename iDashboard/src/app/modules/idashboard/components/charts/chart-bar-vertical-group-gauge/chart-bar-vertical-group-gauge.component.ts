@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { BaseChart } from '../base-chart';
 
 @Component({
-  selector: 'leap-chart-bar-vertical-group-gauge',
+  selector: 'app-chart-bar-vertical-group-gauge',
   templateUrl: './chart-bar-vertical-group-gauge.component.html',
   styleUrls: ["../base-chart.scss", "./chart-bar-vertical-group-gauge.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default

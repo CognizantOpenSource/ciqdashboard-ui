@@ -4,9 +4,10 @@ import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@ang
 import { ClrDropdownMenu } from '@clr/angular';
 import { IFilterData, IFilterConfig } from '../../model/data.model';
 import { datePeriodNames } from '../../services/filter-ops';
+import { getType } from '../filter-dropdown/filter-dropdown.component';
 
 @Component({
-  selector: 'leap-item-filters',
+  selector: 'app-item-filters',
   templateUrl: './item-filters.component.html',
   styleUrls: ['./item-filters.component.scss']
 })
@@ -17,12 +18,9 @@ export class ItemFiltersComponent implements OnInit {
   options;
   @Input('options') set setOptions(options: any) {
     if (options && options.fields && options.typeMap) {
-      options.actions = {};
       options.types = {};
       options.fields.forEach(field => {
-        field.actions = this.getActions(field.type, options.typeMap);
-        options.actions[field.name] = field.actions;
-        options.types[field.name] = field.type;
+        options.types[field.name] = getType(field.type);
       });
     }
     this.options = options;
@@ -43,7 +41,7 @@ export class ItemFiltersComponent implements OnInit {
   dropdownSide = 'bottom-left';
 
   datePeriods = datePeriodNames.map(name => ({ name, label: name.split('lastN')[1] }));
-  
+
   constructor(private fb: FormBuilder) { }
 
   get newFilter() {
@@ -92,9 +90,9 @@ export class ItemFiltersComponent implements OnInit {
     }
   }
   setSelectedFilter(filter = {} as any) {
-    let configs ;
+    let configs;
     if (filter.configs && filter.configs.length > 0) {
-      configs =  this.fb.array(filter.configs.map(c => this.createConfigGroup(c)));
+      configs = this.fb.array(filter.configs.map(c => this.createConfigGroup(c)));
     } else {
       configs = this.fb.array([this.createConfigGroup({} as IFilterConfig)]);
     }
@@ -170,20 +168,5 @@ export class ItemFiltersComponent implements OnInit {
     config.get('value').setValue(event.value);
     config.get('maxValue').setValue(event.maxValue);
   }
-  private getActions(type = 'string', map) {
-    switch (type.toLowerCase()) {
-      case 'integer':
-      case 'int':
-      case 'float':
-      case 'double':
-        return map.number;
-      case 'date':
-      case 'time':
-        return map.date;
-      case 'boolean':
-        return map.boolean;
-      default:
-        return map.string;
-    }
-  }
+
 }

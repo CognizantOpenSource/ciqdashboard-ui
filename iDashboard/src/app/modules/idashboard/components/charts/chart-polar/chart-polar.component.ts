@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: 'leap-chart-polar',
+  selector: 'app-chart-polar',
   templateUrl: './chart-polar.component.html',
   styleUrls: ['./chart-polar.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default

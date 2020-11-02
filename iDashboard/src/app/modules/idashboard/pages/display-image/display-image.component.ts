@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'leap-display-image',
+  selector: 'app-display-image',
   templateUrl: './display-image.component.html',
   styleUrls: ['./display-image.component.scss']
 })

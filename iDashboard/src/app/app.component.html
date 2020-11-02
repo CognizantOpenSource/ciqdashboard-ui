@@ -1,5 +1,5 @@
 <ng-progress [thick]="true"></ng-progress>
-<clr-main-container (window:keydown.control.Backspace)="onBack($event)" [attr.data-theme]="theme$ | async">
+<clr-main-container (window:keydown.control.Backspace)="onBack()" [attr.data-theme]="theme$ | async">
   <app-top-nav></app-top-nav>
   <div class="content-container">
     <div class="sidebar">
@@ -9,5 +9,7 @@
       <router-outlet></router-outlet>
     </div>
   </div>
-  <!-- <router-outlet name="modal"></router-outlet> -->
+  <ng-container *ngIf="loaded && !openRoute && !authenticated">
+    <app-login [reloadWindow]="false"></app-login>
+  </ng-container>
 </clr-main-container>

@@ -2,7 +2,8 @@
   <div class="head">
     <h3 class="title">Manage Users</h3>
     <div class="action-buttons" [class.scroll-active]="false" style="float: right;">
-      <button *ngIf="isResetCredActive" [disabled]="!(newPassword && newPassword.length>8)" type="button"
+      <button *ngIf="isResetCredActive" [disabled]="!passwordConstraints.regex.test(newPassword)" type="button"
+      [attr.title]="passwordConstraints.regex.test(newPassword)?'Change Password':passwordConstraints.message"
         class="btn btn-primary-outline" (click)="resetCred(user);">Change Password</button>
       <button type="button" class="btn btn-primary-outline" [disabled]="isResetCredActive"
         (click)="updateDetails(user);">Update</button>
@@ -86,7 +87,7 @@
       </clr-tab>
       <clr-tab>
         <button clrTabLink>Reset Credentials</button>
-        <ng-template  [(clrIfActive)]="isResetCredActive" (clrIfActiveChange)="refreshPassword()">
+        <ng-template [(clrIfActive)]="isResetCredActive" (clrIfActiveChange)="refreshPassword()">
           <clr-tab-content>
             <div class="change-cred flex-row">
               <clr-input-container style="flex-grow: 1;">
@@ -94,11 +95,12 @@
                 <input class="userInput" type="text" name="new-password" clrInput placeholder="New Password"
                   [(ngModel)]="newPassword" />
               </clr-input-container>
-              <span *ngIf="hasCrypto" class="refresh is-link" (click)="refreshPassword()"><clr-icon shape="sync"></clr-icon></span>
+              <span *ngIf="hasCrypto" title="Generate Password" class="refresh is-link" (click)="refreshPassword()">
+                <clr-icon shape="sync"></clr-icon>
+              </span>
             </div>
           </clr-tab-content>
-      </ng-template>
-       
+        </ng-template>
       </clr-tab>
     </clr-tabs>
   </div>

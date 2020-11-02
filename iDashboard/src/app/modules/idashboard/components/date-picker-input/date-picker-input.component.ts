@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgDateRangePickerComponent } from 'ng-daterangepicker';
 
 @Component({
-  selector: 'leap-date-picker-input',
+  selector: 'app-date-picker-input',
   templateUrl: './date-picker-input.component.html',
   styleUrls: ['./date-picker-input.component.scss'],
   providers: [{

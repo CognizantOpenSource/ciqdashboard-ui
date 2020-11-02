@@ -12,10 +12,6 @@
       <a clrVerticalNavLink [routerLink]="['/admin/teams']" routerLinkActive="active">
         <clr-icon shape="users" class="is-solid"></clr-icon>Teams
       </a>
-      <div class="nav-divider"></div>
-      <a clrVerticalNavLink (click)="reloadWhitelist()" routerLinkActive="active">
-        <clr-icon shape="sync" class="is-solid"></clr-icon>Refresh Whitelist
-      </a>
     </clr-vertical-nav>
     <div class="content-area-class">
       <router-outlet></router-outlet>

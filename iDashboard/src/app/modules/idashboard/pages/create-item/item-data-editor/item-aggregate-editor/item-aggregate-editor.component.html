@@ -21,9 +21,9 @@
                 <div class="title flex-row">
                     <span class="name">Field {{fi+1}}</span>
                     <span class="option">
-                        <leap-item-filters [(filters)]="agg.filters" 
+                        <app-item-filters [(filters)]="agg.filters" 
                         [options]="filterOptions" (fieldChange)="onFiledSelected($event)">
-                      </leap-item-filters>
+                      </app-item-filters>
                     </span>
                     <span class="option" (click)="remove(fi , group.aggregates)" *ngIf="fi">
                         <clr-icon shape="minus-circle" size="20"></clr-icon>
@@ -63,14 +63,14 @@
                         </clr-input-container>
                     </div>
                     <div class="filters flex-row">                     
-                        <!-- <leap-dash-filter-dropdown [data]="newFilterOptions" [options]="filterOptions"
+                        <!-- <app-dash-filter-dropdown [data]="newFilterOptions" [options]="filterOptions"
                             (save)="addFilter($event,agg.filters)" (fieldChange)="onFiledSelected($event)">
-                        </leap-dash-filter-dropdown>
-                        <leap-dash-filter-dropdown *ngFor="let filter of agg.filters;let index=index;" [data]="filter"
+                        </app-dash-filter-dropdown>
+                        <app-dash-filter-dropdown *ngFor="let filter of agg.filters;let index=index;" [data]="filter"
                             [options]="filterOptions" [edit]="true" (clone)="addFilter($event,agg.filters)"
                             (save)="saveFilter($event,index,agg.filters)" (select)="setFilter(filter,index,$event)"
                             (remove)="removeFilter(filter,index,agg.filters);" (fieldChange)="onFiledSelected($event)">
-                        </leap-dash-filter-dropdown> -->
+                        </app-dash-filter-dropdown> -->
                     </div>
                 </div>
             </div>

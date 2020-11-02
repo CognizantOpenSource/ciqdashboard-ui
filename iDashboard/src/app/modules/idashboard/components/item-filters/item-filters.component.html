@@ -90,11 +90,11 @@
                                                     </ng-container>
                                                     <ng-template #dateSelectorTpl>
                                                         <div class="daterangeFilter">
-                                                            <leap-date-picker-input
+                                                            <app-date-picker-input
                                                                 [value]="{value:config.get('value')?.value , maxValue:config.get('maxValue')?.value}"
                                                                 (valueChange)="updateDate(config , $event)"
                                                                 [isRange]="opValue==='between'">
-                                                            </leap-date-picker-input>
+                                                            </app-date-picker-input>
                                                         </div>
                                                     </ng-template>
                                                 </ng-container>

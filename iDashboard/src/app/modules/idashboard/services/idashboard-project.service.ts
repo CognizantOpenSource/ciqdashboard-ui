@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, merge, forkJoin } from 'rxjs';
 import { IDashBoardApiService } from './idashboard-api.service';
-import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from 'src/app/services/local-storage.service';
-import { map, tap, take, switchMap } from 'rxjs/operators';
+import {tap, switchMap } from 'rxjs/operators';
 import { IDashboardProjet } from '../model/data.model';
 
 export function createUpdateCachableResource(db: LocalStorage, group: string): (id: string, req: Observable<any>) => Observable<any> {
@@ -43,10 +42,7 @@ export class DashboardProjectService {
 
   private cachableProject = createCachableResource(this.db, 'project');
 
-  constructor(
-    private api: IDashBoardApiService, private db: LocalStorage, private toastr: ToastrService) {
-
-  }
+  constructor(private api: IDashBoardApiService, private db: LocalStorage) { }
 
   public loadProjects() {
     this.api.getProjects().subscribe(projects => this._projectsSource.next(projects),
@@ -64,20 +60,20 @@ export class DashboardProjectService {
   public get projects$() {
     return this._projects$;
   }
-  clear() {
-    this.db.deleteItem('project').subscribe();
-  }
   removeProject(project: IDashboardProjet) {
-    this.api.deleteProject(project).subscribe(res => {
-      this.toastr.success('project deleted successfully');
-      this.loadProjects();
-    }, error => this.toastr.error('error while deleting project'));
+    return this.api.deleteProject(project);
   }
   createProject(project: any): Observable<any> {
     return this.api.postProject(project);
   }
   searchProject(name: string): Observable<any> {
     return this.api.getProjectByName(name);
+  }
+  getUserProjects(userId: string): Observable<string[]> {
+    return this.api.getUserProjects(userId);
+  }
+  updateUserProjects(userId: string, projectIds: string[]): Observable<any> {
+    return this.api.updateUserProjects(userId, projectIds);
   }
   getProjectMapping(projectId: string): Observable<any> {
     return this.api.getProjectMapping(projectId);

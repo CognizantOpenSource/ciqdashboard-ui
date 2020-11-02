@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'leap-sidebar-left',
+  selector: 'app-sidebar-left',
   templateUrl: './sidebar-left.component.html',
   styleUrls: ['./sidebar-left.component.scss']
 })

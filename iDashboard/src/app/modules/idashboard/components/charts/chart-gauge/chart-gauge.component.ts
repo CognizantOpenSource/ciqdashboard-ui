@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: "leap-chart-gauge",
+  selector: "app-chart-gauge",
   templateUrl: "./chart-gauge.component.html",
   styleUrls: ["./chart-gauge.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: "leap-chart-bubble",
+  selector: "app-chart-bubble",
   templateUrl: "./chart-bubble.component.html",
   styleUrls: ["./chart-bubble.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: "leap-chart-bar-horizontal-stacked",
+  selector: "app-chart-bar-horizontal-stacked",
   templateUrl: "./chart-bar-horizontal-stacked.component.html",
   styleUrls: ["../base-chart.scss" , "./chart-bar-horizontal-stacked.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default

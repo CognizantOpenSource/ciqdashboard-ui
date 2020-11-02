@@ -60,9 +60,5 @@ export class AdminTeamsComponent extends UnSubscribable implements OnInit {
   selectionChanged($event) { this.selected = $event; }
 }
 function getTeamIds(teamList: any[]) {
-  const teamIds = [];
-  for (const teamObject of teamList) {
-    teamIds.push(teamObject.name);
-  }
-  return teamIds;
+  return teamList && teamList.map(t => t.id) || [];
 }

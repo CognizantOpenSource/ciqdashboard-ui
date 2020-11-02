@@ -7,10 +7,12 @@ import { RoleManagerComponent } from './role-manager/role-manager.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminTeamsComponent } from './teams/teams.component';
 import { TeamEditorComponent } from './teams/team-editor/team-editor.component';
+import { AuthGuard } from 'src/app/services/auth/auth-guard.service';
+import { AdminGuard } from 'src/app/services/auth/admin-guard.service';
 
 const routes: Routes = [
     {
-        path: '', component: AdminSettingsComponent,
+        path: '', component: AdminSettingsComponent, canActivate: [AuthGuard, AdminGuard],
         children: [
             { path: 'users', component: AdminUsersComponent },
             { path: 'users/:userId/edit', component: UserManagerComponent },

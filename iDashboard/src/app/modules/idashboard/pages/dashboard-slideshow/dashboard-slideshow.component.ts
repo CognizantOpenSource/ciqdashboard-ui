@@ -22,7 +22,7 @@ import { DashboardProjectService } from '../../services/idashboard-project.servi
 import { IDashBoard } from '../dashboard-home/idashboard';
 
 @Component({
-  selector: 'leap-dashboard-slideshow',
+  selector: 'app-dashboard-slideshow',
   templateUrl: './dashboard-slideshow.component.html',
   styleUrls: ['./dashboard-slideshow.component.scss'],
   animations: [

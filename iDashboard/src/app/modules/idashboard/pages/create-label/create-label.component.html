@@ -1,17 +1,16 @@
-<div class="create-wizard flex-col full">
+<div class="create-wizard flex-col full" *ngIf="form">
     <div class="header flex-row">
         <div class="title flex-row">
-            <div class="crumb" *ngFor="let nav of navs;let last= last;let index = index;">
-                <span class="page-link" [class.is-link]="!last" (click)="onCrumClick(index)">{{nav}}</span>
-                <clr-icon *ngIf="!last" shape="angle" dir="right"></clr-icon>
+            <div class="crumb">
+                <span class="page-link">Label Options</span>
             </div>
         </div>
         <div class="options right ">
             <div class="btn-group btn-outline-primary btn-md btn-icon">
-                <button class="btn" title="Refresh Preview" (click)="reload()" *ngIf="navs">
+                <button class="btn" title="Refresh Preview" (click)="reload()">
                     <clr-icon shape="refresh"></clr-icon>
                 </button>
-                <button class="btn" title="{{item?.id ? 'Update' : 'Save'}}" (click)="updateItem()" *ngIf="navs">
+                <button class="btn" title="{{item?.id ? 'Update' : 'Save'}}" (click)="updateItem()">
                     <clr-icon shape="floppy"></clr-icon>
                 </button>
                 <button class="btn" title="Cancel" (click)="close()">
@@ -34,9 +33,9 @@
                         <clr-tab>
                             <button clrTabLink>Options</button>
                             <clr-tab-content *clrIfActive>
-                                <leap-item-options-editor class="flex-col" formControlName="options"
+                                <app-item-options-editor class="flex-col" formControlName="options"
                                    [params]="params.options" (dataChange)="optionsChange($event)">
-                                </leap-item-options-editor>
+                                </app-item-options-editor>
                             </clr-tab-content>
                         </clr-tab>
                     </clr-tabs>
@@ -53,7 +52,7 @@
                 </form>
                 <div class="preview clr-col-12 flex-col">                    
                     <ng-container *ngIf="previewData else noPreviewTpl">
-                        <leap-display-label [labelConfig]="item.options"></leap-display-label>               
+                        <app-display-label [labelConfig]="item.options"></app-display-label>               
                     </ng-container>
                     <ng-template #noPreviewTpl>
                         <button class="btn btn-link" title="Refresh Preview" (click)="reload()" style="margin: auto;color:var(--fg1);">

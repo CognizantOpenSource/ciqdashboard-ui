@@ -17,9 +17,9 @@
                 </div>
             </div>
         </div>
-        <leap-dashboard-view [dashboard]="dashboard" [page]="activePage" [update]="loadedItem" class="flex-col full"
+        <app-dashboard-view [dashboard]="dashboard" [page]="activePage" [update]="loadedItem" class="flex-col full"
             *ngIf="dashboard && filterDataby && filterDataby !='' && dashboard.pages[0].items.length>0 else askSerachTpl">
-        </leap-dashboard-view>
+        </app-dashboard-view>
     </div>
 </div>
 <ng-template #askSerachTpl>

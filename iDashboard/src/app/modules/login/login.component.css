@@ -32,3 +32,9 @@
 .login-wrapper .login {
   position: inherit;
 }
+.login-wrapper::ng-deep input.ng-invalid.ng-dirty + button {
+  margin: 0 !important;
+}
+.login-wrapper::ng-deep .clr-error .clr-validate-icon {
+  margin-left: 0;
+}

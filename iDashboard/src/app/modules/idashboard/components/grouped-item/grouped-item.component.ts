@@ -4,7 +4,7 @@ import { cut } from 'src/app/modules/home/home.component';
 import { groupBy } from 'lodash';
 import { DashboardDataSourceService } from '../../services/idashboard-datasource.service';
 @Component({
-  selector: 'leap-grouped-item',
+  selector: 'app-grouped-item',
   templateUrl: './grouped-item.component.html',
   styleUrls: ['./grouped-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

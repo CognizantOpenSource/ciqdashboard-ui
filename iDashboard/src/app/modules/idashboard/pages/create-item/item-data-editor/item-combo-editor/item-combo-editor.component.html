@@ -5,9 +5,9 @@
                 <clr-icon class="clr-accordion-angle" [class.close]="!groupState[gi]" dir="right" shape="angle" role="none"></clr-icon>
                 <span class="name">{{groupName}}</span>
                 <span class="option">
-                    <leap-item-filters [(filters)]="group.filters" 
+                    <app-item-filters [(filters)]="group.filters" 
                     [options]="filterOptions" (fieldChange)="onFiledSelected($event)">
-                  </leap-item-filters>
+                  </app-item-filters>
                 </span>
             </div>
             <div class="agg-fields" *ngIf="configs[gi] as config" [hidden]="!groupState[gi]">           

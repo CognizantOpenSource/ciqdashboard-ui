@@ -29,11 +29,11 @@ export class API {
     get getAllUsers() {
         return `${this.base}users`;
     }
-    updatePassword(params: any) {
-        return `${this.base}/users/password/update?${this.getParams(params)}`;
+    get updatePassword() {
+        return `${this.base}/users/password/update`;
     }
-    resetPassword(params: any) {
-        return `${this.base}/users/password/reset?${this.getParams(params)}`;
+    get resetPassword() {
+        return `${this.base}/users/password/reset`;
     }
     private getParams(params: any): string {
         return Object.keys(params || {}).filter(key => !!params[key])
@@ -72,4 +72,7 @@ export class API {
     deleteUsers() {
         return `${this.base}users/delete`;
     }
+}
+export const APP_PERMISSIONS = {
+    Admin: 'permission.admin'
 }

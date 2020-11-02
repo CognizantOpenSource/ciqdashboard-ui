@@ -35,29 +35,29 @@
       <div class="search flex-row">
         <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterDataby">
       </div>
-      <leap-grouped-item class="items datasets full" [items]="datasets | callback:getItemsFilter('filterDataby')"
+      <app-grouped-item class="items datasets full" [items]="datasets | callback:getItemsFilter('filterDataby')"
         (itemSelect)="selectDataSource($event.name)" [canEdit]="true" [canRemove]="true"
         (itemRemove)="removeDataSource($event)" (itemEdit)="editDataSource($event)">
-      </leap-grouped-item>
+      </app-grouped-item>
     </div>
     <div class="panel select-data  flex-col clr-col-12" *ngSwitchCase="2">
       <div class="search flex-row">
         <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterItemby">
       </div>
-      <leap-grouped-item class="items item-types full" [items]="itemTypes | callback:getItemsFilter('filterItemby')"
+      <app-grouped-item class="items item-types full" [items]="itemTypes | callback:getItemsFilter('filterItemby')"
         (itemSelect)="selectType($event.name)">
-      </leap-grouped-item>
+      </app-grouped-item>
     </div>
     <div class="panel update-config flex-col full" *ngSwitchCase="3">
       <div class="head-filter flex-row">
-        <leap-dash-filter-dropdown [data]="newFilterOptions" [options]="filterOptions" (save)="addFilter($event)"
+        <app-dash-filter-dropdown [data]="newFilterOptions" [options]="filterOptions" (save)="addFilter($event)"
           (fieldChange)="onFiledSelected($event)">
-        </leap-dash-filter-dropdown>
-        <leap-dash-filter-dropdown *ngFor="let filter of filters;let index=index;" [data]="filter"
+        </app-dash-filter-dropdown>
+        <app-dash-filter-dropdown *ngFor="let filter of filters;let index=index;" [data]="filter"
           [options]="filterOptions" [edit]="true" (clone)="addFilter($event)" (save)="saveFilter($event,index)"
           (select)="setFilter(filter,index,$event)" (remove)="removeFilter(filter,index);"
           (fieldChange)="onFiledSelected($event)">
-        </leap-dash-filter-dropdown>
+        </app-dash-filter-dropdown>
       </div>
       <div class="main-config flex-row full">
         <item-data-editor *ngIf="item" class="config" [(item)]="item" [type]="item?.type"
@@ -65,10 +65,10 @@
         </item-data-editor>
 
         <div class="preview clr-col-12 flex-col">
-          <leap-display-chart *ngIf="previewData else noPreviewTpl" [chartType]="item.type"
+          <app-display-chart *ngIf="previewData else noPreviewTpl" [chartType]="item.type"
             [dashboardData]="previewData" [dashboardConfig]="item.options"
             [chartTitle]="item.options?.title || item.name" [item]="item">
-          </leap-display-chart>
+          </app-display-chart>
           <ng-template #noPreviewTpl>
             <button class="btn btn-link" title="Refresh Preview" (click)="reload()"
               style="margin: auto;color:var(--fg1);">
@@ -100,7 +100,7 @@
               <div class="imagelabel flex-col">
                 <span style="margin: auto; font-weight: bold">Select Image: (Please Upload "PNG" File)</span>
                 <div class="tool-image">
-                  <leap-file-upload [(data)]="icon" type=".png"></leap-file-upload>
+                  <app-image-upload [(data)]="icon" type=".png"></app-image-upload>
                 </div>
               </div>
             </div>

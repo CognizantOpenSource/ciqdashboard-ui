@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy, SimpleChanges, OnCha
 import { BaseChart } from '../base-chart'
 
 @Component({
-  selector: 'leap-chart-area',
+  selector: 'app-chart-area',
   templateUrl: './chart-area.component.html',
   styleUrls: ["../base-chart.scss", './chart-area.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,

@@ -28,7 +28,7 @@ const options = {
   headers: []
 };
 @Component({
-  selector: 'leap-display-chart',
+  selector: 'app-display-chart',
   templateUrl: './display-chart.component.html',
   styleUrls: ['./display-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
@@ -135,7 +135,6 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
         this.item.filters = this.item.filters || [];
         this.options.filters = this.item.filters;
         super.setOptions(this.options);
-        console.log(this.options)
       });
     }
   }

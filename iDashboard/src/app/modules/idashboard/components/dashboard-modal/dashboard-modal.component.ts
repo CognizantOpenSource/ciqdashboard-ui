@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'leap-dashboard-modal',
+  selector: 'app-dashboard-modal',
   templateUrl: './dashboard-modal.component.html',
   styleUrls: ['./dashboard-modal.component.scss']
 })

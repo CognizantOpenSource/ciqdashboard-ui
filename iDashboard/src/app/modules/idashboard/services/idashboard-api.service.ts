@@ -9,7 +9,13 @@ import { itemTypes } from './items.data';
   providedIn: 'root'
 })
 export class IDashBoardApiService {
-
+  
+  getUserProjects(userId: string): Observable<any> {
+    return this.http.get(this.api.getUserProjects(userId));
+  }
+  updateUserProjects(userId: string, projectIds: string[]): Observable<any> {
+    return this.http.put(this.api.getUserProjects(userId), projectIds);
+  }
   getProjectMapping(projectId):Observable<any>{
     return this.http.get(this.api.getProjectMapping(projectId));
   }

@@ -72,7 +72,7 @@ export class IDashboardAPI {
     }
 
     getFieldsTypes(name: string) {
-        return `${this.base}/collector/fields-types?collection-name=${name}`;
+        return `${this.base}collector/fields-types?collection-name=${name}`;
     }
 
     detDataSourceByid(id): string {
@@ -111,5 +111,8 @@ export class IDashboardAPI {
     }
     getProjectMapping(projectId): string {
         return `${this.projectMapping}${projectId}/`;
+    }
+    getUserProjects(userId: string): string {
+        return `${this.resourceMapping}users/${userId}`;
     }
 }

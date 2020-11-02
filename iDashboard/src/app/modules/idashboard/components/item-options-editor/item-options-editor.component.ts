@@ -12,7 +12,7 @@ export function resetDisabledFieldsInOptions(options, disabled) {
 }
 
 @Component({
-  selector: 'leap-item-options-editor',
+  selector: 'app-item-options-editor',
   templateUrl: './item-options-editor.component.html',
   styleUrls: ['./item-options-editor.component.scss'],
   providers: [{
@@ -64,6 +64,10 @@ export class ItemOptionsEditorComponent implements OnInit, ControlValueAccessor 
   private updateDisabledFields() {
 
     if (this.data && this.disabled && Object.keys(this.data).some(k => this.data[k] !== null)) {
+      // apply disabled options from saved item to disabled options
+      Object.keys(this.data).filter((k:string) => k.endsWith('--disabled')).forEach(key => {
+         this.disabled[key.split('--disabled')[0]] = this.data[key];
+      });
       if (resetDisabledFieldsInOptions(this.data, this.disabled)) {
         this.onFormChange(this.data);
         this.dataChange.emit(this.data);

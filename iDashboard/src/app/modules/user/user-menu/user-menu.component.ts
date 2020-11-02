@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UnSubscribable } from 'src/app/components/unsub';
 import { Theme } from 'src/app/model/types.model';
 import { UserConfigService } from '../../idashboard/services/user-config.service';
+import { APP_PERMISSIONS } from 'src/app/services/auth/auth-api';
 @Component({
   selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',
@@ -28,7 +29,7 @@ export class UserMenuComponent extends UnSubscribable implements OnInit {
   }
   isAdmin(user: any) {
     return user.account.roles.map(role => role.permissions)
-      .flatMap(permissions => [...permissions]).find(permission => permission.id === 'leap.permission.admin');
+      .flatMap(permissions => [...permissions]).find(permission => permission.id === APP_PERMISSIONS.Admin);
   }
   getDisplayName(user: any) {
     return `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}`;

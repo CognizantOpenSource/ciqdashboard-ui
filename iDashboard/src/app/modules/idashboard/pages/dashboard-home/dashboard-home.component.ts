@@ -100,10 +100,12 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
       if (res) {
         this.toastr.success(`dashboard ${action}ed successfully`);
       } else {
-        this.toastr.error( `error while ${action}ing dashboard!`);
+        dashboard.openAccess = !dashboard.openAccess
+        this.toastr.error(`error while ${action}ing dashboard!`);
       }
     },
       error => {
+        dashboard.openAccess = !dashboard.openAccess;
         const parsedError = parseApiError(error, `error while ${action}ing dashboard!`);
         this.toastr.error(parsedError.message, parsedError.title);
       });

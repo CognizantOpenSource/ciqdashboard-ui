@@ -6,7 +6,7 @@ interface IDashBoardItem{
   [key:string]:any;
 }
 @Component({
-  selector: 'leap-dashboard-grid',
+  selector: 'app-dashboard-grid',
   templateUrl: './dashboard-grid.component.html',
   styleUrls: ['./dashboard-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

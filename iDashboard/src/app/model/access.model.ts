@@ -19,6 +19,7 @@ export interface IUser {
     password?: any;
     image: Blob | string;
     active: boolean;
+    account:IAccount;
 }
 interface IAccount {
     id: ObjectId;

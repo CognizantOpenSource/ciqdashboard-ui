@@ -21,7 +21,7 @@ export interface IInfoCard {
   base?: number;
 }
 @Component({
-  selector: 'leap-info-bar-report',
+  selector: 'app-info-bar-report',
   templateUrl: './info-bar.component.html',
   styleUrls: ['./info-bar.component.css'],
   changeDetection : ChangeDetectionStrategy.OnPush

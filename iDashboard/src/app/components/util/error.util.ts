@@ -3,6 +3,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 enum IMessageTypes {
     whitelistError = 'whitelist error'
 }
+
+export const DEFAULT_ERROR_MESSAGES = {
+    E0: 'application is offline!',
+    E400: 'invalid request, please check the inputs',
+    E401: 'unauthorized, please login again to continue',
+    E403: 'You don’t have required role or privilege to complete this action',
+    E405: 'the action not supported yet',
+    E409: 'resource conflict, please choose another name/id',
+    E500: 'unable to procss the request'
+}
 interface IErrorResponse {
     error: string;
     message: string;
@@ -28,45 +38,26 @@ function parseMessage(message: string): IParsedError {
     }
     return { message };
 }
-function parse400(error: IErrorResponse): IParsedError {
-   if (error && error.message) {
-        return parseMessage(error.message);
-    }
-    return { message: 'invalid request, please check the inputs' };
-}
-function parse405(error: IErrorResponse): IParsedError {
+function parseError(error: IErrorResponse, code: number): IParsedError {
     if (error && error.message) {
         return parseMessage(error.message);
     }
-    return { message: 'the action not supported yet' };
-}
-function parse409(error: IErrorResponse): IParsedError {
-   if (error && error.message) {
-        return parseMessage(error.message);
-    }
-    return { message: 'resource conflict, please choose another name/id' };
-}
-function parse500(error: IErrorResponse): IParsedError {
-    if (error && error.message) {
-        return parseMessage(error.message);
-    }
-    return { message: 'unable to procss the request' };
+    return { message: DEFAULT_ERROR_MESSAGES[`E${code}`] };
 }
 export function parseApiError(error: HttpErrorResponse, message: string): IParsedError {
     if (typeof error.status === 'number') {
         switch (error.status) {
             case 0:
-                return { message: 'application is offline!' };
+                return { message: DEFAULT_ERROR_MESSAGES.E0 };
             case 401:
-                return { message: 'unauthorized, please login again to continue' };
+                return { message: DEFAULT_ERROR_MESSAGES.E401 };
+            case 403:
+                return { message: DEFAULT_ERROR_MESSAGES.E403 };
             case 400:
-                return parse400(error.error);
             case 409:
-                return parse409(error.error);
             case 405:
-                return parse405(error.error);
             case 500:
-                return parse500(error.error);
+                return parseError(error.error, error.status);
         }
     }
     return { message };

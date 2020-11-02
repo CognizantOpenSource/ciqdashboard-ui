@@ -27,7 +27,6 @@ export class UserConfigService {
     this.auth.state$.pipe(filter(s => s), take(1)).subscribe(this.init.bind(this));
   }
   private init() {
-    //this.loadSystemSettings();
     this.loadUserSettings();
     this.userSettings$.subscribe(settings => {
       this.setSettings(settings);

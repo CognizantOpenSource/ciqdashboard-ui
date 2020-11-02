@@ -52,11 +52,11 @@ export class AuthRestAPIService {
   getProfile() {
     return this.http.get(this.api.profile);
   }
-  updatePassword(params: any): Observable<any> {
-    return this.http.post(this.api.updatePassword(params), null);
+  updatePassword(data: any): Observable<any> {
+    return this.http.post(this.api.updatePassword, data);
   }
-  resetPassword(params: any): Observable<any> {
-    return this.http.post(this.api.resetPassword(params), null);
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(this.api.resetPassword, data);
   }
   // Roles
   getAllRoles(): Observable<any> {

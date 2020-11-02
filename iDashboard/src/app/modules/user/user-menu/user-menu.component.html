@@ -13,13 +13,15 @@
       <label clrDropdownItem title="Profile" [routerLink]="['/user/profile']">
         <clr-icon shape="user" class="is-solid"></clr-icon>Profile
       </label>
-      <div class="dropdown-divider" role="separator"></div>
-      <label clrDropdownItem title="User Settings" [routerLink]="['/user/settings']">
-        <clr-icon shape="administrator" class="is-solid"></clr-icon>Settings
-      </label>
-      <label clrDropdownItem title="Admin Settings" [routerLink]="['/admin/users']" *ngIf="isAdmin(user)">
-        <clr-icon shape="cog" class="is-solid"></clr-icon>Admin Settings
-      </label>
+      <a clrDropdownItem title="Open Help" href="help" target="_blank">
+        <clr-icon shape="help" class="is-solid"></clr-icon>Help
+      </a>
+      <ng-container *ngIf="isAdmin(user)">
+        <div class="dropdown-divider" role="separator"></div>
+        <label clrDropdownItem title="Admin Settings" [routerLink]="['/admin/users']">
+          <clr-icon shape="cog" class="is-solid"></clr-icon>Admin Settings
+        </label>
+      </ng-container>
       <div class="dropdown-divider" role="separator"></div>
       <a clrDropdownItem (click)="toggleTheme()" class="theme-toggle-menu">
         <clr-icon shape="paint-roller" class="is-solid"></clr-icon>Dark Theme

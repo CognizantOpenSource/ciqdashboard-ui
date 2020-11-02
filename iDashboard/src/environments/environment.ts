@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 const port = 9002;
-const host = 'http://10.120.100.231:9002' ; //`http://${window.location.hostname}:${port}`;
+const host = `http://${window.location.hostname}:${port}`;
 
 export const environment = {
   production: false,

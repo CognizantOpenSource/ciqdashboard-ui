@@ -131,6 +131,10 @@ export class ItemDataEditorComponent implements OnInit {
     const formValue = this.form.getRawValue();
     this.item[name] = formValue[name];
     this.item.options = { ...(name == 'options' ? data : formValue.options) };
+    // store disabled states for the options in dash edit page
+    Object.keys(this.disabledOptions).forEach(option => {
+      this.item.options[`${option}--disabled`] = this.disabledOptions[option];
+    })
   }
   groupByChange(value, index, config) {
     this.updated('groupBy', value);

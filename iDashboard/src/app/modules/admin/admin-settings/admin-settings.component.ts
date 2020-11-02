@@ -10,20 +10,10 @@ import { parseApiError } from 'src/app/components/util/error.util';
 })
 
 export class AdminSettingsComponent implements OnInit {
-  constructor(private config: UserConfigService, private toastr: ToastrService) {
-
-  }
+  constructor() { }
   ngOnInit() {
   }
 
-  reloadWhitelist() {
-    this.config.reloadWhitelist().subscribe(
-      success => this.toastr.success('whitelists successfully reloaded!'),
-      error => {
-        const parsedError = parseApiError(error, 'error while reloading whitelists!');
-        this.toastr.error(parsedError.message, parsedError.title);
-      });
-  }
 }
 
 

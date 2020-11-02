@@ -1,5 +1,5 @@
 <div class="container-full">
-  <div class="login-wrapper" *ngIf="newSession">
+  <div class="login-wrapper" *ngIf="newSession || !reloadWindow">
     <form class="login">
       <section class="title">
         <h3 class="welcome">Welcome to</h3>
@@ -24,7 +24,7 @@
         </clr-input-container>
         <clr-password-container>
           <input type="password" name="password" minlength="8" clrPassword placeholder="Password"
-            [(ngModel)]="form.password" />
+            [(ngModel)]="form.password" autocomplete="off" />
         </clr-password-container>
         <clr-checkbox-wrapper *ngIf="false">
           <label>Remember me</label>

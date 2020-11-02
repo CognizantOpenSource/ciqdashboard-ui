@@ -7,6 +7,7 @@ import { LocalStorage } from 'src/app/services/local-storage.service';
 import { UserManagerService } from 'src/app/services/auth/admin/user-manager.service';
 import { forkJoin } from 'rxjs';
 import { parseApiError } from 'src/app/components/util/error.util';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
 @Component({
   selector: 'app-project-home',
@@ -29,8 +30,9 @@ export class ProjectHomeComponent extends UnSubscribable implements OnInit {
       || (project && project.name.toLowerCase().includes(context.searchBy.toLowerCase()));
   }
   constructor(
+    private auth: AuthenticationService,
     private projectService: DashboardProjectService, private teamsService: UserManagerService,
-    private tostr: ToastrService, private localStorage: LocalStorage) {
+    private tostr: ToastrService) {
     super();
   }
   ngOnInit() {
@@ -39,7 +41,13 @@ export class ProjectHomeComponent extends UnSubscribable implements OnInit {
   }
   delete(project) {
     if (confirm(`Are you sure to delete ${project.name}?`))
-      this.projectService.removeProject(project.id);
+      this.projectService.removeProject(project.id).subscribe(res => {
+        this.tostr.success('project deleted successfully');
+        this.projectService.loadProjects();
+      }, error => {
+        const parsedError = parseApiError(error, 'error while deleting project');
+        this.tostr.error(parsedError.message, parsedError.title);
+      });
   }
   showSettings(project) {
 

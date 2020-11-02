@@ -10,7 +10,7 @@ import { BaseChart } from '../base-chart'
 
 
 @Component({
-  selector: "leap-chart-tree-map",
+  selector: "app-chart-tree-map",
   templateUrl: "./chart-tree-map.component.html",
   styleUrls: ["./chart-tree-map.component.scss"],
   changeDetection: ChangeDetectionStrategy.Default

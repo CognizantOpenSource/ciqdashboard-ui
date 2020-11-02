@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'leap-display-label',
+  selector: 'app-display-label',
   templateUrl: './display-label.component.html',
   styleUrls: ['./display-label.component.scss']
 })

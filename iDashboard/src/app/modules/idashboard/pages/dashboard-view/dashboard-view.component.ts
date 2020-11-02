@@ -4,7 +4,7 @@ import { IDashboard } from '../../model/data.model';
 import { DashboardItemsService } from '../../services/idashboard-items.service';
 
 @Component({
-  selector: 'leap-dashboard-view',
+  selector: 'app-dashboard-view',
   templateUrl: './dashboard-view.component.html',
   styleUrls: ['./../../components/idashboard.scss', './dashboard-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

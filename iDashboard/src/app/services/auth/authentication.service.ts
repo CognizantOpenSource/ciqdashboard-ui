@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { AuthRestAPIService } from './auth-rest-api.service';
+import { parseApiError } from 'src/app/components/util/error.util';
 function parseQuery(queryString): any {
   const query = {};
   const pairs: Array<string> = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
@@ -34,8 +35,8 @@ export class AuthenticationService {
   }
   private validateLogin() {
     const qParams = parseQuery(window.location.search);
-    if (qParams.leap_token) {
-      this.storageService.setItem('auth_token', qParams.leap_token).subscribe(() => this.loadProfile());
+    if (qParams.token) {
+      this.storageService.setItem('auth_token', qParams.token).subscribe(() => this.loadProfile());
     } else {
       this.isValid().subscribe(valid => valid ? this.loadProfile() : this._authSource.next(false));
     }
@@ -81,7 +82,7 @@ export class AuthenticationService {
       this.loadProfile();
     }, error => {
       if (error.status === 401 || error.status === 404) {
-        this.toastr.error('invalid email id/password');
+        this.toastr.error( (error.error && error.error.message) || 'invalid email id/password');
       } else {
         this.toastr.error(error.status ? error.error.message : 'application is offline')
       }
@@ -94,34 +95,43 @@ export class AuthenticationService {
     }, error =>
       this.toastr.error(error.status ? error.error.message : 'application is offline'));
   }
-  public createUser(userData, returnUrl) {
+  public createUser(userData) {
     return this.restApi.createUser(userData).subscribe(user => {
       if (user.id) {
         this.toastr.success('user created successfully');
-        this.router.navigate(['/login'], { queryParams: { returnUrl } });
+        this.router.navigate(['/login']);
       } else {
         this.toastr.error('error while creating user');
       }
-    }, error => this.toastr.error(error.error.message));
+    }, error => {
+      const parsedError = parseApiError(error, 'error while creating user');
+      this.toastr.error(parsedError.message, parsedError.title);
+    });
   }
-  public updatePassword(userData) {
-    return this.restApi.updatePassword(userData).subscribe(res => {
+  public updatePassword(newPassword, oldPassword) {
+    return this.restApi.updatePassword({ newPassword, oldPassword }).subscribe(res => {
       if (res.status === 200) {
         this.toastr.success('password changed successfully');
         this.router.navigate(['/user/profile']);
       } else {
         this.toastr.error('error while updating password');
       }
-    }, error => this.toastr.error(error.error.message));
+    }, error => {
+      const parsedError = parseApiError(error, 'error while updating password');
+      this.toastr.error(parsedError.message, parsedError.title);
+    });
   }
-  public resetPassword(userEmailId, password) {
-    return this.restApi.resetPassword({ userEmailId, password }).subscribe(res => {
+  public resetPassword(email, password) {
+    return this.restApi.resetPassword({ email, password }).subscribe(res => {
       if (res.status === 200) {
         this.toastr.success('password changed successfully');
       } else {
-        this.toastr.error('error while updating password');
+        this.toastr.error('error while reseting password');
       }
-    }, error => this.toastr.error(error.error.message));
+    }, error => {
+      const parsedError = parseApiError(error, 'error while reseting password');
+      this.toastr.error(parsedError.message, parsedError.title);
+    });
   }
   generateAPIToken(): Observable<any> {
     return this.restApi.generateAPIToken();
