@@ -1,7 +1,7 @@
 <form clrForm [formGroup]="filterForm" clrLayout="vertical" style="padding:0">
     <clr-dropdown [clrCloseMenuOnItemClick]="false">
         <button class="filter-toggle" clrDropdownTrigger #trigger aria-label="Open Filters"
-            (click)="openFilter(trigger)">
+            (click)="openFilter(trigger , $event)">
             <span class="clickable is-link">
                 <clr-icon shape="filter-grid" [class.is-solid]="hasActiveFilter(filters)" size="20"></clr-icon>
             </span>
@@ -23,7 +23,7 @@
                             <clr-icon shape="form"></clr-icon>
                         </button>
                         <button class="btn btn-info btn-sm" (click)="clear()" title="Remove all Filters">
-                            <clr-icon shape="times-circle"></clr-icon>
+                            <clr-icon shape="sync"></clr-icon>
                         </button>
                     </div>
                 </div>

@@ -26,7 +26,7 @@
       //  workaround https://github.com/swimlane/ngx-charts/issues/1248 , https://github.com/swimlane/ngx-charts/issues/1040
       g.chart {
         transform-origin: center;
-        transform: scale(0.9) translateX(40px) translateY(-8px);
+        transform: scale(0.85) translateX(40px) translateY(0px);
         g.x.axis > g:last-child {
           transform: translateY(-8px);
         }

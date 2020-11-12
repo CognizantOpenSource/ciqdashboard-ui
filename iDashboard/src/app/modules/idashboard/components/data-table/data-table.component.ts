@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectorRef, ViewRef } from '@angular/core';
 
 @Component({
   selector: 'app-data-table',
@@ -11,16 +11,18 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Input('columns') columns: any[];
   @Input('data') rows;
   @Input('config') options: any;
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
   ngOnChanges(changes: SimpleChanges): void {
     this.gridDataLoaded = false;
     setTimeout(() => {
       this.gridDataLoaded = this.columns && this.rows && true;
+      if (this.cdr && !(this.cdr as ViewRef).destroyed) {
+        this.cdr.detectChanges();
+      }
     });
   }
 
   ngOnInit() {
-
   }
 
 }

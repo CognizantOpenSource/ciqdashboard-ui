@@ -12,6 +12,9 @@ clr-datagrid::ng-deep {
         outline:none;
     }
   }
+  .datagrid-footer .pagination-size .clr-page-size-select {
+    min-height: unset!important;
+  }
 }
 clr-datagrid.no-header {
   &::ng-deep {

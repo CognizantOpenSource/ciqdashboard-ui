@@ -2,7 +2,7 @@
     <clr-tabs *ngIf="dashboards" class="full">
         <clr-tab *ngFor="let dashboard of dashboards;let index = index">
             <button clrTabLink [clrTabLinkInOverflow]="!dashboard.pinned && index >= 2"
-                [routerLink]="['../',dashboard.id]">{{dashboard.name}}</button>
+                [routerLink]="['../',dashboard.id]" [title]="dashboard.name">{{dashboard.name}}</button>
             <ng-template [(clrIfActive)]="dashboard.active">
                 <clr-tab-content>
                     <div class="dashboard-panel flex-col full">
@@ -10,7 +10,7 @@
                             <span class="title" *ngIf="dashboard.pages[activePage] as page">{{page.name}}</span>
                             <div class="options right ">
                                 <div class="btn-group btn-outline-primary btn-md btn-icon">
-                                    <clr-dropdown class="btn">
+                                    <clr-dropdown class="btn" *ngIf="dashboard.pages.length>1">
                                         <button clrDropdownTrigger class="no-focus" title="Select Page"
                                             aria-label="select page button">
                                             <clr-icon shape="file-group" size="20"></clr-icon>
@@ -26,7 +26,8 @@
                                     <button class="btn" title="Refresh Dashboard" (click)="reloadDashBoard(dashboard)">
                                         <clr-icon shape="sync"></clr-icon>
                                     </button>
-                                    <button class="btn" title="Pin Dashboard" [class.active]="dashboard.pinned"
+                                    <button class="btn" title="Pin Dashboard" *ngIf="dashboards.length>2"
+                                        [class.active]="dashboard.pinned"
                                         (click)="dashboard.pinned = !dashboard.pinned;">
                                         <clr-icon shape="pin"></clr-icon>
                                     </button>
@@ -65,8 +66,8 @@
         </clr-tab>
         <clr-tab class="new-tab">
             <button class="btn btn-icon" clrTabLink [clrTabLinkInOverflow]="false" title="Create Dashboard"
-                (click)="onCreateNewDash();">
-                <clr-icon shape="plus" size="24"></clr-icon>
+                style="padding: 0;">
+                <clr-icon shape="plus" size="36" (click)="showCreateDashPopup($event);" style="padding:6px"></clr-icon>
             </button>
             <ng-template [clrIfActive]="false">
                 <clr-tab-content>
@@ -75,3 +76,19 @@
         </clr-tab>
     </clr-tabs>
 </div>
+<clr-modal [clrModalOpen]="newDashboardModal" [clrModalClosable]="false" [clrModalSize]="'md'" class="new-dash-modal">
+    <span class="modal-title">Create Dashboard</span>
+    <div class="modal-body flex-col" style="overflow: hidden;">
+        <div class="flex-col full new-dash-modal">
+            <clr-input-container>
+                <input type="text" name="newDashBoardName" clrInput placeholder="DashBoard Name" minlength="4"
+                    [(ngModel)]="newDashBoardName" />
+            </clr-input-container>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" [disabled]="!(newDashBoardName && newDashBoardName.length>3)"
+            (click)="doCreateDashboard(newDashBoardName)">Create</button>
+        <button type="button" class="btn btn-outline-danger" (click)="cancelCreateDashboard()">Cancel</button>
+    </div>
+</clr-modal>

@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { StageParams, FieldType } from 'src/app/components/form/dynamic-field/dynamic-field.component';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { parseApiError } from 'src/app/components/util/error.util';
 import { DashboardProjectService } from '../../services/idashboard-project.service';
 interface Project {
@@ -16,6 +16,7 @@ interface Project {
   selector: 'app-new-project',
   templateUrl: './new-project.component.html',
   styleUrls: ['./new-project.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger(
       'enterAnimation', [
@@ -92,10 +93,9 @@ export class NewProjectComponent implements OnInit {
       this.toastr.warning('please provide valid inputs');
       return;
     }
-    const name = this.form.controls.name.value;
-    const description =  this.form.controls.description.value;
-    this.complete.emit({ name ,description});
-    this.projectService.createProject({ name ,description}).subscribe(project => {
+    const { name, description } = this.form.getRawValue();
+    this.complete.emit({ name, description });
+    this.projectService.createProject({ name, description }).subscribe(project => {
       if (project.id) {
         this.toastr.success('project created successfully');
         this.closed(event);

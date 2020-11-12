@@ -48,7 +48,7 @@ export class DashboardViewComponent implements OnInit {
       pushItems: false,
       swap: false,
       setGridSize: false,
-      mobileBreakpoint: 480,
+      mobileBreakpoint: 600,
       minRows: config.rows,
       maxRows: config.rows,
       minCols: config.columns,

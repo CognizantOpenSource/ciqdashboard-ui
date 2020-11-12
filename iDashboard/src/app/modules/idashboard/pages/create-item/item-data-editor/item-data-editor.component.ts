@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { getItemAggregate, getItemFields, getItemGroupBy } from '../../../services/idashboard-items.service';
 import { Subscription } from 'rxjs';
 import { resetDisabledFieldsInOptions } from '../../../components/item-options-editor/item-options-editor.component';
-import { suffledColors } from '../../../services/items.data';
 
 function add(index, controls: any[], ...args) {
   if (index == controls.length - 1) {
@@ -17,9 +16,8 @@ function remove(index, controls) {
   controls.splice(index, 1);
 }
 export const defGroupByConfig = {
-  "minFields": 1,
-  "maxFields": 3,
-  "fields": [{ "name": "Level 1", "required": true }, { "name": "Level 2" }, { "name": "Level 3" }]
+  minFields: 1,  maxFields: 3,
+  fields : [{ name: "Level 1", required : true  , gIndex: 0}, { name : "Level 2" , gIndex: 1 }, { name : "Level 3" , gIndex: 2}]
 }
 @Component({
   selector: 'item-data-editor',
@@ -58,7 +56,7 @@ export class ItemDataEditorComponent implements OnInit {
     groupBy: false, aggregate: false
   }
   hasAggregate;
-  disabledOptions: { [key: string]: boolean };
+  disabledOptions: { [key: string]: boolean } = {};
   constructor(private toastr: ToastrService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -106,7 +104,8 @@ export class ItemDataEditorComponent implements OnInit {
         this.groupByControls[i].setValue(values[i] || '');
         setTimeout(() => {
           // update in background
-          this.updateFieldOptions(values[i] , i , this.groupByConfig);
+          const fieldIndex = this.groupByConfig.fields.indexOf(this.groupByConfig.fields.find(f => f.gIndex === i));
+          this.updateFieldOptions(values[i] , fieldIndex , this.groupByConfig);
         }, 1000);
       }
     }
@@ -132,8 +131,8 @@ export class ItemDataEditorComponent implements OnInit {
     this.item[name] = formValue[name];
     this.item.options = { ...(name == 'options' ? data : formValue.options) };
     // store disabled states for the options in dash edit page
-    Object.keys(this.disabledOptions).forEach(option => {
-      this.item.options[`${option}--disabled`] = this.disabledOptions[option];
+    Object.keys(this.disabledOptions).filter(opt =>  this.disabledOptions[opt] === true).forEach(option => {
+      this.item.options[`${option}--disabled`] = true;
     })
   }
   groupByChange(value, index, config) {
@@ -141,15 +140,14 @@ export class ItemDataEditorComponent implements OnInit {
     this.updateFieldOptions(value, index, config);
   }
   private updateFieldOptions(fieldName, index, config) {
-    let dateSeries = !!(this.disabledOptions && this.disabledOptions.dateSeries);
-    if (fieldName && index >= 0 && config && config.fields) {
+     if (fieldName && index >= 0 && config && config.fields) {
       const isSeriesField = ['X Axis', 'Y Axis'].includes(config.fields[index].name) || config.fields.length === 1;
       if (isSeriesField) {
         const field = this.fields && this.fields.find(f => f.name == fieldName);
-        dateSeries = field && field.type !== 'date';
+        this.disabledOptions.dateSeries = (field && field.type||'').toLowerCase() !== 'date';
       }
     }
-    this.disabledOptions = { ...(this.disabledOptions || {}), dateSeries };
+    this.disabledOptions = { ...(this.disabledOptions || {})};
     setTimeout(() => {
       resetDisabledFieldsInOptions(this.item.options, this.disabledOptions);
     }, 10);

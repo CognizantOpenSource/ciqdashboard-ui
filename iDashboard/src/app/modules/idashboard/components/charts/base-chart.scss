@@ -44,7 +44,7 @@
       //  workaround https://github.com/swimlane/ngx-charts/issues/1248 , https://github.com/swimlane/ngx-charts/issues/1040
       g.chart {
         transform-origin: center;
-        transform: scale(0.9) translateX(40px) translateY(-8px);
+        transform: scale(0.9) translateX(40px) translateY(10px);
       }
       g[ngx-charts-timeline] {
         transform: translateX(86px) translateY(-30px);
@@ -61,7 +61,7 @@
         line-height: 50%;
         li {
           display: inline-block;
-          margin: 6px;
+          margin: 3px 6px;
         }
       }
     }

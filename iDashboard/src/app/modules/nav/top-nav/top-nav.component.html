@@ -1,10 +1,17 @@
 <header class="header-2" [hidden]="!loggedIn" [attr.data-theme]="theme$ | async" *ngIf="showFullHeader$|async">
-  <div class="branding hidden-mobile">
-    <a class="nav-link">     
-      <span class="title">iDashboard</span>
+  <div class="branding clr-hidden-sm-down">
+    <a class="nav-link">
+      <img src="assets/logo-r.svg" />
+      <!-- <span class="title">iDashboard</span> -->
     </a>
   </div>
-  <div class="header-nav">
+  <div class="branding-sm clr-hidden-md-up" style="min-width: 4rem;">
+    <a class="nav-link is-link" style="margin: 6px 12px; padding: 6px;width: 48px;height: 48px;"
+      [routerLink]="['/home']" [routerLinkActive]="['active']">
+      <clr-icon shape="home" size="36" style="color:var(--white);"></clr-icon>
+    </a>
+  </div>
+  <div class="header-nav clr-hidden-sm-down">
     <a class="nav-link nav-text" [routerLink]="['/home']" [routerLinkActive]="['active']">Home</a>
     <a class="nav-link nav-text" [routerLinkActive]="['active']" style="max-width: 180px;">
       <label [routerLink]="['idashboard','projects']" [title]="(projectLoaded && project?.name) || 'Project'"
@@ -22,22 +29,14 @@
       </clr-dropdown>
     </a>
   </div>
-
-  <div class="settings">
-    <div class="tools">
-      <router-outlet name="toolbar"></router-outlet>
-    </div>
-
-    <div class="tool right">
-      <a class="search" [routerLink]="['/idashboard/smart-dashboard']" [routerLinkActive]="['active']">
+  <div class="filler"></div>
+  <div class="header-actions">
+    <div class="action">
+      <a class="search-link" [routerLink]="['/idashboard/smart-dashboard']" [routerLinkActive]="['active']">
         Search
       </a>
-      <app-notification></app-notification>
-      <a class="help" title="Help" (click)="openHelp()" [hidden]="true">
-        <clr-icon shape="help" class="is-solid" size="28"></clr-icon>
-      </a>
-      <app-user-menu></app-user-menu>
+      <app-notification *ngIf="false"></app-notification>
+      <app-user-menu class="flex-row" style="min-width: 2.25rem;"></app-user-menu>
     </div>
-    <div class="tool right"></div>
   </div>
 </header>

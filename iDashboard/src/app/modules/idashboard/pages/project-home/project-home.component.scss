@@ -15,16 +15,17 @@
 
 .contents {
   min-height: 100%;
+  max-height: 100%;
   background: var(--bg2);
   color: var(--fg1);
-
+  align-items: center;
   .head {
     justify-content: space-between;
     border-bottom: 2px solid;
     border-bottom-color: var(--bg1);
     .title {
       * {
-        margin-top: 1rem;
+        margin-top: 1.125rem;
       }
     }
     .options {

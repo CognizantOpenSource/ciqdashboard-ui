@@ -93,6 +93,7 @@ button.is-editing {
       background-color: var(--bg2);
       .nav-link.active {
         background-color: var(--bg3);
+
       }
     }
   }
@@ -106,7 +107,7 @@ button.is-editing {
   color: var(--fg1);
   min-width: 2rem;
   min-height: 1rem;
-  cursor: pointer;
+  max-width: 6rem;
   &:focus {
     outline: none;
   }
@@ -116,5 +117,19 @@ button.is-editing {
   clr-icon {
     color: var(--fg1);
     padding-bottom: 6px;
+  }
+}
+.rename-page-modal::ng-deep {
+  .modal-content {
+    background: var(--bg3);
+    box-shadow: none;
+    color: var(--fg1) !important;
+    .modal-title {
+      color: var(--fg1) !important;
+    }
+  }
+  .clr-control-container {
+    min-height: 1.3rem;
+    width: 100%;
   }
 }

@@ -59,10 +59,11 @@
     margin-right: 4px;
   }
   clr-dropdown-menu {
-    top: calc(50vh - 130px) !important;
+    top: calc(50vh - 10rem) !important;
     bottom: auto !important;
     left: 310px !important;
     transform: none!important;
+    min-width: 18rem;
      select {
       height: 1.25rem;
     }

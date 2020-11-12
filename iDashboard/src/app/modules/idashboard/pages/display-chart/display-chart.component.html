@@ -67,11 +67,11 @@
         </app-chart-line-area-stacked>
 
         <!--  \\Pie Chart\\  -->
-        <app-chart-pie *ngSwitchCase="'pie-chart'" [data]="itemData" [config]="itemConfig">
+        <app-chart-pie *ngSwitchCase="'pie-chart'" [data]="itemData" [config]="itemConfig" [(path)]="paths">
         </app-chart-pie>
         <app-chart-pie-advanced *ngSwitchCase="'pie-chart-advanced'" [data]="itemData" [config]="itemConfig">
         </app-chart-pie-advanced>
-        <app-chart-pie-grid *ngSwitchCase="'pie-chart-grid'" [data]="itemData" [config]="itemConfig">
+        <app-chart-pie-grid *ngSwitchCase="'pie-chart-grid'" [data]="itemData" [config]="itemConfig" [(path)]="paths">
         </app-chart-pie-grid>
 
         <!--  \\Tree map Chart\\  -->

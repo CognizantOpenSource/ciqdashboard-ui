@@ -127,13 +127,13 @@ export class DashboardSlideshowComponent extends IDashBoard implements OnInit {
       this.updateItemData(item, this.page, this.currentSlide);
     }
   }
-  onPreviousClick() {
+  previous() {
     const previous = this.currentSlide - 1;
     this.currentSlide = previous < 0 ? this.slides.length - 1 : previous;
     this.navChange();
   }
 
-  onNextClick() {
+  next() {
     const next = this.currentSlide + 1;
     this.currentSlide = next === this.slides.length ? 0 : next;
     this.navChange();
@@ -142,7 +142,7 @@ export class DashboardSlideshowComponent extends IDashBoard implements OnInit {
   setAnimationType(type) {
     this.animationType = type.value;
     setTimeout(() => {
-      this.onNextClick();
+      this.next();
     });
   }
 

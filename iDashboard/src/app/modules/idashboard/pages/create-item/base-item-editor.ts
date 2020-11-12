@@ -20,10 +20,6 @@ export class BaseItemEditor extends FilterableDashboardComponent<any> {
     constructor(public route: ActivatedRoute, public router: Router, spec: FilterOps, public toastr: ToastrService) {
         super(spec);
     }
-    getItemsFilter(searchBy) {
-        const context = this;
-        return (item: any) => !context[searchBy] ? true : item.name.includes(context[searchBy]);
-    }
     updateRouteQueryParam(queryParams) {
         this.router.navigate([], { relativeTo: this.route, queryParams, queryParamsHandling: 'merge' });
     }

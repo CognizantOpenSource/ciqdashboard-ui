@@ -1,12 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { DashboardService } from '../../services/idashboard.service'; 
+import { DashboardService } from '../../services/idashboard.service';
 import { ActivatedRoute, Router, ActivationEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { filter, map, distinctUntilChanged, take, tap } from 'rxjs/operators';
 import { UserConfigService } from '../../services/user-config.service';
 import { IGridConfig, IDashboard } from '../../model/data.model';
-import { CreateItemComponent } from '../create-item/create-item.component'; 
+import { CreateItemComponent } from '../create-item/create-item.component';
 import { DashboardItemsService } from '../../services/idashboard-items.service';
-import { DashboardProjectService } from '../../services/idashboard-project.service'; 
+import { DashboardProjectService } from '../../services/idashboard-project.service';
 import { ToastrService } from 'ngx-toastr';
 import { cloneDeep } from 'lodash';
 import { IDashBoard } from '../dashboard-home/idashboard';
@@ -35,6 +35,7 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   activePage: any;
   activePageIndex: number;
   loadedItem: any;
+  renamePage:any;
   constructor(
     private route: ActivatedRoute, private router: Router, private config: UserConfigService,
     private toastr: ToastrService, private projectService: DashboardProjectService,
@@ -62,7 +63,7 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
     this.managed(this.route.queryParams).pipe(map(params => params.page), filter(it => !!it), distinctUntilChanged())
       .subscribe(page => this.activePageIndex = +page);
     this.managed(this.route.params).pipe(map(params => params.page), filter(it => !!it), distinctUntilChanged())
-      .subscribe(page => this.changePageQueryParam(page , true));
+      .subscribe(page => this.changePageQueryParam(page, true));
 
     this.managed(this.dashboardService.dashboard$)
       .pipe(filter(d => d.id === this.params.dashboardId), distinctUntilChanged())
@@ -150,8 +151,6 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
       item.options = { ...item.options };
     }
     this.updateGrid();
-    // TODO : fix label options live update issue on first edit
-    // TODO : fix label properties not passed on
   }
   onGridConfigChange(config: IGridConfig) {
     this.updateGrid();
@@ -159,10 +158,17 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   onModalClosed() {
     this.router.navigate(['./'], { relativeTo: this.route });
   }
+  onPageNameChange(page, index, name) {
+    if (!name || name == '')
+      page.name = 'page-' + (index + 1);
+  }
+  showRenamePopup(page){
+    this.renamePage = page;
+  }
 
-  private changePageQueryParam(page: number , removeParam = false) {
+  private changePageQueryParam(page: number, removeParam = false) {
     // use 'remove' param to remove existing page param in route
-    this.router.navigate(removeParam ? [{}]:[], { relativeTo: this.route, queryParams: { page }, queryParamsHandling: 'merge' });
+    this.router.navigate(removeParam ? [{}] : [], { relativeTo: this.route, queryParams: { page }, queryParamsHandling: 'merge' });
   }
   changeActivePage(page) {
     if (this.activePage !== page) {

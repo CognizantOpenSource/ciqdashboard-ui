@@ -10,6 +10,7 @@
       max-height: 100%;
       width: 100%;
       max-width: 100%;
+      
     }
   }
 }
@@ -28,14 +29,26 @@
     }
   }
 }
-
-:host::ng-deep {
-  .gauge .gauge-tick {
-    path {
-      stroke: var(--chart-text-color);
+.show-axis::ng-deep {
+  .gauge{
+    &.chart{
+      transform-origin: 0;
+      transform: scale(0.95) translate(50%, 65%);
     }
-    text {
-      fill: var(--chart-text-color);
+  }
+}
+:host::ng-deep {
+  .gauge{
+    &.chart{ 
+      transition: all .3s ease-out;
+    }
+    .gauge-tick {
+      path {
+        stroke: var(--chart-text-color);
+      }
+      text {
+        fill: var(--chart-text-color);
+      }
     }
   }
 }

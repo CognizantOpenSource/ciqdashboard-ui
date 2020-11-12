@@ -52,12 +52,8 @@
     <clr-tabs class="full pages">
         <clr-tab *ngFor="let page of dashboard.pages;let index = index" class="page page-tab">
             <div clrTabLink [clrTabLinkInOverflow]="!page.pinned && index >= 6" class="page-tab-link">
-                <button (click)="changeActivePage(page);" [(text)]="page.name"
-                    (textChange)="(!$event || $event == '') && page.name = 'page-'+(index+1)" appEditable
-                    class="page-tab-btn">default</button>
-                <ng-container>
-                    <ng-container *ngTemplateOutlet="pageDDTpl; context: {page:page,pages:dashboard.pages}">
-                    </ng-container>
+                <button (dblclick)="showRenamePopup(page)"   class="is-link page-tab-btn ellipsis">{{page.name}}</button>
+                <ng-container *ngTemplateOutlet="pageDDTpl; context: {page:page,pages:dashboard.pages}">
                 </ng-container>
             </div>
             <ng-template [(clrIfActive)]="page.active">
@@ -89,8 +85,22 @@
             <clr-icon shape="caret" dir="down" size="20"></clr-icon>
         </button>
         <clr-dropdown-menu *clrIfOpen>
+            <div aria-label="Rename Page" clrDropdownItem (click)="showRenamePopup(page)">Rename</div>
             <div aria-label="Clone Page" clrDropdownItem (click)="clonePage(page,pages)">Clone</div>
             <div aria-label="Delete Page" clrDropdownItem (click)="deletePage(page,pages)">Delete</div>
         </clr-dropdown-menu>
     </clr-dropdown>
 </ng-template>
+
+<clr-modal [clrModalOpen]="renamePage" (clrModalOpenChange)="renamePage = null;" [clrModalClosable]="true" [clrModalSize]="'md'" class="rename-page-modal">
+    <span class="modal-title">Rename Page</span>
+    <div class="modal-body flex-col" style="overflow: hidden;">
+        <div class="flex-col full new-dash-modal" *ngIf="renamePage">
+            <clr-input-container>
+                <input type="text" name="newDashBoardName" clrInput placeholder="Page Name" minlength="4"
+                    [(ngModel)]="renamePage.name"
+                    (ngModelChange)="onPageNameChange(renamePage , dashboard.pages.indexOf(renamePage) , $event)" />
+            </clr-input-container>
+        </div>
+    </div>
+</clr-modal>

@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
 import { GridsterConfig, DisplayGrid, GridType, CompactType } from 'angular-gridster2';
 import { IGridConfig } from '../../../model/data.model';
 import { UnSubscribable } from 'src/app/components/unsub';
-interface IDashBoardItem{
-  [key:string]:any;
+interface IDashBoardItem {
+  [key: string]: any;
 }
 @Component({
   selector: 'app-dashboard-grid',
@@ -11,7 +11,7 @@ interface IDashBoardItem{
   styleUrls: ['./dashboard-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardGridComponent extends UnSubscribable implements OnInit {
+export class DashboardGridComponent extends UnSubscribable implements OnInit, OnChanges {
 
   // TODO: match max used rows/cols to min rows/cols to the editor
   @Input() set config(config: IGridConfig) {
@@ -66,6 +66,9 @@ export class DashboardGridComponent extends UnSubscribable implements OnInit {
   constructor() {
     super();
   }
+  ngOnChanges(changes: SimpleChanges): void {
+
+  }
 
   ngOnInit() {
   }
@@ -104,6 +107,10 @@ export class DashboardGridComponent extends UnSubscribable implements OnInit {
     // trigger chart resize
     item.data = item.data && [...item.data];
     this.itemsChange.emit(this.items);
+    // trigger resize for combo chart
+    setTimeout(_ => {
+      window.dispatchEvent(new Event('resize'));
+    }, 10);
   }
   removeItem($event: MouseEvent | TouchEvent, index: number) {
     super.consume($event);
@@ -114,7 +121,7 @@ export class DashboardGridComponent extends UnSubscribable implements OnInit {
     this.selected = (this.selected == index) ? null : index;
     this.selectedChange.emit(this.selected !== null ? item : null);
   }
-  getImageIcon(imgItem:any) {
+  getImageIcon(imgItem: any) {
     return { type: imgItem.type || 'image', name: imgItem.name, data: imgItem.options.ImageSrc, desc: imgItem.description };
   }
   pick(item = {} as any) {

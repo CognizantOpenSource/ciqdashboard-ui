@@ -22,8 +22,8 @@ gridster {
 
     .remove {
       position: absolute;
-      top: 1px;
-      right: 0;
+      top: 0;
+      right: 1px;
       z-index: 999;
       color: var(--fg1);
       &.is-chart {

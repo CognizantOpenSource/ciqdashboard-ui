@@ -4,9 +4,20 @@ import { IDashBoardApiService } from './idashboard-api.service';
 import { LocalStorage } from 'src/app/services/local-storage.service';
 import { tap, map } from 'rxjs/operators';
 import { createCachableResource } from './idashboard-project.service';
-import { getItemFieldsConfig, getItemGroupByConfig , getItemAggregateConfig } from './items.data';
-import { transFormData } from './transform-data';
+import { getItemFieldsConfig, getItemGroupByConfig , getItemAggregateConfig } from './items.data'; 
+import { isObject, isArray, map as _map, flow, omitBy, mapValues } from 'lodash';
 
+export function deepOmitBy(root , func) {
+  if (!func || typeof func !== 'function') {
+      throw new Error('requried function(argument) for omit check');
+  }
+  const rFn = v => deepOmitBy(v,func);
+  return isObject(root)
+      ? isArray(root)
+          ? _map(root, rFn)
+          : flow(obj => omitBy(obj, func), obj => mapValues(obj, rFn))(root)
+      : root;
+}
 interface ItemWizardEvent {
   type: 'created' | 'updated';
   template?: 'new';
@@ -131,7 +142,7 @@ export const fixNullChartData = (item) => {
   return item;
 };
 export function clean(val) {
-  return val && val.deepOmitBy((e) => e === undefined || e === null || e === "");
+  return val && deepOmitBy(val , (e) => e === undefined || e === null || e === "");
 }
 export function getItemGroupBy(type) {
   return getItemGroupByConfig(type);

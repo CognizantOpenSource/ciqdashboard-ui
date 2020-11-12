@@ -4,7 +4,6 @@ import { GridsterModule } from 'angular-gridster2';
 import { ExecutionRoutingModule } from './idashboard-routing.module';
 import { SharedModule } from '../shared.module';
 import { FilterDropdownComponent } from './components/filter-dropdown/filter-dropdown.component';
-import { InfoBarReportComponent } from './components/info-bar/info-bar.component';
 import { WrapperComponent } from './pages/wrapper/wrapper.component';
 import { NewProjectComponent } from './pages/new-project/new-project.component';
 import { ProjectHomeComponent } from './pages/project-home/project-home.component';
@@ -63,7 +62,6 @@ import { ChartBarVerticalGaugeComponent } from './components/charts/chart-bar-ve
   declarations: [
     ProjectHomeComponent,
     NewProjectComponent,
-    InfoBarReportComponent,
     FilterDropdownComponent,
     WrapperComponent,
     DashboardHomeComponent,

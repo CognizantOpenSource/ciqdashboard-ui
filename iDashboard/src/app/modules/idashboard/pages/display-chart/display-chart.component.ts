@@ -79,7 +79,9 @@ export class DisplayChartComponent extends FilterableDashboardComponent<any> imp
   private doUpdateData(data, options) {
     if (data && options) {
       const dataItem = { ...(this.item || { type: this.chartType }) };
-      this.itemData = [...transFormData({...dataItem , data , options}).data];
+      if (!this.isDataTable(dataItem)) {
+        this.itemData = [...transFormData({ ...dataItem, data, options }).data];
+      }
     }
     this.checkAndUpdateDataTable();
   }

@@ -6,10 +6,11 @@ span {
       border-color: var(--border-color2);
       color: var(--fg1);
       &.active {
-        background: var(--bg1-sel);
+        background: var(--bg1);
       }
-      &:hover {
+      &:hover:not(.active) {
         background: var(--bg1-sel);
+        opacity: .75;
       }
     }
   }

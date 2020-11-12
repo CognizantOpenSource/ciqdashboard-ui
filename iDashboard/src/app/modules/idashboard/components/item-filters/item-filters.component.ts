@@ -53,8 +53,7 @@ export class ItemFiltersComponent implements OnInit {
   hasActiveFilter(filters) {
     return filters && filters.some(f => f.active);
   }
-  openFilter(trigger) {
-    // TODO : fix transparent dropdown issue
+  openFilter(trigger, event) {
     const rect = trigger.getBoundingClientRect();
     const dropDownEnd = rect.left + (24 * 18) + 10;
     if (dropDownEnd < window.innerWidth) {

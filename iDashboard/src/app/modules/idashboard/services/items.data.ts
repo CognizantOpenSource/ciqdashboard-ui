@@ -80,7 +80,7 @@ export const fieldTypes = [
     { "name": "dateSeries", "type": "boolean" },
     {
         "name": "dateFormat", "type": "select", "dependsOn": "dateSeries",
-        "data": ["ddd Do MMM, YYYY", "dd-MMM-YYYY", "MMM YYYY", "YYYY"]
+        "data": ["ddd Do MMM, YYYY", "DD-MMM-YYYY", "MM-DD-YYYY" , "DD-MM-YYYY", "MMM YYYY", "YYYY"]
     },
     {
         "name": "dateGroup", "type": "select", "dependsOn": "dateSeries",
@@ -132,6 +132,7 @@ export const fieldTypes = [
     { "name": "maxRadius", "type": "number" },
     { "name": "innerPadding", "type": "number" },
     { "name": "cardColor", "type": "string" },
+    { "name": "textColor", "type": "string" },
     { "name": "min", "type": "number" },
     { "name": "max", "type": "number" },
     { "name": "units", "type": "string" },
@@ -382,7 +383,7 @@ export const itemTypes = [{
     }],
     "aggregate": "true",
     "image": "grid-chart", "imageType": "clr-icon",
-    "fields": ["title", "colors", "scheme", "animations", "innerPadding", "cardColor"]
+    "fields": ["title", "colors", "scheme", "animations", "innerPadding", "cardColor", "textColor"]
 },
 {
     "name": "gauge-chart",
@@ -392,7 +393,7 @@ export const itemTypes = [{
         ]
     }],
     "group": "gauge chart", "image": "tick-chart", "imageType": "clr-icon",
-    "fields": ["title", "colors", "scheme", "animations", "legend", "legendTitle", "legendPositionDown", "min", "max", "units", "bigSegments", "smallSegments", "showAxis", "angleSpan", "startAngle", "tooltipDisabled", "showText"]
+    "fields": ["title", "colors", "scheme", "animations", "legend", "legendTitle", "legendPositionDown", "min", "max", "units", "bigSegments", "smallSegments", "showAxis", "tooltipDisabled", "showText"]
 
 },
 {

@@ -48,10 +48,10 @@
             </div>
         </div>
         <div class="search">
-            <input type="text" [(ngModel)]="filterChartItemsBy">
+            <input type="text" [(ngModel)]="searchItemText">
         </div>
-        <app-grouped-item class="flex-col" [groupBy]="'sourceGroup'" sidebarView="true" [canEdit]="true"
-            canRemove="true" [filterValue]="filterChartItemsBy" [filterBy]="filterItemBy" [items]="filteredCharts"
+        <app-grouped-item class="flex-col full" [groupBy]="'sourceGroup'" sidebarView="true" [canEdit]="true"
+            canRemove="true" [filterValue]="searchItemText" [filterBy]="filterItemBy" [items]="filteredCharts"
             (itemSelect)="selectItem($event)" (itemRemove)="removeItem($event)" (itemEdit)="editItem($event)">
         </app-grouped-item>
     </div>

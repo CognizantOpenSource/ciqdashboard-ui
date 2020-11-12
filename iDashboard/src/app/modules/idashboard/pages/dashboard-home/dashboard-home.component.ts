@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/idashboard.service';
-import { UnSubscribable } from 'src/app/components/unsub';
-import { ActivatedRoute, Router, ActivatedRouteSnapshot } from '@angular/router';
-import { combineLatest, forkJoin } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest } from 'rxjs';
 import { UserConfigService } from '../../services/user-config.service';
 
-import { ExportAsService, ExportAsConfig, SupportedExtensions } from 'ngx-export-as';
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 import { DashboardProjectService } from '../../services/idashboard-project.service';
-import { take, filter, map, distinctUntilChanged, tap, distinct, switchMap, debounce, debounceTime, throttleTime } from 'rxjs/operators';
+import { take, filter, map, distinctUntilChanged, distinct, switchMap, debounceTime } from 'rxjs/operators';
 import { DashboardItemsService } from '../../services/idashboard-items.service';
 import { getEmptyPage } from '../dashboard-editor/dashboard-editor.component';
 import { ToastrService } from 'ngx-toastr';
@@ -36,6 +35,9 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
   theme$
   loadedItem: any;
   projectId;
+  dashboardId;
+  newDashboardModal: boolean;
+  newDashBoardName: string;
   constructor(
     private route: ActivatedRoute, private router: Router, private config: UserConfigService,
     private projectService: DashboardProjectService, dashItemService: DashboardItemsService,
@@ -50,6 +52,9 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
       this.projectId = id;
       this.dashboardService.loadDashboards(id);
     });
+    this.managed(this.route.params).pipe(map(p => p.dashboardId), distinct()).subscribe(id => {
+      this.dashboardId = id;
+    });
     this.managed(this.route.params).pipe(map(params => params.page), distinctUntilChanged()).subscribe(page => this.activePage = +page);
     this.managed(combineLatest(
       this.dashboardService.dashboards$.pipe(filter(ds => (ds && ds.project) === this.projectId),
@@ -58,9 +63,7 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
         if (dashboardId) {
           this.dashboards = dashboards.map(dash => ({ ...dash, active: dash.id === dashboardId }));
           if (!this.dashboards[0]) {
-            this.createNewDash().subscribe(dash => {
-              this.router.navigate(['../', dash.id, 'edit', { page: 0 }], { relativeTo: this.route });
-            });
+            this.showCreateDashPopup();
           } else {
             const dash = dashboards.find(d => d.id === dashboardId) || dashboards.find(d => d.active) || dashboards[0];
             if (dash.id === dashboardId) {
@@ -77,18 +80,16 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
           if (dash) {
             this.router.navigate([dash.id], { relativeTo: this.route });
           } else {
-            this.createNewDash().subscribe(dash => {
-              this.router.navigate([dash.id, 'edit', { page: 0 }], { relativeTo: this.route });
-            });;
+            this.showCreateDashPopup();
           }
         }
       });
 
   }
-  private createNewDash() {
+  private createNewDash(name: string) {
     return this.projectService.project$.pipe(filter(p => p.id === this.projectId), take(1), switchMap(project => {
       return this.dashboardService.createDashboard({
-        name: 'New Dashboard', projectName: project.name,
+        name, projectName: project.name,
         pages: [getEmptyPage('default')]
       })
     }));
@@ -130,9 +131,9 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
     this.dashboardService.removeDashboard(dashboard);
   }
   saveDashboard(dashboard) {
-    this.dashboardService.save(dashboard).subscribe(res => {
+    this.dashboardService.save(dashboard).subscribe(() => {
       this.toastr.success('dashboard saved successfully');
-    }, error => this.toastr.error('error while saving dashboard'));
+    }, () => this.toastr.error('error while saving dashboard'));
   }
   selectPage(index, dashboard) {
     if (!dashboard) return;
@@ -142,9 +143,26 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
     dashboard.pages[index].active = true;
     this.router.navigate([{ page: index }], { relativeTo: this.route });
   }
-  onCreateNewDash() {
-    this.createNewDash().subscribe(dash => {
-      this.router.navigate(['../', dash.id, 'edit', { page: 0 }], { relativeTo: this.route });
+  doCreateDashboard(name: string) {
+    this.createNewDash(name).subscribe(dash => {
+      this.newDashboardModal = false;
+      this.router.navigate([this.dashboardId ? '../' : './', dash.id, 'edit', { page: 0 }], { relativeTo: this.route });
+    }, (error) => {
+      const parsedError = parseApiError(error, `error while creating dashboard!`);
+      this.toastr.error(parsedError.message, parsedError.title);
     });
+  }
+  showCreateDashPopup(event: MouseEvent | false = false) {
+    if (event) {
+      this.consume(event as MouseEvent);
+    }
+    this.newDashboardModal = true;
+  }
+  cancelCreateDashboard() {
+    if (this.dashboardId) {
+      this.newDashboardModal = false;
+    } else
+      this.router.navigate(['../../../projects'], { relativeTo: this.route });
+
   }
 }

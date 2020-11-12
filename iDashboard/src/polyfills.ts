@@ -97,21 +97,3 @@ if (!(String.prototype as any).applyTemplateContext) {
         return this.replace(/\${(.*?)}/g, (x, g) => context[g]);
     };
 }
-const deepOmitByConfig = {
-    configurable: true,
-    value: function deepOmitBy() {
-        const func = arguments && arguments[0];
-        if (!func || typeof func !== 'function') {
-            throw new Error('requried function(argument) for omit check');
-        }
-        const rFn = v => v.deepOmitBy(func);
-        return isObject(this)
-            ? isArray(this)
-                ? map(this, rFn)
-                : flow(obj => omitBy(obj, func), obj => mapValues(obj, rFn))(this)
-            : this;
-    },
-    writable: true
-};
-Object.defineProperty(Object.prototype, 'deepOmitBy', deepOmitByConfig);
-Object.defineProperty(Array.prototype, 'deepOmitBy', deepOmitByConfig);

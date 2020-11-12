@@ -64,10 +64,6 @@ export class CreateLabelComponent extends UnSubscribable implements OnInit {
       });
     }
   }
-  getItemsFilter(searchBy) {
-    const context = this;
-    return (item: any) => !context[searchBy] ? true : item.name.includes(context[searchBy]);
-  }
   reload(formValue = this.form.getRawValue()) {
     formValue.options = formValue.options || {};
     clean(formValue.options);

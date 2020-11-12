@@ -49,11 +49,13 @@ span {
   min-width: 6rem;
   max-width: 6rem;
 }
-
 clr-dropdown-menu {
   justify-content: space-between;
+  justify-content: space-between;
   min-width: 18rem;
+  min-width: min(100%, 18rem);
   max-width: 18rem;
+  max-width: min(100%, 18rem);
   height: 12rem;
   display: flex;
   flex-direction: column;
@@ -145,7 +147,7 @@ clr-dropdown-menu {
         margin-top: 6px;
       }
       .filter-spec-field {
-        min-width: 5rem!important;
+        min-width: 5rem !important;
       }
       .filter-spec-op {
         max-width: 4rem;
@@ -167,6 +169,17 @@ clr-dropdown-menu {
   }
 }
 
+@media (hover: none) and (pointer: coarse) {
+  clr-dropdown-menu {
+    transform: none !important;
+  }
+}
+@media (max-width: 540px) {
+  clr-dropdown-menu {
+    transform: none !important;
+    min-width: 100%;
+  }
+}
 // overides
 select,
 input,

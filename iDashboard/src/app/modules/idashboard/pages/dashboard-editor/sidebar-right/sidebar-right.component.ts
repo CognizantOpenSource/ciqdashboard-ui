@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { IGridConfig } from '../../../model/data.model';
 import { getItemFields, clean } from '../../../services/idashboard-items.service';
 import { UnSubscribable } from 'src/app/components/unsub';
@@ -30,22 +29,21 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
   @Output() itemRemove = new EventEmitter<any>();
   @Output() itemEdit = new EventEmitter<any>();
 
-  filterChartItemsBy;
+  searchItemText;
   charts;
   filteredCharts;
   @Input('charts') set setCharts(charts) {
     this.charts = (charts || []).map(this.updateIcons.bind(this)).map(it => ({ ...it, group: it.sourceGroup }));
     this.setFilteredCharts();
   }
-  gridConfigForm: FormGroup;
+
   gridConfigParams = [{ name: 'rows', label: 'Rows' }, { name: 'columns', label: 'Columns' }];
   params = {
     options: []
   };
 
-  filterItemBy =  (item) => (item.name || '') + (item.options && item.options.title || '')
-  constructor(
-    private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
+  filterItemBy = (item) => (item.name || '') + (item.options && item.options.title || '')
+  constructor(private route: ActivatedRoute, private router: Router) {
     super();
   }
 
@@ -62,7 +60,7 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
       this.filteredCharts = this.charts.filter(this.getItemGroupFilter());
     }
   }
-  
+
   updateIcons(item) {
     return { ...item, iconType: getIconType(item.type) }
   }
@@ -76,7 +74,7 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
   }
   onItemOptionsChange(value) {
     clean(value);
-    this.data.options = { ...(this.data.options || {}), ...value };
+    this.data.options = value;
     this.dataChange.emit(this.data);
   }
   selectItem(item) {

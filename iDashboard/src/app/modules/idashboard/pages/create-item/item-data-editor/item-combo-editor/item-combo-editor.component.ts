@@ -94,5 +94,7 @@ export class ItemComboEditorComponent implements OnInit, ControlValueAccessor {
   remove(index, array) {
     array.splice(index, 1);
   }
-
+ toggleGroupState(index, event){
+   this.groupState[index] = ! this.groupState[index];
+ }
 }

@@ -9,9 +9,6 @@ export const environment = {
   production: false,
   api: {
     auth: `${host}/`,
-    workbench : `${host}/workbench/`,
-    reports : `${host}/reports/`,
-    execution : `${host}/execution/`,
     idashboard :  `${host}/idashboard/`
   },
   storagePrefix: 'idash-ui'

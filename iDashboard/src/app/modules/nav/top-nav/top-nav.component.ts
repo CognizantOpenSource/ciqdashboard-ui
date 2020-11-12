@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { filter, take, tap, map } from 'rxjs/operators';
@@ -11,7 +11,8 @@ import { DashboardProjectService } from '../../idashboard/services/idashboard-pr
 @Component({
   selector: 'app-top-nav',
   templateUrl: './top-nav.component.html',
-  styleUrls: ['./top-nav.component.css']
+  styleUrls: ['./top-nav.component.css'],
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class TopNavComponent implements OnInit {
 

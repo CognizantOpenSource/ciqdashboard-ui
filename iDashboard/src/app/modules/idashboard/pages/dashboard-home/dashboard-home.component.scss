@@ -1,3 +1,30 @@
-.dashboard-panel{
-    max-height: calc(100% - 36px);
+.dashboard-panel {
+  max-height: calc(100% - 36px);
+}
+.new-dash-modal::ng-deep {
+  .modal-content {
+    background: var(--bg3);
+    box-shadow: none;
+    color: var(--fg1) !important;
+    .modal-title {
+      color: var(--fg1) !important;
+    }
+  }
+  .clr-control-container {
+    min-height: 1.3rem;
+    width: 100%;
+  }
+}
+
+:host::ng-deep {
+  clr-tab-overflow-content {
+    top: auto !important;
+    left: 4rem !important;
+    transform: none !important;
+    max-width: min(15rem, calc(100vw - 5rem));
+  }
+ 
+  .datagrid {
+    border-color: var(--border-color) !important;
+  }
 }

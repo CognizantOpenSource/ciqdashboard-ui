@@ -3,12 +3,12 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { suffledColors } from '../../services/items.data';
 
 export function resetDisabledFieldsInOptions(options, disabled) {
-  let changed = false;
-  Object.keys(disabled).filter(f => disabled[f]).forEach(fieldToDisable => {
+  const changes = [];
+  Object.keys(disabled).filter(f => disabled[f] && options[f] !== null && options[f] !== undefined).forEach(fieldToDisable => {
     delete options[fieldToDisable];
-    changed = true;
-  });
-  return changed;
+    changes.push(fieldToDisable);
+  }); 
+  return changes.length > 0;
 }
 
 @Component({
@@ -56,21 +56,18 @@ export class ItemOptionsEditorComponent implements OnInit, ControlValueAccessor 
       this.params.filter(p => !this.data.hasOwnProperty(p.name)).forEach(p => {
         this.data[p.name] = null;
       });
-      
-    this.data.colors = this.data.colors && this.data.colors.length && this.data.colors || suffledColors().join(',');
+      this.data.colors = this.data.colors && this.data.colors.length && this.data.colors || suffledColors().join(',');
     }
     this.updateDisabledFields();
   }
   private updateDisabledFields() {
-
     if (this.data && this.disabled && Object.keys(this.data).some(k => this.data[k] !== null)) {
       // apply disabled options from saved item to disabled options
-      Object.keys(this.data).filter((k:string) => k.endsWith('--disabled')).forEach(key => {
-         this.disabled[key.split('--disabled')[0]] = this.data[key];
+      Object.keys(this.data).filter((k: string) => k.endsWith('--disabled')).forEach(key => {
+        this.disabled[key.split('--disabled')[0]] = this.data[key];
       });
       if (resetDisabledFieldsInOptions(this.data, this.disabled)) {
-        this.onFormChange(this.data);
-        this.dataChange.emit(this.data);
+        this.emit(this.data);
       }
     }
   }
@@ -85,8 +82,11 @@ export class ItemOptionsEditorComponent implements OnInit, ControlValueAccessor 
   setDisabledState?(isDisabled: boolean): void { }
 
   onChange(param, value) {
-    this.onFormChange(this.data);
-    this.dataChange.emit(this.data);
+    this.emit(this.data);
+  }
+  private emit(data) {
+    this.onFormChange(data);
+    this.dataChange.emit(data);
   }
 
   onImageChange(param, value) {

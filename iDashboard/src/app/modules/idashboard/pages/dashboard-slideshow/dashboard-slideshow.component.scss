@@ -5,12 +5,20 @@
 :host {
   flex: 1;
 }
+@media (hover: none) and (pointer: coarse) {
+  .carousel > .control,
+  .dashbaord-header > .options .btn {
+    display: none;
+  }
+}
 .container {
   display: flex;
   flex-direction: column;
   background: var(--bg3);
   width: 100%;
   height: 100%;
+   
+  
   &.full-screen {
     height: 100vh;
     position: absolute;
@@ -20,8 +28,8 @@
     .options {
       height: 1rem;
       margin: 6px 0;
-      .btn clr-icon{
-        color:var(--fg1);
+      .btn clr-icon {
+        color: var(--fg1);
       }
     }
   }
@@ -32,10 +40,11 @@
   width: 100%;
   overflow: hidden;
   border-radius: 0.5em;
+  margin-bottom: 2rem;
 }
 
 .slidechart {
-  position: absolute; 
+  position: absolute;
   left: 5%;
   width: 90%;
   height: calc(100% - 6px);
@@ -54,8 +63,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0.5em; 
-  font-weight: bold;
   font-size: 3em;
   user-select: none;
   height: 100%;
@@ -84,8 +91,8 @@
   border-bottom: 0.1em solid rgb(56, 54, 54);
   width: 0.5em;
   height: 0.5em;
-  border-left-color:var(--fg1);
-  border-bottom-color:var(--fg1);
+  border-left-color: var(--fg1);
+  border-bottom-color: var(--fg1);
   &.left {
     transform: rotate(45deg);
   }
@@ -102,32 +109,32 @@
   justify-content: center;
   color: var(--fg1);
   padding-top: 1em;
-  &:hover{
+  &:hover {
     .btn {
       visibility: visible;
     }
   }
 
-.btn {
-  visibility: hidden;
-  color:var(--fg1);
-  border-color:var(--bg3);
-  &:hover{
-    background-color: var(--bg2);
-    color:var(--fg1);
-  }
-  height: 2.5em;
-  min-width: 4.5em;
-  margin-bottom: 1em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .btn {
+    visibility: hidden;
+    color: var(--fg1);
+    border-color: var(--bg3);
+    &:hover {
+      background-color: var(--bg2);
+      color: var(--fg1);
+    }
+    height: 2.5em;
+    min-width: 4.5em;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  padding: 0.5em 0.7em;
-  transition: background 20ms cubic-bezier(0.25, 0.46, 0.45, 0.84);
+    padding: 0.5em 0.7em;
+    transition: background 20ms cubic-bezier(0.25, 0.46, 0.45, 0.84);
 
-  &:not(:last-child) {
-    margin-right: 1em;
+    &:not(:last-child) {
+      margin-right: 1em;
+    }
   }
-}
 }

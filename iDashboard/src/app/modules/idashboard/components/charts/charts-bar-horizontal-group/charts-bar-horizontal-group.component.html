@@ -1,4 +1,7 @@
-<ngx-charts-bar-horizontal-2d class="x-chart" *ngIf="data && chartconfig"  [class.legend-down]="chartconfig?.legend && chartconfig.legendPositionDown"
+<ngx-charts-bar-horizontal-2d class="x-chart" *ngIf="data && chartconfig"  
+    [class.legend-down]="chartconfig?.legend && chartconfig.legendPositionDown"
+    [class.show-x]="chartconfig?.showXAxisLabel"
+    [class.show-y]="chartconfig?.showYAxisLabel"
     [scheme]="colorScheme"
     [schemeType]="chartconfig.schemeType == 'linear' ?  chartconfig.schemeType : 'ordinal'"
     [results]="data"

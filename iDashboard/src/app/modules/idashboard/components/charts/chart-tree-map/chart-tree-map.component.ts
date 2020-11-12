@@ -32,6 +32,9 @@ export class ChartTreeMapComponent extends BaseChart implements OnInit {
  data: any;
   @Input('data') set setData(data: any) {
     this.data = data;
+    if (this.paths && this.paths.length)
+      this.changePath([]);
+      this.pathChange.emit(this.paths); 
   }
   public get viewData() {
     return this._viewData || this.data;

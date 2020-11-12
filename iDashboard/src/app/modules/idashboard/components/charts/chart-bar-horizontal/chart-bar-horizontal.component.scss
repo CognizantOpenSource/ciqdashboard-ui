@@ -1,9 +1,23 @@
-.x-chart.legend-down {
-  &::ng-deep {
-    .ngx-charts-outer {
-      g.chart {
-        transform: scale(0.95) translateX(128px) translateY(-8px);
+:host::ng-deep {
+  &.x-chart.legend-down {
+    .ngx-charts-outer g.chart {
+      transform: scale(0.95) translateX(120px) translateY(-5px);
+      transition: all .2s ease;
+    }
+    &.show-x:not(.show-y) {
+      .ngx-charts-outer g.chart {
+        transform: scale(0.95) translateX(125px) translateY(-5px);
       }
     }
+    &.show-y:not(.show-x) {
+      .ngx-charts-outer g.chart {
+        transform: scale(0.95) translateX(140px) translateY(-5px);
+      }
+    }
+    &.show-x.show-y {
+      .ngx-charts-outer g.chart {
+      transform: scale(0.95) translateX(140px) translateY(-5px);
+    }
+  }
   }
 }

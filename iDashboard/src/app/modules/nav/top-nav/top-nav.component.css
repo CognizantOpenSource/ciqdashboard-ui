@@ -1,16 +1,22 @@
 :host {
   user-select: none;
+  display: flex;
+  width: 100%;
 }
 .header,
 header.header-2 {
   background-color: var(--main-theme-color) !important;
+  display: flex;
+  flex-grow: 1;
 }
 .title {
   font-weight: bold !important;
   font-size: 1rem !important;
   margin-left: 0.5rem !important;
 }
-
+.filler {
+  flex-grow: 11;
+}
 .branding {
   width: var(--sidebar-width);
   min-width: var(--sidebar-min-width);
@@ -21,16 +27,22 @@ header .header-nav .nav-link {
   color: #fff;
   opacity: 1;
 }
-
-.tools {
-  width: 100%;
-  margin: auto;
+.header-actions {
+  min-width: 10rem;
+  width: 25%;
+  max-width: 24rem;
 }
-.tool {
+.action {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
-.tool > * {
+.action > * {
   margin-right: 8px;
+}
+.search-link {
+  color: var(--white);
+  font-size: 1rem;
 }
 .thumb {
   max-width: 1.6rem;
@@ -43,31 +55,8 @@ a.nav-link {
   max-width: 100%;
 }
 a.nav-link > *:nth-child(1) {
-  max-width: 150px;
-  width: 150px;
-}
-.ext-link {
-  height: 1.5rem;
-  width: 1.5rem;
-  cursor: pointer;
-  justify-content: center;
-  align-items: center;
-  color: var(--white);
-}
-.ext-link > clr-icon {
-  margin-right: 0 !important;
-}
-.ext-link-icon {
-  height: 60px;
-  width: 48px;
-  display: flex;
-  padding: 0 !important;
-  justify-content: space-around;
-  padding-bottom: 6px !important;
-  transform: translateX(18px);
-}
-.ext-link-icon > * {
-  padding-bottom: 6px;
+  max-width: 240px;
+  width: 240px;
 }
 clr-dropdown clr-icon {
   padding: 4px !important;
@@ -96,29 +85,8 @@ a.nav-link:hover .dropdown-menu {
   border-radius: 0px !important;
   width: 8rem !important;
 }
-.ext-link:hover .dropdown-menu {
-  visibility: visible !important;
-  position: absolute !important;
-  top: 0px !important;
-  bottom: auto !important;
-  left: 0px !important;
-  right: auto !important;
-  transform: translateX(-30%) translateY(60px);
-  height: auto !important;
-  z-index: 9999;
-  border-radius: 0px !important;
-  width: 6rem !important;
-}
-.ext-link > a {
-  display: flex;
-  height: 1.2rem;
-}
 .nav-link label {
   cursor: pointer;
-}
-.ext-link-name {
-  color: var(--main-theme-color);
-  text-decoration: none;
 }
 .nav-link label:focus {
   outline: none;
@@ -149,5 +117,5 @@ a.nav-link:hover .dropdown-menu {
   opacity: 1;
   padding-top: 3px;
   padding-right: 8px;
-  font-size: 0.78rem!important;
+  font-size: 0.78rem !important;
 }

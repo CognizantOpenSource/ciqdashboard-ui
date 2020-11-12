@@ -155,6 +155,7 @@ clr-vertical-nav {
         font-weight: 500 !important;
         div {
           font-weight: 500 !important;
+          text-transform: uppercase;
         }
         &:focus {
           outline: none;
@@ -273,4 +274,10 @@ button {
   font-size: 0.75rem;
   text-transform: uppercase;
   color: var(--card-fg);
+}
+.loading {
+  cursor: progress!important;
+  * {
+    cursor: progress!important;
+  }
 }

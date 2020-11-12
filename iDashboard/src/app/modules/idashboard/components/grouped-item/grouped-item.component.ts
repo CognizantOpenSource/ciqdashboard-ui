@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, ViewRef } from '@angular/core';
 import { UnSubscribable } from 'src/app/components/unsub';
 import { cut } from 'src/app/modules/home/home.component';
 import { groupBy } from 'lodash';
-import { DashboardDataSourceService } from '../../services/idashboard-datasource.service';
 @Component({
   selector: 'app-grouped-item',
   templateUrl: './grouped-item.component.html',
@@ -15,18 +14,12 @@ export class GroupedItemComponent extends UnSubscribable implements OnInit {
   data: any[] = [];
   @Input() set items(data: Array<any>) {
     this.data = data;
-    this.updateLinks(data || []);
+    this.updateLinks();
   }
+  filterValue;
   @Input('filterValue') set setFilter(val: string) {
-    if (this.data) {
-      if (val && val !== '') {
-        this.updateLinks(this.data.filter(link =>
-          ((this.filterBy ? this.filterBy(link) : link.name) || '').toLowerCase().includes(val.toLowerCase())
-        ));
-      } else {
-        this.updateLinks(this.data);
-      }
-    }
+    this.filterValue = val;
+    this.updateLinks();
   }
   @Input('filterBy') filterBy: Function;
   @Input('groupBy') groupbyKey;
@@ -39,13 +32,27 @@ export class GroupedItemComponent extends UnSubscribable implements OnInit {
   @Output() itemEdit = new EventEmitter<any>();
 
   expanded: any = { others: false };
-  private updateLinks(list) {
-    this.links = this.grouped(list).sort((a, b) => a.name.localeCompare(b.name));
-    if (this.links.length == 1) {
-      this.expanded = { [this.links[0].name]: true };
-    }
+  loading = false;
+  private updateLinks() {
+    this.loading = true;
+    setTimeout(() => {
+      let list = this.data || [];
+      if (this.filterValue && this.filterValue !== '') {
+        list = this.data.filter(link =>
+          ((this.filterBy ? this.filterBy(link) : link.name) || '').toLowerCase().includes(this.filterValue.toLowerCase())
+        );
+      }
+      this.links = this.grouped(list).sort((a, b) => a.name.localeCompare(b.name));
+      if (this.links.length == 1) {
+        this.expanded = { [this.links[0].name]: true };
+      }
+      this.loading = false;
+      if (this.cdr && !(this.cdr as ViewRef).destroyed) {
+        this.cdr.detectChanges();
+      }
+    });
   }
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     super();
   }
 
@@ -63,7 +70,6 @@ export class GroupedItemComponent extends UnSubscribable implements OnInit {
     return name.includes(' ') ? cut(name.split(' ', 2)[0], 1) + cut(name.split(' ', 2)[1], 1) : cut(name, 2);
   }
   onSelectItem(item) {
-    //TODO: fix first click issue when search is active
     this.itemSelect.emit(item);
   }
   removeItem(item, event) {

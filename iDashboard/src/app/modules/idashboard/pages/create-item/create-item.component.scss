@@ -80,11 +80,17 @@
   .main-config {
     height: calc(100% - 1.5rem);
     flex-grow: 1;
+    position: relative;
+    z-index: 100;
     .config {
       min-width: 320px;
       max-width: 320px;
+      position: relative;
+      z-index: 1000;
     }
     .preview {
+      position: relative;
+      z-index: 100;
       width: 100%;
       max-width: calc(100% - 324px);
       overflow: hidden;
@@ -92,9 +98,9 @@
       flex-grow: 1;
       border-left: 2px solid grey;
       border-left-color: var(--bg2);
-      &::ng-deep{
-        app-item-filters{
-          display:none;
+      &::ng-deep {
+        app-item-filters {
+          display: none;
         }
       }
     }
@@ -256,9 +262,9 @@ select {
   align-items: baseline;
   width: 100%;
   min-height: 1px !important;
-  ::ng-deep{
-    .no-label .clr-control-label{
-      display:none;
+  ::ng-deep {
+    .no-label .clr-control-label {
+      display: none;
     }
   }
 }

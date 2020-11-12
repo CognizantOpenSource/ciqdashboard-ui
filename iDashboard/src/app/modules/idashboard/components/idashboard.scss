@@ -2,7 +2,7 @@ clr-icon,
 .title {
   color: var(--fg1);
 }
-.page-content{
+.page-content {
   background-color: var(--bg2);
 }
 .btn-group {
@@ -20,7 +20,6 @@ clr-icon,
       outline-width: 0px;
       outline-color: var(--bg1);
     }
-   
   }
 }
 clr-tabs {
@@ -36,11 +35,14 @@ clr-tabs {
     .nav {
       background-color: var(--bg1);
       padding: 0 1px;
-      .nav-item {
+      &>.nav-item {
         margin-right: 0;
+        max-width: 30%;
+        overflow: hidden;
       }
       .nav-link {
         padding: 0 12px;
+        max-width: 100%;
         &:focus {
           outline: none;
         }
@@ -51,12 +53,11 @@ clr-tabs {
         }
       }
     }
-
   }
 }
 .dashboard-panel {
   background-color: var(--bg2);
-  
+
   .dashbaord-header {
     min-height: 1.8rem;
     max-height: 1.8rem;

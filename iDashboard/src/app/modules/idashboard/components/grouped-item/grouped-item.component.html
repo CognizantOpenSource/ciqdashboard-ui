@@ -1,5 +1,5 @@
 <ng-container *ngIf="sidebarView else pageView">
-    <div class="links-home scroll-main flex-col" *ngIf="links else loading">
+    <div class="links-home scroll-main flex-col full" *ngIf="links else loadingTpl" [ngClass]="{loading:loading}">
         <clr-vertical-nav class="full">
             <clr-vertical-nav-group routerLinkActive="active" *ngFor="let group of links"
                 [(clrVerticalNavGroupExpanded)]="expanded[group.name]">
@@ -58,6 +58,6 @@
 <ng-template #nolinks>
     <div class="no-links">no entries found</div>
 </ng-template>
-<ng-template #loading>
+<ng-template #loadingTpl>
     <div class="no-links">loading...</div>
 </ng-template>

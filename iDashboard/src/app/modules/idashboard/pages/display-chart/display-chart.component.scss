@@ -48,7 +48,7 @@
   // box-shadow: var(--main-box-shadow-card);
   // box-shadow: 0 1px 0px 3px #ffffff18;
   transition: border 0.3s linear;
-  border-radius: var(--chart-border-radius); 
+  border-radius: var(--chart-border-radius);
 }
 
 .chart-wrapper {
@@ -73,10 +73,17 @@
 .chart-card .chart-card .chart-wrapper {
   border: none;
 }
-:host::ng-deep text {
-  fill: var(--chart-text-color);
+:host::ng-deep {
+  g[ngx-charts-series-vertical] g[ngx-charts-bar-label]{
+    text.textDataLabel {
+      transform: rotate(0deg) translateX(-8px);
+      font-weight: 500;
+    }
+  }
+  text {
+    fill: var(--chart-text-color);
+  }
 }
-
 .chart-card .chart-card .analysis-title {
   background: none;
   color: var(--chart-text-color);
@@ -97,17 +104,13 @@
   color: var(--chart-tooltip-color);
 }
 
-:host::ng-deep text.textDataLabel {
-  transform: rotate(0deg) translateX(-16px);
-  font-weight: 500;
-}
-
 .crumb-header {
   height: 0.6rem !important;
   font-size: 0.5rem;
   display: flex;
   align-items: center;
   margin-left: 12px;
+  transition: all .2s ease;
   & > * {
     color: var(--chart-text-color);
     margin: 0;
