@@ -56,7 +56,7 @@ export class ItemAggregateEditorComponent implements OnInit, ControlValueAccesso
 
   private updateFields() {
     if (!this.data) {
-      // to avoid anular view update error
+      // to avoid angular view update error
       setTimeout(() => {
         this.dataChange.emit({ groups: [this.newGroup], name: 'aggregate' })
       }, 10)

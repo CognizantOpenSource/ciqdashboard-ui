@@ -43,7 +43,12 @@ export class ItemDataEditorComponent implements OnInit {
     if (item)
       this.initForm(this.item);
   }
-  @Input() fields: any[];
+  fields: any[];
+  aggregateFields : any[];
+  @Input('fields') set setFields(fields: any[]){
+    this.fields = fields;
+    this.aggregateFields = fields && fields.filter(f => !['array' , 'object'].includes((f.type||'').toLowerCase()));
+  }
   @Input('type') set setType(type) {
     this.setItemType(type);
   }
@@ -96,28 +101,29 @@ export class ItemDataEditorComponent implements OnInit {
     this.updateGroupByControls();
   }
   updateGroupByControls() {
-    const values = this.groupByControls.map(c => c.value);
+    const values = this.groupByControls.map(c => c.value).filter(v => v && v !== '');
     if (this.groupByConfig && this.groupByControls) {
       this.groupByControls.splice(0, this.groupByControls.length);
-      for (let i = 0; i < this.groupByConfig.maxFields; i++) {
+      const fieldsToUdDate = Math.min( this.groupByConfig.maxFields , Math.max(this.groupByConfig.minFields , values.length));
+      for (let i = 0; i < fieldsToUdDate ; i++) {
         this.add(i, this.groupByControls, this.groupByConfig.maxFields);
         this.groupByControls[i].setValue(values[i] || '');
         setTimeout(() => {
-          // update in background
+          // update options in background
           const fieldIndex = this.groupByConfig.fields.indexOf(this.groupByConfig.fields.find(f => f.gIndex === i));
           this.updateFieldOptions(values[i] , fieldIndex , this.groupByConfig);
         }, 1000);
       }
     }
   }
-  add(index, controls: any[], limit = 0) {
+  add(index, controls: any[], limit = 3) {
     if (limit && controls.length >= limit) {
       this.toastr.warning(`maximum ${limit} values can be added`);
       return;
     }
     add(index, controls);
   }
-  remove(index, controls: any[], limit = 0) {
+  remove(index, controls: any[], limit = 1) {
     // TODO: verify if field is required before remove
     if (limit && controls.length <= limit) {
       this.toastr.warning(`minimum required values ${limit}`);
@@ -136,7 +142,9 @@ export class ItemDataEditorComponent implements OnInit {
     })
   }
   groupByChange(value, index, config) {
-    this.updated('groupBy', value);
+    const {groupBy} = this.form.getRawValue();
+    this.updated('groupBy', groupBy);
+    this.item.groupBy = groupBy && groupBy.filter(v => v && v !== '');
     this.updateFieldOptions(value, index, config);
   }
   private updateFieldOptions(fieldName, index, config) {

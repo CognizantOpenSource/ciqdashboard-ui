@@ -90,12 +90,12 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
     this.loadDataSources();
     this.loadCollectionsName();
     const pageNames = Object.keys(pages).map(k => pages[k]);
-    this.dashItemService.getItemTypes().subscribe(it => this.itemTypes = it.map(it => ({ ...it, desc: it.name + ' chart item', })));
+
     this.managed(this.route.queryParams).subscribe(q => {
       const nav = q.navs || pages.selectSource;
       this.navs = (nav instanceof Array ? nav : [nav]).filter(p => !!pageNames.includes(p));
     });
-    this.managed(this.route.queryParams).pipe(take(1)).subscribe(q => {
+    this.route.queryParams.pipe(take(1)).subscribe(q => {
       const nav = q.navs || pages.selectSource;
       this.navs = (nav instanceof Array ? nav : [nav]).filter(p => !!pageNames.includes(p));
       this.createMode = !q.itemId;
@@ -108,7 +108,6 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
         this.loadSourceInfo(this.item.source);
         this.processTypeUpdate(this.item.type);
       } else {
-        
         this.dashItemService.getItem(q.itemId).subscribe(item => {
           this.item = { ...item };
           this.filters = item.filters || [];
@@ -117,9 +116,18 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
           this.reload();
         });
       }
-    });
-
-
+      this.dashItemService.getItemTypes().subscribe(items => this.setItemTypes(q.itemGroup, items));
+    }); 
+  }
+  private setItemTypes(itemGroup: string, items: any[]) {
+    if (items) {
+      if (itemGroup !== 'datatable') {
+        const excludes = ['label', 'image' , 'table']; 
+      this.itemTypes = items.filter(i => !excludes.includes(i.name)).map(it => ({ ...it, desc: (it.desc || it.name + ' chart item') }));
+      }else{
+        this.itemTypes =  items.filter(i => i.name === 'table').map(it => ({ ...it, desc: (it.desc || it.name + ' chart item')  }));
+      }
+    }
   }
   private loadDataSources() {
     this.dashItemService.getDataSources().subscribe(ds => this.datasets = ds.map(it => ({ ...it, desc: it.toolName, })));

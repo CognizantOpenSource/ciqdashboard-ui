@@ -10,7 +10,7 @@ export function passwordConstraints(min = 8, max = 20, symbols = '$_@!%*#?&') {
   return {
     min, max, symbols, pattern, message, regex: new RegExp(pattern)
   }
-} 
+}
 @Component({
   selector: 'app-signUp',
   templateUrl: './sign-up.component.html',
@@ -21,8 +21,8 @@ export class SignUpComponent extends UnSubscribable implements OnInit {
   password: any = passwordConstraints();
 
   signupForm = new FormGroup({
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
+    firstName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+    lastName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.pattern(this.password.pattern)]),
     confirmPassword: new FormControl('', [Validators.required]),

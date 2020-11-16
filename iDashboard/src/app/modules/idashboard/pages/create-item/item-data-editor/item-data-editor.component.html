@@ -27,16 +27,16 @@
                             </clr-accordion-content>
                         </clr-accordion-panel>
                         <ng-container *ngSwitchDefault>
-                            <clr-accordion-panel *ngIf="groupByConfigs.length">
+                            <clr-accordion-panel *ngIf="groupByConfigs.length" [clrAccordionPanelOpen]="!hasAggregate">
                                 <clr-accordion-title><span>GroupBy</span></clr-accordion-title>
                                 <clr-accordion-content [(clrIfExpanded)]="dataOpen.groupBy">
                                     <ng-container *ngTemplateOutlet="dataGroupByTpl"></ng-container>
                                 </clr-accordion-content>
                             </clr-accordion-panel>
-                            <clr-accordion-panel *ngIf="hasAggregate">
+                            <clr-accordion-panel *ngIf="hasAggregate" [clrAccordionPanelOpen]="!groupByConfigs.length">
                                 <clr-accordion-title><span>Aggregate</span></clr-accordion-title>
                                 <clr-accordion-content class="aggregate-editor" [(clrIfExpanded)]="dataOpen.aggregate">
-                                    <item-aggregate-editor [(data)]="item.aggregate" [fields]="fields"
+                                    <item-aggregate-editor [(data)]="item.aggregate" [fields]="aggregateFields"
                                         [filterOptions]="filterOptions" (fieldChange)="fieldChange.emit($event)">
                                     </item-aggregate-editor>
                                 </clr-accordion-content>
@@ -80,7 +80,7 @@
                         *ngIf="{index:(gField.gIndex == null?i:gField.gIndex)} as fConfig"
                         [formControlName]="fConfig.index" name="item-groupby-{{fConfig.index}}"
                         [attr.required]="gField.required" (ngModelChange)="groupByChange($event , i , groupByConfig)">
-                        <option [value]="opt.name" *ngFor="let opt of fields;let opIndex=i">
+                        <option [value]="opt.name" *ngFor="let opt of aggregateFields;let opIndex=i">
                             {{opt.label}}</option>
                     </select>
                 </clr-select-container>

@@ -37,17 +37,19 @@
         <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterDataby">
       </div>
       <app-grouped-item class="items datasets full" [items]="datasets" [filterValue]="filterDataby"
-         (itemSelect)="selectDataSource($event.name)" [canEdit]="true" [canRemove]="true"
+        (itemSelect)="selectDataSource($event.name)" [canEdit]="true" [canRemove]="true"
         (itemRemove)="removeDataSource($event)" (itemEdit)="editDataSource($event)">
       </app-grouped-item>
     </div>
     <div class="panel select-data  flex-col clr-col-12" *ngSwitchCase="2">
-      <div class="search flex-row">
-        <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterItemby">
-      </div>
-      <app-grouped-item class="items item-types full" [items]="itemTypes" [filterValue]="filterItemby"
-        (itemSelect)="selectType($event.name)">
-      </app-grouped-item>
+      <ng-container *ngIf="itemTypes">
+        <div class="search flex-row" *ngIf="itemTypes.length > 1">
+          <clr-icon shape="search" size="24"></clr-icon> <input type="text" [(ngModel)]="filterItemby">
+        </div>
+        <app-grouped-item class="items item-types full" [items]="itemTypes" [filterValue]="filterItemby"
+          (itemSelect)="selectType($event.name)">
+        </app-grouped-item>
+      </ng-container>
     </div>
     <div class="panel update-config flex-col full" *ngSwitchCase="3">
       <div class="head-filter flex-row">
