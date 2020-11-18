@@ -12,7 +12,11 @@
       max-width: 100%;
       display: flex;
       .chart-legend {
-        margin-left: 6px;
+        margin-right: -5px;
+        transform: scale(.9);
+      }
+      g.chart{
+        transform: scaleX(0.9) translateX(90px) translateY(10px);
       }
     }
   }
@@ -26,7 +30,7 @@
       //  workaround https://github.com/swimlane/ngx-charts/issues/1248 , https://github.com/swimlane/ngx-charts/issues/1040
       g.chart {
         transform-origin: center;
-        transform: scale(0.85) translateX(40px) translateY(0px);
+        transform: scaleY(0.85) scaleX(.95) translateX(60px) translateY(0px);
         g.x.axis > g:last-child {
           transform: translateY(-8px);
         }

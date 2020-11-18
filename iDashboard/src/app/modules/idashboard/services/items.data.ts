@@ -404,16 +404,13 @@ export const itemTypes = [{
 {
     "name": "combo",
     "groupBy": [{
-        "type": "bar-chart", "minFields": 2, "maxFields": 3, "fields": [
-            { "name": "Group", "required": false, "gIndex": 1 },
-            { "name": "X Axis", "required": true, "gIndex": 0 },
-            { "name": "Y Axis", "required": false, "gIndex": 2 }
+        "type": "bar-chart", "minFields": 1, "maxFields": 1, "fields": [
+            { "name": "Group", "required": false, "gIndex": 0 }
         ]
     }, {
         "type": "line-chart", "minFields": 2, "maxFields": 3, "fields": [
             { "name": "Group", "required": true, "gIndex": 1 },
-            { "name": "X Axis", "required": true, "gIndex": 0 },
-            { "name": "Y Axis", "required": true, "gIndex": 2 }
+            { "name": "X Axis", "required": true, "gIndex": 0 }
         ]
     }],
     "group": "combo", "image": "line-chart", "imageType": "clr-icon",

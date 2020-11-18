@@ -44,14 +44,18 @@
       //  workaround https://github.com/swimlane/ngx-charts/issues/1248 , https://github.com/swimlane/ngx-charts/issues/1040
       g.chart {
         transform-origin: center;
-        transform: scale(0.9) translateX(40px) translateY(10px);
+        transform: scaleY(0.9) translateX(40px) translateY(-6px);
       }
       g[ngx-charts-timeline] {
-        transform: translateX(86px) translateY(-30px);
+        transform: translateX(40px) translateY(-42px);
       }
     }
 
     .chart-legend {
+      .legend-label-text {
+        min-width: fit-content;
+        max-width: 6rem;
+      }
       .legend-title {
         margin-top: -24px;
         position: absolute;

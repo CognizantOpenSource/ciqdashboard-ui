@@ -97,9 +97,11 @@ export class DashboardItemsService {
     return this.cachableDataSources(`fields.${source}.${field}`, this.api.getFieldValues(source, field));
   }
   previewChartItem(item: any): Observable<any> {
+    delete item._data;
     return this.api.previewItem(item).pipe(map(fixNullChartData));
   }
   getItemData(item: any, options = []): Observable<any> {
+    delete item._data;
     return this.api.getItemData(item.id, options).pipe(map(fixNullChartData),map(sortNonSeries));
   }
 
