@@ -26,12 +26,19 @@ gridster {
     &.focused {
       z-index: 10;
     }
+
+    app-display-image {
+      display: block;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
   }
 }
 :host::ng-deep {
   .gridster-column,
   .gridster-row {
-    display: none!important;
+    display: none !important;
   }
   .modal-dialog {
     height: 100%;

@@ -92,14 +92,13 @@
     </clr-dropdown>
 </ng-template>
 
-<clr-modal [clrModalOpen]="renamePage" (clrModalOpenChange)="renamePage = null;" [clrModalClosable]="true" [clrModalSize]="'md'" class="rename-page-modal">
+<clr-modal [clrModalOpen]="renamePage" (clrModalOpenChange)="closeRenamePage()" [clrModalClosable]="true" [clrModalSize]="'md'" class="rename-page-modal">
     <span class="modal-title">Rename Page</span>
     <div class="modal-body flex-col" style="overflow: hidden;">
         <div class="flex-col full new-dash-modal" *ngIf="renamePage">
             <clr-input-container>
                 <input type="text" name="newDashBoardName" clrInput placeholder="Page Name" minlength="4"
-                    [(ngModel)]="renamePage.name"
-                    (ngModelChange)="onPageNameChange(renamePage , dashboard.pages.indexOf(renamePage) , $event)" />
+                    [(ngModel)]="renamePage.name"/>
             </clr-input-container>
         </div>
     </div>

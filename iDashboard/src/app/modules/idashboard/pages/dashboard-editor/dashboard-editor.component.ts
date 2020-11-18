@@ -35,7 +35,7 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   activePage: any;
   activePageIndex: number;
   loadedItem: any;
-  renamePage:any;
+  renamePage: any;
   constructor(
     private route: ActivatedRoute, private router: Router, private config: UserConfigService,
     private toastr: ToastrService, private projectService: DashboardProjectService,
@@ -158,11 +158,12 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
   onModalClosed() {
     this.router.navigate(['./'], { relativeTo: this.route });
   }
-  onPageNameChange(page, index, name) {
-    if (!name || name == '')
-      page.name = 'page-' + (index + 1);
+  closeRenamePage() {
+    if (!this.renamePage.name || this.renamePage.name == '')
+      this.renamePage.name = 'page-' + (this.dashboard.pages.indexOf(this.renamePage) + 1);
+    this.renamePage = null;
   }
-  showRenamePopup(page){
+  showRenamePopup(page) {
     this.renamePage = page;
   }
 
