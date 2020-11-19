@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: 'app-chart-line-series',
   templateUrl: './chart-line-series.component.html',
-  styleUrls: ["../base-chart.scss" , './chart-line-series.component.scss'],
+  styleUrls: ['../base-chart.scss' , './chart-line-series.component.scss'],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 

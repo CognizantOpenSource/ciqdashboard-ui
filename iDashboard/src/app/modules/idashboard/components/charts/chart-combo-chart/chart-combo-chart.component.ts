@@ -5,6 +5,9 @@ import { BaseChart } from '../base-chart'
   selector: "app-chart-combo-chart",
   templateUrl: "./chart-combo-chart.component.html",
   styleUrls: ["./chart-combo-chart.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartComboChartComponent extends BaseChart implements OnInit {

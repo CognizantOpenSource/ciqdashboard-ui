@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "app-chart-bar-horizontal-stacked",
   templateUrl: "./chart-bar-horizontal-stacked.component.html",
-  styleUrls: ["../base-chart.scss" , "./chart-bar-horizontal-stacked.component.scss"],
+  styleUrls: ['../base-chart.scss' , "./chart-bar-horizontal-stacked.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartBarHorizontalStackedComponent extends BaseChart implements OnInit {

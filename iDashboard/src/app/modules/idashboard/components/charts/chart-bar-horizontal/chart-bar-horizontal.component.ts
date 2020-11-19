@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "app-chart-bar-horizontal",
   templateUrl: "./chart-bar-horizontal.component.html",
-  styleUrls: ["../base-chart.scss" , "./chart-bar-horizontal.component.scss"],
+  styleUrls: ['../base-chart.scss' , "./chart-bar-horizontal.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartBarHorizontalComponent extends BaseChart implements OnInit {

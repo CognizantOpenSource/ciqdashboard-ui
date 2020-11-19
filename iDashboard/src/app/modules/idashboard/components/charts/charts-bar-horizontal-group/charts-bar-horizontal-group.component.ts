@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "app-charts-bar-horizontal-group",
   templateUrl: "./charts-bar-horizontal-group.component.html",
-  styleUrls: ["../base-chart.scss" , "./charts-bar-horizontal-group.component.scss"],
+  styleUrls: ['../base-chart.scss' , "./charts-bar-horizontal-group.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartsBarHorizontalGroupComponent extends BaseChart implements OnInit {

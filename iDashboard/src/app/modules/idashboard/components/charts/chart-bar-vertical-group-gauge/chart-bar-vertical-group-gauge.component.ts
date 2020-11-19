@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart';
 @Component({
   selector: 'app-chart-bar-vertical-group-gauge',
   templateUrl: './chart-bar-vertical-group-gauge.component.html',
-  styleUrls: ["../base-chart.scss", "./chart-bar-vertical-group-gauge.component.scss"],
+  styleUrls: ['../base-chart.scss', "./chart-bar-vertical-group-gauge.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartBarVerticalGroupGaugeComponent extends BaseChart implements OnInit {

@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "app-chart-bar-vertical-normalized",
   templateUrl: "./chart-bar-vertical-normalized.component.html",
-  styleUrls: ["../base-chart.scss" , "./chart-bar-vertical-normalized.component.scss"],
+  styleUrls: ['../base-chart.scss' , "./chart-bar-vertical-normalized.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartBarVerticalNormalizedComponent extends BaseChart implements OnInit {

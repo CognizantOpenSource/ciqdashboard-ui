@@ -52,7 +52,7 @@
     <clr-tabs class="full pages">
         <clr-tab *ngFor="let page of dashboard.pages;let index = index" class="page page-tab">
             <div clrTabLink [clrTabLinkInOverflow]="!page.pinned && index >= 6" class="page-tab-link">
-                <button (dblclick)="showRenamePopup(page)"   class="is-link page-tab-btn ellipsis">{{page.name}}</button>
+                <button (click)="changeActivePage(page);" (dblclick)="showRenamePopup(page)"   class="is-link page-tab-btn ellipsis">{{page.name}}</button>
                 <ng-container *ngTemplateOutlet="pageDDTpl; context: {page:page,pages:dashboard.pages}">
                 </ng-container>
             </div>

@@ -5,7 +5,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: "app-chart-area-normalized",
   templateUrl: "./chart-area-normalized.component.html",
-  styleUrls: ["../base-chart.scss" , "./chart-area-normalized.component.scss"],
+  styleUrls: ['../base-chart.scss' , "./chart-area-normalized.component.scss"],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartAreaNormalizedComponent extends BaseChart implements OnInit {

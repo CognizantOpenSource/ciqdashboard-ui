@@ -1,8 +1,0 @@
-:host::ng-deep {
-    &.x-chart.legend-down {
-      .ngx-charts-outer g.chart {
-        transform: scaleY(.9) translateX(40px) translateY(-16px);
-        transition: all .2s ease;
-      }
-    }
-  }

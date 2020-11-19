@@ -4,7 +4,10 @@ import { BaseChart } from '../base-chart'
 @Component({
   selector: 'app-chart-polar',
   templateUrl: './chart-polar.component.html',
-  styleUrls: ['./chart-polar.component.scss'],
+  styleUrls: ['../base-chart.scss','./chart-polar.component.scss'],
+  host:{
+    '[class.legend-down]' : 'chartconfig?.legend && chartconfig.legendPositionDown'
+  },
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChartPolarComponent extends BaseChart implements OnInit {

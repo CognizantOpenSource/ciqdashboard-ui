@@ -36,22 +36,20 @@
     }
   }
 }
+:host(.legend-down){
+  height: calc(100% - 30px);
+  max-height: calc(100% - 30px);
+}
 .x-chart.legend-down {
   &::ng-deep {
     .ngx-charts-outer {
       display: flex;
       flex-direction: column;
-      //  workaround https://github.com/swimlane/ngx-charts/issues/1248 , https://github.com/swimlane/ngx-charts/issues/1040
-      g.chart {
-        transform-origin: center;
-        transform: scaleY(0.9) translateX(40px) translateY(-6px);
-      }
-      g[ngx-charts-timeline] {
-        transform: translateX(40px) translateY(-42px);
-      }
     }
 
     .chart-legend {
+      position: absolute;
+      bottom: 6px;
       .legend-label-text {
         min-width: fit-content;
         max-width: 6rem;

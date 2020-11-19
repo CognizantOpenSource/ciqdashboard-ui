@@ -2,7 +2,7 @@
     <clr-dropdown [clrCloseMenuOnItemClick]="false">
         <div class="filter-toggle" *ngIf="edit" aria-label="Edit Filter">
             <span class="clickable is-link label flex-row" [class.active]="data?.active">
-                <span class="filter-label" (click)="onSelect()">{{data?.name}}</span>
+                <span class="filter-label ellipsis" (click)="onSelect()" [attr.title]="data?.name">{{data?.name}}</span>
                 <clr-icon class="filter-toggle" shape="pencil" clrDropdownTrigger></clr-icon>
                 <clr-icon shape="times" (click)="remove.emit();"></clr-icon>
             </span>
@@ -103,7 +103,7 @@
                         <clr-input-container class="filter-name clr-col-8">
                             <label for="name" class="clr-control-label">Label</label>
                             <input class="use-clr-style" clrInput placeholder="Filter Label" name="name"
-                                formControlName="name" />
+                                formControlName="name" minlength="3" maxlength="36"/>
                         </clr-input-container>
                         <clr-select-container class="filter-op clr-col-4">
                             <label for="filter-op" class="clr-control-label">Operator</label>
