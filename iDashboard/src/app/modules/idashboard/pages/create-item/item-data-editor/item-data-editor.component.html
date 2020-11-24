@@ -41,7 +41,8 @@
                                     </item-aggregate-editor>
                                 </clr-accordion-content>
                             </clr-accordion-panel>
-                            <clr-accordion-panel *ngIf="!groupByConfigs.length && !hasAggregate" [clrAccordionPanelDisabled]="true">
+                            <clr-accordion-panel *ngIf="!groupByConfigs.length && !hasAggregate"
+                                [clrAccordionPanelDisabled]="true">
                                 <clr-accordion-title><span style="opacity: .5;">Default</span></clr-accordion-title>
                                 <clr-accordion-content [clrIfExpanded]="false">
                                 </clr-accordion-content>
@@ -84,13 +85,16 @@
                             {{opt.label}}</option>
                     </select>
                 </clr-select-container>
-                <clr-icon shape="plus" class="edit-icon add-icon" *ngIf="i<2"
+                <clr-icon shape="plus" class="edit-icon add-icon"
+                    *ngIf="groupByControls.length < groupByConfig?.maxFields"
                     (click)="add(i, groupByControls ,groupByConfig?.maxFields);" title="Add">
                 </clr-icon>
                 <clr-icon shape="minus" class="edit-icon remove-icon"
+                    *ngIf="groupByControls.length > groupByConfig?.minFields"
                     (click)="remove(i,groupByControls,groupByConfig?.minFields);" title="Remove">
                 </clr-icon>
-                <clr-icon shape="plus" class="hidden" *ngIf="i==2">
+                <clr-icon shape="plus" class="hidden"
+                    *ngIf="groupByControls.length==groupByConfig?.maxFields || groupByControls.length==groupByConfig?.minFields">
                 </clr-icon>
             </div>
             <div class="flex-row" *ngIf="!groupByControls[0]">
@@ -112,7 +116,8 @@
                             {{opt.label}}</option>
                     </select>
                 </clr-select-container>
-                <clr-icon shape="plus" class="edit-icon add-icon" (click)="add(i, projectionControls);" title="Add">
+                <clr-icon shape="plus" class="edit-icon add-icon" (click)="add(i, projectionControls , -1);"
+                    title="Add">
                 </clr-icon>
                 <clr-icon shape="minus" class="edit-icon remove-icon" (click)="remove(i,projectionControls);"
                     title="Remove">

@@ -16,8 +16,8 @@ function remove(index, controls) {
   controls.splice(index, 1);
 }
 export const defGroupByConfig = {
-  minFields: 1,  maxFields: 3,
-  fields : [{ name: "Level 1", required : true  , gIndex: 0}, { name : "Level 2" , gIndex: 1 }, { name : "Level 3" , gIndex: 2}]
+  minFields: 1, maxFields: 3,
+  fields: [{ name: "Level 1", required: true, gIndex: 0 }, { name: "Level 2", gIndex: 1 }, { name: "Level 3", gIndex: 2 }]
 }
 @Component({
   selector: 'item-data-editor',
@@ -44,10 +44,10 @@ export class ItemDataEditorComponent implements OnInit {
       this.initForm(this.item);
   }
   fields: any[];
-  aggregateFields : any[];
-  @Input('fields') set setFields(fields: any[]){
+  aggregateFields: any[];
+  @Input('fields') set setFields(fields: any[]) {
     this.fields = fields;
-    this.aggregateFields = fields && fields.filter(f => !['array' , 'object'].includes((f.type||'').toLowerCase()));
+    this.aggregateFields = fields && fields.filter(f => !['array', 'object'].includes((f.type || '').toLowerCase()));
   }
   @Input('type') set setType(type) {
     this.setItemType(type);
@@ -104,20 +104,20 @@ export class ItemDataEditorComponent implements OnInit {
     const values = this.groupByControls.map(c => c.value).filter(v => v && v !== '');
     if (this.groupByConfig && this.groupByControls) {
       this.groupByControls.splice(0, this.groupByControls.length);
-      const fieldsToUdDate = Math.min( this.groupByConfig.maxFields , Math.max(this.groupByConfig.minFields , values.length));
-      for (let i = 0; i < fieldsToUdDate ; i++) {
+      const fieldsToUdDate = Math.min(this.groupByConfig.maxFields, Math.max(this.groupByConfig.minFields, values.length));
+      for (let i = 0; i < fieldsToUdDate; i++) {
         this.add(i, this.groupByControls, this.groupByConfig.maxFields);
         this.groupByControls[i].setValue(values[i] || '');
         setTimeout(() => {
           // update options in background
           const fieldIndex = this.groupByConfig.fields.indexOf(this.groupByConfig.fields.find(f => f.gIndex === i));
-          this.updateFieldOptions(values[i] , fieldIndex , this.groupByConfig);
+          this.updateFieldOptions(values[i], fieldIndex, this.groupByConfig);
         }, 1000);
       }
     }
   }
   add(index, controls: any[], limit = 3) {
-    if (limit && controls.length >= limit) {
+    if (limit > 0 && controls.length >= limit) {
       this.toastr.warning(`maximum ${limit} values can be added`);
       return;
     }
@@ -137,25 +137,25 @@ export class ItemDataEditorComponent implements OnInit {
     this.item[name] = formValue[name];
     this.item.options = { ...(name == 'options' ? data : formValue.options) };
     // store disabled states for the options in dash edit page
-    Object.keys(this.disabledOptions).filter(opt =>  this.disabledOptions[opt] === true).forEach(option => {
+    Object.keys(this.disabledOptions).filter(opt => this.disabledOptions[opt] === true).forEach(option => {
       this.item.options[`${option}--disabled`] = true;
     })
   }
   groupByChange(value, index, config) {
-    const {groupBy} = this.form.getRawValue();
+    const { groupBy } = this.form.getRawValue();
     this.updated('groupBy', groupBy);
     this.item.groupBy = groupBy && groupBy.filter(v => v && v !== '');
     this.updateFieldOptions(value, index, config);
   }
   private updateFieldOptions(fieldName, index, config) {
-     if (fieldName && index >= 0 && config && config.fields) {
+    if (fieldName && index >= 0 && config && config.fields) {
       const isSeriesField = ['X Axis', 'Y Axis'].includes(config.fields[index].name) || config.fields.length === 1;
       if (isSeriesField) {
         const field = this.fields && this.fields.find(f => f.name == fieldName);
-        this.disabledOptions.dateSeries = (field && field.type||'').toLowerCase() !== 'date';
+        this.disabledOptions.dateSeries = (field && field.type || '').toLowerCase() !== 'date';
       }
     }
-    this.disabledOptions = { ...(this.disabledOptions || {})};
+    this.disabledOptions = { ...(this.disabledOptions || {}) };
     setTimeout(() => {
       resetDisabledFieldsInOptions(this.item.options, this.disabledOptions);
     }, 10);
