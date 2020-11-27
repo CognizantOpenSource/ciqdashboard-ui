@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --base-href=/ui/ --deployUrl=/ui/ --output-path=./dist/out",
-    "dev-build": "ng build --prod --base-href=/ui/ --deployUrl=/ui/ --output-path=./dist/deploy/ui --sourceMap=true --watch=true",
+    "build": "ng build --prod --base-href=/idashboard/ --deployUrl=/idashboard/ --output-path=./dist/out",
+    "dev-build": "ng build --prod --base-href=/idashboard/ --deployUrl=/idashboard/ --output-path=./dist/deploy/idashboard --sourceMap=true --watch=true",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

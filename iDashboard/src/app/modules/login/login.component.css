@@ -38,3 +38,13 @@
 .login-wrapper::ng-deep .clr-error .clr-validate-icon {
   margin-left: 0;
 }
+.footer {
+  position: inherit;
+  bottom: 0;
+  left: 15%;
+}
+.footer p {
+  font-size: 93%;
+  font-weight: 560;
+  font-family: Arial, Helvetica, sans-serif;
+}
