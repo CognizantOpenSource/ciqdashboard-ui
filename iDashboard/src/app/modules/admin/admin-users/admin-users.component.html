@@ -16,6 +16,9 @@
     <clr-dg-column>Name
       <clr-dg-string-filter [clrDgStringFilter]="userNameFilter"></clr-dg-string-filter>
     </clr-dg-column>
+    <clr-dg-column>Type
+      <clr-dg-string-filter [clrDgStringFilter]="userTypeFilter"></clr-dg-string-filter>
+    </clr-dg-column>
     <clr-dg-column>Role</clr-dg-column>
     <clr-dg-column>Status</clr-dg-column>
     <clr-dg-row *clrDgItems="let user of users" [clrDgItem]="user"
@@ -23,6 +26,7 @@
       <clr-dg-cell><a clrVerticalNavLink [state]="{ navigateFromRole: false }"
           [routerLink]="['/admin/users/', user.id, 'edit']">{{ user.email }}</a></clr-dg-cell>
       <clr-dg-cell>{{ user.firstName }} {{ user.lastName }}</clr-dg-cell>
+      <clr-dg-cell>{{user.type}}</clr-dg-cell>
       <clr-dg-cell>
         <a clrVerticalNavLink [state]="{ navigateFromRole: true }" [routerLink]="['/admin/users/', user.id, 'edit']">
           <span *ngFor="let role of user.account.roles; let i = index;">

@@ -65,7 +65,7 @@ export class AuthenticationService {
   get permissions$(): Observable<Array<string>> {
     return this.user$.pipe(map(user => user.account.roles.flatMap(it => it.permissions).map(it => it.id)));
   }
-  public login(username: string, password: string, type = 'native') {
+  public login(username: string, password: string, type: string) {
     return this.authenticate({ type, username, password });
   }
   public logout(): Observable<any> {
