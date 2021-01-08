@@ -47,9 +47,9 @@
                                     <button class="btn" title="Delete Dashboard" (click)="deleteDashboard(dashboard)">
                                         <clr-icon shape="trash"></clr-icon>
                                     </button>
-                                    <!-- <button class="btn" ngIf="false" title="Export as PDF" (click)="exportAs(dashboard)">
+                                     <button class="btn" title="Export as PDF" (click)="exportAs(dashboard)">
                                         <clr-icon shape="download"></clr-icon>
-                                    </button> -->
+                                    </button>
                                     <button class="btn" title="Slide Show"
                                         [routerLink]="['./../' ,dashboard.id,'slideshow' , {page:activePage}]">
                                         <clr-icon shape="video-gallery"></clr-icon>

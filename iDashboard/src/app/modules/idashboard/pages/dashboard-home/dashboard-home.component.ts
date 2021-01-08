@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DashboardService } from '../../services/idashboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
@@ -12,6 +12,7 @@ import { getEmptyPage } from '../dashboard-editor/dashboard-editor.component';
 import { ToastrService } from 'ngx-toastr';
 import { IDashBoard } from './idashboard';
 import { parseApiError } from 'src/app/components/util/error.util';
+import { DashboardViewComponent } from '../dashboard-view/dashboard-view.component';
 
 @Component({
   templateUrl: './dashboard-home.component.html',
@@ -30,6 +31,8 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
       pdfCallbackFn: this.pdfCallbackFn
     }
   };
+  @ViewChild(DashboardViewComponent, {static: false}) dashboardView: DashboardViewComponent;
+  
   activePage = 0;
   dashboards: any[];
   theme$
@@ -113,7 +116,8 @@ export class DashboardHomeComponent extends IDashBoard implements OnInit {
   }
 
   exportAs(dashboard) {
-    this.exportAsService.save(this.exportconfig, dashboard.name).subscribe();
+    //this.exportAsService.save(this.exportconfig, dashboard.name).subscribe();
+    this.dashboardView.exportAsPdf();
   }
 
   pdfCallbackFn(pdf: any) {

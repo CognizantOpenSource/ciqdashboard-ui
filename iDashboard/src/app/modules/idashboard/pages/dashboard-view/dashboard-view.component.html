@@ -1,4 +1,4 @@
-<section class="dashboard-renderer flex-col full" *ngIf="config">
+<section id="gridcharts" class="dashboard-renderer flex-col full" *ngIf="config">
   <gridster [options]="config" class="scroll-main">
     <ng-container *ngFor="let item of items; let index = index" >
     <gridster-item [item]="item" *ngIf="item" [class.focused]="activeItem == index">     

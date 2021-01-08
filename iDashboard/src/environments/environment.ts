@@ -8,7 +8,7 @@ const host = `http://${window.location.hostname}:${port}`;
 export const environment = {
   production: false,
   api: {
-    auth: `${host}/`,
+    auth: `${host}/`,                       //--> http://localhost:9002/ --> authapi(nginx) auth/token
     idashboard :  `${host}/idashboard/`
   },
   storagePrefix: 'idash-ui'
