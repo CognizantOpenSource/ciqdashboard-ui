@@ -94,6 +94,11 @@ export class IDashboardAPI {
     get updateExtdata() {
         return `${this.base}collector/update-collection`;
     }
+
+    get createView() {
+        return `${this.base}collector/create-view`;
+    }
+
     get resourceMapping(){
         return `${this.base}project-mapping/`;
     }

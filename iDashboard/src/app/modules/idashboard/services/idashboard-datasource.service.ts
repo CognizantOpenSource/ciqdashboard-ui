@@ -50,4 +50,8 @@ export class DashboardDataSourceService {
     return this.api.updateExternalData(data,collname);
   }
 
+  createView(data: any): Observable<any>  {
+    return this.api.createView(data);
+  }
+
 }
