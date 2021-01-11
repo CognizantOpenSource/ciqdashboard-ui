@@ -1,8 +1,10 @@
 :host{
-    background: #f0ecec;
+    background: var(--bg2);
+   
     p{
+        color: var(--fg1);
         margin: 0px;
         text-align: center;
-        font-size: small;
+        font-size: small
     }
 }
