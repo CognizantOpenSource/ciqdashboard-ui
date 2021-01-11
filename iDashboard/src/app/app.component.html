@@ -3,7 +3,7 @@
   <app-top-nav></app-top-nav>
   <div class="content-container">
     <div class="sidebar">
-      <router-outlet name="sidebar"></router-outlet>
+      <!-- <router-outlet name="sidebar"></router-outlet> -->
     </div>
     <div class="main-page full" [class.has-header]="showFullHeader$|async">
       <router-outlet></router-outlet>
@@ -12,4 +12,5 @@
   <ng-container *ngIf="loaded && !openRoute && !authenticated">
     <app-login [reloadWindow]="false"></app-login>
   </ng-container>
+   <app-footer></app-footer>
 </clr-main-container>
