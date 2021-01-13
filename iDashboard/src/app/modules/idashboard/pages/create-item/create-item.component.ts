@@ -8,6 +8,7 @@ import { DashboardDataSourceService } from "../../services/idashboard-datasource
 import { BaseItemEditor, pages } from './base-item-editor';
 import * as csv from 'csvtojson';
 import { take } from 'rxjs/operators';
+import { FormGroup, Validators, FormBuilder, FormArray, FormControl, Form, FormsModule } from '@angular/forms';
 
 interface DataSoure {
   id: string;
@@ -73,16 +74,61 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
 
   // End of Upload External Data
 
+  // Create View Variables
+  
+  opencreateviewswin =  false
+  public createViewform: FormGroup;
+  public baseCollection: FormGroup;
+
+  selectedbaseCol: any = [];
+  ItemsBaseCol: any=[];
+
+  lookupsColwin =  false;
+
+  isBaseSelected: boolean = false;
+  
+
+  lookupsselected: any;
+
+  
+  ItemslookupCol: any = [];
+  selectedlookupsCol: any = [];
+  lookupidx: number;
+
+  islookupsSelected: boolean = false;
+  selectedlookupsfield: any=[];
+  selectedbasefield: any=[];
+
+  idx=0;
+
+  // End of Create View Variables
+
   createMode = true;
   navs = [];
 
   constructor(
+
+    private fb: FormBuilder,
+
     route: ActivatedRoute, router: Router, spec: FilterOps, toastr: ToastrService,
     private dashItemService: DashboardItemsService, private datasoruceService: DashboardDataSourceService
   ) {
     super(route, router, spec, toastr);
 
+    this.createViewform = fb.group({
+      name: ['New View',Validators.required],
+      baseCollection : this.baseCollection = this.fb.group({
+        name: new FormControl(),
+        fields: new FormArray([])
+      }),
+      'lookups': fb.array([])
+  });
+
   }
+
+  get funcviewform() { return this.createViewform.controls }
+  get funcbaseCollection() { return this.baseCollection.controls}
+  get funcfields() { return this.funcbaseCollection.fields as FormArray; }
 
 
   ngOnInit() {
@@ -259,6 +305,12 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
     this.isEdit = false;
     this.resetform();
     this.opendtswin = true;
+
+    this.isSelected=false;
+    if (this.ItemsCol.length >  0)  {
+      this.ItemsCol.splice(0,this.ItemsCol.length)
+    }
+
   }
 
   resetform() {
@@ -605,5 +657,331 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
   }
 
   //End of External Data
+
+  //********************************************************************************** */
+//Start Create View 
+//********************************************************************************** */
+
+ //************************************************** */
+ // Opencreateview - 
+ // Description : To Open CreteView Dialog and clear the 
+ // previous data and rest the fields. and delete
+ // the controls
+//************************************************** */
+
+Opencreateview(){
+
+  this.lookupidx = 0;
+  this.opencreateviewswin =  true;
+  this.createViewform.reset();
+  this.baseCollection.reset();
+  this.createViewform.setControl('lookups', this.fb.array([]));
+
+  this.baseCollection.setControl('fields',this.fb.array([]));
+
+  if(this.collectionNames.length > 0) {
+    this.collectionNames.splice(0,this.collectionNames.length)
+    this.loadCollectionsName();
+  }
+
+  if (this.ItemslookupCol.length >  0)  {
+    this.ItemslookupCol.splice(0,this.ItemslookupCol.length)
+  }
+  
+  if (this.ItemsBaseCol.length >  0)  {
+     this.ItemsBaseCol.splice(0,this.ItemsBaseCol.length)
+  }
+
+ this.selectedbaseCol="";
+ this.isBaseSelected=false;
+  
+ this.createViewform.controls.name.setValue("New View");
+}
+
+//************************************************** */
+// onBaseCollectionSelected
+// Description : To get field name from the selected collection name
+// and populate the UI
+//************************************************** */
+onBaseCollectionSelected(collectionName: string) {
+
+
+this.selectedbaseCol = collectionName;
+
+this.datasoruceService.getFieldsTypes(collectionName).subscribe((values) => {
+
+this.ItemsBaseCol = [...values];
+this.isBaseSelected=true;
+
+this.ItemsBaseCol= this.ItemsBaseCol.filter(function(field) {
+return field.name.charAt(0) !== '_';
+});
+
+});
+this.addBaseUI(collectionName);
+
+
+}
+
+//**************************************************************** */
+// addBaseUI
+// Description : To populate the Basecollection UI with fields and alias
+//**************************************************************** */
+
+addBaseUI(collName: string,data?: any) {
+
+this.createViewform.get('baseCollection').get('name').setValue(collName);
+let baseIndex = (<FormArray>this.createViewform.get('baseCollection').get('fields')).length-1;
+this.addBase(baseIndex);
+
+
+}
+
+//**************************************************************** */
+// addBase
+// Description : To Populate the name and alise format inside the fields array
+//
+// Ex. fields [
+//        "name" : "",
+//          "alias" : "" 
+//          ]
+//**************************************************************** */
+
+addBase(baseIndex: number, data?: any) {
+let fg =  this.fb.group({
+'name': [data ? data : '', Validators.compose([Validators.required])],
+'alias': new FormControl()
+});
+(<FormArray>this.createViewform.get('baseCollection').get('fields')).push(fg)
+
+
+}
+
+//**************************************************************** */
+// OpenlookupCollectionDlg
+// Description : Click the Addlookups button, to call the function to open the
+// lookup collection dialog for selecting the collection
+//**************************************************************** */
+
+OpenlookupCollectionDlg() {
+this.lookupsColwin=true;
+}
+
+
+//**************************************************************** */
+// onlookupsCollectionSelected
+// Description : Click on Addlookups to Open a Dialog for select the lookup
+// Collection. After select the collection , Need to popuplate the lookups UI
+//**************************************************************** */
+
+onlookupsCollectionSelected(value: string) {
+
+this.datasoruceService.getFieldsTypes(value).subscribe((values) => {
+
+this.ItemslookupCol.push(values);
+this.selectedlookupsCol.push(value);
+this.islookupsSelected = true;
+
+for (let lookupfield of this.ItemslookupCol) {
+  for(let i=0;i<lookupfield.length;i++) {
+      if(this.ItemslookupCol[this.lookupidx][i].name.charAt(0) === '_') {
+        this.ItemslookupCol[this.lookupidx].splice(i,1);
+      }
+  }
+}
+
+this.lookupidx = this.lookupidx +1;
+
+});
+
+this.addlookupUI(value);
+}
+
+//**************************************************************** */
+// addlookupUI
+// Description : To load the lookup UI , popuplate the controls after select the
+// lookup collection.
+//**************************************************************** */
+
+addlookupUI(collName: string,data?: any) {
+let fg = this.fb.group({
+'name': [data ? data.name : collName, Validators.compose([Validators.required])],
+'fields': this.fb.array([]),
+'localForeignFields': this.fb.array([]),
+ alias: new FormControl()
+
+});
+(<FormArray>this.createViewform.get('lookups')).push(fg);
+
+
+let lookupIndex = (<FormArray>this.createViewform.get('lookups')).length - 1;
+this.createViewform.get(['lookups',lookupIndex]).get('alias').setValue(collName);
+
+
+if (!data) {
+this.addlookup(lookupIndex);
+this.addlocalForeignFields(lookupIndex);
+}
+else {
+data.field.forEach(field => {
+    this.addlookup(lookupIndex, field);
+});
+}
+
+this.lookupsColwin = false;
+
+}
+
+//**************************************************************** */
+// addlookup
+// Description : To load the lookup UI fields Json format
+// Ex. fields [
+//        "name" : "",
+//          "alias" : "" 
+//          ]
+//**************************************************************** */
+
+addlookup(Idx: number, data?: any) {
+
+let fg = this.fb.group({
+'name': [data ? data : '', Validators.compose([Validators.required])],
+'alias': new FormControl()
+});
+
+(<FormArray>(<FormGroup>(<FormArray>this.createViewform.controls['lookups'])
+.controls[Idx]).controls['fields']).push(fg);
+
+}
+
+//**************************************************************** */
+// addlocalForeignFields
+// Description : To load LocalForeignFields controls user can selct the 
+// source Field and lookup Field and to create a Json format
+// For Ex.
+// localForeignFields": [  
+//  {
+//    "localField": "domainName",
+//    "foreignField": "domainName"
+// }
+//**************************************************************** */
+
+addlocalForeignFields(localForeignFieldIndex: number,data?: any) {
+let fg = this.fb.group({
+'localField': [data ? data : '', Validators.compose([Validators.required])],
+'foreignField': [data ? data : '', Validators.compose([Validators.required])],
+});
+(<FormArray>(<FormGroup>(<FormArray>this.createViewform.controls['lookups'])
+  .controls[localForeignFieldIndex]).controls['localForeignFields']).push(fg);
+
+  
+}
+
+
+//**************************************************************** */
+// On click Create View
+// Description : Create a View, to map the various fields from 
+// various collection. 
+//**************************************************************** */
+
+createview(formValue) {
+
+this.datasoruceService.createView(formValue).subscribe((values) => {
+
+this.toastr.success("View Created successfuly");
+this.createViewform.reset();
+this.opencreateviewswin = false;
+},
+error => {
+const parsedError = parseApiError(error, 'Error in Create View ');
+this.toastr.error(parsedError.message, parsedError.title);
+});
+
+
+}
+
+//**************************************************************** */
+//onChangeBaseField
+// Description : The user select the base field from the 
+// drop down, automatically populate the same value in the alise
+//**************************************************************** */
+
+onChangeBaseField(fieldName: any) {
+let baseFieldIndex = (<FormArray>this.createViewform.get('baseCollection').get('fields')).length-1;
+this.createViewform.get('baseCollection').get(['fields', baseFieldIndex]).setValue({name: fieldName,alias: fieldName});
+}
+
+//**************************************************************** */
+// onChangeLookupField
+// Description : The user select the base field from the 
+// drop down, automatically populate the same value in the alise
+//**************************************************************** */
+onChangeLookupField(fieldName: any) {
+let lookupIndex = (<FormArray>this.createViewform.get('lookups')).length - 1;
+let lookupFieldIndex = (<FormArray>this.createViewform.get(['lookups',lookupIndex]).get('fields')).length-1;
+this.createViewform.get(['lookups',lookupIndex]).get(['fields', lookupFieldIndex]).setValue({name: fieldName,alias: fieldName});
+}
+
+//**************************************************************** */
+// onChangelookupCollectionAlias
+// Description : The user select the lookup collection from the 
+// drop down from the Dialog box, automatically populate the same collection 
+// name in the Collection alias
+//**************************************************************** */
+onChangelookupCollectionAlias(collectionName: any) {
+let lookupIndex = (<FormArray>this.createViewform.get('lookups')).length - 1;
+this.createViewform.get(['lookups',lookupIndex]).get('alias').setValue(collectionName);
+
+}
+
+//**************************************************************** */
+// deleteBaseField
+// Description : To delete control from baseField
+//**************************************************************** */
+
+deleteBaseField(baseFieldIdx: number) {
+(<FormGroup>(<FormArray>this.createViewform.controls.baseCollection)
+.controls['fields'].removeAt(baseFieldIdx));
+}
+
+//**************************************************************** */
+// deletelookupField
+//  Description : To delete control from lookupfield
+//**************************************************************** */
+deletelookupField(lookupIdx: number, lookupFieldIdx: number) {
+(<FormArray>(<FormGroup>(<FormArray>this.createViewform.controls['lookups'])
+.controls[lookupIdx]).controls['fields']).removeAt(lookupFieldIdx);
+}
+
+//**************************************************************** */
+// deletelocalForeignFields
+// Description : To delete control from localForeignFields
+//**************************************************************** */
+deletelocalForeignFields(lookupIdx: number, lookuplocalForeignFieldIdx: number) {
+(<FormArray>(<FormGroup>(<FormArray>this.createViewform.controls['lookups'])
+.controls[lookupIdx]).controls['localForeignFields']).removeAt(lookuplocalForeignFieldIdx);
+}
+
+//**************************************************************** */
+// deleteLookup
+// Description : To delete control from Add lookup controls
+//**************************************************************** */
+deleteLookup(lookupIdx: number) {
+this.selectedlookupsCol.splice(lookupIdx, 1);
+(<FormArray>this.createViewform.get('lookups')).removeAt(lookupIdx);
+}
+
+//**************************************************************** */
+// closeCreateViewDlg
+// Description : To Close the Create View Dialog
+//**************************************************************** */
+closeCreateViewDlg() {
+this.opencreateviewswin=false;
+this.createViewform.reset();
+
+}
+
+//********************************************************************************** */
+//End of Create View
+//********************************************************************************** */
 
 }

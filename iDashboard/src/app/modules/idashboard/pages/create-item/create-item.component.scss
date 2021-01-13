@@ -378,3 +378,17 @@ input {
   width: 97%;
   margin-left: -12px;
 }
+
+.modal-createview-content {
+  padding: 1rem;
+  background-color:#FAFAFA;
+  /*border-radius: .125rem;*/
+  /* box-shadow: 0 1px 2px 2px rgba(0,0,0,.2);*/
+}
+
+.createview-list-group {
+padding: .5rem .75rem;
+  font-size: .583333rem;
+  background-color:#FAFAFA;
+  border-bottom: 1px solid #ededed
+}
