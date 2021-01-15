@@ -8,6 +8,6 @@
     </div>
     <div class="user-name">{{getDisplayName(user)}}</div>
     <div class="user-email">{{user.email}}</div>
-    <div class="changePassword">Do you want to <a [routerLink]="['/user/profile/changePassword']">Change Password</a>?</div>
+    <div *ngIf="user.type!='LDAP'" class="changePassword">Do you want to <a [routerLink]="['/user/profile/changePassword']">Change Password</a>?</div>
   </div>
 </app-container>

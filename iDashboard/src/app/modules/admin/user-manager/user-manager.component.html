@@ -85,7 +85,7 @@
           </clr-datagrid>
         </clr-tab-content>
       </clr-tab>
-      <clr-tab>
+      <clr-tab *ngIf="user.type!='LDAP'">
         <button clrTabLink>Reset Credentials</button>
         <ng-template [(clrIfActive)]="isResetCredActive" (clrIfActiveChange)="refreshPassword()">
           <clr-tab-content>

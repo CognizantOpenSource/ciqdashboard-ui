@@ -18,6 +18,7 @@ export class AdminUsersComponent extends UnSubscribable implements OnInit {
 
   userEmailFilter = new EntityFilter('email');
   userNameFilter = new EntityCallBackFilter(it => it.firstName + ' ' + it.lastName);
+  userTypeFilter = new EntityFilter('type');
 
   constructor(private userManagerService: UserManagerService, private authService: AuthenticationService, private toastr: ToastrService) {
     super();

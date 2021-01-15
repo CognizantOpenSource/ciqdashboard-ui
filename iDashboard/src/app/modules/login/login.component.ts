@@ -4,6 +4,7 @@ import { UnSubscribable } from 'src/app/components/unsub';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,11 @@ import { environment } from 'src/environments/environment';
 export class LoginComponent extends UnSubscribable implements OnInit, AfterViewInit {
 
   form: any = {
-    type: 'local',
+    type: '',
     username: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
+    secretKey: 'idashboardSCKey'
   };
   returnUrl = '';
   failedAttempt = 0;
@@ -32,6 +34,7 @@ export class LoginComponent extends UnSubscribable implements OnInit, AfterViewI
     return environment.production;
   }
   ngOnInit() {
+    this.form.type="Native";
     this.managed(this.route.queryParams)
       .subscribe(params => this.returnUrl = params.returnUrl || '/home');
     this.managed(this.authService.user$).subscribe(this.success.bind(this));
@@ -52,7 +55,8 @@ export class LoginComponent extends UnSubscribable implements OnInit, AfterViewI
       this.toastr.warning('please provide valid inputs');
       return;
     }
-    this.authService.login(this.form.username, this.form.password);
+    var encrypted = CryptoJS.AES.encrypt(this.form.password, this.form.secretKey).toString();
+    this.authService.login(this.form.username, encrypted, this.form.type);
   }
   success(user: any) {
     this.toastr.success(`logged in as '${user.name || user.firstName}'`);
