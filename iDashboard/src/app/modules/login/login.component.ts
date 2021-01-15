@@ -34,7 +34,7 @@ export class LoginComponent extends UnSubscribable implements OnInit, AfterViewI
     return environment.production;
   }
   ngOnInit() {
-    this.form.type="native";
+    this.form.type="Native";
     this.managed(this.route.queryParams)
       .subscribe(params => this.returnUrl = params.returnUrl || '/home');
     this.managed(this.authService.user$).subscribe(this.success.bind(this));
