@@ -4,7 +4,7 @@
       <section class="title">
         <h3 class="welcome">Welcome to</h3>
         <img src="assets/logo.svg"/>
-        <h5 class="hint">Use your Company ID to login.
+        <h5 class="hint">Use your Organization ID to login.
           <div>Don't have a login?
             <a [routerLink]="['/signUp']">
               Create Account
@@ -13,14 +13,19 @@
         </h5>
       </section>
       <div class="login-group">
-        <clr-select-container *ngIf="false">
-          <select clrSelect name="type" [(ngModel)]="form.type">
+        <clr-select-container>
+          <!-- <select clrSelect name="type" [(ngModel)]="form.type">
             <option value="local">Local Users</option>
             <option value="admin">Administrator</option>
-          </select>
+          </select> -->
+
+          <select clrSelect name="type" [(ngModel)]="form.type" >
+            <option value="ldap">LDAP</option>
+            <option value="Native" selected>Native</option>
+          </select> 
         </clr-select-container>
         <clr-input-container>
-          <input type="text" name="username" clrInput placeholder="Email Id" [(ngModel)]="form.username" />
+            <input type="text" name="username" clrInput [placeholder]="form.type=='native'?'Email Id':'User Id'" [(ngModel)]="form.username" />
         </clr-input-container>
         <clr-password-container>
           <input type="password" name="password" minlength="8" clrPassword placeholder="Password"
@@ -38,10 +43,11 @@
       </div>
     </form>
   </div>
-  <footer class="footer">
+  <!-- <footer class="footer">
     <p>
       © 2020 Cognizant® iDashboard. All rights reserved. Cognizant Confidential and/or Trade Secret.
        Click <b> <a href="https://www.cognizant.com/privacy-notice" target="_blank"><i>here</i></a></b> for Cognizant’s Privacy Statement  | Build # 3.0.0
     </p>
-  </footer>
+  </footer> -->
+  <app-footer class="loginfooter"></app-footer>
 </div>

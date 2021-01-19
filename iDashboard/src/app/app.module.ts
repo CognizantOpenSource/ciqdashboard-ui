@@ -18,7 +18,7 @@ import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { AppErrorHandler } from './services/app-error.service';
 import { HomeComponent } from './modules/home/home.component';
-
+import { AppFooterComponent } from './modules/footer/app-footer/app-footer.component';
 import { ExportAsModule } from 'ngx-export-as';
 
 
@@ -39,6 +39,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     UserMenuComponent,
     NotificationComponent,
     HomeComponent,
+    AppFooterComponent
    
   ],
   imports: [
@@ -46,7 +47,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     BrowserAnimationsModule,
     AppRoutingModule,
     ToastrModule.forRoot({
-      timeOut: 3000,
+      timeOut: 4000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),

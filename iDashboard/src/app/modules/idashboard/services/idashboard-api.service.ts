@@ -161,6 +161,12 @@ export class IDashBoardApiService {
     return this.http.put(this.api.updateExtdata,data,options);
   }
 
+  createView(data : any): Observable<any>  {
+    let httpHeaders = new HttpHeaders({'Content-Type' : 'application/json','Cache-Control': 'no-cache'}); 
+    const options = {headers: httpHeaders};
+    return this.http.post(this.api.createView,data,options);
+  }
+  
   api: IDashboardAPI;
   constructor(private http: HttpClient) {
     this.api = new IDashboardAPI(environment.api.idashboard);

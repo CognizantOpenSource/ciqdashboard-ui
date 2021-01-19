@@ -27,7 +27,7 @@ export class SignUpComponent extends UnSubscribable implements OnInit {
     password: new FormControl('', [Validators.required, Validators.pattern(this.password.pattern)]),
     confirmPassword: new FormControl('', [Validators.required]),
     org: new FormControl('idashboard', Validators.required),
-    type: new FormControl({ value: 'native', disabled: true }, Validators.required)
+    type: new FormControl({ value: 'Native', disabled: true }, Validators.required)
   });
   returnUrl: any;
   showPass = false;
