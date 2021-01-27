@@ -348,7 +348,7 @@
                         <ng-container>
                             <div class="title flex-row">
                               <span class="name">Field {{i +1}}</span>
-                              <span class="option" (click)="addBase(j)">
+                              <span class="option" (click)="addBase(i)">
                                 <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
                             </span>
                               <span class="option" *ngIf="funcfields.controls.length > 1" (click)="deleteBaseField(i)">
@@ -413,7 +413,7 @@
 </div>
 
       <div formArrayName="lookups">
-        <div  *ngFor="let lookups of createViewform.controls.lookups.controls; let i = index" formGroupName="{{i}}">
+        <div  *ngFor="let lookups of formData.controls; let i = index" formGroupName="{{i}}">
           <div style="width: 80%" *ngIf="islookupsSelected">
             <div class="container">
               <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
@@ -460,7 +460,7 @@
                                             <select #mylookupfieldSelect formControlName="name" class="use-clr-stylee" clrSelect placeholder="opt.name" name="opt-name" (change)="onChangeLookupField(mylookupfieldSelect.value)" required>
                                               <option value="">Select</option>
                                               <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
-                                                  {{opt.label}}</option> <span>{{opt}}</span>
+                                                  {{opt.label}}</option>
                                           </select>
                                           
                                         </clr-select-container>
@@ -510,7 +510,7 @@
                                             <select  style="width: 97%;" #localFieldSelect formControlName="localField" clrSelect placeholder="opt.name" name="opt-name" required>
                                               <option value="">Select</option>
                                               <option value="{{opt.label}}" *ngFor="let opt of ItemsBaseCol">
-                                                  {{opt.label}}</option> <span>{{opt}}</span>
+                                                  {{opt.label}}</option>
                                           </select>
                                           
                                         </clr-select-container>
@@ -519,7 +519,7 @@
                                           <select style="width: 97%;" #foreignFieldSelect formControlName="foreignField" clrSelect placeholder="opt.name" name="opt-name" required>
                                             <option value="">Select</option>
                                             <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
-                                                {{opt.label}}</option> <span>{{opt}}</span>
+                                                {{opt.label}}</option>
                                         </select>
                                         
                                       </clr-select-container>
