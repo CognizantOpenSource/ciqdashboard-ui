@@ -363,7 +363,7 @@
                                   <div class="form-group col-6">
                                       
                                       <clr-select-container>
-                                        <select #myBasefieldSelect formControlName="name" class="use-clr-stylee" clrSelect required (change)="onChangeBaseField(myBasefieldSelect.value)">
+                                        <select #myBasefieldSelect formControlName="name" class="use-clr-stylee" clrSelect required (change)="onChangeBaseField(myBasefieldSelect.value,i)">
                                           <option value="">Select</option>
                                           <option *ngFor="let opt of ItemsBaseCol" value="{{opt.label}}" >{{opt.label}}</option>
                                       </select>
@@ -457,7 +457,7 @@
                                 <div class="field-group flex-col">
                                     <div class="fields flex-row">
                                         <clr-select-container>
-                                            <select #mylookupfieldSelect formControlName="name" class="use-clr-stylee" clrSelect placeholder="opt.name" name="opt-name" (change)="onChangeLookupField(mylookupfieldSelect.value)" required>
+                                            <select #mylookupfieldSelect formControlName="name" class="use-clr-stylee" clrSelect placeholder="opt.name" name="opt-name" (change)="onChangeLookupField(mylookupfieldSelect.value,j)" required>
                                               <option value="">Select</option>
                                               <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
                                                   {{opt.label}}</option>

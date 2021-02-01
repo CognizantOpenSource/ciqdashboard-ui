@@ -905,9 +905,9 @@ this.toastr.error(parsedError.message, parsedError.title);
 // drop down, automatically populate the same value in the alise
 //**************************************************************** */
 
-onChangeBaseField(fieldName: any) {
-let baseFieldIndex = (<FormArray>this.createViewform.get('baseCollection').get('fields')).length-1;
-this.createViewform.get('baseCollection').get(['fields', baseFieldIndex]).setValue({name: fieldName,alias: fieldName});
+onChangeBaseField(fieldName: any,index: number) {
+//let baseFieldIndex = (<FormArray>this.createViewform.get('baseCollection').get('fields')).length-1;
+this.createViewform.get('baseCollection').get(['fields', index]).setValue({name: fieldName,alias: fieldName});
 }
 
 //**************************************************************** */
@@ -915,10 +915,11 @@ this.createViewform.get('baseCollection').get(['fields', baseFieldIndex]).setVal
 // Description : The user select the base field from the 
 // drop down, automatically populate the same value in the alise
 //**************************************************************** */
-onChangeLookupField(fieldName: any) {
+onChangeLookupField(fieldName: any,index: number) {
+alert(index);  
 let lookupIndex = (<FormArray>this.createViewform.get('lookups')).length - 1;
 let lookupFieldIndex = (<FormArray>this.createViewform.get(['lookups',lookupIndex]).get('fields')).length-1;
-this.createViewform.get(['lookups',lookupIndex]).get(['fields', lookupFieldIndex]).setValue({name: fieldName,alias: fieldName});
+this.createViewform.get(['lookups',lookupIndex]).get(['fields', index]).setValue({name: fieldName,alias: fieldName});
 }
 
 //**************************************************************** */
