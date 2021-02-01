@@ -776,21 +776,30 @@ this.lookupsColwin=true;
 
 onlookupsCollectionSelected(value: string) {
 
+
 this.datasoruceService.getFieldsTypes(value).subscribe((values) => {
 
-this.ItemslookupCol.push(values);
 this.selectedlookupsCol.push(value);
+this.ItemslookupCol.push(values);
 this.islookupsSelected = true;
 
-for (let lookupfield of this.ItemslookupCol) {
-  for(let i=0;i<lookupfield.length;i++) {
-      if(this.ItemslookupCol[this.lookupidx][i].name.charAt(0) === '_') {
-        this.ItemslookupCol[this.lookupidx].splice(i,1);
-      }
-  }
-}
+// console.log(this.ItemslookupCol[this.lookupidx]);
+// console.log(this.selectedlookupsCol);
 
-this.lookupidx = this.lookupidx +1;
+// console.log("lookup idx " +  this.lookupidx);
+
+ for (let lookupfield of this.ItemslookupCol) {
+   for(let i=0;i<lookupfield.length;i++) {
+
+    console.log(this.ItemslookupCol[this.lookupidx][i].name);
+
+       if(this.ItemslookupCol[this.lookupidx][i].name.charAt(0) === '_') {
+         this.ItemslookupCol[this.lookupidx].splice(i,1);
+       }
+   }
+ }
+
+this.lookupidx ++;
 
 });
 
@@ -916,7 +925,7 @@ this.createViewform.get('baseCollection').get(['fields', index]).setValue({name:
 // drop down, automatically populate the same value in the alise
 //**************************************************************** */
 onChangeLookupField(fieldName: any,index: number) {
-alert(index);  
+
 let lookupIndex = (<FormArray>this.createViewform.get('lookups')).length - 1;
 let lookupFieldIndex = (<FormArray>this.createViewform.get(['lookups',lookupIndex]).get('fields')).length-1;
 this.createViewform.get(['lookups',lookupIndex]).get(['fields', index]).setValue({name: fieldName,alias: fieldName});

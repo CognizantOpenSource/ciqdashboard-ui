@@ -444,7 +444,7 @@
                             
                                   <div class="title flex-row">
                                       <span class="name">Field {{j+1}}</span>
-                                      <span class="option" (click)="addlookup(i)">
+                                      <span class="option" (click)="addlookup(j)">
                                         <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
                                     </span>
                                       <span class="option" *ngIf="lookups.controls.fields.controls.length > 1" (click)="deletelookupField(i,j)">
@@ -535,7 +535,7 @@
                          </div>  
 
                         <div>
-                          <input clrInput type="text" formControlName="alias" placeholder="Collection alias">
+                          <input clrInput type="text" formControlName="alias" placeholder="Collection alias" disabled>
                         </div>
 
                         </div>
