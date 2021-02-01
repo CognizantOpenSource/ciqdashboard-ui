@@ -705,6 +705,8 @@ Opencreateview(){
 //************************************************** */
 onBaseCollectionSelected(collectionName: string) {
 
+ this.baseCollection.reset();
+ this.baseCollection.setControl('fields',this.fb.array([]))
 
 this.selectedbaseCol = collectionName;
 
@@ -788,10 +790,11 @@ this.islookupsSelected = true;
 
 // console.log("lookup idx " +  this.lookupidx);
 
+//console.log(this.ItemslookupCol);
+
+
  for (let lookupfield of this.ItemslookupCol) {
    for(let i=0;i<lookupfield.length;i++) {
-
-    console.log(this.ItemslookupCol[this.lookupidx][i].name);
 
        if(this.ItemslookupCol[this.lookupidx][i].name.charAt(0) === '_') {
          this.ItemslookupCol[this.lookupidx].splice(i,1);
