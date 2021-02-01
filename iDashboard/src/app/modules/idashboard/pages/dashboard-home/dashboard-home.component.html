@@ -26,11 +26,11 @@
                                     <button class="btn" title="Refresh Dashboard" (click)="reloadDashBoard(dashboard)">
                                         <clr-icon shape="sync"></clr-icon>
                                     </button>
-                                    <button class="btn" title="Pin Dashboard" *ngIf="dashboards.length>2"
+                                    <!-- <button class="btn" title="Pin Dashboard" *ngIf="dashboards.length>2"
                                         [class.active]="dashboard.pinned"
                                         (click)="dashboard.pinned = !dashboard.pinned;">
                                         <clr-icon shape="pin"></clr-icon>
-                                    </button>
+                                    </button> -->
                                     <button class="btn"
                                         [attr.title]="'Click to ' + (dashboard.openAccess ? 'Lock':'Unlock')"
                                         (click)="toggleLock(dashboard)">
