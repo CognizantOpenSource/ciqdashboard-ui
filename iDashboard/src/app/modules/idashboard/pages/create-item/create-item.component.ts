@@ -1006,13 +1006,6 @@ get formData() { return <FormArray>this.createViewform.get('lookups'); }
 
 //*********************************************************************************** */
 
-deletebase() {
-  this.updatedlookupcollectionnames.push(this.selectedbaseCol);
 
-  this.baseCollection.reset();
-  this.baseCollection.setControl('fields',this.fb.array([]))
-  this.createViewform.reset();
-  this.isBaseSelected =false;
-}
 
 }
