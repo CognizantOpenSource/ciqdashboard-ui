@@ -286,300 +286,314 @@
   </div>
 
 
-   <!--Create View-->
-  
-<clr-modal [(clrModalOpen)]="opencreateviewswin" [clrModalSize]="'lg'">
-  <h3 class="modal-title">Create View</h3>
-  <div class="modal-body">
-  <form [formGroup]="createViewform" (ngSubmit)="createview(createViewform.value)" class="form-horizontal">
+  <!--Create View-->
+
+  <clr-modal [(clrModalOpen)]="opencreateviewswin" [clrModalSize]="'lg'">
+    <h3 class="modal-title">Create View</h3>
+    <div class="modal-body">
+      <form [formGroup]="createViewform" (ngSubmit)="createview(createViewform.value)" class="form-horizontal">
         <div class="container" style="width: 80%;">
-              <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
-                  <div class="card">
-                      <div class="card-block modal-createview-content">
-                        <div class="card-text">
-                          <div class="field-group flex-col">
-                            <div class="createview-list-group">
-                              <div class="form-row">
-                                  <div class="form-group col-6">
-                                    <span>View Name</span><input clrInput type="text" formControlName="name" placeholder="Name">
-                                  </div>
-                                  <div class="form-group col-6" style="height: 2px;"></div>
-                                  <div class="form-group col-6">
-                                    <span>Select Collection</span><select clrSelect #myBaseSelect class="use-clr-stylee"
-                                    (change)="onBaseCollectionSelected(myBaseSelect.value)"
-                                   style="color: #000;">
-                                   <option value="">Select CollectionName</option>
-                                   <option *ngFor="let item of updatedlookupcollectionnames" value="{{ item }}">{{ item }}</option>
-                                 </select>
-                                  </div>
-                              </div>
-                          </div>
-                          </div>
-                          
+          <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+            <div class="card">
+              <div class="card-block modal-createview-content">
+                <div class="card-text">
+                  <div class="field-group flex-col">
+                    <div class="createview-list-group">
+                      <div class="form-row">
+                        <div class="form-group col-6">
+                          <span>View Name</span><input clrInput type="text" formControlName="name" placeholder="Name">
                         </div>
-                      </div> 
+                        <div class="form-group col-6" style="height: 2px;"></div>
+                        <div class="form-group col-6">
+                          <span>Select Collection</span><select clrSelect #myBaseSelect class="use-clr-stylee"
+                            (change)="onBaseCollectionSelected(myBaseSelect.value)" style="color: #000;">
+                            <option value="">Select CollectionName</option>
+                            <option *ngFor="let item of updatedlookupcollectionnames" value="{{ item }}">{{ item }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-              </div> 
-           
+
+                </div>
+              </div>
+            </div>
           </div>
 
-    <div style="width: 80%" *ngIf="isBaseSelected">
-  <div [formGroup]="baseCollection" class="form-row">
-<div class="container">
-  <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
-      <div class="card">
-        <div style="font-size:20px;width:100%;background-color: #ccc;height: 29px;">&nbsp;{{selectedbaseCol}}</div>
-          <div class="card-block modal-createview-content">
-            <div class="card-text">
-                <div>
-                  <div>
-                    <!-- <div class="aggregate flex-col">  -->
+        </div>
+
+        <div style="width: 80%" *ngIf="isBaseSelected">
+          <div [formGroup]="baseCollection" class="form-row">
+            <div class="container">
+              <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+                <div class="card">
+                  <div style="font-size:20px;width:100%;background-color: #ccc;height: 29px;">&nbsp;{{selectedbaseCol}}
+                  </div>
+                  <div class="card-block modal-createview-content">
+                    <div class="card-text">
+                      <div>
+                        <div>
+                          <!-- <div class="aggregate flex-col">  -->
                           <!-- <div class="group flex-col">
                             <div class="title flex-row">
                               <span class="name"><label>{{selectedbaseCol}}</label></span>
                             </div>
                           </div> -->
-                      <!-- </div>   -->
-                      <!-- Control to get the collection Name-->
-                      <input type="hidden" value='' formControlName="name" />
-                    
-                    <div class="aggregate flex-col">
-                      <div *ngFor="let fields of funcfields.controls; let i = index" class="list-group list-group-flush">
-                        <ng-container>
-                            <div class="title flex-row">
-                              <span class="name">Field {{i +1}}</span>
-                              <span class="option" (click)="addBase(i)">
-                                <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
-                            </span>
-                              <span class="option" *ngIf="funcfields.controls.length > 1" (click)="deleteBaseField(i)">
-                                <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
-                            </span>
-                           
-                          </div>  
-                          <div class="field-group flex-col">
-                            <div class="createview-list-group">
-                            
-                              <div [formGroup]="fields" class="form-row">
-                                  <div class="form-group col-6">
-                                      
-                                      <clr-select-container>
-                                        <select #myBasefieldSelect formControlName="name" class="use-clr-stylee" clrSelect required (change)="onChangeBaseField(myBasefieldSelect.value,i)">
-                                          <option value="">Select</option>
-                                          <option *ngFor="let opt of ItemsBaseCol" value="{{opt.label}}" >{{opt.label}}</option>
-                                      </select>
-                                      
-                                    </clr-select-container>
-                                      
-                                  </div>
-                                  <div class="form-group col-6">
-                                    <input clrInput type="text" formControlName="alias" name="alias" placeholder="alias">
-                                  </div>
-                              </div>
-                          </div>
-                          </div>
-                        </ng-container>
-                        
-                        
-                    </div>
-                      
-                    </div>
-                  
-                  </div>
-                </div> 
-                
-              </div>
-          </div>
-      </div>        
-    </div>
-</div>
-</div>
-  </div>       
+                          <!-- </div>   -->
+                          <!-- Control to get the collection Name-->
+                          <input type="hidden" value='' formControlName="name" />
 
-   <div class="container" style="margin-top:20px">
-    <div class="row">
-       
-    </div>
-   </div>  
-
-    
-    
- <!-- Add lookup Button-->
-<div class="container">
-  <div class="row">
-      <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
-      <button type="button" class="btn btn-primary-outline" (click)="OpenlookupCollectionDlg()">Add lookup Collection</button>
-      </div>
-  </div>
-</div>
-
-      <div formArrayName="lookups">
-        <div  *ngFor="let lookups of formData.controls; let i = index" formGroupName="{{i}}">
-          <div style="width: 80%" *ngIf="islookupsSelected">
-            <div class="container">
-              <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
-                  <div class="card">
-                    
-                      <div style="font-size:20px;width:100%;background-color: #ccc;height: 29px;">&nbsp;{{selectedlookupsCol[i]}}
-                      
-                        <span class="option" (click)="deleteLookup(i)" style="float:right">
-                          <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
-                      </span>
-                      
-                    </div>
-                    
-                      <div class="card-block modal-createview-content">
-                        <div class="card-text">
                           <div class="aggregate flex-col">
-                            <div class="group flex-col">
-                              <div class="title flex-row">
+                            <div *ngFor="let fields of funcfields.controls; let i = index"
+                              class="list-group list-group-flush">
+                              <ng-container>
+                                <div class="title flex-row">
+                                  <span class="name">Field {{i +1}}</span>
+                                  <span class="option" (click)="addBase(i)">
+                                    <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
+                                  </span>
+                                  <span class="option" *ngIf="funcfields.controls.length > 1"
+                                    (click)="deleteBaseField(i)">
+                                    <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
+                                  </span>
+
+                                </div>
+                                <div class="field-group flex-col">
+                                  <div class="createview-list-group">
+
+                                    <div [formGroup]="fields" class="form-row">
+                                      <div class="form-group col-6">
+
+                                        <clr-select-container>
+                                          <select #myBasefieldSelect formControlName="name" class="use-clr-stylee"
+                                            clrSelect required (change)="onChangeBaseField(myBasefieldSelect.value,i)">
+                                            <option value="">Select</option>
+                                            <option *ngFor="let opt of ItemsBaseCol" value="{{opt.label}}">{{opt.label}}
+                                            </option>
+                                          </select>
+
+                                        </clr-select-container>
+
+                                      </div>
+                                      <div class="form-group col-6">
+                                        <input clrInput type="text" formControlName="alias" name="alias"
+                                          placeholder="alias">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-container>
+
+
+                            </div>
+
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container" style="margin-top:20px">
+          <div class="row">
+
+          </div>
+        </div>
+
+
+
+        <!-- Add lookup Button-->
+        <div class="container">
+          <div class="row">
+            <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+              <button type="button" class="btn btn-primary-outline" (click)="OpenlookupCollectionDlg()">Add lookup
+                Collection</button>
+            </div>
+          </div>
+        </div>
+
+        <div formArrayName="lookups">
+          <div *ngFor="let lookups of formData.controls; let i = index" formGroupName="{{i}}">
+            <div style="width: 80%" *ngIf="islookupsSelected">
+              <div class="container">
+                <div class="clr-col-lg-12 clr-col-md-8 clr-col-12">
+                  <div class="card">
+
+                    <div style="font-size:20px;width:100%;background-color: #ccc;height: 29px;">
+                      &nbsp;{{selectedlookupsCol[i]}}
+
+                      <span class="option" (click)="deleteLookup(i)" style="float:right">
+                        <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
+                      </span>
+
+                    </div>
+
+                    <div class="card-block modal-createview-content">
+                      <div class="card-text">
+                        <div class="aggregate flex-col">
+                          <div class="group flex-col">
+                            <div class="title flex-row">
                               <!-- <span class="name"><label>{{selectedlookupsCol[i]}}</label></span> -->
                               <!-- <span class="option" (click)="deleteLookup(i)">
                                 <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
                             </span> -->
-                            </div> 
                             </div>
-                        </div> 
-                        <div class="aggregate flex-col" formArrayName="fields">
-                          <div class="group flex-col"  *ngFor="let name of lookups.controls.fields.controls; let j = index" formGroupName="{{j}}">
-                            
-                                  <div class="title flex-row">
-                                      <span class="name">Field {{j+1}}</span>
-                                      <span class="option" (click)="addlookup(i)">
-                                        <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
-                                    </span>
-                                      <span class="option" *ngIf="lookups.controls.fields.controls.length > 1" (click)="deletelookupField(i,j)">
-                                        <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
-                                    </span>
-                                   
-                                </div>  
-                                    
-
-                                <div class="field-group flex-col">
-                                    <div class="fields flex-row">
-                                        <clr-select-container>
-                                            <select #mylookupfieldSelect formControlName="name" class="use-clr-stylee" clrSelect placeholder="opt.name" name="opt-name" (change)="onChangeLookupField(mylookupfieldSelect.value,j)" required>
-                                              <option value="">Select</option>
-                                              <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
-                                                  {{opt.label}}</option>
-                                          </select>
-                                          
-                                        </clr-select-container>
-                                    </div>
-                                    
-                                    <div>
-                                    <input clrInput type="text" formControlName="alias" placeholder="alias">
-                                  </div>
-                                </div>
-                            
-                                
                           </div>
-                    
+                        </div>
+                        <div class="aggregate flex-col" formArrayName="fields">
+                          <div class="group flex-col"
+                            *ngFor="let name of lookups.controls.fields.controls; let j = index" formGroupName="{{j}}">
+
+                            <div class="title flex-row">
+                              <span class="name">Field {{j+1}}</span>
+                              <span class="option" (click)="addlookup(i)">
+                                <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
+                              </span>
+                              <span class="option" *ngIf="lookups.controls.fields.controls.length > 1"
+                                (click)="deletelookupField(i,j)">
+                                <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
+                              </span>
+                            </div>
+
+                            <div class="field-group flex-col">
+                              <div class="fields flex-row">
+                                <clr-select-container>
+                                  <select #mylookupfieldSelect formControlName="name" class="use-clr-stylee" clrSelect
+                                    placeholder="opt.name" name="opt-name"
+                                    (change)="onChangeLookupField(mylookupfieldSelect.value,j)" required>
+                                    <option value="">Select</option>
+                                    <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
+                                      {{opt.label}}</option>
+                                  </select>
+
+                                </clr-select-container>
+                              </div>
+
+                              <div>
+                                <input clrInput type="text" formControlName="alias" placeholder="alias">
+                              </div>
+                            </div>
+
+
+                          </div>
+
                         </div>
                         <!-- localForeignFields"> -->
 
                         <div class="container" style="margin-top:20px">
                           <div class="row">
-                             
+
                           </div>
-                         </div>  
-    
+                        </div>
+
                         <div formArrayName="localForeignFields">
 
-                          <div class="group flex-col"  *ngFor="let name of lookups.controls.localForeignFields.controls; let lffj = index" formGroupName="{{lffj}}">
-                            
-                                  <div class="title flex-row">
-                                      <span class="name">Field Mapping {{lffj+1}}</span>
-                                      <span class="option" (click)="addlocalForeignFields(i)">
-                                        <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
-                                    </span>
-                                      <span class="option" *ngIf="lookups.controls.localForeignFields.controls.length > 1" (click)="deletelocalForeignFields(i,lffj)">
-                                        <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
-                                    </span>
-                                   
-                                </div>  
-                                    
+                          <div class="group flex-col"
+                            *ngFor="let name of lookups.controls.localForeignFields.controls; let lffj = index"
+                            formGroupName="{{lffj}}">
 
-                                <div class="field-group flex-col">
-                                    <div class="d-flex flex-row bd-highlight mb-3">
-                                      <div style="width: 50%;">Source Fields</div>
-                                      <div class="p-8 bd-highlight">Lookup Fields</div>
-                                    </div>
-                                    <div class="fields flex-row">
-                                      
-                                        <clr-select-container>
-                                            <select  style="width: 97%;" #localFieldSelect formControlName="localField" clrSelect placeholder="opt.name" name="opt-name" required>
-                                              <option value="">Select</option>
-                                              <option value="{{opt.label}}" *ngFor="let opt of ItemsBaseCol">
-                                                  {{opt.label}}</option>
-                                          </select>
-                                          
-                                        </clr-select-container>
-                                        
-                                        <clr-select-container>
-                                          <select style="width: 97%;" #foreignFieldSelect formControlName="foreignField" clrSelect placeholder="opt.name" name="opt-name" required>
-                                            <option value="">Select</option>
-                                            <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
-                                                {{opt.label}}</option>
-                                        </select>
-                                        
-                                      </clr-select-container>
-                                    </div>
-                                </div>
+                            <div class="title flex-row">
+                              <span class="name">Field Mapping {{lffj+1}}</span>
+                              <span class="option" (click)="addlocalForeignFields(i)">
+                                <clr-icon title="Add" shape="plus-circle" size="20"></clr-icon>
+                              </span>
+                              <span class="option" *ngIf="lookups.controls.localForeignFields.controls.length > 1"
+                                (click)="deletelocalForeignFields(i,lffj)">
+                                <clr-icon title="Delete" shape="minus-circle" size="20"></clr-icon>
+                              </span>
+
+                            </div>
+
+
+                            <div class="field-group flex-col">
+                              <div class="d-flex flex-row bd-highlight mb-3">
+                                <div style="width: 50%;">Source Fields</div>
+                                <div class="p-8 bd-highlight">Lookup Fields</div>
+                              </div>
+                              <div class="fields flex-row">
+
+                                <clr-select-container>
+                                  <select style="width: 97%;" #localFieldSelect formControlName="localField" clrSelect
+                                    placeholder="opt.name" name="opt-name" required>
+                                    <option value="">Select</option>
+                                    <option value="{{opt.label}}" *ngFor="let opt of ItemsBaseCol">
+                                      {{opt.label}}</option>
+                                  </select>
+
+                                </clr-select-container>
+
+                                <clr-select-container>
+                                  <select style="width: 97%;" #foreignFieldSelect formControlName="foreignField"
+                                    clrSelect placeholder="opt.name" name="opt-name" required>
+                                    <option value="">Select</option>
+                                    <option value="{{opt.label}}" *ngFor="let opt of ItemslookupCol[i]">
+                                      {{opt.label}}</option>
+                                  </select>
+
+                                </clr-select-container>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
                         <div class="container" style="margin-top:20px">
                           <div class="row">
-                             
+
                           </div>
-                         </div>  
+                        </div>
 
                         <div>
                           <input clrInput type="text" formControlName="alias" placeholder="Collection alias" disabled>
                         </div>
 
-                        </div>
                       </div>
-                    </div>     
-                </div>     
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+
+
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary-outline">
+            Create
+          </button>
+          <button type="button" (click)="closeCreateViewDlg()" class="btn btn-warning-outline">
+            Cancel
+          </button>
+        </div>
+
+      </form>
     </div>
-</div>
-
-          
-
-<div class="modal-footer">
-    <button type="submit" class="btn btn-primary-outline">
-    Create
-    </button>
-    <button type="button" (click)="closeCreateViewDlg()" class="btn btn-warning-outline">
-    Cancel
-    </button>
-</div>
-
-  </form>
-  </div>
-</clr-modal>
-<!--End of Form array-->
+  </clr-modal>
+  <!--End of Form array-->
 
 
-<!-- Select Collection Name -->
-<clr-modal [(clrModalOpen)]="lookupsColwin">
-  <h3 class="modal-title">Select lookups </h3>
-  <div class="modal-body">
-    <select clrSelect #lookupsSelectCollectionName class="use-clr-stylee" 
-    (change)="onlookupsCollectionSelected(lookupsSelectCollectionName.value)"
-    style="color: #000">
-    <option value="-1">Select CollectionName</option>
-    <option *ngFor="let item of updatedlookupcollectionnames" value="{{ item }}">{{ item }}</option>
-  </select>
-  </div>
-  <!-- <div class="modal-footer">
+  <!-- Select Collection Name -->
+  <clr-modal [(clrModalOpen)]="lookupsColwin">
+    <h3 class="modal-title">Select lookups </h3>
+    <div class="modal-body">
+      <select clrSelect #lookupsSelectCollectionName class="use-clr-stylee"
+        (change)="onlookupsCollectionSelected(lookupsSelectCollectionName.value)" style="color: #000">
+        <option value="-1">Select CollectionName</option>
+        <option *ngFor="let item of updatedlookupcollectionnames" value="{{ item }}">{{ item }}</option>
+      </select>
+    </div>
+    <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="lookupsColwin = false">Cancel</button>
       <button type="button" class="btn btn-primary" (click)="addUser()">Ok</button>
   </div> -->
-</clr-modal>
-<!-- End Collection Name -->
+  </clr-modal>
+  <!-- End Collection Name -->
 
 </div>
