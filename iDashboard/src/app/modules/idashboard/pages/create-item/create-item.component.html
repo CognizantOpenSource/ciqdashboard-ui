@@ -309,7 +309,7 @@
                                     (change)="onBaseCollectionSelected(myBaseSelect.value)"
                                    style="color: #000;">
                                    <option value="">Select CollectionName</option>
-                                   <option *ngFor="let item of collectionNames" value="{{ item }}">{{ item }}</option>
+                                   <option *ngFor="let item of updatedlookupcollectionnames" value="{{ item }}">{{ item }}</option>
                                  </select>
                                   </div>
                               </div>
@@ -572,7 +572,7 @@
     (change)="onlookupsCollectionSelected(lookupsSelectCollectionName.value)"
     style="color: #000">
     <option value="-1">Select CollectionName</option>
-    <option *ngFor="let item of collectionNames" value="{{ item }}">{{ item }}</option>
+    <option *ngFor="let item of updatedlookupcollectionnames" value="{{ item }}">{{ item }}</option>
   </select>
   </div>
   <!-- <div class="modal-footer">

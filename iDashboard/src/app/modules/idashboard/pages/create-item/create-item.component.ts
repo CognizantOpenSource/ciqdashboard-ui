@@ -101,6 +101,8 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
 
   idx=0;
 
+  updatedlookupcollectionnames:  any;
+
   // End of Create View Variables
 
   createMode = true;
@@ -183,6 +185,7 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
     // Get All Collection Names
     this.datasoruceService.getcollectionName().subscribe((values) => {
       this.collectionNames = values;
+      this.updatedlookupcollectionnames = values;
     });
   }
 
@@ -715,9 +718,13 @@ this.datasoruceService.getFieldsTypes(collectionName).subscribe((values) => {
 this.ItemsBaseCol = [...values];
 this.isBaseSelected=true;
 
+this.updatecollectionName(collectionName,this.selectedbaseCol);
+
 this.ItemsBaseCol= this.ItemsBaseCol.filter(function(field) {
 return field.name.charAt(0) !== '_';
 });
+
+
 
 });
 this.addBaseUI(collectionName);
@@ -776,37 +783,29 @@ this.lookupsColwin=true;
 // Collection. After select the collection , Need to popuplate the lookups UI
 //**************************************************************** */
 
-onlookupsCollectionSelected(value: string) {
+onlookupsCollectionSelected(collectionSelected: string) {
 
+let getCollectionField;
+this.datasoruceService.getFieldsTypes(collectionSelected).subscribe((collectionFields) => {​​​​​​​​
 
-this.datasoruceService.getFieldsTypes(value).subscribe((values) => {
-
-this.selectedlookupsCol.push(value);
-this.ItemslookupCol.push(values);
+this.selectedlookupsCol.push(collectionSelected);
+getCollectionField = collectionFields;
+let finalfield= getCollectionField.filter(ele=> !ele.name.startsWith('_'));
+this.ItemslookupCol.push(finalfield);
 this.islookupsSelected = true;
 
-// console.log(this.ItemslookupCol[this.lookupidx]);
-// console.log(this.selectedlookupsCol);
+this.updatecollectionName(collectionSelected,this.selectedlookupsCol);
 
-// console.log("lookup idx " +  this.lookupidx);
-
-//console.log(this.ItemslookupCol);
-
-
- for (let lookupfield of this.ItemslookupCol) {
-   for(let i=0;i<lookupfield.length;i++) {
-
-       if(this.ItemslookupCol[this.lookupidx][i].name.charAt(0) === '_') {
-         this.ItemslookupCol[this.lookupidx].splice(i,1);
-       }
-   }
- }
-
-this.lookupidx ++;
 
 });
+ 
 
-this.addlookupUI(value);
+
+this.addlookupUI(collectionSelected);
+}
+
+updatecollectionName(cSelected: string,collectionName:any) {
+    this.updatedlookupcollectionnames = this.collectionNames.filter(cSelected => !collectionName.includes(cSelected));
 }
 
 //**************************************************************** */
@@ -979,6 +978,7 @@ deletelocalForeignFields(lookupIdx: number, lookuplocalForeignFieldIdx: number) 
 // Description : To delete control from Add lookup controls
 //**************************************************************** */
 deleteLookup(lookupIdx: number) {
+this.updatedlookupcollectionnames.push(this.selectedlookupsCol[lookupIdx])
 this.selectedlookupsCol.splice(lookupIdx, 1);
 (<FormArray>this.createViewform.get('lookups')).removeAt(lookupIdx);
 }
@@ -1005,5 +1005,14 @@ this.createViewform.reset();
 get formData() { return <FormArray>this.createViewform.get('lookups'); }
 
 //*********************************************************************************** */
+
+deletebase() {
+  this.updatedlookupcollectionnames.push(this.selectedbaseCol);
+
+  this.baseCollection.reset();
+  this.baseCollection.setControl('fields',this.fb.array([]))
+  this.createViewform.reset();
+  this.isBaseSelected =false;
+}
 
 }
