@@ -144,7 +144,7 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
       this.toastr.success('dashboard saved successfully');
       this.projectService.project$.pipe(take(1)).subscribe(p => this.dashboardService.loadDashboards(p.id));
     }, error => {
-      const parsedError = parseApiError(error, 'error while creating project!');
+      const parsedError = parseApiError(error, 'error while saving dashboard');
       this.toastr.error(parsedError.message, parsedError.title);
     });
   }
@@ -206,7 +206,7 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
       this.dashItemService.deleteItem(item.id).subscribe(res => {
         this.toastr.success('item deleted successfully');
       }, error => {
-        const parsedError = parseApiError(error, 'error while creating team!');
+        const parsedError = parseApiError(error, 'error while deleting item');
         this.toastr.error(parsedError.message, parsedError.title);
       });
     }
