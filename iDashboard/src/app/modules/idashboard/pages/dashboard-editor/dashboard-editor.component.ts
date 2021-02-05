@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { cloneDeep } from 'lodash';
 import { IDashBoard } from '../dashboard-home/idashboard';
 import { CreateLabelComponent } from '../create-label/create-label.component';
+import { parseApiError } from 'src/app/components/util/error.util';
 
 export function getEmptyPage(name) {
   return { name, gridConfig: { rows: 8, columns: 8 }, items: [] }
@@ -142,7 +143,10 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
     this.dashboardService.save(this.dashboard).subscribe(res => {
       this.toastr.success('dashboard saved successfully');
       this.projectService.project$.pipe(take(1)).subscribe(p => this.dashboardService.loadDashboards(p.id));
-    }, error => this.toastr.error('error while saving dashboard'));
+    }, error => {
+      const parsedError = parseApiError(error, 'error while creating project!');
+      this.toastr.error(parsedError.message, parsedError.title);
+    });
   }
   onItemOptionsChange(item) {
     if (item.options) {
@@ -201,7 +205,10 @@ export class DashboardEditorComponent extends IDashBoard implements OnInit {
       item.disabled = true;
       this.dashItemService.deleteItem(item.id).subscribe(res => {
         this.toastr.success('item deleted successfully');
-      }, error => this.toastr.error('error while deleting item'));
+      }, error => {
+        const parsedError = parseApiError(error, 'error while creating team!');
+        this.toastr.error(parsedError.message, parsedError.title);
+      });
     }
   }
 }
