@@ -310,9 +310,12 @@ export class CreateItemComponent extends BaseItemEditor implements OnInit {
     this.opendtswin = true;
 
     this.isSelected = false;
-    if (this.ItemsCol.length > 0) {
-      this.ItemsCol.splice(0, this.ItemsCol.length)
-    }
+
+    if(this.ItemsCol != null) {
+      if (this.ItemsCol.length > 0) {
+        this.ItemsCol.splice(0, this.ItemsCol.length)
+      }
+  }
 
   }
 
