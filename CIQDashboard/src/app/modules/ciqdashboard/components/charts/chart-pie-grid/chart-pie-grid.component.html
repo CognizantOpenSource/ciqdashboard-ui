@@ -1,0 +1,10 @@
+<ngx-charts-pie-grid class="x-chart"
+[scheme]="colorScheme"
+[results]="viewData"
+[tooltipDisabled]="chartconfig.tooltipDisabled"
+[label]="chartconfig.label || 'value'"
+[animations]="chartconfig.animations"
+[minWidth]="chartconfig.minWidth || 150"
+(select)="onSelect($event)"
+>
+</ngx-charts-pie-grid>

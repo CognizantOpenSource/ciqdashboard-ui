@@ -1,0 +1,31 @@
+<app-container>
+  <div class="stage">
+    <div class="stage-container  clr-col-12 clr-col-md-10	clr-col-lg-8">
+        <form clrForm [formGroup]="form">
+      <div class="title">
+        <h3>Create Project</h3>
+      </div>
+      <div class="content cle-col-12">        
+          <div class="alert-container" *ngIf="duplicateProject.state">
+            <clr-alert clrAlertType="danger" [clrAlertAppLevel]="false" style="width: 100%;">
+              <clr-alert-item>
+                <span class="alert-text">
+                  Project with the name '{{duplicateProject.value}}' already exist, Please select another name!
+                </span>
+              </clr-alert-item>
+            </clr-alert>
+          </div>
+          <app-card class="content-source" title="New Project">
+            <app-dynamic-input *ngFor="let param of params" [field]="param" [(value)]="project[param.name]"
+              (blur)="blur(param,$event)" [formControlName]="param.name"></app-dynamic-input>
+          </app-card>
+      </div>
+      <div class="footer" [class.scroll-active]="false">
+        <button type="submit" class="btn btn-primary-outline" (click)="create($event);"
+          [disabled]="duplicateProject.state">Create</button>
+        <button type="button" class="btn btn-warning-outline" (click)="closed($event);">Cancel</button>
+      </div>      
+    </form>
+    </div>
+  </div>
+</app-container>

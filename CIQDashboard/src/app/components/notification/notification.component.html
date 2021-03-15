@@ -1,0 +1,24 @@
+<nav *ngIf="hasNotifications">
+  <a class="icon" (click)="toggleDrawerState()">    
+    <clr-icon shape="bell" [class.has-badge]="false" size="28" class="is-solid"></clr-icon>
+    <span class="badge badge-danger">{{notifications.length}}</span>
+  </a>
+  <section class="modal notification-modal" *ngIf="drawerState">
+    <div class="modal-backdrop" @easeOut (click)="hideDrawer();">
+    </div>
+    <div class="container" @slideOut>
+      <div class="content">
+        <div class="notification" *ngFor="let ntf of notifications" @listOutRight>
+          <div class="info">
+            <h5 class="title">{{ntf.title}}</h5>
+            <div class="message">{{ntf.message}}</div>
+          </div>
+          <div class="actions">
+            <div class="action"><a class="link" (click)="onAction(ntf)">{{ntf.action}}</a></div>
+          </div>
+          <clr-icon shape="times" size="24" (click)="remove(ntf)"></clr-icon>
+        </div>
+      </div>
+    </div>
+  </section>
+</nav>

@@ -1,0 +1,53 @@
+.userLabel {
+  max-width: 10em;
+  padding-top: 0.4em;
+}
+.userInput {
+  width: 30em;
+}
+.userTitle {
+  margin-top: 0px;
+}
+.admin-filter {
+  margin: 1em 0 1em 0;
+}
+.admin-search-input {
+  width: 20em;
+}
+.user-grid {
+  margin: 1em 0 0 0;
+}
+.add-item {
+  width: 16px;
+  height: 16px;
+  margin-right: 1.5em;
+  cursor: pointer;
+  color: green;
+}
+.add-remove {
+  position: absolute;
+  right: 1rem;
+}
+.edit-item {
+  margin-top: -5px;
+  font-size: 0.541667rem;
+}
+.autoSuggestWidget .close-icon {
+  display: none;
+  margin-left: 1em;
+}
+.autoSuggestWidget:hover .close-icon {
+  display: inline-block;
+  margin-left: 1em;
+  cursor: pointer;
+}
+.close-icon:hover {
+  color: var(--red);
+}
+.removeStage {
+  float: right;
+  margin-top: -20px;
+}
+h5 {
+  color: var(--fg1);
+}

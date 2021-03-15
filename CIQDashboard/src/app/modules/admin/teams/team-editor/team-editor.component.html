@@ -1,0 +1,47 @@
+<div>
+  <div class="head">
+    <h3 class="title">Manage Teams</h3>
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button *ngIf="!isAddTeam" [disabled]="!(team.name && team.name.length > 2 && selected.length > 1)" type="button"
+        [title]="selected.length < 2 ? 'Minimum 2 members required for team' : 'Update Team'"
+        class="btn btn-success-outline" (click)="updateTeam($event);">Update</button>
+      <button *ngIf="isAddTeam" [disabled]="!(team.name && team.name.length > 2 && selected.length > 1)" type="button"
+        [title]="selected.length < 2 ? 'Minimum 2 members required for team' : (!(team.name && team.name.length > 2 && team.name.length <= 64)? 'Teams name should be of minimum 3 and maximum 64 characters':'Create Team')"
+        class="btn btn-info-outline" (click)="addTeam($event);">Add New</button>
+      <button type="button" class="btn btn-warning-outline" (click)="close($event);">Cancel</button>
+    </div>
+  </div>
+  <div class="parent">
+    <clr-tabs>
+      <clr-tab>
+        <button clrTabLink>Basic Details</button>
+        <clr-tab-content>
+          <form clrForm *ngIf="team" class="login" (ngSubmit)="updateTeam($event)">
+            <clr-input-container>
+              <label>Team Name</label>
+              <input type="text" name="name" clrInput placeholder="Team Name" [(ngModel)]="team.name"
+                [disabled]="!isAddTeam" minlength="3" maxlength="64" />
+            </clr-input-container>
+          </form>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Members</button>
+        <clr-tab-content>
+          <clr-datagrid *ngIf="members" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+            (clrDgSelectedChange)="memberSelectionChanged($event)">
+            <clr-dg-column>Member
+              <clr-dg-string-filter [clrDgStringFilter]="memberNameFilter"></clr-dg-string-filter>
+            </clr-dg-column>
+            <clr-dg-column>Email</clr-dg-column>
+            <clr-dg-row *clrDgItems="let member of members" [clrDgItem]="member" [(clrDgSelected)]="member.selected">
+              <clr-dg-cell>{{ member.firstName }}</clr-dg-cell>
+              <clr-dg-cell>{{ member.email }}</clr-dg-cell>
+            </clr-dg-row>
+            <clr-dg-footer>{{members.length}} Members</clr-dg-footer>
+          </clr-datagrid>
+        </clr-tab-content>
+      </clr-tab>
+    </clr-tabs>
+  </div>
+</div>

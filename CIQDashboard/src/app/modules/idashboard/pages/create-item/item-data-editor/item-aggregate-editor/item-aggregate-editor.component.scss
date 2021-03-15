@@ -1,0 +1,71 @@
+.aggregate {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  padding-right: 2px;
+
+  .group {
+    border: 1px solid lightgray;
+    border-radius: 2px;
+    border-color: var(--bg2);
+    & > .title {
+      background-color: var(--bg2);
+      padding: 4px;
+    }
+    .agg-fields {
+      padding: 4px;
+      .agg-field {
+        border: 1px solid;
+        border-color: var(--bg2);
+        margin: 2px 0;
+        .title {
+          background-color: var(--bg2);
+          padding: 4px;
+        }
+        .field-group {
+          padding: 4px;
+          margin-bottom: 4px;
+          .filters {
+            flex-wrap: wrap;
+          }
+        }
+      }
+      .fields {
+        clr-select-container.opt {
+          max-width: 3rem;
+          margin-right: 6px;
+          select {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    margin-bottom: 4px;
+  }
+}
+.title {
+  .name {
+    flex-grow: 1;
+  }
+  .option {
+    cursor: pointer;
+    margin: 0 2px;
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+:host::ng-deep {
+  .filter-toggle{
+    margin-right: 4px;
+  }
+  clr-dropdown-menu {
+    top: calc(50vh - 10rem) !important;
+    bottom: auto !important;
+    left: 310px !important;
+    transform: none!important;
+    min-width: 18rem;
+     select {
+      height: 1.25rem;
+    }
+  }
+}

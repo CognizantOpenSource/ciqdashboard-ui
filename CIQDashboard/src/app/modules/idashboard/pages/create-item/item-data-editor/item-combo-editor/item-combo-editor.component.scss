@@ -1,0 +1,15 @@
+.title {
+  text-transform: capitalize;
+  .clr-accordion-angle {
+    margin: auto 2px;
+    padding: 2px;
+    &.close {
+      visibility: visible;
+      transform: unset;
+    }
+  }
+}
+.agg-fields{
+    display: flex;
+    flex-direction:column;
+}

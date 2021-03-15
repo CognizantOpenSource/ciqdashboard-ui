@@ -1,0 +1,16 @@
+<ngx-charts-pie-chart class="x-chart full" [class.legend-down]="chartconfig?.legend && chartconfig.legendPositionDown" 
+[scheme]="colorScheme"
+[results]="viewData"
+[legend]="chartconfig.legend"
+[legendTitle]="chartconfig.legendTitle"
+[legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+[tooltipDisabled]="chartconfig.tooltipDisabled"
+[explodeSlices]="chartconfig.explodeSlices"
+[labels]="chartconfig.showLabels"
+[trimLabels]="chartconfig.trimLabels"
+[maxLabelLength]="chartconfig.maxLabelLength"
+[doughnut]="chartconfig.doughnut"
+[gradient]="chartconfig.gradient"
+(select)="onSelect($event)"
+>
+</ngx-charts-pie-chart>

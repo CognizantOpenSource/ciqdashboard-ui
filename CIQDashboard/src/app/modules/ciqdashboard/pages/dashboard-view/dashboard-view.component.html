@@ -1,0 +1,30 @@
+<section class="dashboard-renderer flex-col full" *ngIf="config">
+  <gridster [options]="config" class="scroll-main">
+    <ng-container *ngFor="let item of items; let index = index" >
+    <gridster-item [item]="item" *ngIf="item" [class.focused]="activeItem == index">     
+      <div class="content flex-col full" [class.has-chart]="item.id" (click)="activeItem = index">
+        <ng-container *ngIf="item.id else newItemTpl">
+          <ng-container [ngSwitch]="item.itemGroup || 'datachart'">
+            <app-display-label *ngSwitchCase="'datalabel'"  [labelConfig]="item.options"></app-display-label>
+            <app-display-image *ngSwitchCase="'dataimg'" [imageConfig]="item.options"></app-display-image>
+            <app-display-chart *ngSwitchCase="'datachart'" [chartType]="item.type" [dashboardData]="item.data"
+            [dashboardConfig]="item.options" [chartTitle]="item.options?.title || item.name" [item]="item">
+          </app-display-chart>
+          <app-display-chart *ngSwitchCase="'datatable'" [chartType]="item.type" [dashboardData]="item.data"
+          [dashboardConfig]="item.options" [chartTitle]="item.options?.title || item.name" [item]="item">
+        </app-display-chart>
+          </ng-container> 
+        </ng-container>
+      </div>
+      <ng-template #newItemTpl>
+        <span [ngSwitch]="item.itemGroup || item.type" style="margin: auto;">
+          <clr-icon shape="bar-chart" size="48" *ngSwitchCase="'datachart'"></clr-icon>
+          <clr-icon shape="table" size="48" *ngSwitchCase="'datatable'"></clr-icon>
+          <clr-icon shape="image" size="48" *ngSwitchCase="'dataimg'"> </clr-icon>
+          <clr-icon shape="text" size="48" *ngSwitchCase="'datalabel'"> </clr-icon>
+        </span>
+      </ng-template>
+    </gridster-item>    
+  </ng-container>
+  </gridster>
+</section>

@@ -1,0 +1,92 @@
+.card {
+  box-shadow: var(--main-box-shadow-card2);
+  margin-top: 0.5rem;
+  border: none;
+}
+
+.clr-row {
+  justify-content: center;
+  margin: 4px 4px;
+}
+
+.card-header {
+  padding: 0.25rem 0.75rem;
+  font-weight: 400;
+  text-transform: capitalize;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  background-color: var(--bg3);
+  border-bottom-color: var(--bg1);
+  color: var(--fg1);
+}
+.card-block {
+  background-color: var(--bg3);
+}
+
+.card-close-icon {
+  float: right;
+  margin-top: 4px;
+  margin-right: -10px;
+  cursor: pointer;
+  color: var(--fg1);
+}
+
+.card-close-icon:hover {
+  fill: var(--red-chart);
+  transform: scale(1.5, 1.5);
+}
+
+span.label,
+span.option {
+  user-select: none;
+}
+
+clr-dropdown-menu {
+  overflow-x: hidden;
+  min-width: 60px;
+  max-width: 100px;
+}
+.dropdown clr-icon[shape^="caret"] {
+  position: relative;
+  padding: 6px 4px 6px 0px;
+}
+.option {
+  font-size: 12px;
+}
+.selected-option {
+  padding: 4px 8px;
+  min-width: 60px;
+  text-align: center;
+  overflow: hidden;
+  color: var(--fg1);
+}
+.card-header .title {
+  padding-left: 0.5rem;
+}
+.card-header .drag-title {
+  padding-left: 0.2rem;
+  cursor: move;
+  flex-grow: 1;
+  height: 1rem;
+  display: flex;
+}
+.card-header .drag-title clr-icon {
+  left: -10px;
+  top: -5px;
+  position: relative;
+  opacity: 0;
+}
+.card-header .drag-title:hover clr-icon {
+  opacity: 1;
+  transition: opacity 0.25s linear;
+}
+.card-header .drag-title span {
+  vertical-align: bottom;
+  width: 100%;
+  left: -18px;
+  position: relative;
+}
+:host {
+  display: block;
+}

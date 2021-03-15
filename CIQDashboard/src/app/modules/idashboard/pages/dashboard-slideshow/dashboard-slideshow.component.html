@@ -1,0 +1,28 @@
+<section class="container" [class.full-screen]="isFullScreen">
+
+    <div class="dashbaord-header">
+        <div class="options right">
+            <div class="btn-group btn-icon">
+                <button class="btn btn-link no-focus" [title]="(isFullScreen ? 'Toggle' : 'View' )+ ' Full Screen'" (click)="isFullScreen = ! isFullScreen;">
+                    <clr-icon shape="display"  size="20" [class.is-solid]="isFullScreen"></clr-icon>
+                </button>
+                <button class="btn btn-link no-focus" title="Cancel" [routerLink]="['./..', {page:page}]">
+                    <clr-icon shape="times" size="20"></clr-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="carousel" (swipeleft)="next()" (swiperight)="previous()" (swipeup)="isFullScreen = true;" (swipeDown)="isFullScreen = false;">
+        <ng-container *ngFor="let item of slides; let index = index">
+            <app-display-chart class="slidechart" [@slideAnimation]="animationType" *ngIf="index === currentSlide"
+                [chartType]="item.type" [dashboardData]="item.data" [dashboardConfig]="item.options"
+                [chartTitle]="item.options?.title || item.name" [item]="item"></app-display-chart>
+        </ng-container>
+        <button class="control prev" (click)="previous()">
+            <span class="arrow left"></span>
+        </button>
+        <button class="control next" (click)="next()">
+            <span class="arrow right"></span>
+        </button>
+    </div>
+</section>

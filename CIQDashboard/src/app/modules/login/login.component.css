@@ -1,0 +1,58 @@
+.container-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  height: 100vh; /*3vh for footer*/
+  width: 100vw;
+  background-color: #eeeeee;
+}
+
+.btn-login-g {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 1rem !important;
+}
+.text {
+  margin-left: 1rem;
+}
+.hidden {
+  display: none !important;
+}
+.login-wrapper {
+  justify-content: center;
+  background: none;
+}
+.create-account-label {
+  cursor: pointer;
+}
+.login-wrapper .login {
+  position: inherit;
+  min-height: auto;
+}
+.login-wrapper::ng-deep input.ng-invalid.ng-dirty + button {
+  margin: 0 !important;
+}
+.login-wrapper::ng-deep .clr-error .clr-validate-icon {
+  margin-left: 0;
+}
+/* .footer {
+  position: inherit;
+  bottom: 0;
+  left: 15%;
+}
+.footer p {
+  font-size: 93%;
+  font-weight: 560;
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+.loginfooter {
+  position: absolute;
+  bottom: 1px;
+  left: 18%;
+  background: none;
+} 

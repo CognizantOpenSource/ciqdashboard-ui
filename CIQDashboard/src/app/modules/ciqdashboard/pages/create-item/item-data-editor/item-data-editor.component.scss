@@ -1,0 +1,10 @@
+:host::ng-deep {
+  clr-accordion-inner-content:has(.aggregate-editor) {
+    padding: 0 !important;
+  }
+}
+
+.card-projection {
+  max-height: calc(100vh - 11rem);
+  overflow-y: auto;
+}

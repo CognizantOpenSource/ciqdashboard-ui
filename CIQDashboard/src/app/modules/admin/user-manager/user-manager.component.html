@@ -1,0 +1,107 @@
+<div>
+  <div class="head">
+    <h3 class="title">Manage Users</h3>
+    <div class="action-buttons" [class.scroll-active]="false" style="float: right;">
+      <button *ngIf="isResetCredActive" [disabled]="!passwordConstraints.regex.test(newPassword)" type="button"
+      [attr.title]="passwordConstraints.regex.test(newPassword)?'Change Password':passwordConstraints.message"
+        class="btn btn-primary-outline" (click)="resetCred(user);">Change Password</button>
+      <button type="button" class="btn btn-primary-outline" [disabled]="isResetCredActive"
+        (click)="updateDetails(user);">Update</button>
+      <button type="button" class="btn btn-warning-outline" (click)="close($event);">Cancel</button>
+    </div>
+  </div>
+  <div class="parent">
+    <clr-tabs>
+      <clr-tab>
+        <button clrTabLink>Basic Details</button>
+        <clr-tab-content>
+          <form clrForm *ngIf="user" class="login" (ngSubmit)="updateDetails(user)">
+            <clr-input-container>
+              <label class="userLabel">Email Id</label>
+              <input class="userInput" type="text" name="email" clrInput placeholder="Email Id" [(ngModel)]="user.email"
+                disabled />
+            </clr-input-container>
+            <clr-input-container>
+              <label class="userLabel">First Name</label>
+              <input class="userInput" type="text" name="firstName" clrInput placeholder="First Name"
+                [(ngModel)]="user.firstName" />
+            </clr-input-container>
+            <clr-input-container>
+              <label class="userLabel">Last Name</label>
+              <input class="userInput" type="text" name="lastName" clrInput placeholder="Last Name"
+                [(ngModel)]="user.lastName" />
+            </clr-input-container>
+            <clr-input-container>
+              <label class="userLabel">Organisation</label>
+              <input class="userInput" type="text" name="org" clrInput placeholder="Organisation"
+                [(ngModel)]="user.org" />
+            </clr-input-container>
+          </form>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Roles</button>
+        <clr-tab-content *clrIfActive="isNavigateFromRole">
+          <clr-datagrid *ngIf="roles" class="data-grid" [clrDgSelected]="roleSelected" [clrDgRowSelection]="true"
+            (clrDgSelectedChange)="roleSelectionChanged($event)">
+            <clr-dg-column>Roles
+              <clr-dg-string-filter [clrDgStringFilter]="roleNameFilter"></clr-dg-string-filter>
+            </clr-dg-column>
+            <clr-dg-column>Description</clr-dg-column>
+            <clr-dg-column>Permission
+              <clr-dg-string-filter [clrDgStringFilter]="rolePermissionsFilter"></clr-dg-string-filter>
+            </clr-dg-column>
+            <clr-dg-row *clrDgItems="let role of roles" [clrDgItem]="role" [(clrDgSelected)]="role.selected">
+              <clr-dg-cell>{{ role.name }}</clr-dg-cell>
+              <clr-dg-cell>{{ role.desc }}</clr-dg-cell>
+              <clr-dg-cell>
+                <span *ngFor="let permission of role.permissions; let last=last;">
+                  <span>{{permission.name}}</span>
+                  <span *ngIf="!last">, </span>
+                </span>
+              </clr-dg-cell>
+            </clr-dg-row>
+            <clr-dg-footer>{{roles.length}} Roles</clr-dg-footer>
+          </clr-datagrid>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Projects</button>
+        <clr-tab-content>
+          <clr-datagrid *ngIf="projects" class="data-grid" [clrDgSelected]="projectSelected" [clrDgRowSelection]="true"
+            (clrDgSelectedChange)="projectSelectionChanged($event)">
+            <clr-dg-column>Project
+              <clr-dg-string-filter [clrDgStringFilter]="projectNameFilter"></clr-dg-string-filter>
+            </clr-dg-column>
+            <clr-dg-column>Platform</clr-dg-column>
+            <clr-dg-column>Version</clr-dg-column>
+            <clr-dg-row *clrDgItems="let project of projects" [clrDgItem]="project"
+              [(clrDgSelected)]="project.selected">
+              <clr-dg-cell>{{ project.name }}</clr-dg-cell>
+              <clr-dg-cell>{{ project.platform }}</clr-dg-cell>
+              <clr-dg-cell>{{ project.version }}</clr-dg-cell>
+            </clr-dg-row>
+            <clr-dg-footer>{{projects.length}} Projects</clr-dg-footer>
+          </clr-datagrid>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab *ngIf="user.type!='LDAP'">
+        <button clrTabLink>Reset Credentials</button>
+        <ng-template [(clrIfActive)]="isResetCredActive" (clrIfActiveChange)="refreshPassword()">
+          <clr-tab-content>
+            <div class="change-cred flex-row">
+              <clr-input-container style="flex-grow: 1;">
+                <label class="userLabel">New Password</label>
+                <input class="userInput" type="text" name="new-password" clrInput placeholder="New Password"
+                  [(ngModel)]="newPassword" />
+              </clr-input-container>
+              <span *ngIf="hasCrypto" title="Generate Password" class="refresh is-link" (click)="refreshPassword()">
+                <clr-icon shape="sync"></clr-icon>
+              </span>
+            </div>
+          </clr-tab-content>
+        </ng-template>
+      </clr-tab>
+    </clr-tabs>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+:host /deep/ input {
+  border-radius: 4px;
+  border: 0;
+  min-height: 1.3rem;
+}
+select,
+input,
+textarea,
+:host /deep/ .clr-control-container,
+:host /deep/ .clr-input-wrapper {
+  width: 100%;
+  padding-right: 0;
+  min-height: 1.3rem !important;
+}
+:host /deep/ clr-select-container .clr-control-container {
+  padding-left: 8px;
+}
+:host /deep/ .clr-form-control {
+  margin-top: 0.5rem !important;
+  flex-wrap: nowrap;
+}
+.head {
+  margin: .5rem 0 .5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  margin-top: 0px;
+}
+.action-buttons {
+  float: right;
+}
+.data-grid {
+  max-height: calc(100vh - 10rem);
+}

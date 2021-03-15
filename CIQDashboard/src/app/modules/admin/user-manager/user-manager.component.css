@@ -1,0 +1,15 @@
+label {
+  max-width: 10em;
+  padding-top: 0.4em;
+}
+input {
+  width: 30em;
+}
+.data-grid::ng-deep .datagrid-table {
+  width: 100%;
+}
+.change-cred .refresh {
+  margin: 6px;
+  margin-top: auto;
+  margin-bottom: 6px;
+}

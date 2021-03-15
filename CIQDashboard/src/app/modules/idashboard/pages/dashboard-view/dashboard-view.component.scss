@@ -1,0 +1,62 @@
+.dashboard-renderer {
+  background-color: var(--bg3);
+}
+gridster {
+  padding: 0 !important;
+  background-color: inherit;
+  width: 100% !important;
+  max-width: calc(100vw - 12px);
+  margin: 6px;
+  &.no-margin {
+    gridster-item {
+      padding: 4px;
+    }
+  }
+  gridster-item {
+    background: unset;
+    overflow: unset;
+    div.content {
+      background: var(--chart-card-bg);
+      color: var(--fg1);
+      &:not(.has-chart) {
+        border: 1px solid var(--chart-card-border-color);
+        border-color: var(--chart-card-border-color);
+      }
+    }
+    &.focused {
+      z-index: 10;
+    }
+
+    app-display-image {
+      display: block;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+  }
+}
+:host::ng-deep {
+  .gridster-column,
+  .gridster-row {
+    display: none !important;
+  }
+  .modal-dialog {
+    height: 100%;
+    .modal-title {
+      color: var(--fg1);
+    }
+    .modal-content {
+      background-color: var(--bg3);
+      color: var(--fg1);
+    }
+  }
+  app-dash-filter-dropdown {
+    .dropdown-menu {
+      min-width: 16rem;
+      bottom: 20vh !important;
+      top: auto !important;
+      margin-left: 5.5rem;
+      transform: none !important;
+    }
+  }
+}

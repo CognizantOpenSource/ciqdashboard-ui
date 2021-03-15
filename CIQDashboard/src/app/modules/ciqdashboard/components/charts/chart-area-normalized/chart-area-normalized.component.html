@@ -1,0 +1,12 @@
+<ngx-charts-area-chart-normalized *ngIf="data && chartconfig" class="x-chart"  [scheme]="colorScheme" [gradient]="chartconfig.gradient"
+  [legend]="chartconfig.legend" [legendTitle]="chartconfig.legendTitle" [showXAxisLabel]="chartconfig.showXAxisLabel"
+  [showYAxisLabel]="chartconfig.showYAxisLabel" [xAxis]="chartconfig.xAxis" [yAxis]="chartconfig.yAxis"
+  [xAxisLabel]="chartconfig.xAxisLabel" [yAxisLabel]="chartconfig.yAxisLabel" [timeline]="chartconfig.timeline"
+   [showGridLines]="chartconfig.showGridLines"
+  [tooltipDisabled]="chartconfig.tooltipDisabled" [trimXAxisTicks]="chartconfig.trimXAxisTicks"
+  [trimYAxisTicks]="chartconfig.trimYAxisTicks" [maxXAxisTickLength]="chartconfig.maxXAxisTickLength"
+  [maxYAxisTickLength]="chartconfig.maxYAxisTickLength" [rotateXAxisTicks]="chartconfig.rotateXAxisTicks"
+  [results]="data" (select)="onSelect($event)" [legendPosition]="chartconfig?.legendPositionDown?'down':'right'"
+  [class.legend-down]="chartconfig?.legend && chartconfig.legendPositionDown"
+  [xAxisTickFormatting]="seriesFormatter">
+</ngx-charts-area-chart-normalized>

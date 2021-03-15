@@ -1,0 +1,62 @@
+<div class="container-full">
+  <div class="login-wrapper">
+    <form class="login" clrForm [formGroup]="signupForm">
+      <section class="title">
+        <h3 class="welcome">Create a New Account</h3>
+      </section>
+      <div class="login-group">
+        <clr-select-container>
+          <select clrSelect name="type" formControlName="type">
+            <option value="ldap">LDAP</option>
+            <option value="native">Native</option>
+          </select>
+        </clr-select-container>
+        <clr-input-container>
+          <input type="text" name="firstName" clrInput placeholder="First Name" formControlName="firstName" minlength="3" maxlength="255"/>
+        </clr-input-container>
+        <clr-input-container>
+          <input type="text" name="lastName" clrInput placeholder="Last Name" formControlName="lastName" minlength="3" maxlength="255"/>
+        </clr-input-container>
+        <clr-input-container>
+          <input type="email" name="email" clrInput placeholder="Email Id" formControlName="email" />
+        </clr-input-container>
+        <div class="clr-form-control" style="padding: 0 12px;">
+          <div class="clr-control-container" [class.clr-error]="signupForm.get('password').invalid">
+            <div class="clr-input-wrapper" style="position: relative;">
+              <input class="clr-input" [attr.type]="showPass ? 'text' : 'password'" name="password" minlength="8"
+                placeholder="Password" [class.ng-invalid]="signupForm.get('password').invalid" autocomplete="off"
+                formControlName="password" required />
+              <div class="show-password is-link"
+                style="position: absolute;margin-left: calc(100% - 1rem);top: 2px;color:var(--fg1);">
+                <clr-icon [attr.shape]="showPass?'eye-hide' : 'eye'" [attr.title]="showPass?'Hide' : 'Show'"
+                  (click)="showPass=!showPass"></clr-icon>
+              </div>
+              <div class="clr-validate-icon tooltip tooltip-top-left tooltip-lg" style="margin-left: 2px;">
+                <clr-icon shape="exclamation-circle" size="24"></clr-icon>
+                <span class="error-message tooltip-content">{{password.message}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clr-form-control" style="padding: 0 12px;">
+          <div class="clr-control-container"
+            [class.clr-error]="signupForm.get('password').value !== signupForm.get('confirmPassword').value">
+            <div class="clr-input-wrapper">
+              <input class="clr-input" type="password" name="confirmPassword" minlength="8"
+                placeholder="Confirm Password" autocomplete="off"
+                [class.ng-invalid]="signupForm.get('password').value !== signupForm.get('confirmPassword').value"
+                formControlName="confirmPassword" required />
+              <div class="clr-validate-icon tooltip tooltip-top-left" style="margin-left: 2px;">
+                <clr-icon shape="exclamation-circle" size="24"></clr-icon>
+                <span class="error-message tooltip-content">passwords doesn't match</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button (click)="createAccount()" type="submit" class="btn btn-primary btn-login" style="margin-top: 2rem;"
+          [disabled]="signupForm.invalid || signupForm.get('password').value !== signupForm.get('confirmPassword').value">Create
+          Account</button>
+      </div>
+    </form>
+  </div>
+</div>

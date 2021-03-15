@@ -1,0 +1,175 @@
+span {
+  &.label {
+    &.clickable {
+      padding-right: 4px;
+      border-radius: 4px;
+      border-color: var(--border-color2);
+      color: var(--fg1);
+      &.active {
+        background: var(--bg1);
+      }
+      &:hover:not(.active) {
+        background: var(--bg1-sel);
+        opacity: .75;
+      }
+    }
+  }
+}
+
+.filter-toggle {
+  padding: 0 !important;
+  color: unset !important;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.filter-label {
+  margin-right: 4px;
+  padding-top: 2px;
+  max-width: 3rem;
+}
+
+clr-dropdown-menu {
+  min-height: 340px;
+  justify-content: space-between;
+
+  .dropdown-header {
+    min-height: 1rem;
+    font-size: 1.25em;
+    font-weight: normal;
+  }
+
+  .dropdown-item {
+    min-height: 1.5rem;
+    outline: none;
+
+    &:hover {
+      background-color: transparent !important;
+      color: var(--fg1) !important;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .filter-name {
+    &::ng-deep {
+      clr-input-container {
+        margin-top: 0.5rem;
+      }
+    } 
+  }
+
+  .filter-configs {
+    flex-grow: 1;
+
+    .filter-config-form-group {
+      display: inline-flex;
+
+      clr-select-container {
+        margin-top: 4px !important;
+      }
+
+      div {
+        flex-grow: 1;
+        min-width: 2.5rem;
+        margin-right: 6px;
+      }
+
+      clr-icon {
+        align-self: center;
+        margin-top: 1rem;
+
+        &:hover {
+          background-color: var(--bg2);
+          border-radius: 2px;
+        }
+      }
+
+      .filter-value {
+        width: 80%;
+      }
+    }
+  }
+
+  .filter-actions {
+    margin-top: 1em;
+
+    button {
+      margin: 0 4px;
+      background-color: var(--main-theme-color);
+      color: white;
+    }
+
+    * {
+      min-width: 4rem;
+      text-align: center;
+    }
+  }
+}
+
+// overides
+select,
+input,
+textarea,
+:host::ng-deep .clr-control-container,
+:host::ng-deep .clr-input-wrapper,
+:host::ng-deep .clr-select-wrapper {
+  width: 100%;
+  padding-right: 0;
+  min-height: 1.3rem !important;
+}
+
+input,
+select {
+  color: var(--fg1);
+  background: var(--bg3) !important;
+  color: var(--fg1) !important;
+  border: 1px solid #cdd1d3;
+  border-color: var(--bg1-sel);
+
+  &:not([readonly]):focus {
+    border: 1px solid #0092d1;
+    background-size: 100% 100%;
+  }
+}
+
+:host::ng-deep .clr-error .clr-validate-icon {
+  margin-left: -24px;
+}
+:host::ng-deep {
+  .ng-autocomplete .autocomplete-container {
+    box-shadow: none;
+    .overlay {
+      display: none;
+    }
+    .suggestions-container {
+      position: fixed;
+      max-width: 12rem;
+      ul li a {
+        padding: 6px 15px;
+      }
+    }
+    .input-container {
+      input {
+        border-radius: 1px;
+        max-height: 1.5rem;
+        border: 1px solid grey;
+        border-color: var(--bg1-sel) !important;
+        background-color: var(--bg3) !important;
+      }
+    }
+  }
+  .ng-daterangepicker .calendar.is-opened {
+    position: fixed!important;
+    top: unset!important;
+    left: unset!important;
+    margin-top: 2rem;
+}
+}
+.filter-name , filter-op{
+  padding: 0;
+}

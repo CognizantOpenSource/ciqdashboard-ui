@@ -1,0 +1,256 @@
+span {
+  &.label {
+    &.clickable {
+      margin: 4px auto;
+      padding-right: 2px;
+      border-radius: 2px;
+      border-color: var(--border-color2);
+      color: var(--white);
+      min-width: 5rem;
+      max-width: 5rem;
+      margin-top: 12px;
+      .filter-label {
+        flex-grow: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      &.active {
+        background: var(--bg1-sel);
+        .filter-label {
+          color: var(--fg1);
+        }
+      }
+      &:hover:not(.active) {
+        background: unset;
+      }
+    }
+  }
+}
+
+.filter-toggle {
+  padding: 0 !important;
+  color: unset !important;
+
+  &:focus {
+    outline: none;
+  }
+}
+.editor-container {
+  flex-grow: 1;
+}
+.filter-editor {
+  border-right: 1px solid lightgray;
+  border-right-color: var(--bg2);
+  flex-grow: 1;
+}
+.filter-list {
+  min-width: 6rem;
+  max-width: 6rem;
+}
+clr-dropdown-menu {
+  justify-content: space-between;
+  justify-content: space-between;
+  min-width: 18rem;
+  min-width: min(100%, 18rem);
+  max-width: 18rem;
+  max-width: min(100%, 18rem);
+  height: 12rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #2a343e !important;
+  color: var(--white) !important;
+  border-color: var(--white) !important;
+  padding-bottom: 0;
+  padding-top: 6px;
+  border: none;
+  label,
+  .dropdown-item .clr-control-label {
+    color: var(--white) !important;
+  }
+  .dropdown-divider {
+    margin: 0;
+  }
+  .dropdown-header {
+    min-height: 1rem;
+    max-height: 1.5rem;
+    font-size: 1em;
+    font-weight: normal;
+    border-bottom: 1px solid white;
+    border-bottom-color: var(--white);
+    label {
+      flex-grow: 1;
+      margin: auto 0;
+    }
+    .options {
+      max-width: 6rem;
+      margin-bottom: 6px;
+      .btn {
+        padding: 0;
+        max-width: 1.25rem;
+        width: 1.25rem;
+        min-width: 1.25rem;
+        margin-left: 0.25rem;
+        border: 1px solid #2a343e;
+        &:hover {
+          background-color: #2a343e !important;
+          border-color: var(--white);
+        }
+        clr-icon {
+          width: 28px;
+          height: 28px;
+          padding: 3px;
+          margin-left: 1px;
+          color: var(--white) !important;
+        }
+      }
+    }
+  }
+
+  .dropdown-item {
+    min-height: 1.5rem;
+    outline: none;
+    padding: 0;
+    &:hover {
+      background-color: #2a343e !important;
+      color: var(--fg1) !important;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .filter-name {
+    &::ng-deep {
+      clr-input-container {
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .filter-configs {
+    flex-grow: 1;
+    max-height: 66%;
+    .filter-config-form-group {
+      display: inline-flex;
+
+      clr-select-container {
+        margin-top: 4px !important;
+      }
+
+      .group-wrapper div {
+        flex-grow: 1;
+        min-width: 3rem;
+        margin-right: 6px;
+        margin-top: 6px;
+      }
+      .filter-spec-field {
+        min-width: 5rem !important;
+      }
+      .filter-spec-op {
+        max-width: 4rem;
+      }
+      clr-icon {
+        align-self: center;
+        margin-top: 1rem;
+
+        &:hover {
+          background-color: var(--bg2);
+          border-radius: 2px;
+        }
+      }
+
+      .filter-value {
+        width: 80%;
+      }
+    }
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  clr-dropdown-menu {
+    transform: none !important;
+  }
+}
+@media (max-width: 540px) {
+  clr-dropdown-menu {
+    transform: none !important;
+    min-width: 100%;
+  }
+}
+// overides
+select,
+input,
+textarea,
+:host::ng-deep .clr-control-container,
+:host::ng-deep .clr-input-wrapper,
+:host::ng-deep .clr-select-wrapper {
+  width: 100%;
+  padding-right: 0;
+  min-height: 1.3rem !important;
+}
+
+input,
+select {
+  color: var(--fg1);
+  background: var(--bg3) !important;
+  color: var(--fg1) !important;
+  border: 1px solid #cdd1d3;
+  border-color: var(--bg1-sel);
+
+  &:not([readonly]):focus {
+    border: 1px solid #0092d1;
+    background-size: 100% 100%;
+  }
+}
+
+:host::ng-deep .clr-error .clr-validate-icon {
+  margin-left: -24px;
+}
+:host::ng-deep {
+  .dropdown-menu .dropdown-item clr-icon {
+    color: var(--white) !important;
+  }
+  .clr-control-label {
+    font-weight: 400;
+  }
+  .clr-select-wrapper select:hover {
+    border-color: var(--bg3) !important;
+  }
+  .ng-autocomplete .autocomplete-container {
+    box-shadow: none;
+    .overlay {
+      display: none;
+    }
+    .suggestions-container {
+      position: fixed;
+      max-width: 12rem;
+      ul li a {
+        padding: 6px 15px;
+      }
+    }
+    .input-container {
+      input {
+        border-radius: 1px;
+        max-height: 1.5rem;
+        border: 1px solid grey;
+        border-color: var(--bg2) !important;
+        background-color: var(--bg3) !important;
+      }
+    }
+  }
+  .datepicker {
+    top: 6rem !important;
+    left: 10rem !important;
+    transform: none !important;
+  }
+  .ng-daterangepicker .calendar {
+    position: fixed !important;
+    z-index: 1000;
+    top: unset !important;
+    left: unset !important;
+    margin-top: 2rem;
+  }
+}

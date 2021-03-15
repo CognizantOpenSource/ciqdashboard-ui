@@ -1,0 +1,48 @@
+<div class="container-full">
+  <div class="login-wrapper" *ngIf="newSession || !reloadWindow">
+    <form class="login">
+      <section class="title">
+        <h3 class="welcome">Welcome to</h3>
+        <img src="assets/logo.svg"/>
+        <h5 class="hint">Use your Organization ID to login.
+          <div>Don't have a login?
+            <a [routerLink]="['/signUp']">
+              Create Account
+            </a>
+          </div>
+        </h5>
+      </section>
+      <div class="login-group">
+        <clr-select-container>
+          <!-- <select clrSelect name="type" [(ngModel)]="form.type">
+            <option value="local">Local Users</option>
+            <option value="admin">Administrator</option>
+          </select> -->
+
+          <select clrSelect name="type" [(ngModel)]="form.type" >
+            <option value="ldap">LDAP</option>
+            <option value="Native" selected>Native</option>
+          </select> 
+        </clr-select-container>
+        <clr-input-container>
+            <input type="text" name="username" clrInput [placeholder]="form.type=='Native'?'Email Id':'User Id'" [(ngModel)]="form.username" />
+        </clr-input-container>
+        <clr-password-container>
+          <input type="password" name="password" minlength="8" clrPassword placeholder="Password"
+            [(ngModel)]="form.password" autocomplete="off" />
+        </clr-password-container>
+        <clr-checkbox-wrapper *ngIf="false">
+          <label>Remember me</label>
+          <input type="checkbox" name="rememberMe" clrCheckbox [(ngModel)]="form.rememberMe" />
+        </clr-checkbox-wrapper>
+        <div class="error" [class.active]="failedAttempt>0">
+          Invalid user name or password
+        </div>
+        <button type="submit" class="btn btn-primary btn-login" (click)="login()"
+          [disabled]="!form.username || !form.password">Login</button>
+      </div>
+    </form>
+  </div>
+  
+  <app-footer class="loginfooter"></app-footer>
+</div>

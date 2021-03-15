@@ -1,0 +1,13 @@
+ .x-chart.legend-down {
+  &::ng-deep {
+    .chart-legend {
+      .legend-labels {
+        overflow-x: auto;
+        li {
+          display: inline-block;
+          margin: 4px 8px;
+        }
+      }
+    }
+  }
+}

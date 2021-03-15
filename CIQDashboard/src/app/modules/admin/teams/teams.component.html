@@ -1,0 +1,36 @@
+<div>
+  
+  <div class="head">
+      <h3 class="title">Teams</h3>
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button type="button" class="btn btn-success-outline" (click)="addTeam($event);">Add New</button>
+      <button type="button" class="btn btn-warning-outline" (click)="deleteTeam($event);">Delete</button>
+    </div>
+  </div>
+  <clr-datagrid *ngIf="teams" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+    (clrDgSelectedChange)="selectionChanged($event)">
+    <clr-dg-column>Teams
+      <clr-dg-string-filter [clrDgStringFilter]="teamNameFilter"></clr-dg-string-filter>
+    </clr-dg-column>
+    <clr-dg-column class="users cell">Users</clr-dg-column>
+    <clr-dg-column class="users cell">Projects</clr-dg-column>
+    <clr-dg-row *clrDgItems="let team of teams" [clrDgItem]="team"
+      [(clrDgSelected)]="team.selected">
+      <clr-dg-cell><a clrVerticalNavLink [routerLink]="['/admin/teams/', team.id, 'edit']">{{ team.name }}</a>
+      </clr-dg-cell>
+      <clr-dg-cell class="users cell">
+        <span *ngFor="let user of team.members; let last=last;">
+          <span>{{user}}</span>
+          <span *ngIf="!last">, </span>
+        </span>
+      </clr-dg-cell>
+      <clr-dg-cell class="users cell">
+        <span *ngFor="let project of team.projects; let last=last;">
+          <span>{{project.name}}</span>
+          <span *ngIf="!last">, </span>
+        </span>
+      </clr-dg-cell>
+    </clr-dg-row>
+    <clr-dg-footer>{{teams.length}} Teams</clr-dg-footer>
+  </clr-datagrid>
+</div>
