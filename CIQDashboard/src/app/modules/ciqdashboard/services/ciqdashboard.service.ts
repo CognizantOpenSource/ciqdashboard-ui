@@ -19,7 +19,10 @@ import { LocalStorage } from 'src/app/services/local-storage.service';
 import { tap, take } from 'rxjs/operators';
 import { createCachableResource, createUpdateCachableResource } from './ciqdashboard-project.service';
 import { IDashboardProjet, IDashboard } from '../model/data.model';
-
+/**
+* DashboardService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

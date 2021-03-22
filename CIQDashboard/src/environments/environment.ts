@@ -16,6 +16,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+/**
+* Environment Variable Setup 
+* @author Cognizant
+*/
+
 const port = 9000;
 const host = `http://${window.location.hostname}:${port}`;
 

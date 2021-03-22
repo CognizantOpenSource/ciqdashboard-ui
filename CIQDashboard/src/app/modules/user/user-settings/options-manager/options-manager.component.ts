@@ -16,7 +16,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 import { UnSubscribable, EntityFilter } from 'src/app/components/unsub';
-
+/**
+* OptionsManagerComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-options-manager',
   templateUrl: './options-manager.component.html',

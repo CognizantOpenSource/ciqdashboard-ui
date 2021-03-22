@@ -17,7 +17,10 @@ import { HostListener } from '@angular/core';
 import { IFilterData, IFieldDef, IFilterOptions } from '../model/data.model';
 import { FormControl, Validators } from '@angular/forms';
 import { ObjectUtil } from 'src/app/components/util/object.util';
-
+/**
+* FilterableDashboardComponent
+* @author Cognizant
+*/
 export class FilterableDashboardComponent<T> extends UnSubscribable {
 
   // tslint:disable-next-line:member-ordering

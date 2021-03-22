@@ -14,7 +14,10 @@
 import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { formatLabel } from '@swimlane/ngx-charts';
-
+/**
+* SeriesVerticalComponent2
+* @author Cognizant
+*/
 export enum D0Types {
     positive = 'positive',
     negative = 'negative'

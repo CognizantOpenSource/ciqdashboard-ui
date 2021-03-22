@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartAdvancedPieChartComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-chart-pie-advanced',
   templateUrl: './chart-pie-advanced.component.html',

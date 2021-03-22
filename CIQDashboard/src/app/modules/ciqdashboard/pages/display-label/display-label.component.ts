@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit, Input } from '@angular/core';
-
+/**
+* DisplayLabelComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-display-label',
   templateUrl: './display-label.component.html',

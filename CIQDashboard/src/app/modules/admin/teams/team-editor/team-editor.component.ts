@@ -19,7 +19,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 import { parseApiError } from 'src/app/components/util/error.util';
 
-
+/**
+* TeamEditorComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-team-editor',
   templateUrl: './team-editor.component.html',

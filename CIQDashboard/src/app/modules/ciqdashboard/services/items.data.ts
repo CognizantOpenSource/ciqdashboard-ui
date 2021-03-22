@@ -11,6 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+* items.data - Includes all the chart types and its axis mandatory fields are updated
+* @author Cognizant
+*/
 export function getItemGroupByConfig(type) {
     const map = itemTypes.find(f => f.name == type);
     return map && map.groupBy;

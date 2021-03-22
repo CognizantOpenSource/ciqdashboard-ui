@@ -22,7 +22,10 @@ import { FilterOps } from '../../services/filter-ops';
 import { omit } from 'lodash';
 import { transFormData } from '../../services/transform-data';
 
-
+/**
+* DisplayChartComponent
+* @author Cognizant
+*/
 export enum KEY_CODE {
   ENTER = 13
 }

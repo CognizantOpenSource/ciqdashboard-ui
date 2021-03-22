@@ -20,7 +20,10 @@ import {
   ChangeDetectionStrategy,
 } from "@angular/core";
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartTreeMapComponent
+* @author Cognizant
+*/
 
 @Component({
   selector: "app-chart-tree-map",

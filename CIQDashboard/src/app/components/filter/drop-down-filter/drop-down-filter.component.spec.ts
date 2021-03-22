@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DropDownFilterComponent } from './drop-down-filter.component';
-
+/**
+ * DropDownFilterComponent
+ * @author Cognizant
+*/
 describe('DropDownFilterComponent', () => {
   let component: DropDownFilterComponent;
   let fixture: ComponentFixture<DropDownFilterComponent>;

@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroupDirective } from '@angular/forms';
-
+/**
+ * DynamicFieldComponent
+ * @author Cognizant
+*/
 export enum FieldType { 'text', 'multilineText', 'date', 'boolean', 'secretText', 'select',  'selectObject', 'multiSelect', 'inputLabel' }
 export interface StageParams {
   readonly name: string;

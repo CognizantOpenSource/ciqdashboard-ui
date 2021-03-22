@@ -16,7 +16,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/services/auth/auth-guard.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
-
+/**
+* UserRoutingModule
+* @author Cognizant
+*/
 const routes: Routes = [
     { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
     { path: 'profile/changePassword', component: ChangePasswordComponent, canActivate: [AuthGuard] },

@@ -14,6 +14,10 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { DashboardProjectService } from '../modules/ciqdashboard/services/ciqdashboard-project.service';
+/**
+* ProjectResolver
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

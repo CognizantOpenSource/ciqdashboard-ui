@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartLineAreaStackedComponent
+* @author Cognizant
+*/
 @Component({
   selector: "app-chart-line-area-stacked",
   templateUrl: "./chart-line-area-stacked.component.html",

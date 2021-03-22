@@ -33,7 +33,10 @@ import { map, distinctUntilChanged, take, filter } from 'rxjs/operators';
 import { DashboardItemsService } from '../../services/ciqdashboard-items.service';
 import { DashboardProjectService } from '../../services/ciqdashboard-project.service';
 import { IDashBoard } from '../dashboard-home/idashboard';
-
+/**
+* DashboardSlideshowComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-dashboard-slideshow',
   templateUrl: './dashboard-slideshow.component.html',

@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartBarVerticalNormalizedComponent } from './chart-bar-vertical-normalized.component';
-
+/**
+* ChartBarVerticalNormalizedComponent
+* @author Cognizant
+*/
 describe('ChartBarVerticalNormalizedComponent', () => {
   let component: ChartBarVerticalNormalizedComponent;
   let fixture: ComponentFixture<ChartBarVerticalNormalizedComponent>;

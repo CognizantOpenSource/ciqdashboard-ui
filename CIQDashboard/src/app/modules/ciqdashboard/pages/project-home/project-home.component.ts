@@ -21,7 +21,10 @@ import { UserManagerService } from 'src/app/services/auth/admin/user-manager.ser
 import { forkJoin } from 'rxjs';
 import { parseApiError } from 'src/app/components/util/error.util';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
-
+/**
+* ProjectHomeComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-project-home',
   templateUrl: './project-home.component.html',

@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartBarHorizontalStackedComponent
+* @author Cognizant
+*/
 @Component({
   selector: "app-chart-bar-horizontal-stacked",
   templateUrl: "./chart-bar-horizontal-stacked.component.html",

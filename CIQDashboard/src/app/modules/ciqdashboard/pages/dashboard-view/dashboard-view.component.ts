@@ -15,7 +15,10 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { GridsterConfig, GridType, DisplayGrid } from 'angular-gridster2';
 import { IDashboard } from '../../model/data.model';
 import { DashboardItemsService } from '../../services/ciqdashboard-items.service';
-
+/**
+* DashboardViewComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-dashboard-view',
   templateUrl: './dashboard-view.component.html',

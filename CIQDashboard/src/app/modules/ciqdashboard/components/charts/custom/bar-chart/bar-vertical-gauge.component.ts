@@ -30,7 +30,10 @@ import {
 import { scaleBand, scaleLinear } from 'd3-scale';
 
 import { calculateViewDimensions, ViewDimensions, ColorHelper, BaseChartComponent } from '@swimlane/ngx-charts';
-
+/**
+* BarVerticalGaugeComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'ngx-charts-bar-vertical-gauge',
   template: `

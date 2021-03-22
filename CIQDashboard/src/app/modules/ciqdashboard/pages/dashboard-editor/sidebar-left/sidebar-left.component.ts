@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit } from '@angular/core';
-
+/**
+* SidebarLeftComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-sidebar-left',
   templateUrl: './sidebar-left.component.html',

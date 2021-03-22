@@ -19,7 +19,10 @@ import { DashboardItemsService, getItemFields, clean } from '../../services/ciqd
 import { ToastrService } from 'ngx-toastr';
 import { parseApiError } from 'src/app/components/util/error.util';
 import { take } from 'rxjs/operators';
-
+/**
+* CreateImageComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-create-image',
   templateUrl: './create-image.component.html',

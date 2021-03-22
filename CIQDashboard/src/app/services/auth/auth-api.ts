@@ -11,6 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/**
+* API - aurh
+* @author Cognizant
+*/
 export class API {
     getTeam(id: any): string {
         return `${this.teams}${id}`;

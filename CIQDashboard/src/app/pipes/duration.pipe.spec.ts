@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { DurationPipe } from './duration.pipe';
-
+/**
+* DurationPipe
+* @author Cognizant
+*/
 describe('DurationPipe', () => {
   it('create an instance', () => {
     const pipe = new DurationPipe();

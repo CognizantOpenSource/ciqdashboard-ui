@@ -22,7 +22,10 @@ import {
     EventEmitter
 } from '@angular/core';
 import { formatLabel } from '@swimlane/ngx-charts';
-
+/**
+* BarGaugeComponent
+* @author Cognizant
+*/
 enum Color {
     gauge, surplus, deficit
 }

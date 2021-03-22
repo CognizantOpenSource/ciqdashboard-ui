@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Directive, HostListener, ElementRef, Output, Input, EventEmitter, Renderer2 } from '@angular/core';
-
+/**
+ * EditableDirective
+ * @author Cognizant
+*/
 const ENTER = 'Enter';
 const ESCAPE = 'Escape';
 const BACKSPACE = 'Backspace';

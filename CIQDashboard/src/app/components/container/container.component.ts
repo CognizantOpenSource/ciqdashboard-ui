@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-
+/**
+ * ContainerComponent
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-container',
   templateUrl: './container.component.html',

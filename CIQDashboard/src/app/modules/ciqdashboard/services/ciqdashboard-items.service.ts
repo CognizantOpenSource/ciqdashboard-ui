@@ -19,7 +19,10 @@ import { tap, map } from 'rxjs/operators';
 import { createCachableResource } from './ciqdashboard-project.service';
 import { getItemFieldsConfig, getItemGroupByConfig , getItemAggregateConfig } from './items.data'; 
 import { isObject, isArray, map as _map, flow, omitBy, mapValues } from 'lodash';
-
+/**
+* DashboardItemsService
+* @author Cognizant
+*/
 export function deepOmitBy(root , func) {
   if (!func || typeof func !== 'function') {
       throw new Error('requried function(argument) for omit check');

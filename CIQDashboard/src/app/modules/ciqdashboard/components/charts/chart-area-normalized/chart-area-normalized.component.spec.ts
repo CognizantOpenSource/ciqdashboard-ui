@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartAreaNormalizedComponent } from './chart-area-normalized.component';
-
+/**
+* ChartAreaNormalizedComponent
+* @author Cognizant
+*/
 describe('ChartAreaNormalizedComponent', () => {
   let component: ChartAreaNormalizedComponent;
   let fixture: ComponentFixture<ChartAreaNormalizedComponent>;

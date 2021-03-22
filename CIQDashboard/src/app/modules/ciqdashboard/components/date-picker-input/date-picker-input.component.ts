@@ -14,7 +14,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgDateRangePickerComponent } from 'ng-daterangepicker';
-
+/**
+* DatePickerInputComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-date-picker-input',
   templateUrl: './date-picker-input.component.html',

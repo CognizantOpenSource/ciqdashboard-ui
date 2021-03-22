@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy, EventEmitter, Output } from "@angular/core";
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartPieComponent
+* @author Cognizant
+*/
 @Component({
   selector: "app-chart-pie",
   templateUrl: "./chart-pie.component.html",

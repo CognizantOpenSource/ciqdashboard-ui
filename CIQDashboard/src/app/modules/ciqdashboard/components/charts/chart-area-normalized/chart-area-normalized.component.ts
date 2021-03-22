@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartAreaNormalizedComponent
+* @author Cognizant
+*/
 
 @Component({
   selector: "app-chart-area-normalized",

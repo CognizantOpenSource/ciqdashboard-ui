@@ -17,6 +17,10 @@ import { UnSubscribable } from 'src/app/components/unsub';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+/**
+* SignUpComponent
+* @author Cognizant
+*/
 export function passwordConstraints(min = 8, max = 20, symbols = '$_@!%*#?&') {
   const pattern = `^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[${symbols}])[A-Za-z\\d${symbols}]{8,20}$`;
   const message = `minimum ${min} and maximum ${max} characters, at least one uppercase letter, one lowercase letter, one number and one special character from ${symbols}`;

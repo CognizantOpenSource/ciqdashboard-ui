@@ -14,7 +14,10 @@
 import { Injectable } from '@angular/core';
 import { Notification } from 'src/app/components/notification/notification.component';
 import { BehaviorSubject } from 'rxjs';
-
+/**
+* NotificationService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

@@ -20,6 +20,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './authentication.service';
 
+/**
+* AuthInterceptor
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

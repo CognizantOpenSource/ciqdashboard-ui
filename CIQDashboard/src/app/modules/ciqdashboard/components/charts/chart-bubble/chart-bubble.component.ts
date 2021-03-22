@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartBubbleComponent
+* @author Cognizant
+*/
 @Component({
   selector: "app-chart-bubble",
   templateUrl: "./chart-bubble.component.html",

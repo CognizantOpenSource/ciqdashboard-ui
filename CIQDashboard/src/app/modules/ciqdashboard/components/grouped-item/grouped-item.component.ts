@@ -15,6 +15,10 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy
 import { UnSubscribable } from 'src/app/components/unsub';
 import { cut } from 'src/app/modules/home/home.component';
 import { groupBy } from 'lodash';
+/**
+* GroupedItemComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-grouped-item',
   templateUrl: './grouped-item.component.html',

@@ -18,7 +18,10 @@ import { ClrDropdownMenu } from '@clr/angular';
 import { IFilterData, IFilterConfig } from '../../model/data.model';
 import { datePeriodNames } from '../../services/filter-ops';
 import { getType } from '../filter-dropdown/filter-dropdown.component';
-
+/**
+* ItemFiltersComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-item-filters',
   templateUrl: './item-filters.component.html',

@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Output, EventEmitter, Input, NgZone, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-
+/**
+ * FileUploadComponent
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-image-upload',
   templateUrl: './file-upload.component.html',

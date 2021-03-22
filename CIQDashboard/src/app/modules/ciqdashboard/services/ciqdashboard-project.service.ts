@@ -17,7 +17,10 @@ import { IDashBoardApiService } from './ciqdashboard-api.service';
 import { LocalStorage } from 'src/app/services/local-storage.service';
 import {tap, switchMap } from 'rxjs/operators';
 import { IDashboardProjet } from '../model/data.model';
-
+/**
+* DashboardProjectService
+* @author Cognizant
+*/
 export function createUpdateCachableResource(db: LocalStorage, group: string): (id: string, req: Observable<any>) => Observable<any> {
 
   return (id, req) => {

@@ -17,7 +17,10 @@ import { IDashBoardApiService } from './ciqdashboard-api.service';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from 'src/app/services/local-storage.service';
 import { map, tap, take, switchMap } from 'rxjs/operators';
-
+/**
+* DashboardDataSourceService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

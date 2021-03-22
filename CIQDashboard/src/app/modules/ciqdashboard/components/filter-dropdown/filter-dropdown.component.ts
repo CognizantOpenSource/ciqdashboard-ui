@@ -16,7 +16,10 @@ import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@ang
 import { ClrDropdownMenu } from '@clr/angular';
 import { IFilterData, IFilterConfig } from '../../model/data.model';
 import { datePeriodNames } from '../../services/filter-ops';
-
+/**
+* FilterDropdownComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-dash-filter-dropdown',
   templateUrl: './filter-dropdown.component.html',

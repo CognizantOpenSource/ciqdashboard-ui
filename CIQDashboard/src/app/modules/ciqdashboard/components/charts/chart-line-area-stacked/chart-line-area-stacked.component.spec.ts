@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartLineAreaStackedComponent } from './chart-line-area-stacked.component';
-
+/**
+* ChartLineAreaStackedComponent
+* @author Cognizant
+*/
 describe('ChartLineAreaStackedComponent', () => {
   let component: ChartLineAreaStackedComponent;
   let fixture: ComponentFixture<ChartLineAreaStackedComponent>;

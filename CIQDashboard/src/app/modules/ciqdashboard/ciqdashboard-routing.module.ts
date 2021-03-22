@@ -24,7 +24,10 @@ import { DashboardSlideshowComponent } from './pages/dashboard-slideshow/dashboa
 import { CreateLabelComponent } from './pages/create-label/create-label.component';
 import { CreateImageComponent } from './pages/create-image/create-image.component';
 import { SearchChartComponent } from './pages/search-chart/search-chart.component';
-
+/**
+* ExecutionRoutingModule
+* @author Cognizant
+*/
 
 const routes: Routes = [
   { path: '', redirectTo: 'projects', pathMatch: 'full' },

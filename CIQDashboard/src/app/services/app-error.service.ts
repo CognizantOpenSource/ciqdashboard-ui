@@ -15,6 +15,10 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorHandler, Injectable, Inject, forwardRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
+/**
+* AppErrorHandler
+* @author Cognizant
+*/
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
     constructor(@Inject(forwardRef(() => ToastrService)) private toastr: ToastrService) {

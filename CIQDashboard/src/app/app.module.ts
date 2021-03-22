@@ -33,7 +33,10 @@ import { AppErrorHandler } from './services/app-error.service';
 import { HomeComponent } from './modules/home/home.component';
 import { AppFooterComponent } from './modules/footer/app-footer/app-footer.component';
 import { ExportAsModule } from 'ngx-export-as';
-
+/**
+* AppModule
+* @author Cognizant
+*/
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {

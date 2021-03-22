@@ -18,7 +18,10 @@ import { SignUpComponent } from './modules/sign-up/sign-up.component';
 import { AuthGuard } from './services/auth/auth-guard.service';
 import { AdminGuard } from 'src/app/services/auth/admin-guard.service';
 import { NoAuthGuard } from './services/auth/no-auth-guard.service';
-
+/**
+* AppRoutingModule
+* @author Cognizant
+*/
 const routes: Routes = [
   { path: 'login', component: LoginComponent, pathMatch: 'full', canActivate: [NoAuthGuard] },
   { path: 'signUp', component: SignUpComponent, pathMatch: 'full', canActivate: [NoAuthGuard] },

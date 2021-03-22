@@ -32,7 +32,10 @@ import {
   ColorHelper,
   calculateViewDimensions
 } from '@swimlane/ngx-charts';
-
+/**
+* ComboChartComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'combo-chart-component',
   templateUrl: './combo-chart.component.html',

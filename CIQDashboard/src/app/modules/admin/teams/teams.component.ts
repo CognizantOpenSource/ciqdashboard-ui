@@ -19,7 +19,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DashboardProjectService } from '../../ciqdashboard/services/ciqdashboard-project.service';
 import { take } from 'rxjs/operators';
-
+/**
+* AdminTeamsComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-admin-teams',
   templateUrl: './teams.component.html',

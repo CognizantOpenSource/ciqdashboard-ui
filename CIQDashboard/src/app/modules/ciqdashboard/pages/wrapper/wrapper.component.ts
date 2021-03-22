@@ -17,7 +17,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { take, distinctUntilChanged, map } from 'rxjs/operators';
 import { UnSubscribable } from 'src/app/components/unsub';
 import { DashboardItemsService } from '../../services/ciqdashboard-items.service';
-
+/**
+* WrapperComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-wrapper',
   template: `<router-outlet></router-outlet>

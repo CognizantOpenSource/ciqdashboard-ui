@@ -15,7 +15,10 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ItemOptionsEditorComponent } from 'src/app/modules/ciqdashboard/components/item-options-editor/item-options-editor.component';
 import { ObjectUtil } from 'src/app/components/util/object.util';
-
+/**
+* ItemAggregateEditorComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'item-aggregate-editor',
   templateUrl: './item-aggregate-editor.component.html',

@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { CallbackPipe } from './callback.pipe';
-
+/**
+* CallbackPipe
+* @author Cognizant
+*/
 describe('CallbackPipe', () => {
   it('create an instance', () => {
     const pipe = new CallbackPipe();

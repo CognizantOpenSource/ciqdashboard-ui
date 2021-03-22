@@ -11,6 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/**
+ * ObjectUtil
+ * @author Cognizant
+*/
 export class ObjectUtil {
     public static move<T>(array: Array<T>, from: number, to: number) {
         // remove item

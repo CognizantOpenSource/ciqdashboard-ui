@@ -23,7 +23,10 @@ import { Location } from '@angular/common';
 import { AuthenticationService } from './services/auth/authentication.service';
 import { AuthGuard } from './services/auth/auth-guard.service';
 import { NoAuthGuard } from './services/auth/no-auth-guard.service';
-
+/**
+* AppComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

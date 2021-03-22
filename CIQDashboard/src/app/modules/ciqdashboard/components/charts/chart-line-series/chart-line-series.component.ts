@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartLineSeriesComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-chart-line-series',
   templateUrl: './chart-line-series.component.html',

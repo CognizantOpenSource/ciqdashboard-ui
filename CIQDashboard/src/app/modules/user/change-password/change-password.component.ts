@@ -18,7 +18,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { passwordConstraints } from '../../sign-up/sign-up.component';
-
+/**
+* ChangePasswordComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-changePassword',
   templateUrl: './change-password.component.html',

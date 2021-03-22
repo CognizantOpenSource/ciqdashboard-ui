@@ -1,8 +1,0 @@
-<div class="container"
-    [ngStyle]="{'background-color': config.BackgroundColor ? config.BackgroundColor : '#FFFFFF'}"
-    style="height:100%" *ngIf="config">
-    <pre [ngClass]="{txtbold: isBold,
-                txtitalic : isItalic,
-                txtStyle : isTextStyle }" 
-    [ngStyle]="getLabelStyle()">{{labelName}}</pre>
-</div>

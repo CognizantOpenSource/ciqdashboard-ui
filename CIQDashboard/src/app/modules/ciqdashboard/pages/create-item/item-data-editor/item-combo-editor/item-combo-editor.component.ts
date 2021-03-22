@@ -14,7 +14,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ObjectUtil } from 'src/app/components/util/object.util';
-
+/**
+* ItemComboEditorComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'item-combo-editor',
   templateUrl: './item-combo-editor.component.html',

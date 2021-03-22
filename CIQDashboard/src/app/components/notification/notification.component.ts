@@ -3,7 +3,10 @@ import { trigger, transition, animate, style, state, group, sequence } from '@an
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from 'src/app/services/notification/notification.service';
-
+/**
+ * NotificationComponent
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.component.html',

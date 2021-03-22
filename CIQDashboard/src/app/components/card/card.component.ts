@@ -13,7 +13,10 @@
 //     limitations under the License.
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-
+/**
+ * CardComponent
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',

@@ -15,6 +15,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserManagerComponent } from './user-manager.component';
 
+/**
+* UserManagerComponent
+* @author Cognizant
+*/
 describe('UserManagerComponent', () => {
   let component: UserManagerComponent;
   let fixture: ComponentFixture<UserManagerComponent>;

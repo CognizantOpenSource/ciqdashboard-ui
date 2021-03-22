@@ -14,7 +14,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
+/**
+* ExternalAppService
+* @author Cognizant
+*/
 export interface ExternalApp {
   url: string;
   token: string;

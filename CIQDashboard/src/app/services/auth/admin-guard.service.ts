@@ -19,7 +19,10 @@ import { ToastrService } from 'ngx-toastr';
 import { DEFAULT_ERROR_MESSAGES } from 'src/app/components/util/error.util';
 import { Observable } from 'rxjs';
 import { APP_PERMISSIONS } from './auth-api';
-
+/**
+* AdminGuard
+* @author Cognizant
+*/
 @Injectable({ providedIn: 'root' })
 export class AdminGuard implements CanActivate, CanLoad {
     constructor(private router: Router, private toastr: ToastrService, private authService: AuthenticationService) { }

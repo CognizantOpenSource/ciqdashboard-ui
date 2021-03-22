@@ -13,7 +13,10 @@
 // limitations under the License.
 import { UnSubscribable } from 'src/app/components/unsub';
 import { DashboardItemsService } from '../../services/ciqdashboard-items.service';
-
+/**
+* IDashBoard
+* @author Cognizant
+*/
 export class IDashBoard extends UnSubscribable {
     loadedItem;
     constructor(public dashItemService: DashboardItemsService) {

@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartTreeMapComponent } from './chart-tree-map.component';
-
+/**
+* ChartTreeMapComponent
+* @author Cognizant
+*/
 describe('ChartTreeMapComponent', () => {
   let component: ChartTreeMapComponent;
   let fixture: ComponentFixture<ChartTreeMapComponent>;

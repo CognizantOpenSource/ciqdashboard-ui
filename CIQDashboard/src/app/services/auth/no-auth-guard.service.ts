@@ -16,6 +16,10 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { AuthenticationService } from './authentication.service';
 import { tap, take, map } from 'rxjs/operators';
 
+/**
+* NoAuthGuard
+* @author Cognizant
+*/
 @Injectable({ providedIn: 'root' })
 export class NoAuthGuard implements CanActivate {
     constructor(private router: Router, private authService: AuthenticationService) { }

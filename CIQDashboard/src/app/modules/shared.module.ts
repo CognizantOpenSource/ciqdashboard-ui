@@ -33,6 +33,10 @@ import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.
 import { ContainerComponent } from 'src/app/components/container/container.component';
 import { AppDurationPipe } from '../pipes/duration.pipe'; 
 import { NgSelectModule } from '@ng-select/ng-select';
+/**
+* SharedModule
+* @author Cognizant
+*/
 @NgModule({
   declarations: [
     StopClickDirective,

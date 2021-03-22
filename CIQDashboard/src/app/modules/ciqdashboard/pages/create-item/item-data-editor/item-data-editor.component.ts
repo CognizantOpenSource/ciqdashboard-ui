@@ -18,7 +18,10 @@ import { ToastrService } from 'ngx-toastr';
 import { getItemAggregate, getItemFields, getItemGroupBy } from '../../../services/ciqdashboard-items.service';
 import { Subscription } from 'rxjs';
 import { resetDisabledFieldsInOptions } from '../../../components/item-options-editor/item-options-editor.component';
-
+/**
+* ItemDataEditorComponent
+* @author Cognizant
+*/
 function add(index, controls: any[], ...args) {
   if (index == controls.length - 1) {
     controls.push(new FormControl(''));

@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartPolarComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-chart-polar',
   templateUrl: './chart-polar.component.html',

@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit } from '@angular/core';
-
+/**
+* HomeComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

@@ -14,7 +14,10 @@
 import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { formatLabel } from '@swimlane/ngx-charts';
-
+/**
+* ComboSeriesVerticalComponent
+* @author Cognizant
+*/
 @Component({
   // tslint:disable-next-line: component-selector
   selector: 'g[ngx-combo-charts-series-vertical]',

@@ -20,6 +20,10 @@ import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { parseApiError } from 'src/app/components/util/error.util';
 import { DashboardProjectService } from '../../services/ciqdashboard-project.service';
+/**
+* NewProjectComponent
+* @author Cognizant
+*/
 interface Project {
   id: string;
   name: string;

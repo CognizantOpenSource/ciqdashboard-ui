@@ -13,7 +13,10 @@
 // limitations under the License.
 import { chartColors, htmlColorNames, suffledColors } from '../../services/items.data';
 import { formatDate } from '../../services/transform-data';
-
+/**
+* BaseChart
+* @author Cognizant
+*/
 export class BaseChart {
     static customColors = [
         { name: 'passed', value: 'var(--green)' },

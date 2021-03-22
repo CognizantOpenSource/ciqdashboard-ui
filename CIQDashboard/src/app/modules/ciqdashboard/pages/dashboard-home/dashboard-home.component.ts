@@ -25,7 +25,10 @@ import { getEmptyPage } from '../dashboard-editor/dashboard-editor.component';
 import { ToastrService } from 'ngx-toastr';
 import { IDashBoard } from './idashboard';
 import { parseApiError } from 'src/app/components/util/error.util';
-
+/**
+* DashboardHomeComponent
+* @author Cognizant
+*/
 @Component({
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./../../components/idashboard.scss', './dashboard-home.component.scss']

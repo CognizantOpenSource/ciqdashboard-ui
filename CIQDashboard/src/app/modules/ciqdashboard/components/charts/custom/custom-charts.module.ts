@@ -17,6 +17,10 @@ import { BarGaugeComponent } from './bar-chart/bar-gauge.component';
 import { BarVerticalGaugeComponent } from './bar-chart/bar-vertical-gauge.component';
 import { BarVerticalGroupedGaugeComponent } from './bar-chart/bar-vertical-grouped-gauge.component';
 import { SeriesVerticalComponent2 } from './bar-chart/series-vertical.component';
+/**
+* CustomChartsModule
+* @author Cognizant
+*/
 const CUSTOM_CHARTS = [
     BarVerticalGroupedGaugeComponent,
     BarVerticalGaugeComponent,

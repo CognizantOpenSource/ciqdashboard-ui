@@ -19,7 +19,10 @@ import { UserConfigService } from 'src/app/modules/ciqdashboard/services/user-co
 import { Theme } from 'src/app/model/types.model';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { DashboardProjectService } from '../../ciqdashboard/services/ciqdashboard-project.service';
-
+/**
+* TopNavComponent
+* @author Cognizant
+*/
 
 @Component({
   selector: 'app-top-nav',

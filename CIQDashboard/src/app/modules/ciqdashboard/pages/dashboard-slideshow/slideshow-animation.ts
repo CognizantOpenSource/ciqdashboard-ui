@@ -13,6 +13,11 @@
 // limitations under the License.
 import { style, animate, animation, keyframes } from "@angular/animations";
 
+/**
+* Slide show Animation
+* @author Cognizant
+*/
+
 // =========================
 // Enum for referencing animations
 // =========================

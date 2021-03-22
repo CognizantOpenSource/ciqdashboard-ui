@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Type } from '@angular/core';
+/**
+* data model
+* @author Cognizant
+*/
 export interface IDashboardProjet {
     id: string;
     name: string;

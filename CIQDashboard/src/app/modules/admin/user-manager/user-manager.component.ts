@@ -21,7 +21,10 @@ import { Location } from '@angular/common';
 import { DashboardProjectService } from '../../ciqdashboard/services/ciqdashboard-project.service';
 import { IUser } from 'src/app/model/access.model';
 import { passwordConstraints } from '../../sign-up/sign-up.component';
-
+/**
+* UserManagerComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-user-manager',
   templateUrl: './user-manager.component.html',

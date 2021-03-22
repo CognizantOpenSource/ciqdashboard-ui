@@ -17,7 +17,10 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 import { UnSubscribable, EntityFilter } from 'src/app/components/unsub';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+/**
+ * AdminRolesComponent
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-admin-roles',
   templateUrl: './admin-roles.component.html',

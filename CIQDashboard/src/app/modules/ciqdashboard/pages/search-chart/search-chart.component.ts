@@ -22,7 +22,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 import { DashboardProjectService } from '../../services/ciqdashboard-project.service';
 import { parseApiError } from 'src/app/components/util/error.util';
-
+/**
+* SearchChartComponent
+* @author Cognizant
+*/
 @Component({
   templateUrl: './search-chart.component.html',
   styleUrls: ['./../../components/idashboard.scss', './search-chart.component.scss']

@@ -25,7 +25,10 @@ import { cloneDeep } from 'lodash';
 import { IDashBoard } from '../dashboard-home/idashboard';
 import { CreateLabelComponent } from '../create-label/create-label.component';
 import { parseApiError } from 'src/app/components/util/error.util';
-
+/**
+* DashboardEditorComponent
+* @author Cognizant
+*/
 export function getEmptyPage(name) {
   return { name, gridConfig: { rows: 8, columns: 8 }, items: [] }
 }

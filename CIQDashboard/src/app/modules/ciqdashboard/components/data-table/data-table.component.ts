@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectorRef, ViewRef } from '@angular/core';
-
+/**
+* DataTableComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',

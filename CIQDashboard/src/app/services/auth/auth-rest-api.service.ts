@@ -16,7 +16,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { API as AuthAPI } from './auth-api';
-
+/**
+* AuthRestAPIService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

@@ -15,7 +15,10 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { UnSubscribable } from 'src/app/components/unsub';
 import { Router } from '@angular/router';
-
+/**
+* UserProfileComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',

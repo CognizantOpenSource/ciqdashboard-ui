@@ -70,7 +70,10 @@ import { ChartComboChartComponent } from './components/charts/chart-combo-chart/
 import { CustomChartsModule } from './components/charts/custom/custom-charts.module';
 import { ChartBarVerticalGroupGaugeComponent } from './components/charts/chart-bar-vertical-group-gauge/chart-bar-vertical-group-gauge.component';
 import { ChartBarVerticalGaugeComponent } from './components/charts/chart-bar-vertical-gauge/chart-bar-vertical-gauge.component';
-
+/**
+* IDashBoardModule
+* @author Cognizant
+*/
 @NgModule({
   declarations: [
     ProjectHomeComponent,

@@ -18,6 +18,10 @@ import { tap, take } from 'rxjs/operators';
 import { Route } from '@angular/compiler/src/core';
 import { Observable } from 'rxjs';
 
+/**
+* AuthGuard
+* @author Cognizant
+*/
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate, CanLoad {
     constructor(private router: Router, private authService: AuthenticationService) { }

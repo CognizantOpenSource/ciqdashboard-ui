@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartPieComponent } from './chart-pie.component';
-
+/**
+* ChartPieComponent
+* @author Cognizant
+*/
 describe('ChartPieComponent', () => {
   let component: ChartPieComponent;
   let fixture: ComponentFixture<ChartPieComponent>;

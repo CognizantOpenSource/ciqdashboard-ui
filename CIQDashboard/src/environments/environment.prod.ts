@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export const environment = {
+
+/**
+* Environment Variable Setup 
+* @author Cognizant
+*/
+
   production: true,
   api: {
     auth: `${window.location.origin}/api/`,

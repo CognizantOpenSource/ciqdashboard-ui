@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
+/**
+ * DropDownFilterComponent
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-drop-down-filter',
   templateUrl: './drop-down-filter.component.html',

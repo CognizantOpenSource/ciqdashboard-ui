@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Directive, HostListener } from '@angular/core';
-
+/**
+ * StopClickDirective
+ * @author Cognizant
+*/
 @Directive({
     selector: '[click-stop-propagation]'
 })

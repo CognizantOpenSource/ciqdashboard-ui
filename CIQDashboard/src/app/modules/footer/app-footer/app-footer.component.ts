@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit } from '@angular/core';
-
+/**
+* AppFooterComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-footer',
   templateUrl: './app-footer.component.html',

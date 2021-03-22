@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { MultiLinePipe } from './multi-line.pipe';
-
+/**
+* MultiLinePipe
+* @author Cognizant
+*/
 describe('MultiLinePipe', () => {
   it('create an instance', () => {
     const pipe = new MultiLinePipe();

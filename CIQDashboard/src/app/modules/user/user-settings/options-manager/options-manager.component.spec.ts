@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OptionsManagerComponent } from './options-manager.component';
-
+/**
+* OptionsManagerComponent
+* @author Cognizant
+*/
 describe('OptionsManagerComponent', () => {
   let component: OptionsManagerComponent;
   let fixture: ComponentFixture<OptionsManagerComponent>;

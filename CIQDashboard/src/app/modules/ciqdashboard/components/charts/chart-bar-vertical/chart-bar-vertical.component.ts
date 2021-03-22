@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChart } from '../base-chart'
-
+/**
+* ChartBarVerticalComponent
+* @author Cognizant
+*/
 @Component({
   selector: "app-chart-bar-vertical",
   templateUrl: "./chart-bar-vertical.component.html",

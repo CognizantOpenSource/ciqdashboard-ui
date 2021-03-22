@@ -11,6 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+ * Type - Defined Different Themes
+ * @author Cognizant
+*/
+
 export enum Theme {
     default = 'default',
     dark = 'dark'

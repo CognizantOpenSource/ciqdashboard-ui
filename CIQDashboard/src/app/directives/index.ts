@@ -14,3 +14,8 @@
 export * from './auto-resize.directive';
 export * from './editable.directive';
 export * from './stop-click.dircetive';
+
+/**
+ * index
+ * @author Cognizant
+*/

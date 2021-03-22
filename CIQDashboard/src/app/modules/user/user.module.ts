@@ -18,6 +18,10 @@ import { SharedModule } from '../shared.module';
 import { UserRoutingModule } from './user-routing.module';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { OptionsManagerComponent } from './user-settings/options-manager/options-manager.component';
+/**
+* UserModule
+* @author Cognizant
+*/
 @NgModule({
   declarations: [
     UserProfileComponent,

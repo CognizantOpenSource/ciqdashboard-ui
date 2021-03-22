@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { GridsterItem } from 'angular-gridster2';
-
+/**
+ * Report model
+ * @author Cognizant
+*/
 export enum Status {
     passed = 'passed', failed = 'failed', blocked = 'aborted', skipped = 'skipped', in_progress = 'in_progress', none = 'none'
 }

@@ -13,7 +13,10 @@
 // limitations under the License.
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { BaseChart } from '../base-chart';
-
+/**
+* ChartBarVerticalGroupGaugeComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-chart-bar-vertical-group-gauge',
   templateUrl: './chart-bar-vertical-group-gauge.component.html',

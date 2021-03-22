@@ -21,7 +21,10 @@ import { RoleManagerComponent } from './role-manager/role-manager.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminTeamsComponent } from './teams/teams.component';
 import { TeamEditorComponent } from './teams/team-editor/team-editor.component';
-
+/**
+* AdminModule
+* @author Cognizant
+*/
 @NgModule({
   declarations: [
     AdminUsersComponent,

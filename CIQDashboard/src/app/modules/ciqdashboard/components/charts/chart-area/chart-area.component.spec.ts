@@ -15,6 +15,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartAreaComponent } from './chart-area.component';
 
+/**
+* ChartAreaComponent
+* @author Cognizant
+*/
 describe('ChartAreaComponent', () => {
   let component: ChartAreaComponent;
   let fixture: ComponentFixture<ChartAreaComponent>;

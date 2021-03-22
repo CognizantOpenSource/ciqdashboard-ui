@@ -14,7 +14,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { suffledColors } from '../../services/items.data';
-
+/**
+* ItemOptionsEditorComponent
+* @author Cognizant
+*/
 export function resetDisabledFieldsInOptions(options, disabled) {
   const changes = [];
   Object.keys(disabled).filter(f => disabled[f] && options[f] !== null && options[f] !== undefined).forEach(fieldToDisable => {

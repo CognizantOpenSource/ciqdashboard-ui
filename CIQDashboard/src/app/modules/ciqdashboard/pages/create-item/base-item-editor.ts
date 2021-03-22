@@ -16,7 +16,10 @@ import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { FilterOps } from '../../services/filter-ops';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
-
+/**
+* BaseItemEditor
+* @author Cognizant
+*/
 export const pages = { selectSource: 'Data Source', selectType: 'Item Type', updateOptions: 'Item Options' };
 export class BaseItemEditor extends FilterableDashboardComponent<any> {
 

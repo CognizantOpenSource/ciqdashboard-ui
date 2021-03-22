@@ -17,7 +17,10 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IDashboardAPI } from './api';
 import { itemTypes } from './items.data'; 
-
+/**
+* IDashBoardApiService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

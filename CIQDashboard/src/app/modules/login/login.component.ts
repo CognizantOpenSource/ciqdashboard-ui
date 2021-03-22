@@ -18,7 +18,10 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import * as CryptoJS from 'crypto-js';
-
+/**
+* LoginComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

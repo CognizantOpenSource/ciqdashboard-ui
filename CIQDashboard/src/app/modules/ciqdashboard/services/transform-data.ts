@@ -13,7 +13,10 @@
 // limitations under the License.
 import * as MOMENT from 'moment';
 import { getItemGroupByConfig } from './items.data';
-
+/**
+* Transform data
+* @author Cognizant
+*/
 interface IChartEntry {
     name: string;
     value: number;

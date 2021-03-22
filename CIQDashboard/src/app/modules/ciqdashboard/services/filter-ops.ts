@@ -14,7 +14,10 @@
 import { Injectable } from '@angular/core';
 import { LocalStorage } from 'src/app/services/local-storage.service';
 import { IFieldDef } from '../model/data.model';
-
+/**
+* FilterOps
+* @author Cognizant
+*/
 interface IOpDef {
     label?: string;
     type: string;

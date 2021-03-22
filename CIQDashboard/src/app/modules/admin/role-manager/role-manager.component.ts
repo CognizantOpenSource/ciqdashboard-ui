@@ -18,7 +18,10 @@ import { UserManagerService } from 'src/app/services/auth/admin/user-manager.ser
 import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 
-
+/**
+* RoleManagerComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-role-manager',
   templateUrl: './role-manager.component.html',

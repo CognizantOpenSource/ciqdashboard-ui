@@ -14,7 +14,10 @@
 import { TestBed } from '@angular/core/testing';
 
 import { NotificationService } from './notification.service';
-
+/**
+* NotificationService
+* @author Cognizant
+*/
 describe('NotificationService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 

@@ -20,6 +20,10 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { AuthRestAPIService } from './auth-rest-api.service';
 import { parseApiError } from 'src/app/components/util/error.util';
+/**
+* AuthenticationService
+* @author Cognizant
+*/
 function parseQuery(queryString): any {
   const query = {};
   const pairs: Array<string> = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');

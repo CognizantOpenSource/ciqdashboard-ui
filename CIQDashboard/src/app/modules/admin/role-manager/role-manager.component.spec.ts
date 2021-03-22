@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoleManagerComponent } from './role-manager.component';
-
+/**
+* RoleManagerComponent
+* @author Cognizant
+*/
 describe('RoleManagerComponent', () => {
   let component: RoleManagerComponent;
   let fixture: ComponentFixture<RoleManagerComponent>;

@@ -14,7 +14,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartBarVerticalStackedComponent } from './chart-bar-vertical-stacked.component';
-
+/**
+* ChartBarVerticalStackedComponent
+* @author Cognizant
+*/
 describe('ChartBarVerticalStackedComponent', () => {
   let component: ChartBarVerticalStackedComponent;
   let fixture: ComponentFixture<ChartBarVerticalStackedComponent>;

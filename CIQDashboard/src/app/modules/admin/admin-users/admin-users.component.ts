@@ -16,7 +16,10 @@ import { UserManagerService } from 'src/app/services/auth/admin/user-manager.ser
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { UnSubscribable, EntityFilter, EntityCallBackFilter } from 'src/app/components/unsub';
 import { ToastrService } from 'ngx-toastr';
-
+/**
+ * AdminUsers component
+ * @author Cognizant
+*/
 @Component({
   selector: 'app-admin-users',
   templateUrl: './admin-users.component.html',

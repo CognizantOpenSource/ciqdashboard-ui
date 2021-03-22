@@ -18,6 +18,10 @@ import { Location } from '@angular/common';
 import { IUser } from 'src/app/model/access.model';
 import { AuthRestAPIService } from '../auth-rest-api.service';
 
+/**
+* UserManagerService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

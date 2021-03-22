@@ -15,7 +15,10 @@ import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { OnDestroy } from '@angular/core';
 import { ClrDatagridStringFilterInterface } from '@clr/angular';
-
+/**
+ * unsub
+ * @author Cognizant
+*/
 export class EntityFilter implements ClrDatagridStringFilterInterface<any> {
     constructor(private fieldName: string) { }
     accepts(entity: any, search: string): boolean {

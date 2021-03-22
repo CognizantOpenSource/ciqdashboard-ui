@@ -15,6 +15,10 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy
 import { GridsterConfig, DisplayGrid, GridType, CompactType } from 'angular-gridster2';
 import { IGridConfig } from '../../../model/data.model';
 import { UnSubscribable } from 'src/app/components/unsub';
+/**
+* DashboardGridComponent
+* @author Cognizant
+*/
 interface IDashBoardItem {
   [key: string]: any;
 }

@@ -21,7 +21,10 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 import { Theme } from 'src/app/model/types.model';
 import { IUserConfig } from 'src/app/model/access.model';
 import { IDashBoardApiService } from 'src/app/modules/ciqdashboard/services/ciqdashboard-api.service';
-
+/**
+* UserConfigService
+* @author Cognizant
+*/
 @Injectable({
   providedIn: 'root'
 })

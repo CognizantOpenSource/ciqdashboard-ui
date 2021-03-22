@@ -18,6 +18,10 @@ import { UnSubscribable } from 'src/app/components/unsub';
 import { Theme } from 'src/app/model/types.model';
 import { UserConfigService } from '../../ciqdashboard/services/user-config.service';
 import { APP_PERMISSIONS } from 'src/app/services/auth/auth-api';
+/**
+* UserMenuComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',

@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Injectable } from '@angular/core';
 import { saveAs } from 'file-saver';
-
+/**
+* FileServiceService
+* @author Cognizant
+*/
 const types = {
   JenkinsPipeline: {
     ext: 'Jenkinsfile',

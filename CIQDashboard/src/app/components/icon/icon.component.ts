@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-
+/**
+ * IconComponent
+ * @author Cognizant
+*/
 type IconType = 'image' | 'clr-icon' | 'fa-icon';
 interface Icon {
   type: IconType;

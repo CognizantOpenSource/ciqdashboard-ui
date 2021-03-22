@@ -16,7 +16,10 @@ import { IGridConfig } from '../../../model/data.model';
 import { getItemFields, clean } from '../../../services/ciqdashboard-items.service';
 import { UnSubscribable } from 'src/app/components/unsub';
 import { ActivatedRoute, Router } from '@angular/router';
-
+/**
+* SidebarRightComponent
+* @author Cognizant
+*/
 @Component({
   selector: 'app-sidebar-right',
   templateUrl: './sidebar-right.component.html',
