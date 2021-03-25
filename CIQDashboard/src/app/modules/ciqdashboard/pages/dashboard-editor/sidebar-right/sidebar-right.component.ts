@@ -109,7 +109,7 @@ export class SidebarRightComponent extends UnSubscribable implements OnInit {
     }
     const component = itemGroup === 'dataimg' ? 'edit-img' : (itemGroup === 'datalabel' ? 'edit-label' : 'edit-chart');
     if (projectId) {
-      this.router.navigate(['idashboard', projectId, component], { queryParams });
+      this.router.navigate(['ciqdashboard', projectId, component], { queryParams });
     } else
       this.router.navigate([component], { relativeTo: this.route, queryParams });
   }

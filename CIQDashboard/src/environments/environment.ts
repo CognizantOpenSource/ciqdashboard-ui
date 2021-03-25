@@ -21,7 +21,7 @@
 * @author Cognizant
 */
 
-const port = 9000;
+const port = 9002;
 const host = `http://${window.location.hostname}:${port}`;
 
 export const environment = {

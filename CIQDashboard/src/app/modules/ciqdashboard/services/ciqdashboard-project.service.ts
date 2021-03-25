@@ -24,7 +24,7 @@ import { IDashboardProjet } from '../model/data.model';
 export function createUpdateCachableResource(db: LocalStorage, group: string): (id: string, req: Observable<any>) => Observable<any> {
 
   return (id, req) => {
-    const key = `idashboard.${group}.${id}`;
+    const key = `ciqdashboard.${group}.${id}`;
     const request = req.pipe(tap((res: any) => {
       db.setItem(key, res).subscribe();
     }));
@@ -35,7 +35,7 @@ export function createUpdateCachableResource(db: LocalStorage, group: string): (
 export function createCachableResource(db: LocalStorage, group: string, cacheOnly = false): (id: string, req: Observable<any>) => Observable<any> {
 
   return (id, req) => {
-    const key = `idashboard.${group}.${id}`;
+    const key = `ciqdashboard.${group}.${id}`;
     return db.hasKey(key).pipe(switchMap(exist => {
       const request = req.pipe(tap((res: any) => {
         db.setItem(key, res).subscribe();
