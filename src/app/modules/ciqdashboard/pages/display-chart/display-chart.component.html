@@ -1,0 +1,172 @@
+<div class="full flex-col display-wrapper" *ngIf="itemData && itemConfig" #itemElement [attr.data-type]="chartType"
+  [attr.data-id]="item?.id">
+  <div class="chart-card flex-col full">
+    <div class="analysis-title">
+      <div>{{chartTitle}}</div>
+      <div class="filler"></div>
+      <app-item-filters *ngIf="item && chartType !== 'table'" [(filters)]="item.filters" (filtersChange)="updateChartData()"
+        [options]="filterOptions" (fieldChange)="onFiledSelected($event)" (click)="updateFilterConfig()">
+      </app-item-filters>
+
+      <a class="tool-link" title="Export" (click)="downloadPng(itemElement)" [class.hidden]="isExporting">
+        <clr-icon shape="download"></clr-icon>
+      </a>
+      <a class="tool-link" title="Export" (click)="downloadCSV()" *ngIf="chartType == 'table'" [class.hidden]="isExporting">
+        <clr-icon shape="export"></clr-icon>
+      </a>
+    </div>
+
+    <div class="chart-wrapper full flex-col item-{{chartType}}">
+      <div class="crumb-header" *ngIf="paths?.length > 0">
+        <button class="btn btn-link" (click)="clearPaths()" title="Clear View">
+          <clr-icon shape="times" size="20"></clr-icon>
+        </button>
+        <ng-container *ngFor="let item of paths; let last = last;">
+          <button class="btn btn-link" [class.active]="last" [disabled]="last" (click)="selectedPath(item)">
+            {{item.name}}
+            ({{item.value}})
+          </button> <span *ngIf="!last"> / </span>
+        </ng-container>
+      </div>
+      <div class="flex-col full">
+        <ng-container [ngSwitch]="chartType">
+
+        
+
+        <!--  \\Bar Chart\\  -->
+        <app-chart-bar-horizontal *ngSwitchCase="'bar-chart-horizontal'" [data]="itemData" [config]="itemConfig">
+        </app-chart-bar-horizontal>
+        <app-chart-bar-horizontal-stacked *ngSwitchCase="'bar-horizontal-stacked'" [data]="itemData"
+          [config]="itemConfig"></app-chart-bar-horizontal-stacked>
+        <app-chart-bar-horizontal-normalized *ngSwitchCase="'bar-horizontal-normalized'" [data]="itemData"
+          [config]="itemConfig"></app-chart-bar-horizontal-normalized>
+        <app-chart-bar-vertical-normalized *ngSwitchCase="'bar-vertical-normalized'" [data]="itemData"
+          [config]="itemConfig"></app-chart-bar-vertical-normalized>
+        <app-chart-bar-vertical-stacked *ngSwitchCase="'bar-vertical-stacked'" [data]="itemData" [config]="itemConfig">
+        </app-chart-bar-vertical-stacked>
+        <app-chart-bar-vertical *ngSwitchCase="'bar-chart-vertical'" [data]="itemData" [config]="itemConfig">
+        </app-chart-bar-vertical>
+        <app-charts-bar-horizontal-group *ngSwitchCase="'bar-horizontal-group'" [data]="itemData"
+          [config]="itemConfig"></app-charts-bar-horizontal-group>
+        <app-charts-bar-vertical-group *ngSwitchCase="'bar-vertical-group'" [data]="itemData" [config]="itemConfig">
+        </app-charts-bar-vertical-group>
+        <app-chart-bar-vertical-gauge *ngSwitchCase="'bar-chart-vertical-gauge'" [data]="itemData" [config]="itemConfig">
+        </app-chart-bar-vertical-gauge>
+       
+        <app-chart-bar-vertical-group-gauge *ngSwitchCase="'bar-vertical-group-gauge'" [data]="itemData" [config]="itemConfig">
+        </app-chart-bar-vertical-group-gauge>
+
+        <!-- \\Area Chart\\ -->
+        <app-chart-area *ngSwitchCase="'area-chart'" [data]="itemData" [config]="itemConfig">
+        </app-chart-area>
+        <app-chart-area-normalized *ngSwitchCase="'area-chart-normalized'" [data]="itemData" [config]="itemConfig">
+        </app-chart-area-normalized>
+        
+        <!--  \\line Chart\\  -->
+        <app-chart-line-series *ngSwitchCase="'line-chart-series'" [data]="itemData" [config]="itemConfig">
+        </app-chart-line-series>
+        <app-chart-line-area-stacked *ngSwitchCase="'line-chart-area-stacked'" [data]="itemData" [config]="itemConfig">
+        </app-chart-line-area-stacked>
+
+        <!--  \\Pie Chart\\  -->
+        <app-chart-pie *ngSwitchCase="'pie-chart'" [data]="itemData" [config]="itemConfig" [(path)]="paths">
+        </app-chart-pie>
+        <app-chart-pie-advanced *ngSwitchCase="'pie-chart-advanced'" [data]="itemData" [config]="itemConfig">
+        </app-chart-pie-advanced>
+        <app-chart-pie-grid *ngSwitchCase="'pie-chart-grid'" [data]="itemData" [config]="itemConfig" [(path)]="paths">
+        </app-chart-pie-grid>
+
+        <!--  \\Tree map Chart\\  -->
+        <app-chart-tree-map *ngSwitchCase="'tree-map-chart'" [data]="itemData" [config]="itemConfig" [(path)]="paths">
+        </app-chart-tree-map>
+
+        <!--  \\Bubble Chart\\  -->
+        <app-chart-bubble *ngSwitchCase="'bubble-chart'" [data]="itemData" [config]="itemConfig">
+        </app-chart-bubble>
+
+        <!-- \\Card Chart\\  -->
+        <app-chart-card *ngSwitchCase="'card-chart'" [data]="itemData" [config]="itemConfig">
+        </app-chart-card>
+
+        <!-- \\Gauge Chart\\ -->
+        <app-chart-gauge *ngSwitchCase="'gauge-chart'" [data]="itemData" [config]="itemConfig">
+        </app-chart-gauge>
+
+        <!-- \\Polar Chart\\ -->
+        <app-chart-polar *ngSwitchCase="'polar-chart'" [data]="itemData" [config]="itemConfig">
+        </app-chart-polar>
+
+        <app-data-table *ngSwitchCase="'table'" [data]="itemData" [config]="itemConfig" [columns]="itemColumns">
+        </app-data-table>
+
+        <app-chart-combo-chart *ngSwitchCase="'combo'" [data]="itemData" [config]="itemConfig">
+        </app-chart-combo-chart>
+        
+        <!--  \\Tree map interactive Chart\\  -->
+        <app-chart-tree-map-interactive *ngSwitchCase="'tree-map-interactive-chart'" [data]="itemData" [config]="itemConfig">
+        </app-chart-tree-map-interactive>
+
+        <!--  \\Fusion Chart\\  -->
+        <app-chart-fusion-column2d *ngSwitchCase="'bar-vertical-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-column2d>
+
+        <app-chart-fusion-drilldown-barvertical-pie *ngSwitchCase="'drilldown-bar-vertical-pie-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-drilldown-barvertical-pie>
+
+        <app-chart-fusion-bar-vertical-group *ngSwitchCase="'bar-vertical-group-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-bar-vertical-group>
+
+        <app-chart-fusion-bar-vertical-stacked *ngSwitchCase="'bar-vertical-stacked-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-bar-vertical-stacked>
+
+        <app-chart-fusion-heatmap *ngSwitchCase="'chart-heatmap-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-heatmap>
+
+        <app-chart-fusion-gauge *ngSwitchCase="'chart-gauge-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-gauge>
+
+        <app-chart-fusion-scrollstackedcolumn2d *ngSwitchCase="'hundred-percent-stackedbar-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-scrollstackedcolumn2d>
+
+        <app-chart-fusion-linearscale *ngSwitchCase="'chart-linearscale-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-linearscale>
+
+        <app-chart-fusion-area2d *ngSwitchCase="'area2d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-area2d>
+
+        <app-chart-fusion-bar2d *ngSwitchCase="'bar2d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-bar2d>
+
+        <app-chart-fusion-bar3d *ngSwitchCase="'bar3d-chart-fusion'" [data]="itemData" [config]="itemConfig" >
+        </app-chart-fusion-bar3d>
+
+        <app-chart-fusion-column3d *ngSwitchCase="'column3d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-column3d>
+
+        <app-chart-fusion-doughnut2d *ngSwitchCase="'doughnut2d-chart-fusion'" [data]="itemData" [config]="itemConfig" >
+        </app-chart-fusion-doughnut2d>
+
+        <app-chart-fusion-doughnut3d *ngSwitchCase="'doughnut3d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-doughnut3d>
+
+        <app-chart-fusion-funnel *ngSwitchCase="'funnel-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-funnel>
+
+        <app-chart-fusion-pie2d *ngSwitchCase="'pie2d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-pie2d>
+
+        <app-chart-fusion-pie3d *ngSwitchCase="'pie3d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-pie3d>
+        
+        <app-chart-fusion-line2d *ngSwitchCase="'line2d-chart-fusion'" [data]="itemData" [config]="itemConfig">
+        </app-chart-fusion-line2d>
+
+        <app-chart-data-grid *ngSwitchCase="'data-grid'" [data]="itemData" [config]="itemConfig" [columns]="itemColumns">
+        </app-chart-data-grid>
+
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+</div>

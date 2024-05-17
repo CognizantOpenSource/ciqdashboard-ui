@@ -1,0 +1,30 @@
+<!-- <clr-datagrid class="full"   [class.datagrid-compact]="options?.compact"
+  [class.no-header]="options?.hideHeader">
+  <clr-dg-placeholder>No data found</clr-dg-placeholder>
+
+        <clr-dg-column clrDgField="Metrics">Metrics</clr-dg-column>
+        <clr-dg-column clrDgField="Jun23">Jun '23</clr-dg-column>
+        <clr-dg-column clrDgField="Jul23">Jul '23</clr-dg-column>
+        <clr-dg-column clrDgField="Aug23">Aug '23</clr-dg-column>
+
+        <clr-dg-row *clrDgItems="let user of users" [clrDgItem]="user">
+            <clr-dg-cell>{{user.Metrics}}</clr-dg-cell>
+            <clr-dg-cell>{{user.Jun23}}</clr-dg-cell>
+            <clr-dg-cell>{{user.Jul23}}</clr-dg-cell>
+            <clr-dg-cell>{{user.Aug23}}</clr-dg-cell>
+        </clr-dg-row>
+
+</clr-datagrid> -->
+
+<table id="datagridtable">
+  <thead>
+      <tr>
+        <th *ngFor="let header of getHeaders()">{{header}}</th>
+      </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of rows">           
+      <td *ngFor="let key of getHeaders()">{{item[key]}}</td>
+    </tr>
+  </tbody>
+</table>

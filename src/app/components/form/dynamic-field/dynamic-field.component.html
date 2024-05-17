@@ -1,0 +1,149 @@
+<section [attr.title]="field.desc">
+  <div class="container" *ngIf="isText(field.type) && search?.length > 0">
+    <label>{{field.label}}</label>
+    <ng-autocomplete [placeHolder]="field.desc" [ngModel]="value" (ngModelChange)="update($event)"
+      (blur)="blur.emit(value)" [attr.name]="field.name" [required]="!field.optional" [data]="search" [searchKeyword]=''
+      [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+    </ng-autocomplete>
+    <ng-template #itemTemplate let-item>
+      <a [innerHTML]="item"></a>
+    </ng-template>
+    <ng-template #notFoundTemplate let-notFound>
+      <div [innerHTML]="notFound"></div>
+    </ng-template>
+  </div>
+  <clr-input-container *ngIf="isText(field.type) && (!search || search.length === 0)" class="container">
+    <label>{{field.label}}</label>
+    <input clrInput [attr.placeholder]="field.desc" [ngModel]="value" (ngModelChange)="update($event)"
+      (blur)="blur.emit(value)" [attr.name]="field.name" [required]="!field.optional" [disabled]="field.disabled"/>
+  </clr-input-container>
+  <clr-password-container *ngIf="isPassword(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <input clrPassword [attr.placeholder]="field.desc" [ngModel]="value" (ngModelChange)="update($event)"
+      (blur)="blur.emit(value)" [attr.name]="field.name" [required]="!field.optional" />
+    <clr-control-helper>{{field.desc}}</clr-control-helper>
+  </clr-password-container>
+  <clr-date-container *ngIf="isDate(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <input clrDate [attr.placeholder]="field.desc" type="date" [ngModel]="value" (ngModelChange)="update($event)"
+      (blur)="blur.emit(value)" [attr.name]="field.name" [required]="!field.optional" [disabled]="field.disabled">
+    <clr-control-helper>{{field.desc}}</clr-control-helper>
+  </clr-date-container>
+  <clr-textarea-container *ngIf="isTextArea(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <textarea clrTextarea [attr.placeholder]="field.desc" [ngModel]="value | multiLine" (ngModelChange)="update($event)"
+      (blur)="blur.emit(value)" [attr.name]="field.name" [required]="!field.optional" [disabled]="field.disabled"
+      appAutoResize spellcheck="false"></textarea>
+    <clr-control-helper>{{field.desc}}</clr-control-helper>
+  </clr-textarea-container>
+  <clr-select-container *ngIf="isSelect(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <select clrSelect [attr.placeholder]="field.desc" [(ngModel)]="value" [attr.name]="field.name"
+      (ngModelChange)="update($event)" (blur)="blur.emit(value)" [required]="!field.optional"
+      [disabled]="field.disabled">
+      <option [attr.value]="opt" *ngFor="let opt of field.data">{{opt}}</option>
+    </select>
+  </clr-select-container>
+  <clr-select-container *ngIf="isSelectMulti(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <select clrSelect [attr.placeholder]="field.desc" [(ngModel)]="value" [attr.name]="field.name"
+      (ngModelChange)="update($event)" (blur)="blur.emit(value)" [required]="!field.optional"
+      [disabled]="field.disabled" multiple>
+      <option [attr.value]="opt" *ngFor="let opt of field.data">{{opt}}</option>
+    </select>
+  </clr-select-container>
+  <clr-select-container *ngIf="isSelectObject(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <select clrSelect [attr.placeholder]="field.desc" [(ngModel)]="value" [attr.name]="field.name"
+      (ngModelChange)="update($event)" (blur)="blur.emit(value)" [required]="!field.optional"
+      [disabled]="field.disabled">
+      <option [attr.value]="opt.name" *ngFor="let opt of field.data">{{opt.name}}</option>
+    </select>
+  </clr-select-container>
+  <clr-select-container *ngIf="isSelectORGObject(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <select clrSelect [attr.placeholder]="field.desc" [(ngModel)]="value" [attr.name]="field.name"
+      (ngModelChange)="update($event)" (blur)="blur.emit(value)" [required]="!field.optional"
+      [disabled]="field.disabled">
+      <option [attr.value]="opt.id" *ngFor="let opt of field.data">{{opt.organizationName}}</option>
+    </select>
+  </clr-select-container>
+  <clr-select-container *ngIf="isSelectLOBObject(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <select clrSelect [attr.placeholder]="field.desc" [(ngModel)]="value" [attr.name]="field.name"
+      (ngModelChange)="update($event)" (blur)="blur.emit(value)" [required]="!field.optional"
+      [disabled]="field.disabled">
+      <option [attr.value]="opt.id" *ngFor="let opt of field.data">{{opt.lobName}}</option>
+    </select>
+  </clr-select-container>
+  <div class="multi-select flex-row container" style="padding-top: .5rem;" *ngIf="isMultiSelect(field.type)">
+    <label class="select-label">Robots</label>
+    <ng-select [items]="search" [multiple]="true" bindLabel="name" [groupBy]="field.groupBy" [selectableGroup]="true"
+      [selectableGroupAsModel]="false" [closeOnSelect]="false" [bindValue]="bindValue" [(ngModel)]="value" (blur)="blur.emit(value)"
+      (ngModelChange)="update($event)" [disabled]="field.disabled">
+      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">     
+            <div class="clr-form-control">
+              <div class="clr-control-container ">
+                <div class="clr-checkbox-wrapper">
+                  <input clrcheckbox="" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected">
+                  <label class="clr-control-label" for="clr-form-control-1">{{item[field.groupBy] }}</label>
+                </div>
+              </div>
+            </div>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div class="clr-form-control">
+              <div class="clr-control-container ">
+                <div class="clr-checkbox-wrapper">
+                  <input clrcheckbox="" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected">
+                  <label class="clr-control-label" for="clr-form-control-1">{{item.name}}</label>
+                </div>
+              </div>
+            </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <clr-checkbox-wrapper *ngIf="isBoolean(field.type)" class="container">
+    <input clrCheckbox type="checkbox" [ngModel]="value" (ngModelChange)="update($event)" (blur)="blur.emit(value)"
+      [attr.name]="field.name" [disabled]="field.disabled" />
+    <label [attr.title]="field.desc" class="no-select">{{field.label}}</label>
+  </clr-checkbox-wrapper>
+  <span *ngIf="isInputLabel(field.type)">
+    <label class="label-text">{{field.name}}</label>
+    <span [attr.name]="field.name" class="input-label" [attr.value]="field.value">{{field.label}}</span>
+  </span>
+  <clr-select-container *ngIf="isSelectMultiple(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <select clrSelect [attr.placeholder]="field.desc" [(ngModel)]="value" [attr.name]="field.name"
+      (ngModelChange)="update($event)" (blur)="blur.emit(value)" [required]="!field.optional"
+      [disabled]="field.disabled" multiple>
+      <option [attr.value]="opt" *ngFor="let opt of field.data">{{opt}}</option>
+    </select>
+  </clr-select-container>
+  <div class="clr-row auto-width" *ngIf="isMatMultiSelectSourceTools(field.type)" class="container">
+    <label class="label-text">{{field.label}}</label>
+    <mat-form-field>
+      <mat-select [attr.placeholder]="field.desc" [(value)]="value" [attr.name]="field.name" 
+        [required]="!field.optional"
+        [disabled]="field.disabled" (selectionChange)="onMatMultiSelectSourceTools($event)" multiple>
+        <!-- <mat-option>-- None --</mat-option> -->
+        <mat-optgroup *ngFor="let sourceToolNames of field.data" [label]="sourceToolNames.toolName">
+          <mat-option *ngFor="let projectNames of sourceToolNames.projectNames"
+            [value]="sourceToolNames.toolName+' | '+projectNames">
+            {{projectNames}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <!-- <clr-combobox-container *ngIf="isSelectMultiple(field.type)" class="container">
+    <label>{{field.label}}</label>
+    <clr-combobox [(ngModel)]="value" [attr.name]="field.name" (ngModelChange)="update($event)"
+      (blur)="blur.emit(value)" [required]="!field.optional" [disabled]="field.disabled" clrMulti="true">
+      <ng-container *clrOptionSelected="let value"> {{value?.name}}</ng-container>
+      <clr-options>
+        <clr-option *clrOptionItems="let opt of field.data; " [value]="opt">{{opt}}</clr-option>
+      </clr-options>
+    </clr-combobox>
+  </clr-combobox-container> -->
+</section>

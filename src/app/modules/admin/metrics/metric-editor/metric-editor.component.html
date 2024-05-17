@@ -1,0 +1,401 @@
+<div>
+    <div class="head">
+        <h3 class="title">Manage Metric</h3>
+        <div class="action-buttons" [class.scroll-active]="false">
+            <button type="button" [title]="'Create Metric'" class="btn btn-info-outline" *ngIf="!isAddMetric"
+                (click)="updateMetric($event);">Update</button>
+            <button type="button" [title]="'Create Metric'" class="btn btn-info-outline" 
+             *ngIf="isAddMetric"
+                (click)="addMetric($event);">Add New</button>
+            <button type="button" class="btn btn-warning-outline" (click)="close($event);">Cancel</button>
+        </div>
+    </div>
+    <div class="parent">
+        <form clrForm [formGroup]="metricsForm" class="login" sclrLayout="horizontal">
+            <div class="table-responsive">
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <clr-input-container>
+                                    <label>Metric Name</label>
+                                    <input type="text" name="metricName" clrInput placeholder="Metric Name"
+                                        minlength="3" maxlength="64"
+                                        formControlName ="metricName"/>
+                                </clr-input-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-select-container>
+                                    <label>Category</label>
+                                    <select clrSelect name="Category" placeholder="Category"
+                                    formControlName ="category">
+                                        <option value="">-------Select a category-------</option>
+                                        <option *ngFor="let metricCategoryval of metricCategoryObjects" value="{{ metricCategoryval.dropDownValue }}">{{metricCategoryval.dropDownValue}}</option>
+                                        <!-- <option value="Requirements">Requirements</option>
+                                        <option value="Design">Design</option>
+                                        <option value="Execution">Execution</option>
+                                        <option value="Story">Story</option>
+                                        <option value="Defects">Defects</option> -->
+                                    </select>
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-radio-container clrInline (change)="onChangeRadiobutton($event,'customfunction')">
+                                    <label>Custom Function</label>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="customFunction" required value="Yes"
+                                        formControlName ="customFunction" />
+                                        <label>Yes</label>
+                                    </clr-radio-wrapper>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="customFunction" required value="No"
+                                        formControlName ="customFunction" />
+                                        <label>No</label>
+                                    </clr-radio-wrapper>
+                                </clr-radio-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-select-container *ngIf="this.metricsForm.controls['customFunction'].value ==='Yes'">
+                                    <label>Custom FunctionName</label>
+                                    <select clrSelect name="customFunctionName" placeholder="Custom FunctionName"
+                                    formControlName ="customFunctionName">
+                                        <option value="">-------Select a CustomFunctionName-------</option>
+                                        <option *ngFor="let metricCustomNameVal of metricCustomNameObjects" value="{{ metricCustomNameVal.dropDownValue }}">{{metricCustomNameVal.dropDownValue}}</option>
+                                        <!-- <option value="jira_defect_ageing">jira_defect_ageing</option>
+                                        <option value="jira_defect_ageing_by_drops">jira_defect_ageing_by_drops</option> -->
+                                    </select>
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-input-container *ngIf="this.metricsForm.controls['customFunction'].value ==='Yes'">
+                                    <label>Custom Params</label>
+                                    <input type="text" name="customParams" clrInput placeholder="Custom Params"
+                                        minlength="3" maxlength="64" formControlName="customParams"/>
+                                </clr-input-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-select-container *ngIf="this.metricsForm.controls['customFunction'].value ==='No'">
+                                    <label>Calculation Type</label>
+                                    <select clrSelect name="calculationType" placeholder="Calculation Type"
+                                        formControlName="calculationType">
+                                        <option value="">-------Select a calculation type-------</option>
+                                        <option *ngFor="let metricCalculationTypeVal of metricCalculationTypeObjects" value="{{ metricCalculationTypeVal.dropDownValue }}">{{metricCalculationTypeVal.dropDownValue}}</option>
+                                        <!-- <option value="percentage">Percentage</option>
+                                        <option value="N/A">N/A</option> -->
+                                    </select>
+                                    <!-- <clr-control-error *clrIfError="'required'">This is a required field</clr-control-error> -->
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <!-- <clr-input-container *ngIf="metric.customfunction==='No'">
+                                    <label>ToolType</label>
+                                    <input type="text" name="toolType" clrInput placeholder="Tool Type" minlength="3"
+                                        maxlength="64" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="metric.toolType" />
+                                </clr-input-container> -->
+                                <clr-select-container *ngIf="this.metricsForm.controls['customFunction'].value ==='No'">
+                                    <label>Tool Type</label>
+                                    <select clrSelect name="toolType" placeholder="Tool Type"
+                                        (change)="ontoolTypeSelected($event,0,0,0)" formControlName="toolType">
+                                        <option value="">-------Select a ToolType-------</option>
+                                        <option *ngFor="let datasourceval of dataSource" [value]="datasourceval.name">{{datasourceval.name}}
+                                        </option>
+                                    </select>
+                                    <!-- <clr-control-error *clrIfError="'required' && this.metricsForm.controls['customfunction'].value ==='No'">This is a required field</clr-control-error> -->
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-radio-container clrInline (change)="onChangeRadiobutton($event,'grouping')" *ngIf="this.metricsForm.controls['customFunction'].value ==='No'">
+                                    <label>Grouping</label>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="grouping" required value="Yes"
+                                            formControlName="grouping"/>
+                                        <label>Yes</label>
+                                    </clr-radio-wrapper>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="grouping" required value="No"
+                                            formControlName="grouping" />
+                                        <label>No</label>
+                                    </clr-radio-wrapper>
+                                    <!-- <clr-control-error *clrIfError="'required' && this.metricsForm.controls['customfunction'].value ==='No'">This is a required field</clr-control-error> -->
+                                </clr-radio-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <!-- <clr-input-container *ngIf="metric.grouping==='Yes'">
+                                    <label>Group By</label>
+                                    <input type="text" name="groupBy" clrInput placeholder="Group By" minlength="3"
+                                        maxlength="64" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="metric.groupBy" />
+                                </clr-input-container> -->
+                                <clr-select-container *ngIf="this.metricsForm.controls['grouping'].value ==='Yes'">
+                                    <label>Group By</label>
+                                    <select clrSelect name="groupBy" placeholder="Group By"
+                                    formControlName="groupBy">
+                                        <option value="">-------Select a Group By-------</option>
+                                        <option *ngFor="let IssueTypeArrGroupByVal of IssueTypeArrGroupBy" [value]="IssueTypeArrGroupByVal">{{IssueTypeArrGroupByVal}}
+                                        </option>
+                                    </select>
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-input-container *ngIf="this.metricsForm.controls['grouping'].value ==='Yes'">
+                                    <label>Group Value</label>
+                                    <input type="text" name="groupValue" clrInput placeholder="Group Value"
+                                        minlength="3" maxlength="64" formControlName="groupValue" />
+                                </clr-input-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-radio-container clrInline (change)="onChangeRadiobutton($event,'trending')" *ngIf="this.metricsForm.controls['customFunction'].value ==='No'">
+                                    <label>Trending</label>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="trending" required value="Yes"
+                                            formControlName="trending"/>
+                                        <label>Yes</label>
+                                    </clr-radio-wrapper>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="trending" required value="No"
+                                            formControlName="trending" />
+                                        <label>No</label>
+                                    </clr-radio-wrapper>
+                                </clr-radio-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <!-- <clr-input-container *ngIf="metric.trending==='Yes'">
+                                    <label>Trend By</label>
+                                    <input type="text" name="trendBy" clrInput placeholder="Trend By" minlength="3"
+                                        maxlength="64" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="metric.trendBy" />
+                                </clr-input-container> -->
+                                <clr-select-container *ngIf="this.metricsForm.controls['trending'].value ==='Yes'">
+                                    <label>Trend By</label>
+                                    <select clrSelect name="trendBy" placeholder="Trend By"
+                                    formControlName="trendBy">
+                                        <option value="">-------Select a Trend By-------</option>
+                                        <option *ngFor="let IssueTypeArrTrendByVal of IssueTypeArrTrendBy" [value]="IssueTypeArrTrendByVal">{{IssueTypeArrTrendByVal}}
+                                        </option>
+                                    </select>
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <!-- <clr-input-container *ngIf="metric.trending==='Yes'">
+                                    <label>Trend Field</label>
+                                    <input type="text" name="trendingField" clrInput placeholder="Trend Field"
+                                        minlength="3" maxlength="64" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="metric.trendingField" />
+                                </clr-input-container> -->
+                                <clr-select-container *ngIf="this.metricsForm.controls['trending'].value ==='Yes'">
+                                    <label>Trend Field</label>
+                                    <select clrSelect name="trendingField" placeholder="Trend Field"
+                                    formControlName="trendingField">
+                                        <option value="">-------Select a TrendField-------</option>
+                                        <option *ngFor="let metricTrendFieldVal of metricTrendFieldObjects" value="{{ metricTrendFieldVal.dropDownValue }}">{{metricTrendFieldVal.dropDownValue}}</option>
+                                    </select>
+                                </clr-select-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-input-container *ngIf="this.metricsForm.controls['trending'].value ==='Yes'">
+                                    <label>Trend Count</label>
+                                    <input type="number" name="trendCount" clrInput placeholder="Trend Count"
+                                        minlength="3" maxlength="64" formControlName="trendCount" />
+                                </clr-input-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="clr-form-control" *ngIf="this.metricsForm.controls['customFunction'].value ==='No'">
+                                    <label class="clr-control-label" style="padding-left: 0!important"><span>Formula
+                                            <clr-icon shape="info-standard"
+                                                title="To define variable maintain prefix & postfix as $ (e.g) $variable$">
+                                            </clr-icon>
+                                        </span></label>
+                                    <div class="clr-control-container">
+                                        <div class="clr-input-wrapper">
+                                            <input type="text" id="basic" minlength="3" maxlength="64" name="formula"
+                                                style="width: 400px; height: 10px" class="clr-input"
+                                                placeholder="Formula" formControlName="formula"
+                                                [readonly]="isFormulaReadOnly">
+                                            <span *ngIf="editformula" style="margin-left: 2%;">
+                                                <clr-icon shape="pencil" title="Edit Formula"
+                                                    (click)="FormulaEdit($event);"></clr-icon>
+                                            </span>
+                                            <u *ngIf="!editformula" title="Configure Parameters"
+                                                style="margin-left: 2%;" (click)="selectedFormData($event);">Config</u>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div *ngIf="parameterdiv && this.metricsForm.controls['customFunction'].value==='No'"
+                                    style="margin-top: 2%;margin-left: 16%;flex-direction: column">
+                                    <label><u>Parameters:</u></label>
+                                    <div *ngFor="let variable of variablesList">
+                                        <clr-select-container style="padding-left: 5%">
+                                            <label>{{ variable.label}}</label>
+                                            <clr-icon shape="angle" direction="down"></clr-icon>
+                                            <select clrSelect [formControlName]="variable.modelName"
+                                                (change)="createFormArraydata(variable.modelName,variable.modelArrName,'firstfunctionselect',0,variable.label)"
+                                                placeholder="aggregate">
+                                                <option value="0">-------Select a Function-------</option>
+                                                <option *ngFor="let metricFunctionVal of metricFunctionObjects" value="{{ metricFunctionVal.dropDownValue }}">{{metricFunctionVal.dropDownValue}}</option>
+                                                <!-- <option value="countAnd">CountAnd</option>
+                                                <option value="count">Count</option> -->
+                                            </select>
+                                        </clr-select-container>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length" class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">collection</label>
+                                            <select placeholder="Data Source" (change)="ondataSourceSelected($event,variable.modelName,variable.label)"
+                                            [formControlName]= "variable.datasource">
+                                                <option value="0">-------Select a data source-------</option>
+                                                <option *ngFor="let datasourceval of dataSource" [value]="datasourceval.name">{{datasourceval.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='sum' || this.metricsForm.controls[variable.modelName].value ==='sumAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">sum_field</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumField">
+                                                <option value="0">-------Select a sum_field-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumField']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='avg' || this.metricsForm.controls[variable.modelName].value ==='avgAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">avg_field</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumField">
+                                                <option value="0">-------Select a avg_field-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumField']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='max' || this.metricsForm.controls[variable.modelName].value ==='maxAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">max_field</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumField">
+                                                <option value="0">-------Select a max_field-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumField']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='min' || this.metricsForm.controls[variable.modelName].value ==='minAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">min_field</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumField">
+                                                <option value="0">-------Select a min_field-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumField']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='sumISO' || this.metricsForm.controls[variable.modelName].value ==='sumISOAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">sum_field</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumField">
+                                                <option value="0">-------Select a sum_field-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumField']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='sumISODiff' || this.metricsForm.controls[variable.modelName].value ==='sumISODiffAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">field1</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumField">
+                                                <option value="0">-------Select a field1-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumISODiff']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="getControlCount(variable.modelName)?.length && (this.metricsForm.controls[variable.modelName].value ==='sumISODiff' || this.metricsForm.controls[variable.modelName].value ==='sumISODiffAnd')"
+                                            class="clr-select-wrapper" style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <label style="padding-left: 5%;">field2</label>
+                                            <select placeholder="Sum Field" [formControlName]="variable.sumISODiff">
+                                                <option value="0">-------Select a field2-------</option>
+                                                <option *ngFor="let objsumval of dataSourceArrData[variable.label+'sumISODiffField']" [value]="objsumval">{{objsumval}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="row" *ngIf="getControlCount(variable.modelName)?.length"  
+                                            [formArrayName]="variable.modelArrName" class="clr-form-control"
+                                            style="margin-top: 2%;margin-left: 30%;flex-direction: column">
+                                            <div
+                                            *ngFor="let email of this.metricsForm.get(variable.modelArrName)['controls']; let i = index"
+                                            [formGroupName]="i" style="width:25%">
+                                            <tr>
+                                                <td>
+                                                    <div class="clr-select-wrapper"
+                                                        *ngIf="this.metricsForm.controls[variable.modelName].value ==='countAnd' || this.metricsForm.controls[variable.modelName].value ==='sumAnd' || this.metricsForm.controls[variable.modelName].value ==='avgAnd' 
+                                                         || this.metricsForm.controls[variable.modelName].value ==='maxAnd' || this.metricsForm.controls[variable.modelName].value ==='minAnd'
+                                                         || this.metricsForm.controls[variable.modelName].value ==='sumISOAnd'
+                                                         || this.metricsForm.controls[variable.modelName].value ==='sumISODiffAnd'">
+                                                        <select placeholder="IssueType1" [formControlName]="createModelName(variable.modelName,'drop')"
+                                                            class="form-control">
+                                                            <option value="0">-------Select a field-------</option>
+                                                            <option *ngFor="let issuetypearr of dataSourceArrData[variable.label+'DropdownVal']" [value]="issuetypearr">
+                                                                {{issuetypearr}}</option>
+                                                        </select>
+                                                        <input type="text" [formControlName]="createModelName(variable.modelName,'text')" class="clr-input"
+                                                            style="margin-left: 5%" placeholder="value">
+                                                        <span *ngIf="i===0" style="margin-left: 2%;">
+                                                            <clr-icon shape="plus" size="20" title="Add Row"
+                                                                (click)="addFormArraydata(variable.modelName,variable.modelArrName,selecteddataSource,i, variable.label);">
+                                                            </clr-icon>
+                                                        </span>
+                                                        <span *ngIf="i>0" style="margin-left: 2%;">
+                                                            <clr-icon shape="minus" size="20" title="Remove Row" (click)="removeFormArraydata(variable.modelArrName,i);">
+                                                            </clr-icon>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <clr-textarea-container *ngIf="this.metricsForm.controls['customFunction'].value==='No'">
+                                    <label>Parameters Definition</label>
+                                    <textarea clrTextarea name="metricParameters" (focus)="focusNewFunction()"
+                                        formControlName="formulaParams" placeholder="Parameters Definition" rows="15"
+                                        [value]="myJsonString"></textarea>
+                                        <!-- <clr-control-error *clrIfError="'required' && this.metricsForm.controls['customfunction'].value ==='No'">This is a required field</clr-control-error> -->
+                                </clr-textarea-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </form>
+    </div>
+</div>

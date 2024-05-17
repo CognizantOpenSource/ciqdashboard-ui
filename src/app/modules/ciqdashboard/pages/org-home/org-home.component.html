@@ -1,0 +1,69 @@
+<div class="contents flex-col">
+  <div class="flex-col clr-col-xl-11  clr-col-lg-11  clr-col-md-11 clr-col-sm-12" style="max-height: calc(100vh - 60px);padding-bottom: 5px;">
+    <div class="head flex-row">
+      <div class="title">
+        <h3>ORGs</h3>
+      </div>
+      <div class="options" style="padding-top: 10px;">
+        <div>
+          <div class="search flex-row" style="padding-top: 2px;position: relative;">
+            <clr-icon shape="search" style="margin-top: 9px;position: absolute;left:12px;"></clr-icon>
+            <clr-input-container style="margin: 0 6px;">
+              <input clrInput placeholder="search ORG" name="search-org" [(ngModel)]="searchBy"
+                style="padding-left: 28px;min-height: 1.5rem!important;" />
+            </clr-input-container>
+          </div>
+          <button class="btn btn-link" [routerLink]="['./','new']" [queryParams]="{category: 'orgs'}" style="min-width: 2rem;" title="New ORG">
+            <clr-icon shape="add-text" size="24"></clr-icon><span class="clr-hidden-md-down">New ORG</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="main-content projects clr-row" *ngIf="orgs$|async as orgs">
+      <div class="clr-col-lg-4 clr-col-md-6 clr-col-12" *ngFor="let org of orgs | callback:orgsFilter">
+        <div class="card">
+          <div class="card-header ellipsis" title="{{org.organizationName}}">
+            {{org.organizationName}}
+          </div>
+          <div class="card-block">
+            <div class="card-text ellipsis">
+              {{org.organizationDesc}}
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm btn-link" [routerLink]="['../' , org.id , 'dashboards']" [queryParams]="{category: 'org',id:org.id }">DashBoards</button>
+            <!-- <button class="btn btn-sm btn-link" (click)="showSettings(org)">Settings</button> -->
+            <!-- <button class="btn btn-sm btn-link" (click)="showTeams(org)">LOBs</button> -->
+            <button class="btn btn-sm btn-link" [routerLink]="['../lobs']"
+            [queryParams]="{orgId: org.id }">LOBs</button>
+            <button class="btn btn-sm btn-link btn-warning" (click)="delete(org)">Delete</button>
+            <!-- <clr-icon shape="file-settings"></clr-icon> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<clr-modal [clrModalOpen]="teamsProject && allTeams && allTeams.length"
+  (clrModalOpenChange)="teamsProject = false;" [clrModalStaticBackdrop]="false" [clrModalSize]="'md'">
+  <span class="modal-title">Select LOBs</span>
+  <div class="modal-body flex-col" style="overflow: hidden;">
+    <div class="flex-col team-selection-container full">
+      <clr-datagrid *ngIf="allTeams && allTeams.length" class="data-grid" [(clrDgSelected)]="selectedTeams"
+        [clrDgRowSelection]="true">
+        <clr-dg-column>LOB
+          <clr-dg-string-filter [clrDgStringFilter]="teamNameFilter"></clr-dg-string-filter>
+        </clr-dg-column>
+        <clr-dg-row *clrDgItems="let team of allTeams" [clrDgItem]="team">
+          <clr-dg-cell>{{ team.lobName }}</clr-dg-cell>
+        </clr-dg-row>
+        <clr-dg-footer>{{allTeams.length}} LOBs</clr-dg-footer>
+      </clr-datagrid>
+    </div>
+  </div>
+  <div class="modal-footer">    
+    <!-- <button type="button" class="btn btn-outline" (click)="updateTeamsMapping(teamsProject)">Update</button> -->
+</div>
+</clr-modal>

@@ -1,0 +1,39 @@
+<app-container>
+  <div class="stage">
+    <div class="stage-container  clr-col-12 clr-col-md-10	clr-col-lg-8">
+        <form clrForm [formGroup]="form">
+      <div class="title">
+        <h3>Create LOB</h3>
+      </div>
+      <div class="content cle-col-12">        
+          <div class="alert-container" *ngIf="duplicateProject.state">
+            <clr-alert clrAlertType="danger" [clrAlertAppLevel]="false" style="width: 100%;">
+              <clr-alert-item>
+                <span class="alert-text">
+                  LOB with the name '{{duplicateProject.value}}' already exist, Please select another name!
+                </span>
+              </clr-alert-item>
+            </clr-alert>
+          </div>
+          <app-card class="content-source" title="New LOB">
+            <app-dynamic-input *ngFor="let param of params" [field]="param" [(value)]="project[param.name]"
+              (blur)="blur(param,$event)" [formControlName]="param.name"></app-dynamic-input>
+              <!-- <clr-select-container>
+                <label>Organization</label>
+                <select clrSelect name="options" [(ngModel)]="options">
+                  <option value="one">ORG 1</option>
+                  <option value="two">ORG 2</option>
+                  <option value="three">ORG 3</option>
+                </select>
+              </clr-select-container> -->
+          </app-card>
+      </div>
+      <div class="footer" [class.scroll-active]="false">
+        <button type="submit" class="btn btn-primary-outline" (click)="create($event);"
+          [disabled]="duplicateProject.state">Create</button>
+        <button type="button" class="btn btn-warning-outline" (click)="closed($event);">Cancel</button>
+      </div>      
+    </form>
+    </div>
+  </div>
+</app-container>

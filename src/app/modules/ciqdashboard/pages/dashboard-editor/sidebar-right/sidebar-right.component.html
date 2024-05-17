@@ -1,0 +1,75 @@
+<section class="editor-panel item-editor full" *ngIf="data else gridConfigTpl">
+    <clr-tabs class="item-editor-tab full">
+        <clr-tab *ngIf="data.type !== data.itemGroup">
+            <button clrTabLink>Edit Options</button>
+            <ng-template [clrIfActive]="!tab || tab === 'edit'" (clrIfActiveChange)="tabChange('edit' , $event)">
+                <clr-tab-content>
+                    <ng-container *ngTemplateOutlet="editOptionsTpl"></ng-container>
+                </clr-tab-content>
+            </ng-template>
+        </clr-tab>
+        <clr-tab>
+            <button clrTabLink>
+                <ng-container [ngSwitch]="data.itemGroup">
+                    <ng-container *ngSwitchCase="'datalabel'">Labels</ng-container>
+                    <ng-container *ngSwitchCase="'dataimg'">Images</ng-container>
+                    <ng-container *ngSwitchCase="'datatable'">Tables</ng-container>
+                    <ng-container *ngSwitchDefault>Charts</ng-container>
+                </ng-container>
+            </button>
+            <ng-template [clrIfActive]="tab === 'new'" (clrIfActiveChange)="tabChange('new' , $event)">
+                <clr-tab-content>
+                    <ng-container *ngTemplateOutlet="newItemTpl"></ng-container>
+                </clr-tab-content>
+            </ng-template>
+        </clr-tab>
+    </clr-tabs>
+</section>
+<ng-template #editOptionsTpl>
+    <app-item-options-editor class="tab-content flex-col full" [params]="params.options" [data]="data.options"
+        (dataChange)="onItemOptionsChange($event)"></app-item-options-editor>
+</ng-template>
+<ng-template #newItemTpl>
+    <div class="new-item-selection flex-col full">
+        <div class="title flex-row">
+            <span class="name">Select an item</span>
+            <div class="options">
+                <span *ngIf="!data.itemGroup || data.itemGroup === 'datachart' || data.itemGroup === 'datatable'"
+                    class="is-link" [routerLink]="['./create-chart']" 
+                    [queryParams]="{ itemGroup : data.itemGroup || data.type,category: category,dashboardId:dashboardId,layerId:layerId}">
+                    <clr-icon shape="plus-circle" size="24"></clr-icon>
+                </span>
+                <span *ngIf="data.itemGroup === 'datalabel'" class="is-link" [routerLink]="['create-label']"
+                [queryParams]="{ itemGroup : data.itemGroup || data.type,category: category,dashboardId:dashboardId,layerId:layerId}">
+                    <clr-icon shape="plus-circle" size="24"></clr-icon>
+                </span>
+                <span *ngIf="data.itemGroup === 'dataimg'" class="is-link" [routerLink]="['create-img']"
+                [queryParams]="{ itemGroup : data.itemGroup || data.type,category: category,dashboardId:dashboardId,layerId:layerId}">
+                    <clr-icon shape="plus-circle" size="24"></clr-icon>
+                </span>
+            </div>
+        </div>
+        <div class="search">
+            <input type="text" [(ngModel)]="searchItemText">
+        </div>
+        <app-grouped-item class="flex-col full" [groupBy]="'sourceGroup'" sidebarView="true" [canEdit]="true"
+            canRemove="true" [filterValue]="searchItemText" [filterBy]="filterItemBy" [items]="filteredCharts"
+            (itemSelect)="selectItem($event)" (itemRemove)="removeItem($event)" (itemEdit)="editItem($event)">
+        </app-grouped-item>
+    </div>
+</ng-template>
+<ng-template #gridConfigTpl>
+    <section class="editor-panel grid-editor full flex-col">
+        <div class="title flex-row">
+            <span class="name">Grid Config</span>
+        </div>
+        <div style="flex-grow: 1;" *ngIf="gridConfig">
+            <clr-input-container *ngFor="let param of gridConfigParams" class="flex-col">
+                <label>{{param.label}}</label>
+                <input placeholder="{{param.label}}" name="gridConfig_{{param.name}}" clrInput
+                    [ngModel]="gridConfig[param.name]" (ngModelChange)="onGridConfigChange(param,$event)" type="number"
+                    min="0" required />
+            </clr-input-container>
+        </div>
+    </section>
+</ng-template>

@@ -1,27 +1,91 @@
-# CIQDashboardUI
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.6.
+# CIQDashboard UI
 
-## Development server
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+![Node version= 14.21.3](https://img.shields.io/badge/Node_version-14.21.3_or_above-brightgreen?style=flat-square)
+![Angular CLI version= 8.3.29](https://img.shields.io/badge/Angular_CLI_version-8.3.29_or_above-brightgreen?style=flat-square)
+![MongoDB server version= 4.0 or above](https://img.shields.io/badge/MongoDB_Server-4.0_or_above-brightgreen?style=flat-square)
 
-## Code scaffolding
+[Requirements](#requirements) • [Properties](#properties) • [Run Locally](#run-locally) • [Contributing](#contributing) • [Related](#related)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This is visual representation for charts from derived and raw data powered by NGX and Fusion charts.
+## Requirements
 
-## Build
+- Node 14.0 or above
+- Angular CLI 8.3.29 or above
+- MongoDB Server 4.0 or above
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Properties
 
-## Running unit tests
+In order to run this project, you must install all the packages which can be found under packages.json
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+To install, open [src] folder and give and it will install all the packages
 
-## Running end-to-end tests
+`npm install`
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Run Locally
 
-## Further help new changes
+Clone the project
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```bash
+  git clone https://github.com/CognizantCodeHub/ciqdashboard-ui
+```
+
+Go to the project directory
+
+```bash
+  cd ciqdashboard-ui
+```
+
+Build the project
+
+```bash
+  ng build
+```
+
+Start the application
+
+```bash
+  ng serve
+```
+
+## Contributing
+
+Contributions are always welcome!
+
+See `CONTRIBUTING.md` for ways to get started.
+
+Please adhere to this project's `code of conduct`.
+
+## Related
+
+Here are some related projects
+
+[CIQDashboard Jira Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-jira.git)
+
+[CIQDashboard API](https://github.com/CognizantCodeHub/ciqdashboard-api)
+
+[CIQDashboard Metric Services](https://github.com/CognizantCodeHub/ciqdashboard-metric-services)
+
+[CIQDashboard Auth](https://github.com/CognizantCodeHub/ciqdashboard-auth)
+
+[CIQDashboard ALM Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-alm)
+
+[CIQDashboard Jira(cloud) Collector](https://github.com/CognizantCodeHub/IPR000025_ciqdashboard-collector-jira-cloud)
+
+[CIQDashboard Jira+Zephyr(cloud) Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-jira-zephyr-cloud)
+
+[CIQDashboard Jira+Zephyr(On Premise) Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-jira-zephyr)
+
+[CIQDashboard Rally Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-rally)
+
+[CIQDashboard Jenkins Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-jenkins)
+
+[CIQDashboard GitHub Collector](https://github.com/CognizantCodeHub/ciqdashboard-collector-github)
+
+[CIQDashboard ServiceNow Collector](https://github.com/CognizantCodeHub/IPR000025_ciqdashboard-collector-servicenow)
+
+## License
+
+[To edit](https://choosealicense.com/licenses/)

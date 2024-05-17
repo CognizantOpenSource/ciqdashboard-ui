@@ -1,0 +1,24 @@
+<div>
+    <!-- <h4 style="text-align: center">
+        <button class="btn btn-link" [class.active]="sumBy === 'Size'" (click)="treemapProcess('Size')">
+            By Size
+        </button>
+    </h4> -->
+    <div>
+        <ng-container *ngFor="let item of treemapPath; let last = last">
+          <button class="btn btn-link" [class.active]="last" [disabled]="last" (click)="treemapSelect(item)">
+            {{ item.name }}
+          </button>
+          <span *ngIf="!last"> / </span>
+        </ng-container>
+    </div>
+    <ngx-charts-tree-map class="x-chart"
+        [scheme]="colorScheme"
+        [results]="treemap"
+        [animations]="chartconfig.animations"
+        [tooltipDisabled]="chartconfig.tooltipDisabled"
+        [gradient]="chartconfig.gradient"
+        (select)="treemapSelect($event)"
+    >
+    </ngx-charts-tree-map>
+</div>
