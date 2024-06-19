@@ -1,0 +1,50 @@
+<div>
+  <div class="head">
+    <h3 class="title">Metrics</h3>
+    <!-- <div class="action-buttons" [class.scroll-active]="false">
+        <button type="button" class="btn btn-success-outline" (click)="addRole($event);">Add New</button>
+        <button type="button" class="btn btn-warning-outline" (click)="deleteRole($event);">Delete</button>
+      </div> -->
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button type="button" class="btn btn-success-outline" (click)="addMetricConfig($event);">Add New</button>
+      <button type="button" class="btn btn-warning-outline" (click)="deleteMetrics($event);" [(disabled)]="deleteMetricsFlag">Delete</button>
+    </div>
+  </div>
+  <clr-datagrid *ngIf="metrics" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+    (clrDgSelectedChange)="selectionChanged($event)">
+    <clr-dg-column>Metric Name
+      <clr-dg-string-filter [clrDgStringFilter]="metricNameFilter"></clr-dg-string-filter>
+    </clr-dg-column>
+    <clr-dg-column>Category</clr-dg-column>
+    <clr-dg-column>Calculation Type</clr-dg-column>
+    <clr-dg-column>Formula</clr-dg-column>
+    <clr-dg-row *clrDgItems="let metric of metrics" [clrDgItem]="metric" [(clrDgSelected)]="metric.selected">
+      <clr-dg-cell><a clrVerticalNavLink [routerLink]="['/admin/metrics/', metric.id, 'edit']">{{  metric.metricName }}</a>
+        <!-- <a clrVerticalNavLink [routerLink]="['/admin/roles/', role.name, 'edit']">{{ role.metricName }}</a> -->
+      </clr-dg-cell>
+      <clr-dg-cell>{{ metric.category }}</clr-dg-cell>
+      <clr-dg-cell>{{ metric.calculationType }}</clr-dg-cell>
+      <clr-dg-cell>
+        <clr-tree>
+          <clr-tree-node [clrExpanded]="metric.expanded">{{ metric.formula }}
+            <!-- <clr-tree-node [clrExpanded]="false">
+              <pre><p style="margin-top:0px"><u>Parameters:</u> {{ metric.formulaParams | json}} </p></pre>
+            </clr-tree-node> -->
+            <clr-tree-node [clrExpanded]="true"><u><b>Parameters Definition:</b></u>
+              <clr-tree-node [clrExpanded]="true" *ngFor="let key1 of metric.formulaParams;let i=index">
+                {{ key1['key'] }} <span *ngIf="!checkIfArray(key1['value'])">: {{key1['value']}}</span>
+                <clr-tree-node [clrExpanded]="true" *ngFor="let key2 of key1['value'];let j=index">
+                  {{ key2['key'] }} <span *ngIf="!checkIfArray(key2['value'])">: {{key2['value']}}</span>
+                  <clr-tree-node [clrExpanded]="true" *ngFor="let key3 of key2['value'];let k=index">
+                    {{ key3['key'] }} <span *ngIf="!checkIfArray(key3['value'])">: {{key3['value']}}</span>
+                  </clr-tree-node>
+                </clr-tree-node>
+              </clr-tree-node>
+            </clr-tree-node>
+          </clr-tree-node>
+        </clr-tree>
+      </clr-dg-cell>
+    </clr-dg-row>
+    <clr-dg-footer>{{metrics.length}} metrics</clr-dg-footer>
+  </clr-datagrid>
+</div>

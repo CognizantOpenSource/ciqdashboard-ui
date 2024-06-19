@@ -1,0 +1,26 @@
+<div class="main-container-class" data-theme="default">
+  <div class="content-container">
+    <clr-vertical-nav class="vertical-nav">
+      <a clrVerticalNavLink [routerLink]="['/admin/users']" routerLinkActive="active">
+        <clr-icon shape="user" class="is-solid"></clr-icon>Users
+      </a>
+      <div class="nav-divider"></div>
+      <a clrVerticalNavLink [routerLink]="['/admin/roles']" routerLinkActive="active">
+        <clr-icon shape="id-badge" class="is-solid"></clr-icon>Roles
+      </a>
+      <div class="nav-divider"></div>
+      <a clrVerticalNavLink [routerLink]="['/admin/teams']" routerLinkActive="active">
+        <clr-icon shape="users" class="is-solid"></clr-icon>Teams
+      </a>
+      <a clrVerticalNavLink [routerLink]="['/admin/metrics']" routerLinkActive="active">
+        <clr-icon shape="cog" class="is-solid"></clr-icon>Metrics
+      </a>
+      <a clrVerticalNavLink [routerLink]="['/admin/templates']" routerLinkActive="active">
+        <clr-icon shape="file-group" class="is-solid"></clr-icon>Templates
+      </a>
+    </clr-vertical-nav>
+    <div class="content-area-class">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

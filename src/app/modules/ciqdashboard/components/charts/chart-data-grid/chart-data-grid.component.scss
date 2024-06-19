@@ -1,0 +1,28 @@
+#datagridtable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #datagridtable td, #datagridtable th {
+    border: 1px solid #ddd;
+    font-weight:bold;
+    padding: 2px;
+    text-align: center;
+  }
+  
+  #datagridtable tr:nth-child{
+      background-color: #f2f2f2;
+    }
+  
+  #datagridtable tr:hover {
+      background-color: #ddd;
+    }
+  
+  #datagridtable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #00008B;
+    color: white;
+  }

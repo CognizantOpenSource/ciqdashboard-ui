@@ -1,0 +1,167 @@
+/* © [2021] Cognizant. All rights reserved.
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+    http://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. */
+:host /deep/ .clr-input-wrapper,
+:host /deep/ .clr-select-wrapper, 
+:host /deep/ .ng-value-container {
+  display: flex;
+  border-radius: 4px;
+  background-color: var(--bg1);
+  min-height: 1.3rem !important;
+}
+
+.container {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  min-height: 1.3rem !important;
+}
+
+.container label {
+  text-align: right;
+  font-size: 12px;
+  color: var(--fg1);
+  padding-right: .5rem;
+}
+.select-label{
+  align-self: center;
+}
+
+input,
+select,
+.clr-input-group {
+  color: var(--fg1);
+}
+
+select,
+input,
+textarea,
+:host /deep/ .clr-input-group,
+:host /deep/ .clr-select-wrapper {
+  width: 100%;
+  padding-right: 2px;
+  min-height: 1.3rem !important;
+}
+
+:host /deep/ .clr-control-container {
+  flex: 1;
+  min-height: 1.3rem !important;
+}
+
+:host /deep/ .clr-input-group-icon-action clr-icon {
+  margin: 0px 0px 0px -16px;
+  color: var(--fg1);
+}
+
+:host /deep/ .clr-input-group-icon-action:focus {
+  outline: none;
+}
+
+:host /deep/ .clr-input:not([readonly]),
+:host /deep/ .clr-input-group,
+:host /deep/ .clr-select-wrapper select {
+  background-position: center;
+}
+
+:host /deep/ .clr-checkbox-wrapper {
+  margin-left: calc(16.7% + 1rem);
+  padding-top: 0.25rem;
+  width: calc(100% - 16.7% - 2rem);
+}
+
+:host /deep/ .clr-checkbox-wrapper input[type="checkbox"] + label::after {
+  height: 0.16rem;
+  width: 0.28rem;
+  top: 0.08rem;
+}
+
+:host /deep/ .clr-checkbox-wrapper input[type="checkbox"] + label::before {
+  top: 0.066665rem;
+}
+
+:host /deep/ .clr-checkbox-wrapper .clr-control-label {
+  font-weight: 500;
+  padding-left: 1.25rem;
+}
+
+:host /deep/ .ng-autocomplete {
+  width: 100% !important;
+}
+
+:host /deep/ .autocomplete-container {
+  border-radius: 4px;
+  max-height: 1.3rem !important;
+  width: calc(100% - 1rem);
+  border-bottom: none;
+  box-shadow: none;
+  margin-top: 0.6rem !important;
+}
+
+:host /deep/ .autocomplete-container .input-container input {
+  border-radius: 4px;
+  max-height: 1.3rem !important;
+  width: 100%;
+  border-bottom: none;
+  background-position: center;
+  font-size: 0.541667rem;
+  padding: 5px;
+}
+
+:host /deep/ .autocomplete-container .input-container .x i {
+  font-size: 16px;
+  color: var(--fg1);
+  opacity: 0.75;
+}
+
+:host /deep/ .container label {
+  font-weight: 600;
+  padding-right: 0;
+}
+
+:host /deep/ .autocomplete-container .suggestions-container ul li a {
+  padding: 4px 0 4px 5px;
+  font-size: 12px;
+  background: var(--bg2);
+  color: var(--fg1);
+}
+:host /deep/ .autocomplete-container .suggestions-container ul li a:hover {
+  background: var(--bg3);
+}
+:host /deep/ clr-textarea-container .clr-control-container {
+  padding-right: 6px;
+}
+
+.input-label {
+  padding: 0.5em 1em 0.5em 1em;
+  font-size: 12px;
+  background: var(--bg1);
+  color: var(--fg1);
+  opacity: 0.85;
+  border-radius: 4px;
+  margin-left: 0.5em;
+}
+
+.label-text {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--fg1);
+}
+
+:host /deep/ .mat-form-field {
+  width: 100% !important;
+}
+
+:host /deep/ .mat-select-value {
+  max-width: 100%;
+  width: 100%;
+}

@@ -1,0 +1,39 @@
+<div>
+  <div class="head">
+    <h3 class="title">Templates</h3>
+    <!-- <div class="action-buttons" [class.scroll-active]="false">
+        <button type="button" class="btn btn-success-outline" (click)="addRole($event);">Add New</button>
+        <button type="button" class="btn btn-warning-outline" (click)="deleteRole($event);">Delete</button>
+      </div> -->
+    <div class="action-buttons" [class.scroll-active]="false">
+      <button type="button" class="btn btn-success-outline">Add New</button>
+      <button type="button" class="btn btn-warning-outline">Delete</button>
+    </div>
+  </div>
+  <clr-datagrid *ngIf="templates" class="data-grid" [clrDgSelected]="selected" [clrDgRowSelection]="true"
+    (clrDgSelectedChange)="selectionChanged($event)">
+    <clr-dg-column>Template Name
+      <clr-dg-string-filter [clrDgStringFilter]="templateNameFilter"></clr-dg-string-filter>
+    </clr-dg-column>
+    <clr-dg-column>No. of Charts</clr-dg-column>
+    <clr-dg-row *clrDgItems="let template of templates" [clrDgItem]="template" [(clrDgSelected)]="template.selected">
+      <clr-dg-cell><!-- {{ template.name }} -->
+        <!-- <a clrVerticalNavLink [routerLink]="['/admin/roles/', role.name, 'edit']">{{ role.templateName }}</a> -->
+        <clr-tree>
+          <clr-tree-node [clrExpanded]="false">
+            {{ template.name }}
+            <clr-tree-node [clrExpanded]="false" *ngFor="let page of template.pages">
+              {{ page.name }}
+              <clr-tree-node [clrExpanded]="false" *ngFor="let item of page.items;let i=index">
+                {{i+1}}. {{ item.options.title }} | {{ item.type }}&nbsp;<span *ngIf="item.hasOwnProperty('metricName')"> | {{ item.metricName }} </span>&nbsp;<span *ngIf="item.hasOwnProperty('metricCategory')"> - {{ item.metricCategory }}</span>
+              </clr-tree-node>
+            </clr-tree-node>
+          </clr-tree-node>
+        </clr-tree>
+      </clr-dg-cell>
+      <!-- <clr-dg-cell>{{ template.pages[0].items.length }}</clr-dg-cell> -->
+      <clr-dg-cell>{{ template.chartCounts }}</clr-dg-cell>
+    </clr-dg-row>
+    <clr-dg-footer>{{templates.length}} templates</clr-dg-footer>
+  </clr-datagrid>
+</div>

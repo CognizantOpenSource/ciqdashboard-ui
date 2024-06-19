@@ -1,0 +1,23 @@
+<clr-datagrid *ngIf="gridDataLoaded" (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" class="full"   [class.datagrid-compact]="options?.compact"
+  [class.no-header]="options?.hideHeader">
+  <clr-dg-placeholder>No data found</clr-dg-placeholder>
+
+  <clr-dg-column *ngFor="let column of columns" [clrDgField]=column.name>
+     <div> {{ column.label }}</div> 
+  </clr-dg-column>
+
+  <clr-dg-row *clrDgItems="let row of rows">
+    <clr-dg-cell *ngFor="let column of columns">{{ row[column.name] }}
+    </clr-dg-cell>
+  </clr-dg-row>
+
+  <clr-dg-footer *ngIf="options?.enablePagination">
+    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+      <clr-dg-page-size [clrPageSizeOptions]="[5, 10, 15, 20 , 15 , 50 , 100]">
+        {{ options?.paginationMessage || 'Records per page' }}
+      </clr-dg-page-size>
+      {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+      of {{pagination.totalItems}} records
+    </clr-dg-pagination>
+  </clr-dg-footer>
+</clr-datagrid>

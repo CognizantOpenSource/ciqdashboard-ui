@@ -1,0 +1,123 @@
+version: 2.1
+parameters:
+  project_name:
+    description: Project name used for Checkmarx & BlackDuck scans
+    type: string
+    default: "IPR_ciqdashboard-ui" # Provide the Project name used for Checkmarx & BlackDuck scans
+
+jobs:
+  checkmarx_scan:
+    docker:
+      - image: codehub-docker.jfrog.io/devops-checkmarx:latest
+        auth:
+          username: $ARTIFACTORY_USER
+          password: $ARTIFACTORY_TOKEN
+    working_directory: ~/app
+    environment:
+      cx_projectname: << pipeline.parameters.project_name >>
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: curl -v $CHECKMARX_SERVER
+      - run:
+          name: start the Checkmarx scan
+          command: |
+            /opt/CxConsolePlugin/runCxConsole.sh Scan -v \
+            -CxServer $CHECKMARX_SERVER \
+            -Cxuser $CHECKMARX_USER \
+            -CxPassword $CHECKMARX_PASSWORD \
+            -ProjectName "CxServer\Acc-IPReady\\${cx_projectname}" \
+            -LocationType folder \
+            -LocationPath ~/app \
+            -Preset "Cognizant Default Preset" \
+            -executepackagedependency \
+            -ReportPDF ~/app/report/<< pipeline.parameters.project_name >>.pdf
+      - store_artifacts:
+          path: ~/app/report/<< pipeline.parameters.project_name >>.pdf
+
+  blackduck_scan:
+    docker:
+      - image: cimg/node:16.9.1-browsers
+    working_directory: ~/app
+    environment:
+      COMMIT_ID: $(echo $CIRCLE_SHA1 | cut -c1-7)
+    steps:
+      - checkout
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Install npm packages
+          command: npm install --legacy-peer-deps
+      - run:
+          name: Start the Synopsys Detect scan
+          no_output_timeout: 30m
+          command: |
+            bash <(curl -s -L "${SYNOPSIS_URL}") \
+            --blackduck.url=$BLACKDUCK_URL \
+            --blackduck.api.token=$BLACKDUCK_TOKEN \
+            --detect.project.name=<< pipeline.parameters.project_name >> \
+            --detect.project.version.name="ver.2.1" \
+            --blackduck.trust.cert=true \
+            --detect.timeout=3600 \
+            --detect.detector.search.depth=0 \
+            --detect.tools=ALL,IAC_SCAN \
+            --detect.blackduck.signature.scanner.individual.file.matching=ALL \
+            --logging.level.com.synopsys.integration=DEBUG \
+            --detect.risk.report.pdf=true \
+            --detect.risk.report.pdf.path="report" \
+            --detect.blackduck.signature.scanner.snippet.matching=SNIPPET_MATCHING \
+            --detect.detector.search.continue=true \
+            --detect.excluded.directories=.git
+      - store_artifacts:
+          path: ~/app/report
+
+  sonarqube:
+    docker:
+      - image: sonarsource/sonar-scanner-cli:latest
+    working_directory: ~/app
+    environment:
+      PROJECT_KEY: ciqdashboard-ui # Replace the ProjectKey in the  line  With respective project name.
+    steps:
+      - checkout
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Sonar scan
+          command: |
+            sonar-scanner \
+             -Dsonar.projectKey=$PROJECT_KEY \
+             -Dsonar.sources=. \
+             -Dsonar.host.url=$SONAR_HOST_URL \
+             -Dsonar.login=$SONAR_TOKEN
+            
+      - store_artifacts:
+          path: ~/app/reports/rpt
+
+workflows:
+  scan:
+    jobs:
+      - checkmarx_scan:
+          context: Codehub-Common
+          filters:
+            branches:
+              only:
+                - /sast\/.*/ # follow branching conventions matching the regex
+                  # eg: sast/1, sast/prod
+                  # to run sast scan #
+      - blackduck_scan:
+          context: Codehub-Common
+          filters:
+            branches:
+              only:
+                - /oss\/.*/ # follow branching conventions matching the regex
+                  # eg: oss/1, oss/prod
+                  # to run blackduck scan
+
+      - sonarqube:
+          context: Codehub-Common
+          filters:
+            branches:
+              only:
+                - /sonar\/.*/ # follow branching conventions matching the regex
+                  # eg: sonar/1, sonar/prod
+                  # to run blackduck scan

@@ -1,0 +1,128 @@
+// © [2021] Cognizant. All rights reserved.
+ 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+ 
+//     http://www.apache.org/licenses/LICENSE-2.0
+ 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+.content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg1);
+  color: var(--fg1);
+}
+
+.btn:hover {
+  background-color: var(--bg3);
+  color: var(--fg1);
+}
+
+.contents {
+  min-height: 100%;
+  max-height: 100%;
+  background: var(--bg2);
+  color: var(--fg1);
+  align-items: center;
+  .head {
+    justify-content: space-between;
+    border-bottom: 2px solid;
+    border-bottom-color: var(--bg1);
+    .title {
+      * {
+        margin-top: 1.125rem;
+      }
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      .dropdown {
+        margin: auto 0;
+      }
+      .search {
+        padding-top: 4px;
+        flex-grow: 1;
+        width: 100%;
+        max-width: 20rem;
+        justify-self: flex-end;
+        clr-input-container {
+          width: 100%;
+          &::ng-deep {
+            .clr-control-container {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    .options div {
+      margin: 0.25rem;
+      display: flex;
+      justify-content: flex-end;
+
+      h3 {
+        margin-top: 0.6rem;
+      }
+    }
+  }
+  .main-content {
+    align-content: baseline;
+    flex-grow: 1;
+    overflow-y: auto;
+    .card {
+      .card-header {
+        color: var(--fg1);
+      }
+
+      background-color: var(--bg3);
+      border-color: var(--bg1);
+      box-shadow: 0 0.125rem 0 0 var(--bg1);
+
+      div {
+        border-color: var(--bg1);
+      }
+    }
+
+    .btn-warning {
+      color: var(--red-chart);
+      background: var(--bg3);
+      padding: 0 4px;
+      font-weight: 700;
+    }
+  }
+}
+
+.btn {
+  color: var(--link-active-color);
+  &:focus {
+    outline: none;
+  }
+
+  clr-icon {
+    margin-right: 4px;
+  }
+}
+
+:host::ng-deep {
+  .modal-content {
+    background: var(--bg3);
+    box-shadow: none;
+    color: var(--fg1) !important;
+    .modal-title {
+      color: var(--fg1) !important;
+    }
+  }
+  .datagrid {
+    border-color: var(--border-color) !important;
+  }
+}
